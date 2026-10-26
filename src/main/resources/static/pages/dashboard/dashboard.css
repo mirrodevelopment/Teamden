@@ -132,25 +132,28 @@ aside.dash-sidebar::-webkit-scrollbar {
 .dash-brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   text-decoration: none;
   color: var(--dash-text-main);
-  padding: 0 0.25rem;
+  padding: 0;
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
 }
 
 .dash-brand-logo-img {
-  height: 34px;
-  max-width: 140px;
+  height: 38px;
+  max-width: 155px;
+  width: auto;
   object-fit: contain;
+  object-position: left center;
   display: block;
   transition: opacity 0.2s ease;
 }
 
 .dash-brand-icon-img {
   display: none;
-  height: 32px;
-  width: 32px;
+  height: 38px;
+  width: 38px;
   object-fit: contain;
   transition: transform 0.2s ease;
 }
@@ -1662,8 +1665,11 @@ html.dash-sidebar-collapsed .dash-nav-label {
 
 body.dash-sidebar-collapsed .dash-brand,
 html.dash-sidebar-collapsed .dash-brand {
+  display: flex;
   justify-content: center;
+  align-items: center;
   padding: 0;
+  width: 100%;
 }
 
 body.dash-sidebar-collapsed .dash-brand-logo-img,
@@ -1674,6 +1680,8 @@ html.dash-sidebar-collapsed .dash-brand-logo-img {
 body.dash-sidebar-collapsed .dash-brand-icon-img,
 html.dash-sidebar-collapsed .dash-brand-icon-img {
   display: block !important;
+  width: 38px;
+  height: 38px;
   margin: 0 auto;
 }
 
@@ -1682,6 +1690,7 @@ html.dash-sidebar-collapsed .dash-sidebar-header-row {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 body.dash-sidebar-collapsed .dash-sidebar-toggle-btn svg,
