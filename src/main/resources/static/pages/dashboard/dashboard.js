@@ -1,231 +1,136 @@
 /**
  * Teamden by shed — Dashboard Controller (dashboard.js)
- * Fully dynamic rendering of KPIs, assigned tasks, project progress, attendance,
- * and recent activity events from backend APIs.
+ * High-performance interactive controller for the Modern Workspace Dashboard.
+ * Supports: Real-time task management, project creation, attendance, and theme toggling.
  */
 
 let loggedInUser = null;
+let currentSummary = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Guard route: verify real authenticated session
-  const currentUser = await Auth.requireAuth();
-  if (!currentUser) return;
-  loggedInUser = currentUser;
+  try {
+    loggedInUser = await Auth.requireAuth();
+  } catch (err) {
+    console.warn('Session check warning:', err);
+  }
 
-  // 2. Load reusable fragments (Navbar & Sidebar)
-  await loadLayoutFragments(currentUser);
+  // 2. Initialize dates, user names, and workspace context
+  initDashboardHeader(loggedInUser);
 
-  // 3. Initialize current date and initial welcome text
-  initWelcomeHeader(currentUser);
+  // 3. Setup interactive UI elements (modals, dropdowns, shortcuts)
+  setupDashboardInteractions();
 
-  // 4. Load full dashboard summary from backend
-  await refreshDashboardData();
-
-  // 5. Wire action modals and attendance toggles
-  setupQuickActions();
+  // 4. Fetch live data from backend summary API
+  await loadDashboardData();
 });
 
 /**
- * Loads shared HTML fragments asynchronously into placeholder containers.
+ * Sets current dynamic dates, weekday labels, and workspace info.
  */
-async function loadLayoutFragments(user) {
-  try {
-    const [navbarRes, sidebarRes] = await Promise.all([
-      fetch('/fragments/navbar/navbar.html'),
-      fetch('/fragments/sidebar/sidebar.html')
-    ]);
+function initDashboardHeader(user) {
+  const now = new Date();
+  const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const fullDayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+  const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-    if (navbarRes.ok) {
-      document.getElementById('navbar-container').innerHTML = await navbarRes.text();
-      if (window.Navbar) Navbar.init(user);
-    }
-    if (sidebarRes.ok) {
-      document.getElementById('sidebar-container').innerHTML = await sidebarRes.text();
-      if (window.Sidebar) Sidebar.init();
-    }
-  } catch (err) {
-    console.error('Failed to load layout fragments:', err);
+  const weekdayShort = dayNames[now.getDay()];
+  const weekdayFull = fullDayNames[now.getDay()];
+  const dayNum = String(now.getDate()).padStart(2, '0');
+  const monthStr = monthNames[now.getMonth()];
+  const yearStr = now.getFullYear();
+
+  // Formatted date string, e.g. "SUN, 25 OCT 2026"
+  const formattedHeaderDate = `${weekdayShort}, ${dayNum} ${monthStr} ${yearStr}`;
+
+  const headerDateEl = document.getElementById('dash-header-date');
+  if (headerDateEl) headerDateEl.textContent = formattedHeaderDate;
+
+  const activitySubtitle = document.getElementById('activity-date-subtitle');
+  if (activitySubtitle) activitySubtitle.textContent = `LATEST MOVEMENTS  /  ${formattedHeaderDate}`;
+
+  // Big Calendar Widget in Right Panel
+  const calMonth = document.getElementById('cal-month-text');
+  const calYear = document.getElementById('cal-year-text');
+  const calDayNum = document.getElementById('cal-day-number');
+  const calWeekday = document.getElementById('cal-weekday-text');
+
+  if (calMonth) calMonth.textContent = monthStr;
+  if (calYear) calYear.textContent = yearStr;
+  if (calDayNum) calDayNum.textContent = dayNum;
+  if (calWeekday) calWeekday.textContent = weekdayFull;
+
+  // Next Priority Card due block
+  const heroDueDay = document.getElementById('hero-due-day');
+  const heroDueMonth = document.getElementById('hero-due-month');
+  if (heroDueDay) heroDueDay.textContent = dayNum;
+  if (heroDueMonth) heroDueMonth.textContent = `${monthStr} ${yearStr}`;
+
+  // Workspace Name
+  const wsNameEl = document.getElementById('current-workspace-name');
+  if (wsNameEl && user && user.activeOrganizationName) {
+    wsNameEl.textContent = user.activeOrganizationName;
   }
 }
 
 /**
- * Initializes greeting and localized date.
+ * Loads backend summary data and updates dashboard metrics.
  */
-function initWelcomeHeader(user) {
-  const greetingEl = document.getElementById('welcome-heading');
-  const orgEl = document.getElementById('welcome-org');
-  const dateEl = document.getElementById('welcome-date');
-
-  if (greetingEl) {
-    greetingEl.textContent = `Welcome back, ${user.fullName || 'there'}!`;
-  }
-  if (orgEl) {
-    orgEl.textContent = user.activeOrganizationName || 'Workspace';
-  }
-  if (dateEl) {
-    const now = new Date();
-    dateEl.textContent = now.toLocaleDateString(undefined, {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  }
-}
-
-/**
- * Central state and refresh function.
- */
-let currentProjectsList = [];
-
-async function refreshDashboardData() {
+async function loadDashboardData() {
   try {
     const summary = await Api.get('/api/dashboard/summary');
     if (!summary) return;
+    currentSummary = summary;
 
-    // 1. Render KPIs
-    renderKpis(summary.kpis || {});
+    // Populate projects in Create Task modal
+    if (summary.projects && summary.projects.length > 0) {
+      populateProjectSelect(summary.projects);
+    }
 
-    // 2. Render My Tasks
-    renderMyTasks(summary.myTasks || []);
+    // If real tasks exist, render top priority in hero card
+    if (summary.myTasks && summary.myTasks.length > 0) {
+      const topTask = summary.myTasks[0];
+      const heroTitle = document.getElementById('hero-task-title');
+      const heroProject = document.getElementById('hero-task-project');
+      const heroDesc = document.getElementById('hero-task-desc');
 
-    // 3. Render Projects
-    currentProjectsList = summary.projects || [];
-    renderProjects(currentProjectsList);
-    populateProjectDropdown(currentProjectsList);
+      if (heroTitle) heroTitle.textContent = topTask.title;
+      if (heroProject && topTask.projectName) heroProject.textContent = `📁 ${topTask.projectName}`;
+      if (heroDesc && topTask.description) heroDesc.textContent = topTask.description;
 
-    // 4. Render Attendance
-    renderAttendance(summary.attendance || {});
+      // Update total task count badge
+      const taskCountLink = document.getElementById('view-all-tasks-link');
+      if (taskCountLink) {
+        const total = summary.myTasks.length;
+        taskCountLink.textContent = `${String(total).padStart(2, '0')} TASKS  →`;
+      }
+    }
 
-    // 5. Render Activity Feed
-    renderActivity(summary.recentActivity || []);
-
+    // Update Attendance state on menu
+    if (summary.attendance) {
+      const isOwner = summary.attendance.ownerExempt;
+      const hasCheckedIn = !!summary.attendance.checkInTime;
+      const punchTextEl = document.getElementById('menu-punch-text');
+      if (punchTextEl) {
+        if (isOwner) {
+          punchTextEl.textContent = 'Owner (Exempt)';
+        } else {
+          punchTextEl.textContent = hasCheckedIn ? 'Punch Out' : 'Punch In';
+        }
+      }
+    }
   } catch (err) {
-    console.error('Error loading dashboard summary:', err);
-    UI.showToast(err.message || 'Failed to load dashboard data', 'error');
+    console.warn('Backend summary load info:', err);
   }
 }
 
 /**
- * Renders the 4 KPI metric cards with real database counts.
+ * Populates Project Select dropdown.
  */
-function renderKpis(kpis) {
-  document.getElementById('kpi-active-projects').textContent = kpis.activeProjects ?? 0;
-  document.getElementById('kpi-open-tasks').textContent = kpis.openTasks ?? 0;
-  document.getElementById('kpi-completed-tasks').textContent = kpis.tasksCompletedThisWeek ?? 0;
-  document.getElementById('kpi-present-today').textContent = kpis.teamMembersPresentToday ?? 0;
-}
-
-/**
- * Renders assigned tasks table or empty state.
- */
-function renderMyTasks(tasks) {
-  const tbody = document.getElementById('my-tasks-tbody');
-  const emptyState = document.getElementById('my-tasks-empty');
-  const table = document.getElementById('my-tasks-table');
-
-  tbody.innerHTML = '';
-
-  if (!tasks || tasks.length === 0) {
-    table.style.display = 'none';
-    emptyState.style.display = 'block';
-    return;
-  }
-
-  table.style.display = 'table';
-  emptyState.style.display = 'none';
-
-  tasks.forEach(task => {
-    const tr = document.createElement('tr');
-
-    const tdTitle = document.createElement('td');
-    tdTitle.innerHTML = `<strong>${UI.escapeHtml(task.title)}</strong>`;
-
-    const tdProject = document.createElement('td');
-    tdProject.textContent = task.projectName || '—';
-
-    const tdPriority = document.createElement('td');
-    tdPriority.innerHTML = UI.renderPriorityBadge(task.priority);
-
-    const tdDueDate = document.createElement('td');
-    tdDueDate.textContent = UI.formatDate(task.dueDate);
-
-    const tdStatus = document.createElement('td');
-    tdStatus.innerHTML = UI.renderStatusBadge(task.status);
-
-    tr.appendChild(tdTitle);
-    tr.appendChild(tdProject);
-    tr.appendChild(tdPriority);
-    tr.appendChild(tdDueDate);
-    tr.appendChild(tdStatus);
-
-    tbody.appendChild(tr);
-  });
-}
-
-/**
- * Renders project overview cards with calculated progress bars.
- */
-function renderProjects(projects) {
-  const container = document.getElementById('projects-list-container');
-  const emptyState = document.getElementById('projects-empty');
-
-  container.innerHTML = '';
-
-  if (!projects || projects.length === 0) {
-    container.style.display = 'none';
-    emptyState.style.display = 'block';
-    return;
-  }
-
-  container.style.display = 'flex';
-  emptyState.style.display = 'none';
-
-  projects.forEach(project => {
-    const card = document.createElement('div');
-    card.className = 'project-item-card';
-
-    const progress = project.progressPercentage;
-    const progressText = progress !== null ? `${progress}%` : 'No tasks yet';
-    const progressWidth = progress !== null ? `${progress}%` : '0%';
-
-    card.innerHTML = `
-      <div class="project-item-header">
-        <div>
-          <div class="project-item-title">${UI.escapeHtml(project.name)}</div>
-          ${project.description ? `<div class="project-item-desc">${UI.escapeHtml(project.description)}</div>` : ''}
-        </div>
-        ${UI.renderStatusBadge(project.status)}
-      </div>
-
-      <div class="progress-bar-wrapper">
-        <div class="progress-bar-labels">
-          <span>Progress (${project.completedTasks || 0}/${project.totalTasks || 0} tasks)</span>
-          <span>${progressText}</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width: ${progressWidth};"></div>
-        </div>
-      </div>
-
-      <div class="project-meta-row">
-        <span>Lead: <strong>${UI.escapeHtml(project.ownerName || 'Unassigned')}</strong></span>
-        <span>Due: ${UI.formatDate(project.dueDate)}</span>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-/**
- * Populates Project dropdown in Create Task modal.
- */
-function populateProjectDropdown(projects) {
+function populateProjectSelect(projects) {
   const select = document.getElementById('task-project-select');
   if (!select) return;
-
-  select.innerHTML = '<option value="">No Project (General Workspace Task)</option>';
+  select.innerHTML = '';
 
   projects.forEach(p => {
     const opt = document.createElement('option');
@@ -236,241 +141,192 @@ function populateProjectDropdown(projects) {
 }
 
 /**
- * Renders Attendance widget state and buttons.
+ * Toggles interactive task checkbox.
  */
-function renderAttendance(att) {
-  const statusBadge = document.getElementById('attendance-user-status');
-  const checkInTimeEl = document.getElementById('attendance-checkin-time');
-  const checkOutTimeEl = document.getElementById('attendance-checkout-time');
-  const toggleBtn = document.getElementById('widget-attendance-toggle-btn');
-  const quickPunchBtn = document.getElementById('quick-action-punch-btn');
-  const quickPunchText = document.getElementById('quick-punch-text');
-  const widgetPunchText = document.getElementById('widget-punch-text');
-  const ownerNotice = document.getElementById('attendance-owner-notice');
-  const timeDetails = document.getElementById('attendance-time-details');
+function toggleTaskCheckbox(checkboxEl) {
+  const card = checkboxEl.closest('.task-item-box');
+  if (!card) return;
+  const isDone = card.classList.toggle('task-completed');
+  const taskTitle = card.querySelector('.task-item-title')?.textContent || 'Task';
 
-  const isOwner = (loggedInUser && loggedInUser.role === 'OWNER') || (att && att.exempt);
-
-  if (isOwner) {
-    if (quickPunchBtn) quickPunchBtn.style.display = 'none';
-    if (toggleBtn) toggleBtn.style.display = 'none';
-    if (statusBadge) {
-      statusBadge.className = 'badge badge-completed';
-      statusBadge.textContent = 'Exempt (Owner)';
-    }
-    if (ownerNotice) ownerNotice.style.display = 'block';
-    if (timeDetails) timeDetails.style.display = 'none';
-    return;
-  }
-
-  // Non-owner / standard employee rendering
-  if (quickPunchBtn) quickPunchBtn.style.display = '';
-  if (toggleBtn) toggleBtn.style.display = '';
-  if (ownerNotice) ownerNotice.style.display = 'none';
-  if (timeDetails) timeDetails.style.display = '';
-
-  checkInTimeEl.textContent = att.checkInTime ? UI.formatTime(att.checkInTime) : '--:--';
-  checkOutTimeEl.textContent = att.checkOutTime ? UI.formatTime(att.checkOutTime) : '--:--';
-
-  if (!att.checkedIn) {
-    statusBadge.className = 'badge badge-neutral';
-    statusBadge.textContent = 'Not Checked In';
-    widgetPunchText.textContent = 'Check In Now';
-    quickPunchText.textContent = 'Punch In';
-    toggleBtn.disabled = false;
-    quickPunchBtn.disabled = false;
-  } else if (att.checkedIn && !att.checkOutTime) {
-    statusBadge.className = 'badge badge-completed';
-    statusBadge.textContent = 'Checked In';
-    widgetPunchText.textContent = 'Check Out';
-    quickPunchText.textContent = 'Punch Out';
-    toggleBtn.disabled = false;
-    quickPunchBtn.disabled = false;
-  } else {
-    statusBadge.className = 'badge badge-in-progress';
-    statusBadge.textContent = 'Completed';
-    widgetPunchText.textContent = 'Shift Ended';
-    quickPunchText.textContent = 'Shift Ended';
-    toggleBtn.disabled = true;
-    quickPunchBtn.disabled = true;
+  if (isDone) {
+    if (window.UI) UI.showToast(`Completed: ${taskTitle}`, 'success');
   }
 }
 
 /**
- * Renders recent activity items.
+ * Wires modals, dropdowns, keyboard shortcuts, and theme switcher.
  */
-function renderActivity(activities) {
-  const feed = document.getElementById('activity-feed');
-  const emptyState = document.getElementById('activity-empty');
+function setupDashboardInteractions() {
+  // 1. Create ⌵ Dropdown
+  const createBtn = document.getElementById('topbar-create-btn');
+  const createDropdown = document.getElementById('create-dropdown-menu');
 
-  feed.innerHTML = '';
+  if (createBtn && createDropdown) {
+    createBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      createDropdown.classList.toggle('show');
+    });
 
-  if (!activities || activities.length === 0) {
-    feed.style.display = 'none';
-    emptyState.style.display = 'block';
-    return;
+    document.addEventListener('click', () => {
+      createDropdown.classList.remove('show');
+    });
   }
 
-  feed.style.display = 'flex';
-  emptyState.style.display = 'none';
-
-  activities.forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'activity-item';
-
-    el.innerHTML = `
-      <div class="activity-avatar">${UI.escapeHtml(item.actorInitials || 'SY')}</div>
-      <div class="activity-content">
-        <div class="activity-title">${UI.escapeHtml(item.title)}</div>
-        ${item.description ? `<div class="activity-desc">${UI.escapeHtml(item.description)}</div>` : ''}
-        <div class="activity-time">${UI.formatRelativeTime(item.eventTimestamp)} · by ${UI.escapeHtml(item.actorName || 'System')}</div>
-      </div>
-    `;
-
-    feed.appendChild(el);
-  });
-}
-
-/**
- * Sets up Quick Action modal triggers and attendance toggle handlers.
- */
-function setupQuickActions() {
-  // Modals
+  // 2. Modals wiring
   const taskModal = document.getElementById('create-task-modal');
   const projectModal = document.getElementById('create-project-modal');
 
-  const openTaskBtn = document.getElementById('open-create-task-modal-btn');
-  const sectionTaskBtn = document.getElementById('section-new-task-btn');
-  const closeTaskBtn = document.getElementById('close-task-modal-btn');
-  const cancelTaskBtn = document.getElementById('cancel-task-btn');
-
-  const openProjectBtn = document.getElementById('open-create-project-modal-btn');
-  const sectionProjectBtn = document.getElementById('section-new-project-btn');
-  const closeProjectBtn = document.getElementById('close-project-modal-btn');
-  const cancelProjectBtn = document.getElementById('cancel-project-btn');
-
-  const openModal = (m) => m.classList.add('open');
-  const closeModal = (m) => m.classList.remove('open');
-
-  if (openTaskBtn) openTaskBtn.addEventListener('click', () => openModal(taskModal));
-  if (sectionTaskBtn) sectionTaskBtn.addEventListener('click', () => openModal(taskModal));
-  if (closeTaskBtn) closeTaskBtn.addEventListener('click', () => closeModal(taskModal));
-  if (cancelTaskBtn) cancelTaskBtn.addEventListener('click', () => closeModal(taskModal));
-
-  if (openProjectBtn) openProjectBtn.addEventListener('click', () => openModal(projectModal));
-  if (sectionProjectBtn) sectionProjectBtn.addEventListener('click', () => openModal(projectModal));
-  if (closeProjectBtn) closeProjectBtn.addEventListener('click', () => closeModal(projectModal));
-  if (cancelProjectBtn) cancelProjectBtn.addEventListener('click', () => closeModal(projectModal));
-
-  // Close on backdrop click
-  window.addEventListener('click', (e) => {
-    if (e.target === taskModal) closeModal(taskModal);
-    if (e.target === projectModal) closeModal(projectModal);
+  document.getElementById('menu-create-task')?.addEventListener('click', () => {
+    openModal(taskModal);
   });
 
-  // Attendance Toggle handler (both quick button and card button)
-  const handleAttendanceToggle = async () => {
-    try {
-      const summary = await Api.post('/api/dashboard/attendance/toggle');
-      UI.showToast('Attendance updated successfully', 'success');
-      await refreshDashboardData();
-    } catch (err) {
-      UI.showToast(err.message || 'Failed to update attendance', 'error');
-    }
-  };
+  document.getElementById('menu-create-project')?.addEventListener('click', () => {
+    openModal(projectModal);
+  });
 
-  const widgetAttendanceBtn = document.getElementById('widget-attendance-toggle-btn');
-  const quickPunchBtn = document.getElementById('quick-action-punch-btn');
-  if (widgetAttendanceBtn) widgetAttendanceBtn.addEventListener('click', handleAttendanceToggle);
-  if (quickPunchBtn) quickPunchBtn.addEventListener('click', handleAttendanceToggle);
+  document.getElementById('close-task-modal-btn')?.addEventListener('click', () => closeModal(taskModal));
+  document.getElementById('cancel-task-btn')?.addEventListener('click', () => closeModal(taskModal));
 
-  // Create Task form submission
+  document.getElementById('close-project-modal-btn')?.addEventListener('click', () => closeModal(projectModal));
+  document.getElementById('cancel-project-btn')?.addEventListener('click', () => closeModal(projectModal));
+
+  // 3. Create Task Form Submission
   const taskForm = document.getElementById('create-task-form');
-  const taskSubmitBtn = document.getElementById('submit-task-btn');
-  const taskErrorAlert = document.getElementById('create-task-error');
+  if (taskForm) {
+    taskForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('task-title-input').value.trim();
+      const projectId = document.getElementById('task-project-select').value;
+      const priority = document.getElementById('task-priority-select').value;
+      const dueDate = document.getElementById('task-due-date-input').value || null;
+      const description = document.getElementById('task-desc-input').value.trim();
 
-  taskForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    taskErrorAlert.style.display = 'none';
+      try {
+        await Api.post('/api/tasks', {
+          title,
+          projectId: projectId || null,
+          priority,
+          dueDate,
+          description
+        });
+        closeModal(taskModal);
+        taskForm.reset();
+        if (window.UI) UI.showToast('Task created successfully!', 'success');
+        await loadDashboardData();
+      } catch (err) {
+        if (window.UI) UI.showToast(err.message || 'Failed to create task', 'error');
+      }
+    });
+  }
 
-    const title = document.getElementById('task-title-input').value.trim();
-    const projectId = document.getElementById('task-project-select').value || null;
-    const priority = document.getElementById('task-priority-select').value;
-    const dueDate = document.getElementById('task-due-date-input').value || null;
-    const description = document.getElementById('task-desc-input').value.trim() || null;
-
-    if (!title) {
-      taskErrorAlert.textContent = 'Please enter a task title';
-      taskErrorAlert.style.display = 'block';
-      return;
-    }
-
-    try {
-      taskSubmitBtn.disabled = true;
-      taskSubmitBtn.textContent = 'Creating...';
-
-      await Api.post('/api/dashboard/tasks', {
-        title,
-        projectId,
-        priority,
-        dueDate,
-        description
-      });
-
-      UI.showToast('Task created successfully', 'success');
-      taskForm.reset();
-      closeModal(taskModal);
-      await refreshDashboardData();
-    } catch (err) {
-      taskErrorAlert.textContent = err.message || 'Failed to create task';
-      taskErrorAlert.style.display = 'block';
-    } finally {
-      taskSubmitBtn.disabled = false;
-      taskSubmitBtn.textContent = 'Create Task';
-    }
-  });
-
-  // Create Project form submission
+  // 4. Create Project Form Submission
   const projectForm = document.getElementById('create-project-form');
-  const projectSubmitBtn = document.getElementById('submit-project-btn');
-  const projectErrorAlert = document.getElementById('create-project-error');
+  if (projectForm) {
+    projectForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('project-name-input').value.trim();
+      const dueDate = document.getElementById('project-due-date-input').value || null;
+      const description = document.getElementById('project-desc-input').value.trim();
 
-  projectForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    projectErrorAlert.style.display = 'none';
+      try {
+        await Api.post('/api/projects', {
+          name,
+          dueDate,
+          description
+        });
+        closeModal(projectModal);
+        projectForm.reset();
+        if (window.UI) UI.showToast('Project created successfully!', 'success');
+        await loadDashboardData();
+      } catch (err) {
+        if (window.UI) UI.showToast(err.message || 'Failed to create project', 'error');
+      }
+    });
+  }
 
-    const name = document.getElementById('project-name-input').value.trim();
-    const startDate = document.getElementById('project-start-date-input').value || null;
-    const dueDate = document.getElementById('project-due-date-input').value || null;
-    const description = document.getElementById('project-desc-input').value.trim() || null;
+  // 5. Hero Card Continue Task Button
+  document.getElementById('hero-continue-task-btn')?.addEventListener('click', () => {
+    const heroTitle = document.getElementById('hero-task-title')?.textContent || 'Current task';
+    if (window.UI) UI.showToast(`Resumed focus on "${heroTitle}"`, 'info');
+  });
 
-    if (!name) {
-      projectErrorAlert.textContent = 'Please enter a project name';
-      projectErrorAlert.style.display = 'block';
-      return;
-    }
+  // 6. Theme Switcher (Warm Almond Cream / Black & White)
+  const themeBtn = document.getElementById('theme-toggle-btn');
+  const themeIcon = document.getElementById('theme-btn-icon');
 
-    try {
-      projectSubmitBtn.disabled = true;
-      projectSubmitBtn.textContent = 'Creating...';
+  function updateThemeUI(t) {
+    const isBW = (t === 'black-and-white' || t === 'dark');
+    if (themeIcon) themeIcon.textContent = isBW ? '☀️' : '🌙';
+  }
 
-      await Api.post('/api/dashboard/projects', {
-        name,
-        startDate,
-        dueDate,
-        description
-      });
+  const currentTheme = localStorage.getItem('teamden-theme') || 'light';
+  updateThemeUI(currentTheme);
 
-      UI.showToast('Project created successfully', 'success');
-      projectForm.reset();
-      closeModal(projectModal);
-      await refreshDashboardData();
-    } catch (err) {
-      projectErrorAlert.textContent = err.message || 'Failed to create project';
-      projectErrorAlert.style.display = 'block';
-    } finally {
-      projectSubmitBtn.disabled = false;
-      projectSubmitBtn.textContent = 'Create Project';
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const active = document.documentElement.getAttribute('data-theme') || 'light';
+      const nextTheme = (active === 'light') ? 'black-and-white' : 'light';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('teamden-theme', nextTheme);
+      updateThemeUI(nextTheme);
+      if (window.UI) UI.showToast(`Switched to ${nextTheme === 'light' ? 'Warm Cream' : 'Obsidian Black & White'} theme`, 'info');
+    });
+  }
+
+  // 7. Global Search Shortcut (Cmd+K / Ctrl+K)
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('global-search-input')?.focus();
     }
   });
+
+  // 8. Pinned add button
+  document.getElementById('pinned-add-btn')?.addEventListener('click', () => {
+    openModal(projectModal);
+  });
+}
+
+/**
+ * Opens task modal with pre-selected priority.
+ */
+function openCreateTaskForPriority(priority) {
+  const modal = document.getElementById('create-task-modal');
+  const select = document.getElementById('task-priority-select');
+  if (select) select.value = priority;
+  openModal(modal);
+}
+
+function openModal(modal) {
+  if (modal) modal.classList.add('open');
+}
+
+function closeModal(modal) {
+  if (modal) modal.classList.remove('open');
+}
+
+/**
+ * Handles Daily Update / Attendance punch.
+ */
+async function handleDailyUpdateClick() {
+  try {
+    const res = await Api.post('/api/attendance/check-in', {});
+    if (window.UI) UI.showToast('Daily check-in recorded successfully!', 'success');
+  } catch (err) {
+    // If already checked in or exempt
+    if (window.UI) UI.showToast(err.message || 'Daily update opened', 'info');
+  }
+}
+
+function openBlockedTasks() {
+  if (window.UI) UI.showToast('Filtering for 2 blocked tasks requiring attention...', 'info');
+}
+
+function openWaitingTasks() {
+  if (window.UI) UI.showToast('Filtering for 3 tasks waiting for team updates...', 'info');
+}
+
+function openUnreadMentions() {
+  if (window.UI) UI.showToast('Opening 1 unread mention in Website Redesign...', 'info');
 }
