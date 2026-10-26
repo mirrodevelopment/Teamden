@@ -189,6 +189,7 @@ Flyway migration tracking table.
 | Field | Value |
 | :--- | :--- |
 | **Email** | `sivasurya.official.8@gmail.com` |
+| **Unhashed Password** | **`Admin@123`** |
 | **Full Name** | `SIVASURYA S` |
 | **Role** | `OWNER` (Executive Workspace Owner) |
 | **Organization Name** | `siva` |
@@ -201,7 +202,7 @@ Flyway migration tracking table.
 
 Used in `AuthenticationIntegrationTest.java` and `MultiOrganizationIsolationTest.java`:
 
-| Email | Default Password | Role | Organization |
+| Email | Unhashed Password | Role | Organization |
 | :--- | :--- | :--- | :--- |
 | `alex@acme.com` | `SecurePass123!` | `OWNER` | Acme Services |
 | `sarah@acme.com` | `SecurePass123!` | `ADMIN` | Acme Services |
@@ -212,14 +213,14 @@ Used in `AuthenticationIntegrationTest.java` and `MultiOrganizationIsolationTest
 Teamden uses BCrypt with strength 12. To generate a hash directly in Java:
 ```java
 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-String hash = encoder.encode("YourPasswordHere");
+String hash = encoder.encode("Admin@123");
 ```
 Or via SQL update if needing to reset an account directly:
 ```sql
--- Sets password to "crazy@8" (BCrypt 12 rounds)
+-- Sets password to "Admin@123" (BCrypt 12 rounds)
 UPDATE users 
-SET password_hash = '$2a$12$eJ3XjZ9f0aGzQvCjP8U7.eM6fM0z8yN5GkF1rB3yFvL9aB1cD2e3f' 
-WHERE email = 'your-email@example.com';
+SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' 
+WHERE email = 'sivasurya.official.8@gmail.com';
 ```
 
 ---
