@@ -15,10 +15,11 @@
   </script>
 
   <!-- Central Design System & Fonts -->
-  <link rel="stylesheet" href="../src/main/resources/static/fragments/fonts/fonts.css">
-  <link rel="stylesheet" href="../src/main/resources/static/fragments/theme/theme.css">
-  <link rel="stylesheet" href="../src/main/resources/static/shared/css/variables.css">
-  <link rel="stylesheet" href="../src/main/resources/static/shared/css/utilities.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="/fragments/theme/theme.css">
+  <link rel="stylesheet" href="/shared/css/variables.css">
+  <link rel="stylesheet" href="/shared/css/utilities.css">
   <link rel="stylesheet" href="dev use.css">
 </head>
 <body>
@@ -654,41 +655,49 @@
 
         document.getElementById('nav-users-count').textContent = users.length;
 
-        container.innerHTML = users.map(u => `
-          <div class="card">
-            <div class="card-title">
-              <span>${u.role === 'OWNER' ? '👑' : '👤'} ${escapeHtml(u.fullName || 'User')}</span>
+        container.innerHTML = users.map(u => {
+          const isOwner = u.role === 'OWNER';
+          return `
+          <div class="card user-card">
+            <div class="user-identity-header">
+              <div class="user-avatar-badge">${isOwner ? '👑' : '👤'}</div>
+              <div class="user-identity-details">
+                <div class="user-identity-name">${escapeHtml(u.fullName || 'User')}</div>
+                <div class="user-identity-role-badge">${isOwner ? 'Workspace Owner' : escapeHtml(u.role || 'Member')} · ${escapeHtml(u.organizationName || 'No Organization')}</div>
+              </div>
               <span class="${u.status === 'ACTIVE' ? 'status-active-pill' : 'quick-pill'}">${escapeHtml(u.status || 'ACTIVE')}</span>
             </div>
+
             <div class="kv-list">
               <div class="kv-item"><span class="kv-key">Full Name</span><span class="kv-val">${escapeHtml(u.fullName || '—')}</span></div>
-              <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val">${escapeHtml(u.email || '—')}</span></div>
+              <div class="kv-item"><span class="kv-key">Login Email</span><span class="kv-val">${escapeHtml(u.email || '—')}</span></div>
               <div class="kv-item kv-item-highlight">
-                <span class="kv-key kv-key-highlight">Unhashed Password</span>
+                <span class="kv-key kv-key-highlight">Password Note</span>
                 <span class="kv-val kv-val-highlight">${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}</span>
               </div>
               <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">${escapeHtml(u.role || 'MEMBER')}</span></div>
               <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">${escapeHtml(u.organizationName || 'None')}</span></div>
               <div class="kv-item"><span class="kv-key">Org ID</span><span class="kv-val text-xs">${escapeHtml(u.organizationId || '—')}</span></div>
               <div class="kv-item"><span class="kv-key">User ID</span><span class="kv-val text-xs">${escapeHtml(u.id || '—')}</span></div>
-              <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val ${u.role === 'OWNER' ? 'kv-val-exempt' : ''}">${u.role === 'OWNER' ? 'Exempt (Owner)' : 'Tracked Daily'}</span></div>
+              <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val ${isOwner ? 'kv-val-exempt' : ''}">${isOwner ? 'Exempt (Owner)' : 'Tracked Daily'}</span></div>
             </div>
+
             <div>
-              <span class="snippet-label">Copy Login Email:</span>
+              <span class="snippet-label">Quick Copy Email:</span>
               <div class="code-box">
                 <span class="code-text">${escapeHtml(u.email || '')}</span>
                 <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.email || '')}')">Copy</button>
               </div>
             </div>
             <div>
-              <span class="snippet-label-highlight">Copy Password:</span>
+              <span class="snippet-label-highlight">Quick Copy Password:</span>
               <div class="code-box code-box-highlight">
                 <span class="code-text code-text-highlight">${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}</span>
                 <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}')">Copy</button>
               </div>
             </div>
           </div>
-        `).join('');
+        `;}).join('');
 
       } catch (err) {
         console.error('Error fetching users from DB', err);

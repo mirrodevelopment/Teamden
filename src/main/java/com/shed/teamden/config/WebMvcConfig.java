@@ -12,7 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String devUsePath = Paths.get("dev use").toAbsolutePath().toUri().toString();
-        registry.addResourceHandler("/dev use/**", "/dev-use/**")
-                .addResourceLocations(devUsePath.endsWith("/") ? devUsePath : devUsePath + "/");
+        String location = devUsePath.endsWith("/") ? devUsePath : devUsePath + "/";
+        registry.addResourceHandler("/dev use/**", "/dev%20use/**", "/dev-use/**", "/devuse/**")
+                .addResourceLocations(location);
     }
 }
