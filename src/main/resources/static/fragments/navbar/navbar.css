@@ -1,4 +1,6 @@
 /* Topbar Fragment Styles */
+@import url('../theme/theme.css');
+
 .app-topbar {
   height: var(--header-height);
   background-color: var(--bg-surface);

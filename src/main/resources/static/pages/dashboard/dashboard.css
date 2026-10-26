@@ -1,4 +1,6 @@
 /* Dashboard Page Styles */
+@import url('../../fragments/theme/theme.css');
+
 .dashboard-body {
   background-color: var(--bg-primary);
   min-height: 100vh;

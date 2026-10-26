@@ -65,9 +65,15 @@ Teamden centralizes daily work, people operations, planning, internal knowledge,
    Update `src/main/resources/application.yaml` with your database credentials.
 
 3. **Build & Run**:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+   * **Windows One-Click Launcher** (Starts backend & frontend, monitors health check, and opens Google Chrome automatically):
+     ```cmd
+     start.bat
+     ```
+     *(Or simply double-click `start.bat` in File Explorer)*
+   * **Manual Maven Run**:
+     ```bash
+     ./mvnw spring-boot:run
+     ```
 
 ---
 

@@ -1,6 +1,9 @@
 /* ==========================================================
    Teamden by shed — Design System Tokens (variables.css)
+   Imports the single source of truth: fragments/theme/theme.css
    ========================================================== */
+
+@import url('../../fragments/theme/theme.css');
 
 :root {
   /* Typography */

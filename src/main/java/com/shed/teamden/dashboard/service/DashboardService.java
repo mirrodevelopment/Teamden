@@ -7,6 +7,7 @@ import com.shed.teamden.attendance.entity.AttendanceStatus;
 import com.shed.teamden.attendance.repository.AttendanceRecordRepository;
 import com.shed.teamden.auth.dto.UserProfileDto;
 import com.shed.teamden.dashboard.dto.*;
+import com.shed.teamden.organization.entity.MembershipRole;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.project.entity.Project;
@@ -79,7 +80,8 @@ public class DashboardService {
 
         // 5. Attendance Summary for today
         LocalDate today = LocalDate.now(ZoneOffset.UTC);
-        AttendanceSummaryDto attendance = getAttendanceSummary(orgId, user.getId(), today, kpis.getTeamMembersPresentToday());
+        boolean isOwner = (user.getActiveRole() == MembershipRole.OWNER);
+        AttendanceSummaryDto attendance = getAttendanceSummary(orgId, user.getId(), today, kpis.getTeamMembersPresentToday(), isOwner);
 
         return DashboardSummaryDto.builder()
                 .userProfile(mapUserProfile(user))
@@ -99,7 +101,7 @@ public class DashboardService {
                 List.of(ProjectStatus.ACTIVE, ProjectStatus.PLANNING)
         );
 
-        // Open tasks: TODO, IN_PROGRESS, IN_REVIEW, BLOCKED
+        // Open task statuses: pending, in-progress, in-review, blocked
         long openTasks = taskRepository.countByOrganizationIdAndStatusIn(
                 orgId,
                 List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.IN_REVIEW, TaskStatus.BLOCKED)
@@ -184,16 +186,21 @@ public class DashboardService {
                 .build();
     }
 
-    private AttendanceSummaryDto getAttendanceSummary(UUID orgId, UUID userId, LocalDate today, long totalPresent) {
+    private AttendanceSummaryDto getAttendanceSummary(UUID orgId, UUID userId, LocalDate today, long totalPresent, boolean isOwner) {
         Optional<AttendanceRecord> record = attendanceRecordRepository
                 .findByOrganizationIdAndEmployeeIdAndAttendanceDate(orgId, userId, today);
 
+        Instant checkIn = record.map(r -> r.getCheckInTime()).orElse(null);
+        Instant checkOut = record.map(r -> r.getCheckOutTime()).orElse(null);
+        AttendanceStatus status = record.map(r -> r.getStatus()).orElse(null);
+
         return AttendanceSummaryDto.builder()
                 .todayDate(today)
+                .exempt(isOwner)
                 .checkedIn(record.isPresent())
-                .checkInTime(record.map(AttendanceRecord::getCheckInTime).orElse(null))
-                .checkOutTime(record.map(AttendanceRecord::getCheckOutTime).orElse(null))
-                .status(record.map(AttendanceRecord::getStatus).orElse(null))
+                .checkInTime(checkIn)
+                .checkOutTime(checkOut)
+                .status(status)
                 .totalPresentToday(totalPresent)
                 .build();
     }
@@ -328,7 +335,8 @@ public class DashboardService {
                 orgId, today, List.of(AttendanceStatus.PRESENT, AttendanceStatus.HALF_DAY)
         );
 
-        return getAttendanceSummary(orgId, user.getId(), today, presentToday);
+        boolean isOwner = (user.getActiveRole() == MembershipRole.OWNER);
+        return getAttendanceSummary(orgId, user.getId(), today, presentToday, isOwner);
     }
 
     private UserProfileDto mapUserProfile(CustomUserDetails user) {

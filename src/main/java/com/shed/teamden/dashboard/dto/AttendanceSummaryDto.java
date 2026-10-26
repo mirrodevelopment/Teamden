@@ -20,4 +20,5 @@ public class AttendanceSummaryDto {
     private Instant checkOutTime;
     private AttendanceStatus status;
     private long totalPresentToday;
+    private boolean exempt;
 }

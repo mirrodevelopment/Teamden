@@ -4,10 +4,13 @@
  * and recent activity events from backend APIs.
  */
 
+let loggedInUser = null;
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Guard route: verify real authenticated session
   const currentUser = await Auth.requireAuth();
   if (!currentUser) return;
+  loggedInUser = currentUser;
 
   // 2. Load reusable fragments (Navbar & Sidebar)
   await loadLayoutFragments(currentUser);
@@ -243,6 +246,28 @@ function renderAttendance(att) {
   const quickPunchBtn = document.getElementById('quick-action-punch-btn');
   const quickPunchText = document.getElementById('quick-punch-text');
   const widgetPunchText = document.getElementById('widget-punch-text');
+  const ownerNotice = document.getElementById('attendance-owner-notice');
+  const timeDetails = document.getElementById('attendance-time-details');
+
+  const isOwner = (loggedInUser && loggedInUser.role === 'OWNER') || (att && att.exempt);
+
+  if (isOwner) {
+    if (quickPunchBtn) quickPunchBtn.style.display = 'none';
+    if (toggleBtn) toggleBtn.style.display = 'none';
+    if (statusBadge) {
+      statusBadge.className = 'badge badge-completed';
+      statusBadge.textContent = 'Exempt (Owner)';
+    }
+    if (ownerNotice) ownerNotice.style.display = 'block';
+    if (timeDetails) timeDetails.style.display = 'none';
+    return;
+  }
+
+  // Non-owner / standard employee rendering
+  if (quickPunchBtn) quickPunchBtn.style.display = '';
+  if (toggleBtn) toggleBtn.style.display = '';
+  if (ownerNotice) ownerNotice.style.display = 'none';
+  if (timeDetails) timeDetails.style.display = '';
 
   checkInTimeEl.textContent = att.checkInTime ? UI.formatTime(att.checkInTime) : '--:--';
   checkOutTimeEl.textContent = att.checkOutTime ? UI.formatTime(att.checkOutTime) : '--:--';

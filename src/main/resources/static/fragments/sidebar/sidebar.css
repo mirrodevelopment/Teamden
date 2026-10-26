@@ -1,4 +1,6 @@
 /* Sidebar Fragment Styles */
+@import url('../theme/theme.css');
+
 .app-sidebar {
   width: var(--sidebar-width);
   height: 100vh;

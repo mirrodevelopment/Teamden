@@ -2,6 +2,8 @@
    Teamden by shed — Login Page Styles (login.css)
    ========================================================== */
 
+@import url('../../fragments/theme/theme.css');
+
 .login-container {
   min-height: 100vh;
   display: flex;

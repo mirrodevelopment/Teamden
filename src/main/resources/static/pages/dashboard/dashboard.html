@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="icon" type="image/png" href="/assets/icon.png">
 
   <!-- Core Design System & Fragments CSS -->
+  <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/shared/css/reset.css">
   <link rel="stylesheet" href="/shared/css/variables.css">
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
@@ -16,6 +18,7 @@
   <link rel="stylesheet" href="/fragments/sidebar/sidebar.css">
   <link rel="stylesheet" href="/pages/dashboard/dashboard.css">
 </head>
+
 <body class="dashboard-body">
 
   <!-- App Sidebar Fragment Container -->
@@ -46,11 +49,17 @@
               <span id="quick-punch-text">Punch In</span>
             </button>
             <button class="btn btn-secondary" id="open-create-project-modal-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               New Project
             </button>
             <button class="btn btn-primary" id="open-create-task-modal-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               Create Task
             </button>
           </div>
@@ -62,7 +71,9 @@
             <div class="kpi-header">
               <span class="kpi-title">Active Projects</span>
               <div class="kpi-icon-badge kpi-icon-blue">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
               </div>
             </div>
             <div class="kpi-value" id="kpi-active-projects">0</div>
@@ -73,7 +84,10 @@
             <div class="kpi-header">
               <span class="kpi-title">Open Tasks</span>
               <div class="kpi-icon-badge kpi-icon-amber">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
               </div>
             </div>
             <div class="kpi-value" id="kpi-open-tasks">0</div>
@@ -84,7 +98,10 @@
             <div class="kpi-header">
               <span class="kpi-title">Completed This Week</span>
               <div class="kpi-icon-badge kpi-icon-emerald">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
               </div>
             </div>
             <div class="kpi-value" id="kpi-completed-tasks">0</div>
@@ -95,7 +112,10 @@
             <div class="kpi-header">
               <span class="kpi-title">Present Today</span>
               <div class="kpi-icon-badge kpi-icon-indigo">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
               </div>
             </div>
             <div class="kpi-value" id="kpi-present-today">0</div>
@@ -105,10 +125,10 @@
 
         <!-- Two Column Main Grid -->
         <div class="dashboard-content-grid">
-          
+
           <!-- Left Column: Tasks & Projects -->
           <div class="grid-col-primary">
-            
+
             <!-- My Tasks Card -->
             <section class="card content-section" id="my-tasks-section" aria-labelledby="my-tasks-title">
               <div class="card-header">
@@ -165,7 +185,8 @@
                 <div class="empty-state" id="projects-empty" style="display: none;">
                   <div class="empty-state-icon">📁</div>
                   <h3 class="empty-state-title">No projects yet</h3>
-                  <p class="empty-state-desc">Create your team's first project to start organizing tasks and tracking progress.</p>
+                  <p class="empty-state-desc">Create your team's first project to start organizing tasks and tracking
+                    progress.</p>
                 </div>
               </div>
             </section>
@@ -189,7 +210,11 @@
                     <span class="attendance-label">Your Status:</span>
                     <span id="attendance-user-status" class="badge badge-neutral">Not Checked In</span>
                   </div>
-                  <div class="attendance-time-details">
+                  <div class="attendance-owner-notice text-sm text-secondary mt-2" id="attendance-owner-notice"
+                    style="display: none; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px dashed rgba(255,255,255,0.1);">
+                    Workspace owners are exempt from attendance check-in.
+                  </div>
+                  <div class="attendance-time-details" id="attendance-time-details">
                     <div class="time-block">
                       <span class="time-label">Check-in</span>
                       <span class="time-val" id="attendance-checkin-time">--:--</span>
@@ -224,7 +249,8 @@
                 <div class="empty-state" id="activity-empty" style="display: none;">
                   <div class="empty-state-icon">⚡</div>
                   <h3 class="empty-state-title">No recent activity</h3>
-                  <p class="empty-state-desc">Actions performed across projects and tasks will appear here in real time.</p>
+                  <p class="empty-state-desc">Actions performed across projects and tasks will appear here in real time.
+                  </p>
                 </div>
               </div>
             </section>
@@ -250,7 +276,8 @@
 
           <div class="form-group">
             <label for="task-title-input" class="form-label required">Task Title</label>
-            <input type="text" class="form-control" id="task-title-input" required placeholder="e.g., Implement OAuth2 integration">
+            <input type="text" class="form-control" id="task-title-input" required
+              placeholder="e.g., Implement OAuth2 integration">
           </div>
 
           <div class="form-group">
@@ -279,7 +306,8 @@
 
           <div class="form-group">
             <label for="task-desc-input" class="form-label">Description</label>
-            <textarea class="form-control" id="task-desc-input" rows="3" placeholder="Add any details, checklists, or context..."></textarea>
+            <textarea class="form-control" id="task-desc-input" rows="3"
+              placeholder="Add any details, checklists, or context..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -291,7 +319,8 @@
   </div>
 
   <!-- Modal: Create Project -->
-  <div class="modal-overlay" id="create-project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+  <div class="modal-overlay" id="create-project-modal" role="dialog" aria-modal="true"
+    aria-labelledby="project-modal-title">
     <div class="modal-card">
       <div class="modal-header">
         <h3 class="modal-title" id="project-modal-title">Create New Project</h3>
@@ -303,7 +332,8 @@
 
           <div class="form-group">
             <label for="project-name-input" class="form-label required">Project Name</label>
-            <input type="text" class="form-control" id="project-name-input" required placeholder="e.g., Client Portal Redesign">
+            <input type="text" class="form-control" id="project-name-input" required
+              placeholder="e.g., Client Portal Redesign">
           </div>
 
           <div class="form-row">
@@ -320,7 +350,8 @@
 
           <div class="form-group">
             <label for="project-desc-input" class="form-label">Description</label>
-            <textarea class="form-control" id="project-desc-input" rows="3" placeholder="Brief objectives, scope, or client info..."></textarea>
+            <textarea class="form-control" id="project-desc-input" rows="3"
+              placeholder="Brief objectives, scope, or client info..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -339,4 +370,5 @@
   <script src="/fragments/sidebar/sidebar.js"></script>
   <script src="/pages/dashboard/dashboard.js"></script>
 </body>
+
 </html>
