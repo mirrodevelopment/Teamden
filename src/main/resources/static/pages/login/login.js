@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     showAlert('You have been signed out safely.', 'success');
   } else if (urlParams.get('error') === 'forbidden') {
     showAlert('You do not have permission to access that area.', 'danger');
+  } else if (urlParams.get('setup') === 'true') {
+    setupModal.classList.add('active');
+    showAlert('Welcome! Please configure your initial organization and administrator account.', 'info');
   }
 
   // 3. Check workspace setup status

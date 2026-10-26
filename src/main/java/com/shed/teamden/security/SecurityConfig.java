@@ -77,6 +77,7 @@ public class SecurityConfig {
                     "/pages/login/**",
                     "/shared/**",
                     "/fragments/**",
+                    "/assets/**",
                     "/*.png",
                     "/*.ico"
                 ).permitAll()
