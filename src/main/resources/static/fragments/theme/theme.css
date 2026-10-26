@@ -12,9 +12,9 @@
    ========================================================================== */
 :root {
   /* Typography (Inherited exclusively from fragments/fonts/fonts.css) */
-  --font-family: var(--font-family-base, 'Montserrat', sans-serif);
+  --font-family: var(--font-family-base, 'Montserrat');
   --font-family-base: var(--font-family);
-  --font-mono: var(--font-family-mono, 'Montserrat', monospace);
+  --font-mono: var(--font-family-mono, 'Montserrat');
   --font-family-mono: var(--font-mono);
 
   --font-xs: 0.75rem;     /* 12px */

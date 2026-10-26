@@ -7,8 +7,8 @@
 
 :root {
   /* Typography (Inherited from fragments/fonts/fonts.css) */
-  --font-family: var(--font-family-base, 'Montserrat', sans-serif);
-  --font-mono: var(--font-family-mono, 'Montserrat', monospace);
+  --font-family: var(--font-family-base, 'Montserrat');
+  --font-mono: var(--font-family-mono, 'Montserrat');
 
   /* Font Sizes */
   --font-xs: 0.75rem;     /* 12px */
