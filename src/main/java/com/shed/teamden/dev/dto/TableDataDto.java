@@ -17,4 +17,5 @@ public class TableDataDto {
     private long totalRows;
     private List<String> columnNames;
     private List<Map<String, Object>> rows;
+    private Map<String, String> resolvedReferences;
 }

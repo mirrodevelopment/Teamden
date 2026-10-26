@@ -367,6 +367,7 @@
     let databaseTables = [];
     let activeTableName = '';
     let currentViewMode = 'schema'; // 'schema' | 'data'
+    let isDecryptedMode = true; // Decrypted / Human-Readable references enabled by default
     const tableDataCache = {};
 
     // Tab Switching
@@ -404,7 +405,23 @@
       applyTheme(isBW ? 'light' : 'black-and-white');
     });
 
-    // Copy to clipboard
+    // Toast & Clipboard Helpers
+    function showToast(msg) {
+      let toast = document.getElementById('dev-toast-banner');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'dev-toast-banner';
+        toast.className = 'dev-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span>📋</span> <span>${escapeHtml(msg)}</span>`;
+      toast.style.display = 'flex';
+      clearTimeout(window.__toastTimeout);
+      window.__toastTimeout = setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2200);
+    }
+
     function copySnippet(elementId) {
       const el = document.getElementById(elementId);
       if (!el) return;
@@ -419,21 +436,151 @@
             btn.classList.remove('copied');
           }, 1500);
         }
+        showToast('SQL snippet copied to clipboard');
       });
     }
 
     function copySnippetText(text) {
+      if (!text) return;
       navigator.clipboard.writeText(text).then(() => {
-        if (event && event.target) {
-          const old = event.target.textContent;
-          event.target.textContent = 'Copied!';
-          event.target.classList.add('copied');
+        showToast('Copied to clipboard');
+        if (window.event && window.event.target && window.event.target.classList.contains('copy-btn')) {
+          const btn = window.event.target;
+          const old = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
           setTimeout(() => {
-            event.target.textContent = old;
-            event.target.classList.remove('copied');
+            btn.textContent = old;
+            btn.classList.remove('copied');
           }, 1500);
         }
       });
+    }
+
+    function copyDirect(text) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const preview = text.length > 25 ? text.substring(0, 25) + '...' : text;
+        showToast('Copied: ' + preview);
+      }).catch(() => {});
+    }
+
+    function toggleDecryptedMode() {
+      isDecryptedMode = !isDecryptedMode;
+      renderActiveTable();
+    }
+
+    function formatCellData(col, val, resolvedRefs, isDecrypted) {
+      if (val === null || val === undefined) {
+        return '<span class="text-muted">NULL</span>';
+      }
+      const valStr = String(val);
+      if (!isDecrypted) {
+        return escapeHtml(valStr);
+      }
+
+      // 1. Check if value is in resolvedReferences (UUID mapping or Password Hash)
+      if (resolvedRefs && resolvedRefs[valStr]) {
+        const resolved = resolvedRefs[valStr];
+        if (resolved.startsWith('🏢')) {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-org">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        } else if (resolved.startsWith('👤')) {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-user">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        } else if (resolved.startsWith('📁')) {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-project">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        } else if (resolved.startsWith('📋')) {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-task">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        } else if (resolved.startsWith('🔑')) {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-pwd">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw hash: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 12))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-entity">${escapeHtml(resolved)}</span>
+              <span class="raw-subtext" title="Click to copy raw value: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
+            </div>
+          `;
+        }
+      }
+
+      // 2. Unresolved BCrypt Password Hash
+      if (valStr.startsWith('$2a$') || valStr.startsWith('$2b$')) {
+        return `
+          <div class="decrypted-cell">
+            <span class="badge-resolved-pwd">🔒 Protected BCrypt (12 Rounds)</span>
+            <span class="raw-subtext" title="Click to copy hash: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 14))}... <span class="copy-hint">📋</span></span>
+          </div>
+        `;
+      }
+
+      // 3. Timestamps & Dates
+      const colUpper = (col || '').toUpperCase();
+      if (colUpper.endsWith('_AT') || colUpper.endsWith('_TIMESTAMP') || colUpper.endsWith('_DATE') || colUpper.endsWith('_TIME')) {
+        try {
+          const d = new Date(valStr);
+          if (!isNaN(d.getTime()) && valStr.length >= 10 && valStr.includes('-')) {
+            const dateFormatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeFormatted = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            return `
+              <div class="decrypted-cell">
+                <span class="badge-resolved-time">🕒 ${dateFormatted} ${timeFormatted}</span>
+                <span class="raw-subtext" title="${escapeHtml(valStr)}">${escapeHtml(valStr)}</span>
+              </div>
+            `;
+          }
+        } catch (e) {}
+      }
+
+      // 4. Status, Role, Priority, Event Type
+      if (colUpper === 'STATUS' || colUpper === 'ROLE' || colUpper === 'PRIORITY' || colUpper === 'EVENT_TYPE' || colUpper === 'ENTITY_TYPE') {
+        const lower = valStr.toLowerCase();
+        let pillClass = 'status-default';
+        if (lower.includes('active') || lower.includes('provisioned') || lower.includes('done') || lower.includes('owner') || lower.includes('present')) {
+          pillClass = 'status-success';
+        } else if (lower.includes('progress') || lower.includes('admin') || lower.includes('medium') || lower.includes('organization')) {
+          pillClass = 'status-warning';
+        } else if (lower.includes('inactive') || lower.includes('high') || lower.includes('error')) {
+          pillClass = 'status-danger';
+        }
+        return `<span class="data-status-pill ${pillClass}">${escapeHtml(valStr.replace(/_/g, ' '))}</span>`;
+      }
+
+      // 5. UUIDs (Unresolved)
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(valStr)) {
+        return `
+          <div class="uuid-cell" title="Click to copy full UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">
+            <span class="uuid-prefix">#️⃣ ${escapeHtml(valStr.substring(0, 8))}</span><span class="text-muted">...${escapeHtml(valStr.substring(valStr.length - 4))}</span>
+            <span class="copy-hint" title="Copy UUID">📋</span>
+          </div>
+        `;
+      }
+
+      // 6. Default
+      return escapeHtml(valStr);
     }
 
     // --- Dynamic Database Fetching & Rendering ---
@@ -551,6 +698,11 @@
             <button class="view-mode-btn ${currentViewMode === 'data' ? 'active' : ''}" onclick="setViewMode('data')">
               Live Data Rows (SELECT *)
             </button>
+            ${currentViewMode === 'data' ? `
+            <button class="view-mode-btn ${isDecryptedMode ? 'active-decrypted' : ''}" onclick="toggleDecryptedMode()" title="Toggle between decrypted/human-readable data and raw DB values">
+              ${isDecryptedMode ? '🔓 Decrypted Data: ON' : '🔒 Raw DB Values'}
+            </button>
+            ` : ''}
           </div>
         </div>
       `;
@@ -615,6 +767,8 @@
             return;
           }
 
+          const resolvedRefs = data.resolvedReferences || {};
+
           let dataTableHtml = `
             <table class="data-table">
               <thead>
@@ -627,7 +781,7 @@
                   <tr>
                     ${data.columnNames.map(col => {
                       const val = row[col];
-                      return `<td>${val !== null && val !== undefined ? escapeHtml(String(val)) : '<span class="text-muted">NULL</span>'}</td>`;
+                      return `<td>${formatCellData(col, val, resolvedRefs, isDecryptedMode)}</td>`;
                     }).join('')}
                   </tr>
                 `).join('')}
