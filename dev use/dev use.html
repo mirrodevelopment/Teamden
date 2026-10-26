@@ -6,505 +6,20 @@
   <title>Teamden by shed — Developer Reference Portal</title>
   <link rel="icon" type="image/png" href="/assets/icon.png">
 
-  <!-- Montserrat Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+  <!-- Early Theme Bootstrapper -->
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'black-and-white';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 
-  <style>
-    :root {
-      --font-family: 'Montserrat';
-      --font-family-base: 'Montserrat';
-      --font-mono: 'Montserrat', monospace;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-full: 9999px;
-      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Light Theme */
-    [data-theme="light"] {
-      --bg-body: #F8FAFC;
-      --bg-surface: #FFFFFF;
-      --bg-surface-alt: #F1F5F9;
-      --bg-card: #FFFFFF;
-      --bg-input: #FFFFFF;
-      --border-color: #E2E8F0;
-      --border-hover: #CBD5E1;
-      --text-main: #0F172A;
-      --text-body: #334155;
-      --text-muted: #64748B;
-      --color-primary: #2563EB;
-      --color-primary-hover: #1D4ED8;
-      --color-primary-text: #FFFFFF;
-      --color-primary-light: #EFF6FF;
-      --badge-bg: #EFF6FF;
-      --badge-text: #1E40AF;
-      --code-bg: #F1F5F9;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08);
-    }
-
-    /* Black and White Theme */
-    [data-theme="black-and-white"],
-    [data-theme="dark"] {
-      --bg-body: #000000;
-      --bg-surface: #0C0C0E;
-      --bg-surface-alt: #141417;
-      --bg-card: #0C0C0E;
-      --bg-input: #121215;
-      --border-color: #27272A;
-      --border-hover: #3F3F46;
-      --text-main: #FFFFFF;
-      --text-body: #E4E4E7;
-      --text-muted: #A1A1AA;
-      --color-primary: #FFFFFF;
-      --color-primary-hover: #E4E4E7;
-      --color-primary-text: #000000;
-      --color-primary-light: #18181B;
-      --badge-bg: #18181B;
-      --badge-text: #FFFFFF;
-      --code-bg: #111114;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.85);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.9);
-      --shadow-lg: 0 10px 20px rgba(0,0,0,0.95);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-body);
-      color: var(--text-body);
-      line-height: 1.6;
-      transition: background-color var(--transition-normal), color var(--transition-normal);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Header */
-    header.dev-header {
-      background-color: var(--bg-surface);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(8px);
-    }
-
-    .header-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-    }
-
-    .brand-logo-badge {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-      color: #FFFFFF;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.125rem;
-      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
-    }
-
-    .brand-titles h1 {
-      font-size: 1.125rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-
-    .brand-titles p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .quick-pill {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      padding: 0.25rem 0.625rem;
-      border-radius: var(--radius-full);
-      background-color: var(--badge-bg);
-      color: var(--badge-text);
-      border: 1px solid var(--border-color);
-    }
-
-    .theme-toggle-btn {
-      background: var(--bg-surface-alt);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.4375rem 0.875rem;
-      border-radius: var(--radius-md);
-      font-family: var(--font-family);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all var(--transition-fast);
-    }
-
-    .theme-toggle-btn:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-    }
-
-    /* Navigation Tabs */
-    nav.nav-tabs {
-      background-color: var(--bg-surface);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .tabs-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-family);
-      font-size: 0.8125rem;
-      font-weight: 600;
-      padding: 0.875rem 1rem;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      white-space: nowrap;
-      transition: all var(--transition-fast);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-    }
-
-    .tab-btn.active {
-      color: var(--text-main);
-      border-bottom-color: var(--color-primary);
-    }
-
-    /* Main Container */
-    main.dev-container {
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 1.5rem 3rem 1.5rem;
-      flex: 1;
-      width: 100%;
-    }
-
-    .section-block {
-      display: none;
-      animation: fadeIn 200ms ease;
-    }
-
-    .section-block.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-header {
-      margin-bottom: 1.5rem;
-    }
-
-    .section-header h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-    }
-
-    .section-header p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    /* Cards Grid */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    @media (max-width: 1024px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
-      transition: all var(--transition-fast);
-      position: relative;
-    }
-
-    .card:hover {
-      border-color: var(--border-hover);
-      box-shadow: var(--shadow-md);
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* Data Key-Value List */
-    .kv-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.625rem;
-    }
-
-    .kv-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0.75rem;
-      background: var(--bg-surface-alt);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-color);
-      font-size: 0.8125rem;
-    }
-
-    .kv-key {
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .kv-val {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Code Snippet Box */
-    .code-box {
-      background-color: var(--code-bg);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 0.875rem 1rem;
-      position: relative;
-      margin-top: 0.75rem;
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-      color: var(--text-main);
-      overflow-x: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .code-text {
-      white-space: pre;
-    }
-
-    .copy-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.6875rem;
-      font-family: var(--font-family);
-      font-weight: 600;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: all var(--transition-fast);
-    }
-
-    .copy-btn:hover {
-      color: var(--text-main);
-      border-color: var(--border-hover);
-    }
-
-    .copy-btn.copied {
-      background: #10B981;
-      color: #FFFFFF;
-      border-color: #10B981;
-    }
-
-    /* Tables */
-    .table-container {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      overflow-x: auto;
-      margin-top: 1rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    table.data-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.8125rem;
-    }
-
-    table.data-table th {
-      background-color: var(--bg-surface-alt);
-      color: var(--text-main);
-      font-weight: 700;
-      padding: 0.875rem 1rem;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    table.data-table td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-body);
-    }
-
-    table.data-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    table.data-table tr:hover td {
-      background-color: var(--bg-surface-alt);
-    }
-
-    .badge-pk {
-      background: #EF4444;
-      color: #FFFFFF;
-      font-size: 0.625rem;
-      font-weight: 700;
-      padding: 0.125rem 0.375rem;
-      border-radius: var(--radius-sm);
-    }
-
-    .badge-fk {
-      background: #3B82F6;
-      color: #FFFFFF;
-      font-size: 0.625rem;
-      font-weight: 700;
-      padding: 0.125rem 0.375rem;
-      border-radius: var(--radius-sm);
-    }
-
-    .badge-uk {
-      background: #8B5CF6;
-      color: #FFFFFF;
-      font-size: 0.625rem;
-      font-weight: 700;
-      padding: 0.125rem 0.375rem;
-      border-radius: var(--radius-sm);
-    }
-
-    .badge-method {
-      font-size: 0.6875rem;
-      font-weight: 800;
-      padding: 0.2rem 0.5rem;
-      border-radius: var(--radius-sm);
-      letter-spacing: 0.5px;
-    }
-
-    .badge-get { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-post { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.3); }
-
-    /* Schema Selector Pills */
-    .schema-pills {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
-    .schema-pill {
-      background: var(--bg-surface-alt);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 0.4375rem 0.875rem;
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-    }
-
-    .schema-pill:hover {
-      color: var(--text-main);
-      border-color: var(--border-hover);
-    }
-
-    .schema-pill.active {
-      background: var(--color-primary);
-      color: var(--color-primary-text);
-      border-color: var(--color-primary);
-    }
-
-    /* Footer */
-    footer.dev-footer {
-      border-top: 1px solid var(--border-color);
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      background-color: var(--bg-surface);
-    }
-  </style>
+  <!-- Central Design System & Fonts -->
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="/fragments/theme/theme.css">
+  <link rel="stylesheet" href="/shared/css/variables.css">
+  <link rel="stylesheet" href="/shared/css/utilities.css">
+  <link rel="stylesheet" href="dev use.css">
 </head>
 <body>
 
@@ -556,7 +71,7 @@
         <div class="card">
           <div class="card-title">
             <span>🐘 PostgreSQL Connection</span>
-            <span class="quick-pill" style="background:#10B981; color:#FFFFFF;">ACTIVE</span>
+            <span class="status-active-pill">ACTIVE</span>
           </div>
           <div class="kv-list">
             <div class="kv-item"><span class="kv-key">Host</span><span class="kv-val">localhost (127.0.0.1)</span></div>
@@ -567,16 +82,16 @@
             <div class="kv-item"><span class="kv-key">Driver</span><span class="kv-val">org.postgresql.Driver</span></div>
           </div>
 
-          <div style="margin-top: 1rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">JDBC Connection URL:</span>
+          <div>
+            <span class="snippet-label">JDBC Connection URL:</span>
             <div class="code-box">
               <span class="code-text" id="jdbc-url">jdbc:postgresql://localhost:5432/teamden</span>
               <button class="copy-btn" onclick="copySnippet('jdbc-url')">Copy</button>
             </div>
           </div>
 
-          <div style="margin-top: 1rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">PowerShell Direct PSQL Connect:</span>
+          <div>
+            <span class="snippet-label">PowerShell Direct PSQL Connect:</span>
             <div class="code-box">
               <span class="code-text" id="psql-cmd">$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -U postgres -d teamden</span>
               <button class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
@@ -600,12 +115,12 @@
             <div class="kv-item"><span class="kv-key">Global Font</span><span class="kv-val">Montserrat</span></div>
           </div>
 
-          <div style="margin-top: 1rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Web Endpoints:</span>
-            <div class="kv-list" style="margin-top: 0.5rem;">
-              <div class="kv-item"><span class="kv-key">Login Desk</span><span class="kv-val"><a href="http://localhost:8080/pages/login/login.html" target="_blank" style="color:var(--color-primary); text-decoration:none;">/pages/login/login.html ↗</a></span></div>
-              <div class="kv-item"><span class="kv-key">Dashboard</span><span class="kv-val"><a href="http://localhost:8080/pages/dashboard/dashboard.html" target="_blank" style="color:var(--color-primary); text-decoration:none;">/pages/dashboard/dashboard.html ↗</a></span></div>
-              <div class="kv-item"><span class="kv-key">Actuator Health</span><span class="kv-val"><a href="http://localhost:8080/actuator/health" target="_blank" style="color:var(--color-primary); text-decoration:none;">/actuator/health ↗</a></span></div>
+          <div>
+            <span class="snippet-label">Web Endpoints:</span>
+            <div class="kv-list mt-2">
+              <div class="kv-item"><span class="kv-key">Login Desk</span><span class="kv-val"><a href="http://localhost:8080/pages/login/login.html" target="_blank" class="portal-link">/pages/login/login.html ↗</a></span></div>
+              <div class="kv-item"><span class="kv-key">Dashboard</span><span class="kv-val"><a href="http://localhost:8080/pages/dashboard/dashboard.html" target="_blank" class="portal-link">/pages/dashboard/dashboard.html ↗</a></span></div>
+              <div class="kv-item"><span class="kv-key">Actuator Health</span><span class="kv-val"><a href="http://localhost:8080/actuator/health" target="_blank" class="portal-link">/actuator/health ↗</a></span></div>
             </div>
           </div>
         </div>
@@ -652,7 +167,7 @@
       </div>
 
       <!-- Table: organizations -->
-      <div class="table-pane" id="tbl-organizations" style="display:none;">
+      <div class="table-pane d-none" id="tbl-organizations">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -670,7 +185,7 @@
       </div>
 
       <!-- Table: organization_memberships -->
-      <div class="table-pane" id="tbl-memberships" style="display:none;">
+      <div class="table-pane d-none" id="tbl-memberships">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -689,7 +204,7 @@
       </div>
 
       <!-- Table: projects -->
-      <div class="table-pane" id="tbl-projects" style="display:none;">
+      <div class="table-pane d-none" id="tbl-projects">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -712,7 +227,7 @@
       </div>
 
       <!-- Table: tasks -->
-      <div class="table-pane" id="tbl-tasks" style="display:none;">
+      <div class="table-pane d-none" id="tbl-tasks">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -738,7 +253,7 @@
       </div>
 
       <!-- Table: attendance_records -->
-      <div class="table-pane" id="tbl-attendance" style="display:none;">
+      <div class="table-pane d-none" id="tbl-attendance">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -757,13 +272,13 @@
             </tbody>
           </table>
         </div>
-        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
+        <div class="table-info-note">
           ℹ️ <strong>Business Rule:</strong> Users with role <code>OWNER</code> are automatically exempt from punch-in checks.
         </div>
       </div>
 
       <!-- Table: activity_events -->
-      <div class="table-pane" id="tbl-activity" style="display:none;">
+      <div class="table-pane d-none" id="tbl-activity">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -785,7 +300,7 @@
       </div>
 
       <!-- Table: flyway_schema_history -->
-      <div class="table-pane" id="tbl-flyway" style="display:none;">
+      <div class="table-pane d-none" id="tbl-flyway">
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -816,32 +331,32 @@
         <div class="card">
           <div class="card-title">
             <span>👑 Live System Owner</span>
-            <span class="quick-pill" style="background:#10B981; color:#FFFFFF;">ACTIVE</span>
+            <span class="status-active-pill">ACTIVE</span>
           </div>
           <div class="kv-list">
             <div class="kv-item"><span class="kv-key">Full Name</span><span class="kv-val">SIVASURYA S</span></div>
             <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val" id="owner-email">sivasurya.official.8@gmail.com</span></div>
-            <div class="kv-item" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
-              <span class="kv-key" style="color: #10B981; font-weight: 700;">Unhashed Password</span>
-              <span class="kv-val" style="color: #10B981; font-weight: 800; font-size: 0.9375rem;">Admin@123</span>
+            <div class="kv-item kv-item-highlight">
+              <span class="kv-key kv-key-highlight">Unhashed Password</span>
+              <span class="kv-val kv-val-highlight">Admin@123</span>
             </div>
             <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">OWNER</span></div>
             <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">siva</span></div>
             <div class="kv-item"><span class="kv-key">Org ID</span><span class="kv-val">6a6ed829-7154-4a7d-b3a8-3fb104035b69</span></div>
             <div class="kv-item"><span class="kv-key">User ID</span><span class="kv-val">86d8385a-440e-4bfc-acbf-dff2d7d86510</span></div>
-            <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val" style="color:#10B981;">Exempt (Owner)</span></div>
+            <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val kv-val-exempt">Exempt (Owner)</span></div>
           </div>
-          <div style="margin-top: 1rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Copy Login Email:</span>
+          <div>
+            <span class="snippet-label">Copy Login Email:</span>
             <div class="code-box">
               <span class="code-text">sivasurya.official.8@gmail.com</span>
               <button class="copy-btn" onclick="copySnippetText('sivasurya.official.8@gmail.com')">Copy</button>
             </div>
           </div>
-          <div style="margin-top: 0.75rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: #10B981;">Copy Unhashed Password:</span>
-            <div class="code-box" style="border-color: rgba(16, 185, 129, 0.4);">
-              <span class="code-text" style="color: #10B981; font-weight: 800;">Admin@123</span>
+          <div>
+            <span class="snippet-label-highlight">Copy Unhashed Password:</span>
+            <div class="code-box code-box-highlight">
+              <span class="code-text code-text-highlight">Admin@123</span>
               <button class="copy-btn" onclick="copySnippetText('Admin@123')">Copy</button>
             </div>
           </div>
@@ -853,7 +368,7 @@
             <span>🧪 Standard Test Accounts</span>
             <span class="quick-pill">Integration Tests</span>
           </div>
-          <div class="table-container" style="margin-top: 0;">
+          <div class="table-container mt-0">
             <table class="data-table">
               <thead>
                 <tr><th>Email</th><th>Password</th><th>Role</th></tr>
@@ -866,8 +381,8 @@
             </table>
           </div>
 
-          <div style="margin-top: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Reset Password to Admin@123 SQL Snippet (BCrypt 12 rounds):</span>
+          <div>
+            <span class="snippet-label">Reset Password to Admin@123 SQL Snippet (BCrypt 12 rounds):</span>
             <div class="code-box">
               <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
               <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
@@ -989,7 +504,7 @@
       <div class="grid-2">
         <div class="card">
           <div class="card-title">🚀 One-Click Launcher (start.bat)</div>
-          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+          <p class="card-desc">
             Starts PostgreSQL service, verifies port 8080, launches background Chrome monitor, and streams Spring Boot logs.
           </p>
           <div class="code-box">
@@ -1000,7 +515,7 @@
 
         <div class="card">
           <div class="card-title">🧪 Run Automated Tests</div>
-          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+          <p class="card-desc">
             Executes all 14 integration and unit test suites via Maven Wrapper.
           </p>
           <div class="code-box">
@@ -1011,7 +526,7 @@
 
         <div class="card">
           <div class="card-title">📦 Compile Project</div>
-          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+          <p class="card-desc">
             Verifies all Java classes and copies static resources to target directory.
           </p>
           <div class="code-box">
@@ -1022,7 +537,7 @@
 
         <div class="card">
           <div class="card-title">🐘 Start PostgreSQL Service Manually</div>
-          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+          <p class="card-desc">
             Starts PostgreSQL 17 Windows service via net start or pg_ctl.
           </p>
           <div class="code-box">
@@ -1057,13 +572,13 @@
     // Schema Table Switcher
     function switchTable(tableId) {
       document.querySelectorAll('.schema-pill').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.table-pane').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.table-pane').forEach(p => p.classList.add('d-none'));
 
       const activePill = Array.from(document.querySelectorAll('.schema-pill')).find(p => p.textContent.trim() === tableId.replace('tbl-', ''));
       if (activePill) activePill.classList.add('active');
 
       const activePane = document.getElementById(tableId);
-      if (activePane) activePane.style.display = 'block';
+      if (activePane) activePane.classList.remove('d-none');
     }
 
     // Theme Switcher
