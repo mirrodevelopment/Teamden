@@ -29,7 +29,7 @@ Comprehensive developer reference document detailing database connection paramet
 | **Port** | `5432` | — |
 | **Database Name** | `teamden` | — |
 | **Username** | `postgres` | `DB_USERNAME` |
-| **Password** | `crazy@8` | `DB_PASSWORD` |
+| **Password** | `[Configured via DB_PASSWORD]` | `DB_PASSWORD` |
 | **JDBC URL** | `jdbc:postgresql://localhost:5432/teamden` | `DB_URL` |
 | **Driver Class** | `org.postgresql.Driver` | — |
 | **Connection Pool** | HikariCP (Max: 10, Min Idle: 2) | — |
@@ -37,7 +37,7 @@ Comprehensive developer reference document detailing database connection paramet
 ### Direct Connection via PSQL
 Run from PowerShell:
 ```powershell
-$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -U postgres -d teamden
+$env:PGPASSWORD=$env:DB_PASSWORD; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -U postgres -d teamden
 ```
 
 ---
@@ -184,33 +184,26 @@ Flyway migration tracking table.
 
 ## 4. Active Users & Accounts
 
-### 4.1. Live Database Account (Active Owner)
+User accounts and workspaces are provisioned dynamically during registration or company onboarding.
 
-| Field | Value |
-| :--- | :--- |
-| **Email** | `sivasurya.official.8@gmail.com` |
-| **Unhashed Password** | **`Admin@123`** |
-| **Full Name** | `SIVASURYA S` |
-| **Role** | `OWNER` (Executive Workspace Owner) |
-| **Organization Name** | `siva` |
-| **Organization ID** | `6a6ed829-7154-4a7d-b3a8-3fb104035b69` |
-| **User ID** | `86d8385a-440e-4bfc-acbf-dff2d7d86510` |
-| **Status** | `ACTIVE` |
-| **Attendance Status** | **Exempt** (Owners do not require punch-in) |
+### 4.1. Account Provisioning & Roles
+- **OWNER**: Provisioned during initial workspace setup (`/api/setup/register-company`).
+- **MEMBER / ADMIN / VIEWER**: Invited to organizations via membership records.
+- **Attendance Tracking**: Owners are exempt; all members have daily punch-in/out records.
 
 ### 4.2. Creating / Resetting Passwords via BCrypt
 
 Teamden uses BCrypt with strength 12. To generate a hash directly in Java:
 ```java
 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-String hash = encoder.encode("Admin@123");
+String hash = encoder.encode("<raw_password>");
 ```
 Or via SQL update if needing to reset an account directly:
 ```sql
--- Sets password to "Admin@123" (BCrypt 12 rounds)
+-- Sets password hash for target user
 UPDATE users 
-SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' 
-WHERE email = 'sivasurya.official.8@gmail.com';
+SET password_hash = '<bcrypt_12_hash>' 
+WHERE email = '<target_user_email>';
 ```
 
 ---
@@ -234,7 +227,7 @@ POST /api/auth/login
 Content-Type: application/json
 
 {
-  "email": "sivasurya.official.8@gmail.com",
+  "email": "user@example.com",
   "password": "YOUR_PASSWORD"
 }
 ```
@@ -278,7 +271,7 @@ What it does:
 1. Checks PostgreSQL on port 5432 and auto-starts the service if stopped.
 2. Checks port 8080 and frees any lingering zombie processes.
 3. Spawns background health monitor that opens Google Chrome when backend HTTP 200 is confirmed.
-4. Boots Spring Boot with DB password `crazy@8`.
+4. Boots Spring Boot with DB password from environment configuration.
 
 ### 6.2. Maven Build & Test Commands
 Run via the bundled Maven Wrapper:

@@ -34,6 +34,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -85,6 +87,21 @@ public class MultiOrganizationIsolationTest {
     private MockHttpSession sessionAlpha;
     private MockHttpSession sessionBeta;
 
+    private String alphaOrgName;
+    private String alphaFullName;
+    private String alphaEmail;
+    private String alphaPassword;
+
+    private String betaOrgName;
+    private String betaFullName;
+    private String betaEmail;
+    private String betaPassword;
+
+    private String projectAlphaName;
+    private String taskAlphaTitle;
+    private String projectBetaName;
+    private String taskBetaTitle;
+
     @BeforeEach
     void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -98,16 +115,33 @@ public class MultiOrganizationIsolationTest {
         userRepository.deleteAll();
         organizationRepository.deleteAll();
 
+        String suffixAlpha = UUID.randomUUID().toString().substring(0, 8);
+        alphaOrgName = "Org Alpha " + suffixAlpha;
+        alphaFullName = "User Alpha " + suffixAlpha;
+        alphaEmail = "alpha_" + suffixAlpha + "@testisolation.org";
+        alphaPassword = "AlphaPwd" + suffixAlpha + "!";
+
+        String suffixBeta = UUID.randomUUID().toString().substring(0, 8);
+        betaOrgName = "Org Beta " + suffixBeta;
+        betaFullName = "User Beta " + suffixBeta;
+        betaEmail = "beta_" + suffixBeta + "@testisolation.org";
+        betaPassword = "BetaPwd" + suffixBeta + "!";
+
+        projectAlphaName = "Project Alpha " + suffixAlpha;
+        taskAlphaTitle = "Task Alpha " + suffixAlpha;
+        projectBetaName = "Project Beta " + suffixBeta;
+        taskBetaTitle = "Task Beta " + suffixBeta;
+
         // 1. Create Organization Alpha & User Alpha
         orgAlpha = organizationRepository.save(Organization.builder()
-                .name("Alpha Corp")
+                .name(alphaOrgName)
                 .status(OrganizationStatus.ACTIVE)
                 .build());
 
         userAlpha = userRepository.save(User.builder()
-                .fullName("Alice Alpha")
-                .email("alice@alpha.com")
-                .passwordHash(passwordEncoder.encode("AlphaPassword123!"))
+                .fullName(alphaFullName)
+                .email(alphaEmail)
+                .passwordHash(passwordEncoder.encode(alphaPassword))
                 .status(UserStatus.ACTIVE)
                 .build());
 
@@ -120,14 +154,14 @@ public class MultiOrganizationIsolationTest {
 
         // 2. Create Organization Beta & User Beta
         orgBeta = organizationRepository.save(Organization.builder()
-                .name("Beta Logistics")
+                .name(betaOrgName)
                 .status(OrganizationStatus.ACTIVE)
                 .build());
 
         userBeta = userRepository.save(User.builder()
-                .fullName("Bob Beta")
-                .email("bob@beta.com")
-                .passwordHash(passwordEncoder.encode("BetaPassword123!"))
+                .fullName(betaFullName)
+                .email(betaEmail)
+                .passwordHash(passwordEncoder.encode(betaPassword))
                 .status(UserStatus.ACTIVE)
                 .build());
 
@@ -142,7 +176,7 @@ public class MultiOrganizationIsolationTest {
         projectAlpha = projectRepository.save(Project.builder()
                 .organization(orgAlpha)
                 .owner(userAlpha)
-                .name("Project Alpha Confidential")
+                .name(projectAlphaName)
                 .status(ProjectStatus.ACTIVE)
                 .build());
 
@@ -151,7 +185,7 @@ public class MultiOrganizationIsolationTest {
                 .project(projectAlpha)
                 .creator(userAlpha)
                 .assignee(userAlpha)
-                .title("Alpha Secret Task")
+                .title(taskAlphaTitle)
                 .priority(TaskPriority.HIGH)
                 .status(TaskStatus.IN_PROGRESS)
                 .build());
@@ -160,7 +194,7 @@ public class MultiOrganizationIsolationTest {
         projectBeta = projectRepository.save(Project.builder()
                 .organization(orgBeta)
                 .owner(userBeta)
-                .name("Project Beta Internal")
+                .name(projectBetaName)
                 .status(ProjectStatus.ACTIVE)
                 .build());
 
@@ -169,7 +203,7 @@ public class MultiOrganizationIsolationTest {
                 .project(projectBeta)
                 .creator(userBeta)
                 .assignee(userBeta)
-                .title("Beta Secret Task")
+                .title(taskBetaTitle)
                 .priority(TaskPriority.MEDIUM)
                 .status(TaskStatus.TODO)
                 .build());
@@ -177,7 +211,7 @@ public class MultiOrganizationIsolationTest {
         // Login as User Alpha
         MvcResult resAlpha = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"alice@alpha.com\",\"password\":\"AlphaPassword123!\"}"))
+                        .content("{\"email\":\"" + alphaEmail + "\",\"password\":\"" + alphaPassword + "\"}"))
                 .andExpect(status().isOk())
                 .andReturn();
         sessionAlpha = (MockHttpSession) resAlpha.getRequest().getSession(false);
@@ -185,7 +219,7 @@ public class MultiOrganizationIsolationTest {
         // Login as User Beta
         MvcResult resBeta = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"bob@beta.com\",\"password\":\"BetaPassword123!\"}"))
+                        .content("{\"email\":\"" + betaEmail + "\",\"password\":\"" + betaPassword + "\"}"))
                 .andExpect(status().isOk())
                 .andReturn();
         sessionBeta = (MockHttpSession) resBeta.getRequest().getSession(false);
@@ -196,13 +230,13 @@ public class MultiOrganizationIsolationTest {
     void testUserAlphaIsolation() throws Exception {
         mockMvc.perform(get("/api/dashboard/summary").session(sessionAlpha))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.userProfile.activeOrganizationName").value("Alpha Corp"))
+                .andExpect(jsonPath("$.data.userProfile.activeOrganizationName").value(alphaOrgName))
                 .andExpect(jsonPath("$.data.kpis.activeProjects").value(1))
                 .andExpect(jsonPath("$.data.kpis.openTasks").value(1))
                 .andExpect(jsonPath("$.data.projects", hasSize(1)))
-                .andExpect(jsonPath("$.data.projects[0].name").value("Project Alpha Confidential"))
+                .andExpect(jsonPath("$.data.projects[0].name").value(projectAlphaName))
                 .andExpect(jsonPath("$.data.myTasks", hasSize(1)))
-                .andExpect(jsonPath("$.data.myTasks[0].title").value("Alpha Secret Task"));
+                .andExpect(jsonPath("$.data.myTasks[0].title").value(taskAlphaTitle));
     }
 
     @Test
@@ -210,13 +244,13 @@ public class MultiOrganizationIsolationTest {
     void testUserBetaIsolation() throws Exception {
         mockMvc.perform(get("/api/dashboard/summary").session(sessionBeta))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.userProfile.activeOrganizationName").value("Beta Logistics"))
+                .andExpect(jsonPath("$.data.userProfile.activeOrganizationName").value(betaOrgName))
                 .andExpect(jsonPath("$.data.kpis.activeProjects").value(1))
                 .andExpect(jsonPath("$.data.kpis.openTasks").value(1))
                 .andExpect(jsonPath("$.data.projects", hasSize(1)))
-                .andExpect(jsonPath("$.data.projects[0].name").value("Project Beta Internal"))
+                .andExpect(jsonPath("$.data.projects[0].name").value(projectBetaName))
                 .andExpect(jsonPath("$.data.myTasks", hasSize(1)))
-                .andExpect(jsonPath("$.data.myTasks[0].title").value("Beta Secret Task"));
+                .andExpect(jsonPath("$.data.myTasks[0].title").value(taskBetaTitle));
     }
 
     @Test

@@ -189,10 +189,7 @@ public class DevPortalService {
             String orgName = rs.getString("org_name");
             UUID orgId = (UUID) rs.getObject("org_id");
 
-            String passwordNote = "Admin@123";
-            if (email != null && !email.toLowerCase().contains("sivasurya")) {
-                passwordNote = "Set at company registration";
-            }
+            String passwordNote = "Configured during account registration / provisioning";
 
             return DevUserDto.builder()
                     .id(id)

@@ -96,7 +96,7 @@
             <div class="kv-item"><span class="kv-key">Product & Engine</span><span class="kv-val" id="ov-db-engine">PostgreSQL 17</span></div>
             <div class="kv-item"><span class="kv-key">Total Schema Tables</span><span class="kv-val" id="ov-table-count">...</span></div>
             <div class="kv-item"><span class="kv-key">Username</span><span class="kv-val">postgres</span></div>
-            <div class="kv-item"><span class="kv-key">Password</span><span class="kv-val">crazy@8</span></div>
+            <div class="kv-item"><span class="kv-key">Password</span><span class="kv-val text-muted">[Configured via DB_PASSWORD]</span></div>
             <div class="kv-item"><span class="kv-key">Driver</span><span class="kv-val">org.postgresql.Driver</span></div>
           </div>
 
@@ -111,7 +111,7 @@
           <div>
             <span class="snippet-label">PowerShell Direct PSQL Connect:</span>
             <div class="code-box">
-              <span class="code-text" id="psql-cmd">$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -h 127.0.0.1 -U postgres -d teamden</span>
+              <span class="code-text" id="psql-cmd">$env:PGPASSWORD=$env:DB_PASSWORD; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -h 127.0.0.1 -U postgres -d teamden</span>
               <button class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
             </div>
           </div>
@@ -194,9 +194,9 @@
         </div>
 
         <div>
-          <span class="snippet-label">Reset Password to Admin@123 SQL Snippet:</span>
+          <span class="snippet-label">Reset User Password Template SQL:</span>
           <div class="code-box">
-            <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
+            <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '&lt;bcrypt_12_hash&gt;' WHERE email = '&lt;target_email&gt;';</span>
             <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
           </div>
         </div>
@@ -665,7 +665,7 @@
               <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val">${escapeHtml(u.email || '—')}</span></div>
               <div class="kv-item kv-item-highlight">
                 <span class="kv-key kv-key-highlight">Unhashed Password</span>
-                <span class="kv-val kv-val-highlight">${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}</span>
+                <span class="kv-val kv-val-highlight">${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}</span>
               </div>
               <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">${escapeHtml(u.role || 'MEMBER')}</span></div>
               <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">${escapeHtml(u.organizationName || 'None')}</span></div>
@@ -683,8 +683,8 @@
             <div>
               <span class="snippet-label-highlight">Copy Password:</span>
               <div class="code-box code-box-highlight">
-                <span class="code-text code-text-highlight">${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}</span>
-                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}')">Copy</button>
+                <span class="code-text code-text-highlight">${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}</span>
+                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}')">Copy</button>
               </div>
             </div>
           </div>
