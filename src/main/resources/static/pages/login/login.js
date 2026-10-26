@@ -117,6 +117,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     setAuthMode('register');
   }
 
+  // Pre-fill email from query parameter (e.g., from Developer Portal)
+  const prefillEmail = urlParams.get('email');
+  if (prefillEmail && emailInput) {
+    emailInput.value = decodeURIComponent(prefillEmail);
+    if (passwordInput) {
+      setTimeout(() => passwordInput.focus(), 100);
+    }
+  }
+
   // Theme toggle on login screen
   const loginThemeBtn = document.getElementById('login-theme-btn');
   if (loginThemeBtn) {

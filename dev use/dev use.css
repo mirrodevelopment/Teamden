@@ -1279,3 +1279,74 @@ table.data-table tr:hover td {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   USER CARD LOGIN ACTIONS
+   ========================================================================== */
+.user-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.btn-login-as {
+  flex: 1;
+  background: var(--color-primary);
+  color: var(--color-bg-body) !important;
+  border: 1px solid var(--color-primary);
+  font-family: 'Montserrat' !important;
+  font-size: 0.76rem;
+  font-weight: var(--font-weight-bold);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-login-as:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] .btn-login-as {
+  background: #111827;
+  color: #FFFFFF !important;
+  border-color: #111827;
+}
+
+[data-theme="light"] .btn-login-as:hover {
+  background: #1F2937;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-prefill-login {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-body);
+  border: 1px solid var(--color-border);
+  font-family: 'Montserrat' !important;
+  font-size: 0.76rem;
+  font-weight: var(--font-weight-semibold);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-prefill-login:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card-hover);
+  color: var(--color-primary);
+}

@@ -850,12 +850,43 @@
                 <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}')">Copy</button>
               </div>
             </div>
+
+            <div class="user-card-actions">
+              <button class="btn-login-as" onclick="loginAsUser('${escapeHtml(u.id)}', '${escapeHtml(u.fullName || 'User')}')" title="Authenticate and open workspace immediately as this user">
+                <span>🚀</span> One-Click Login
+              </button>
+              <a href="/pages/login/login.html?email=${encodeURIComponent(u.email || '')}" target="_blank" class="btn-prefill-login" title="Open Login desk with this email pre-filled">
+                <span>🔑</span> Login Page ↗
+              </a>
+            </div>
           </div>
         `;}).join('');
 
       } catch (err) {
         console.error('Error fetching users from DB', err);
         container.innerHTML = `<div class="card py-4 text-center" style="grid-column: 1 / -1; color: var(--color-danger);">Failed to load users from DB: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    async function loginAsUser(userId, name) {
+      showToast(`Signing in as ${name}...`);
+      try {
+        const res = await fetch(`${API_BASE}/api/dev/login-as/${encodeURIComponent(userId)}`, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          credentials: 'include'
+        });
+        if (!res.ok) {
+          const errJson = await res.json().catch(() => ({}));
+          throw new Error(errJson.message || `HTTP ${res.status}`);
+        }
+        showToast(`Signed in as ${name}! Opening Dashboard...`);
+        setTimeout(() => {
+          window.open('/pages/dashboard/dashboard.html', '_blank');
+        }, 500);
+      } catch (err) {
+        showToast(`Login failed: ${err.message}`);
+        console.error('Error logging in as user', err);
       }
     }
 

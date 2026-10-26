@@ -1,15 +1,30 @@
 package com.shed.teamden.dev.service;
 
+import com.shed.teamden.auth.dto.AuthResponse;
+import com.shed.teamden.auth.dto.UserProfileDto;
 import com.shed.teamden.dev.dto.ColumnMetadataDto;
 import com.shed.teamden.dev.dto.DevOverviewDto;
 import com.shed.teamden.dev.dto.DevUserDto;
 import com.shed.teamden.dev.dto.TableDataDto;
 import com.shed.teamden.dev.dto.TableMetadataDto;
+import com.shed.teamden.security.CustomUserDetails;
+import com.shed.teamden.security.CustomUserDetailsService;
+import com.shed.teamden.user.entity.User;
+import com.shed.teamden.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -27,6 +42,9 @@ public class DevPortalService {
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityContextRepository securityContextRepository;
 
     public List<String> getPublicTableNames() {
         String sql = "SELECT table_name FROM information_schema.tables " +
@@ -277,7 +295,7 @@ public class DevPortalService {
     }
 
     public List<DevUserDto> getDevUsers() {
-        String sql = "SELECT u.id, u.full_name, u.email, u.status, u.created_at, u.last_login_at, " +
+        String sql = "SELECT u.id, u.full_name, u.email, u.password_hash, u.status, u.created_at, u.last_login_at, " +
                      "m.role, o.name AS org_name, o.id AS org_id " +
                      "FROM users u " +
                      "LEFT JOIN organization_memberships m ON u.id = m.user_id " +
@@ -288,6 +306,7 @@ public class DevPortalService {
             UUID id = (UUID) rs.getObject("id");
             String fullName = rs.getString("full_name");
             String email = rs.getString("email");
+            String hash = rs.getString("password_hash");
             String status = rs.getString("status");
             Timestamp createdAtTs = rs.getTimestamp("created_at");
             Timestamp lastLoginTs = rs.getTimestamp("last_login_at");
@@ -296,6 +315,12 @@ public class DevPortalService {
             UUID orgId = (UUID) rs.getObject("org_id");
 
             String passwordNote = "Configured during account registration / provisioning";
+            if (hash != null) {
+                String decrypted = decryptPasswordHash(hash);
+                if (decrypted != null) {
+                    passwordNote = decrypted;
+                }
+            }
 
             return DevUserDto.builder()
                     .id(id)
@@ -310,6 +335,48 @@ public class DevPortalService {
                     .unhashedPasswordNote(passwordNote)
                     .build();
         });
+    }
+
+    @Transactional
+    public AuthResponse loginAsUser(UUID userId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, httpRequest, httpResponse);
+
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
+
+        CustomUserDetails cud = (CustomUserDetails) userDetails;
+
+        UserProfileDto profile = UserProfileDto.builder()
+                .id(cud.getId())
+                .fullName(cud.getFullName())
+                .email(cud.getEmail())
+                .status(cud.getStatus())
+                .activeOrganizationId(cud.getActiveOrganizationId())
+                .activeOrganizationName(cud.getActiveOrganizationName())
+                .role(cud.getActiveRole())
+                .initials(UserProfileDto.computeInitials(cud.getFullName()))
+                .build();
+
+        log.info("Developer portal login-as successful: user {} ({})", user.getId(), user.getEmail());
+
+        return AuthResponse.builder()
+                .authenticated(true)
+                .user(profile)
+                .build();
     }
 
     public DevOverviewDto getDevOverview() {

@@ -1,16 +1,20 @@
 package com.shed.teamden.dev.controller;
 
+import com.shed.teamden.auth.dto.AuthResponse;
 import com.shed.teamden.common.response.ApiResponse;
 import com.shed.teamden.dev.dto.DevOverviewDto;
 import com.shed.teamden.dev.dto.DevUserDto;
 import com.shed.teamden.dev.dto.TableDataDto;
 import com.shed.teamden.dev.dto.TableMetadataDto;
 import com.shed.teamden.dev.service.DevPortalService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/dev")
@@ -36,6 +40,16 @@ public class DevPortalController {
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<DevUserDto>>> getDevUsers() {
         return ResponseEntity.ok(ApiResponse.success("Developer user accounts retrieved successfully", devPortalService.getDevUsers()));
+    }
+
+    @PostMapping("/login-as/{userId}")
+    public ResponseEntity<ApiResponse<AuthResponse>> loginAsUser(
+            @PathVariable UUID userId,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        AuthResponse authResponse = devPortalService.loginAsUser(userId, request, response);
+        return ResponseEntity.ok(ApiResponse.success("Authenticated successfully as " + authResponse.getUser().getFullName(), authResponse));
     }
 
     @GetMapping("/overview")

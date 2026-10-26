@@ -36,6 +36,9 @@ public class DevPortalIntegrationTest {
                 .andExpect(jsonPath("$.data").isArray());
     }
 
+    @Autowired
+    private com.shed.teamden.user.repository.UserRepository userRepository;
+
     @Test
     @DisplayName("Should successfully retrieve dev users and database overview")
     void testGetUsersAndOverview() throws Exception {
@@ -51,5 +54,22 @@ public class DevPortalIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.status").value("CONNECTED"));
+    }
+
+    @Test
+    @DisplayName("Should test dev login-as endpoint")
+    void testLoginAsUserEndpoint() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
+        java.util.List<com.shed.teamden.user.entity.User> users = userRepository.findAll();
+        if (!users.isEmpty()) {
+            java.util.UUID userId = users.get(0).getId();
+            mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/dev/login-as/" + userId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.success").value(true))
+                    .andExpect(jsonPath("$.data.authenticated").value(true));
+        }
     }
 }
