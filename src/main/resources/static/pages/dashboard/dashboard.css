@@ -139,31 +139,30 @@ aside.dash-sidebar::-webkit-scrollbar {
   overflow: hidden;
 }
 
-.dash-brand-name {
-  font-size: 1.75rem;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--dash-text-main);
-  line-height: 1;
-  white-space: nowrap;
+.dash-brand-logo-img {
+  height: 34px;
+  max-width: 140px;
+  object-fit: contain;
+  display: block;
   transition: opacity 0.2s ease;
 }
 
-.dash-brand-collapsed-badge {
+.dash-brand-icon-img {
   display: none;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: var(--dash-text-main);
-  color: var(--dash-card-bg);
-  font-family: 'Montserrat' !important;
-  font-weight: 900;
-  font-size: 1.25rem;
-  align-items: center;
-  justify-content: center;
-  text-transform: lowercase;
-  user-select: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+[data-theme="black-and-white"] .dash-brand-logo-img,
+[data-theme="dark"] .dash-brand-logo-img {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="black-and-white"] .dash-brand-icon-img,
+[data-theme="dark"] .dash-brand-icon-img {
+  filter: brightness(1.1);
 }
 
 .dash-sidebar-toggle-btn {
@@ -1667,9 +1666,15 @@ html.dash-sidebar-collapsed .dash-brand {
   padding: 0;
 }
 
-body.dash-sidebar-collapsed .dash-brand-collapsed-badge,
-html.dash-sidebar-collapsed .dash-brand-collapsed-badge {
-  display: flex !important;
+body.dash-sidebar-collapsed .dash-brand-logo-img,
+html.dash-sidebar-collapsed .dash-brand-logo-img {
+  display: none !important;
+}
+
+body.dash-sidebar-collapsed .dash-brand-icon-img,
+html.dash-sidebar-collapsed .dash-brand-icon-img {
+  display: block !important;
+  margin: 0 auto;
 }
 
 body.dash-sidebar-collapsed .dash-sidebar-header-row,
