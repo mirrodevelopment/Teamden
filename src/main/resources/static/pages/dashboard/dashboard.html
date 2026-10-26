@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Teamden by shed</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+
+  <!-- Core Design System & Fragments CSS -->
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="/shared/css/components.css">
+  <link rel="stylesheet" href="/shared/css/utilities.css">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css">
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css">
+  <link rel="stylesheet" href="/pages/dashboard/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- App Sidebar Fragment Container -->
+  <div id="sidebar-container"></div>
+
+  <!-- Main Shell Wrapper -->
+  <div class="app-layout">
+    <!-- App Topbar Fragment Container -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main" id="dashboard-main" role="main">
+      <div class="dashboard-container">
+
+        <!-- Welcome Banner Section -->
+        <section class="welcome-header" aria-labelledby="welcome-heading">
+          <div class="welcome-text-group">
+            <h1 class="welcome-heading" id="welcome-heading">Welcome back!</h1>
+            <p class="welcome-sub" id="welcome-sub">
+              Workspace: <strong id="welcome-org">Loading...</strong> · <span id="welcome-date">Today</span>
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="welcome-actions">
+            <button class="btn btn-outline" id="quick-action-punch-btn">
+              <span id="quick-punch-icon">⏱️</span>
+              <span id="quick-punch-text">Punch In</span>
+            </button>
+            <button class="btn btn-secondary" id="open-create-project-modal-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              New Project
+            </button>
+            <button class="btn btn-primary" id="open-create-task-modal-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Create Task
+            </button>
+          </div>
+        </section>
+
+        <!-- KPI Metrics Grid -->
+        <section class="kpi-grid" aria-label="Key Performance Indicators">
+          <div class="kpi-card" id="kpi-card-projects">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Projects</span>
+              <div class="kpi-icon-badge kpi-icon-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-active-projects">0</div>
+            <div class="kpi-caption">Active or in planning status</div>
+          </div>
+
+          <div class="kpi-card" id="kpi-card-tasks">
+            <div class="kpi-header">
+              <span class="kpi-title">Open Tasks</span>
+              <div class="kpi-icon-badge kpi-icon-amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-open-tasks">0</div>
+            <div class="kpi-caption">To do, in progress or review</div>
+          </div>
+
+          <div class="kpi-card" id="kpi-card-completed">
+            <div class="kpi-header">
+              <span class="kpi-title">Completed This Week</span>
+              <div class="kpi-icon-badge kpi-icon-emerald">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-completed-tasks">0</div>
+            <div class="kpi-caption">Completed since Monday</div>
+          </div>
+
+          <div class="kpi-card" id="kpi-card-attendance">
+            <div class="kpi-header">
+              <span class="kpi-title">Present Today</span>
+              <div class="kpi-icon-badge kpi-icon-indigo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-present-today">0</div>
+            <div class="kpi-caption">Checked in team members</div>
+          </div>
+        </section>
+
+        <!-- Two Column Main Grid -->
+        <div class="dashboard-content-grid">
+          
+          <!-- Left Column: Tasks & Projects -->
+          <div class="grid-col-primary">
+            
+            <!-- My Tasks Card -->
+            <section class="card content-section" id="my-tasks-section" aria-labelledby="my-tasks-title">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title" id="my-tasks-title">My Assigned Tasks</h2>
+                  <span class="card-subtitle">Tasks assigned to you in this workspace</span>
+                </div>
+                <button class="btn btn-sm btn-outline" id="section-new-task-btn">+ Add Task</button>
+              </div>
+              <div class="card-body no-padding">
+                <div class="table-responsive">
+                  <table class="table" id="my-tasks-table">
+                    <thead>
+                      <tr>
+                        <th>Task</th>
+                        <th>Project</th>
+                        <th>Priority</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="my-tasks-tbody">
+                      <tr>
+                        <td colspan="5" class="table-loading-cell">
+                          <div class="spinner"></div> Loading your tasks...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="empty-state" id="my-tasks-empty" style="display: none;">
+                  <div class="empty-state-icon">📋</div>
+                  <h3 class="empty-state-title">No tasks assigned to you</h3>
+                  <p class="empty-state-desc">You are all caught up! Create a new task or take one from the backlog.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Projects Overview Card -->
+            <section class="card content-section" id="projects-section" aria-labelledby="projects-title">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title" id="projects-title">Projects Overview</h2>
+                  <span class="card-subtitle">Active and ongoing workspace projects</span>
+                </div>
+                <button class="btn btn-sm btn-outline" id="section-new-project-btn">+ Add Project</button>
+              </div>
+              <div class="card-body">
+                <div class="projects-list-container" id="projects-list-container">
+                  <div class="text-center py-4 text-secondary">
+                    <div class="spinner"></div> Loading projects...
+                  </div>
+                </div>
+                <div class="empty-state" id="projects-empty" style="display: none;">
+                  <div class="empty-state-icon">📁</div>
+                  <h3 class="empty-state-title">No projects yet</h3>
+                  <p class="empty-state-desc">Create your team's first project to start organizing tasks and tracking progress.</p>
+                </div>
+              </div>
+            </section>
+
+          </div>
+
+          <!-- Right Column: Attendance & Recent Activity -->
+          <div class="grid-col-secondary">
+
+            <!-- Today's Attendance Widget -->
+            <section class="card content-section" id="attendance-section" aria-labelledby="attendance-title">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title" id="attendance-title">Today's Attendance</h2>
+                  <span class="card-subtitle" id="attendance-card-date">Real-time status</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="attendance-status-box">
+                  <div class="attendance-badge-row">
+                    <span class="attendance-label">Your Status:</span>
+                    <span id="attendance-user-status" class="badge badge-neutral">Not Checked In</span>
+                  </div>
+                  <div class="attendance-time-details">
+                    <div class="time-block">
+                      <span class="time-label">Check-in</span>
+                      <span class="time-val" id="attendance-checkin-time">--:--</span>
+                    </div>
+                    <div class="time-block">
+                      <span class="time-label">Check-out</span>
+                      <span class="time-val" id="attendance-checkout-time">--:--</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-block mt-3" id="widget-attendance-toggle-btn">
+                    <span id="widget-punch-icon">⏱️</span>
+                    <span id="widget-punch-text">Check In Now</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Recent Activity Feed -->
+            <section class="card content-section" id="activity-section" aria-labelledby="activity-title">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title" id="activity-title">Recent Activity</h2>
+                  <span class="card-subtitle">Workspace event audit trail</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="activity-feed" id="activity-feed">
+                  <div class="text-center py-4 text-secondary">
+                    <div class="spinner"></div> Loading activity...
+                  </div>
+                </div>
+                <div class="empty-state" id="activity-empty" style="display: none;">
+                  <div class="empty-state-icon">⚡</div>
+                  <h3 class="empty-state-title">No recent activity</h3>
+                  <p class="empty-state-desc">Actions performed across projects and tasks will appear here in real time.</p>
+                </div>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Create Task -->
+  <div class="modal-overlay" id="create-task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="task-modal-title">Create New Task</h3>
+        <button class="modal-close-btn" id="close-task-modal-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="create-task-form">
+        <div class="modal-body">
+          <div class="alert alert-danger" id="create-task-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label for="task-title-input" class="form-label required">Task Title</label>
+            <input type="text" class="form-control" id="task-title-input" required placeholder="e.g., Implement OAuth2 integration">
+          </div>
+
+          <div class="form-group">
+            <label for="task-project-select" class="form-label">Project</label>
+            <select class="form-control" id="task-project-select">
+              <option value="">No Project (General Workspace Task)</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-priority-select" class="form-label">Priority</label>
+              <select class="form-control" id="task-priority-select">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM" selected>Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-due-date-input" class="form-label">Due Date</label>
+              <input type="date" class="form-control" id="task-due-date-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="task-desc-input" class="form-label">Description</label>
+            <textarea class="form-control" id="task-desc-input" rows="3" placeholder="Add any details, checklists, or context..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancel-task-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-task-btn">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Project -->
+  <div class="modal-overlay" id="create-project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="project-modal-title">Create New Project</h3>
+        <button class="modal-close-btn" id="close-project-modal-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="create-project-form">
+        <div class="modal-body">
+          <div class="alert alert-danger" id="create-project-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label for="project-name-input" class="form-label required">Project Name</label>
+            <input type="text" class="form-control" id="project-name-input" required placeholder="e.g., Client Portal Redesign">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="project-start-date-input" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="project-start-date-input">
+            </div>
+
+            <div class="form-group">
+              <label for="project-due-date-input" class="form-label">Due Date</label>
+              <input type="date" class="form-control" id="project-due-date-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="project-desc-input" class="form-label">Description</label>
+            <textarea class="form-control" id="project-desc-input" rows="3" placeholder="Brief objectives, scope, or client info..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancel-project-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-project-btn">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/shared/js/api.js"></script>
+  <script src="/shared/js/auth.js"></script>
+  <script src="/shared/js/ui.js"></script>
+  <script src="/fragments/navbar/navbar.js"></script>
+  <script src="/fragments/sidebar/sidebar.js"></script>
+  <script src="/pages/dashboard/dashboard.js"></script>
+</body>
+</html>

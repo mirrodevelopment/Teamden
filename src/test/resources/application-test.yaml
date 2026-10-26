@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: teamden-test
+
+  datasource:
+    url: jdbc:h2:mem:teamdentest;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    show-sql: false
+
+  flyway:
+    enabled: false # In unit/slice tests, H2 uses create-drop to match entities fast; Flyway migration test tests migrations separately
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        same-site: lax
+        name: TEAMDEN_TEST_SESSION
+
+logging:
+  level:
+    root: INFO
+    com.shed.teamden: DEBUG

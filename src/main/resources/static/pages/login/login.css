@@ -1,0 +1,94 @@
+/* ==========================================================
+   Teamden by shed — Login Page Styles (login.css)
+   ========================================================== */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(circle at 50% 0%, #EFF6FF 0%, #F8FAFC 60%, #F1F5F9 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2563EB, #06B6D4, #3B82F6);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-logo {
+  height: 48px;
+  margin: 0 auto 1.25rem;
+  object-fit: contain;
+}
+
+.login-title {
+  font-size: var(--font-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.375rem;
+}
+
+.login-subtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-muted);
+}
+
+.login-footer {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.setup-notice {
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-info-border);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setup-notice-content strong {
+  color: var(--color-primary);
+  font-size: var(--font-sm);
+}
+
+.setup-notice-content p {
+  color: var(--color-text-body);
+  font-size: var(--font-xs);
+  margin-top: 0.125rem;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 2rem 1.25rem;
+    box-shadow: var(--shadow-md);
+  }
+}
