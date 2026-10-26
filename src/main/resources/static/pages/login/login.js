@@ -80,8 +80,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (registerCompanyForm) registerCompanyForm.classList.add('d-none');
       if (form) form.classList.remove('d-none');
-      if (authMainTitle) authMainTitle.textContent = 'Sign in to Teamden';
-      if (authMainSubtitle) authMainSubtitle.textContent = 'All-in-one team and work management workspace';
+      const compName = (typeof Company === 'function' ? Company('displayName') : 'Teamden');
+      const compTagline = (typeof Company === 'function' ? Company('tagline') : 'All-in-one team and work management workspace');
+      if (authMainTitle) authMainTitle.textContent = `Sign in to ${compName}`;
+      if (authMainSubtitle) authMainSubtitle.textContent = compTagline;
       if (emailInput) emailInput.focus();
     }
   }

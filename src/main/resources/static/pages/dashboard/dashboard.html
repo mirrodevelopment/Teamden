@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
   <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/pages/dashboard/dashboard.css">
+  <script src="/fragments/company-data/company-data.js"></script>
 </head>
 
 <body class="dashboard-body">
@@ -30,7 +31,7 @@
     <div class="sidebar-top">
       <!-- Brand Logo -->
       <a href="/pages/dashboard/dashboard.html" class="dash-brand">
-        <span class="dash-brand-name">brick</span>
+        <span class="dash-brand-name" data-company="name">teamden</span>
       </a>
 
       <!-- Workspace Selector -->
@@ -90,7 +91,8 @@
         <div class="dash-pinned-list">
           <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Website Redesign</span></a>
           <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Brand Guidelines</span></a>
-          <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Client Onboarding</span></a>
+          <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Client
+              Onboarding</span></a>
           <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Marketing</span></a>
           <a href="#" class="dash-pinned-item"><span class="dash-pinned-icon">📄</span><span>Product Roadmap</span></a>
         </div>
@@ -103,7 +105,8 @@
         <span class="dash-nav-icon">⚙</span>
         <span>Settings</span>
       </a>
-      <a href="#help" class="dash-nav-item" id="nav-help">
+      <a href="mailto:teamden@gmil.com" data-company="mail" class="dash-nav-item" id="nav-help"
+        title="Email Teamden Support">
         <span class="dash-nav-icon">❓</span>
         <span>Help & Support</span>
       </a>
@@ -161,7 +164,8 @@
 
         <!-- User Profile Avatar -->
         <div class="dash-avatar-wrapper" id="user-profile-wrapper" title="User Profile">
-          <img src="/assets/avatar.jpg" alt="Profile" class="dash-user-avatar" id="topbar-user-avatar" onerror="this.onerror=null; this.src='/assets/icon.png';">
+          <img src="/assets/avatar.jpg" alt="Profile" class="dash-user-avatar" id="topbar-user-avatar"
+            onerror="this.onerror=null; this.src='/assets/icon.png';">
         </div>
       </div>
     </header>
@@ -393,7 +397,8 @@
           <div class="dash-section-header">
             <div class="activity-header-group">
               <span class="dash-section-title">RECENT ACTIVITY</span>
-              <span class="activity-subtitle" id="activity-date-subtitle">LATEST MOVEMENTS &nbsp;/&nbsp; SUN, 25 OCT 2026</span>
+              <span class="activity-subtitle" id="activity-date-subtitle">LATEST MOVEMENTS &nbsp;/&nbsp; SUN, 25 OCT
+                2026</span>
             </div>
             <a href="#" class="dash-section-link">View all &nbsp;→</a>
           </div>
@@ -648,7 +653,8 @@
       <form id="create-task-form">
         <div class="form-group">
           <label class="form-label" for="task-title-input">Task Title</label>
-          <input type="text" class="form-control" id="task-title-input" placeholder="e.g. Finalise the website service card" required>
+          <input type="text" class="form-control" id="task-title-input"
+            placeholder="e.g. Finalise the website service card" required>
         </div>
 
         <div class="form-group">
@@ -678,7 +684,8 @@
 
         <div class="form-group">
           <label class="form-label" for="task-desc-input">Description</label>
-          <textarea class="form-control" id="task-desc-input" rows="3" placeholder="Update the content, refine the visuals and get approval from the client."></textarea>
+          <textarea class="form-control" id="task-desc-input" rows="3"
+            placeholder="Update the content, refine the visuals and get approval from the client."></textarea>
         </div>
 
         <div class="modal-footer">
@@ -711,7 +718,8 @@
 
         <div class="form-group">
           <label class="form-label" for="project-desc-input">Description</label>
-          <textarea class="form-control" id="project-desc-input" rows="3" placeholder="Project overview, goals, or client details..."></textarea>
+          <textarea class="form-control" id="project-desc-input" rows="3"
+            placeholder="Project overview, goals, or client details..."></textarea>
         </div>
 
         <div class="modal-footer">

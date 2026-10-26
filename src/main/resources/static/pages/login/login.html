@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/shared/css/components.css">
   <link rel="stylesheet" href="/shared/css/utilities.css">
   <link rel="stylesheet" href="/pages/login/login.css">
+  <script src="/fragments/company-data/company-data.js"></script>
 </head>
 <body>
 
@@ -35,9 +36,9 @@
 
       <!-- Header & Branding -->
       <header class="login-header">
-        <img src="/assets/logo.png" alt="Teamden by shed Logo" class="login-logo">
-        <h1 class="login-title" id="auth-main-title">Sign in to Teamden</h1>
-        <p class="login-subtitle" id="auth-main-subtitle">All-in-one team and work management workspace</p>
+        <img src="/assets/logo.png" alt="Teamden Logo" class="login-logo">
+        <h1 class="login-title" id="auth-main-title">Sign in to <span data-company="displayName">Teamden</span></h1>
+        <p class="login-subtitle" id="auth-main-subtitle" data-company="tagline">All-in-one team and work management workspace</p>
       </header>
 
       <!-- Segmented Auth Mode Switcher -->
@@ -217,7 +218,8 @@
 
       <footer class="login-footer">
         <p class="text-xs text-muted">
-          Protected by enterprise-grade security and least-privilege scoping.
+          <span data-company="copyright">© 2026 Teamden. All rights reserved.</span> ·
+          Need help? <a href="#" data-company="mail" class="text-primary">teamden@gmil.com</a>
         </p>
       </footer>
     </div>
