@@ -198,17 +198,7 @@ Flyway migration tracking table.
 | **Status** | `ACTIVE` |
 | **Attendance Status** | **Exempt** (Owners do not require punch-in) |
 
-### 4.2. Standard Integration Test Accounts
-
-Used in `AuthenticationIntegrationTest.java` and `MultiOrganizationIsolationTest.java`:
-
-| Email | Unhashed Password | Role | Organization |
-| :--- | :--- | :--- | :--- |
-| `alex@acme.com` | `SecurePass123!` | `OWNER` | Acme Services |
-| `sarah@acme.com` | `SecurePass123!` | `ADMIN` | Acme Services |
-| `dev@acme.com` | `SecurePass123!` | `MEMBER` | Acme Services |
-
-### 4.3. Creating / Resetting Passwords via BCrypt
+### 4.2. Creating / Resetting Passwords via BCrypt
 
 Teamden uses BCrypt with strength 12. To generate a hash directly in Java:
 ```java

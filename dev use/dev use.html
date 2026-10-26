@@ -323,7 +323,7 @@
     <section class="section-block" id="tab-users">
       <div class="section-header">
         <h2>Users, Credentials & Passwords</h2>
-        <p>Active live database accounts and test suites authentication data.</p>
+        <p>Active live database credentials and authenticated account access.</p>
       </div>
 
       <div class="grid-2">
@@ -362,30 +362,32 @@
           </div>
         </div>
 
-        <!-- Standard Test Accounts -->
+        <!-- Security & Database Operations -->
         <div class="card">
           <div class="card-title">
-            <span>🧪 Standard Test Accounts</span>
-            <span class="quick-pill">Integration Tests</span>
+            <span>🔐 Authentication & Database Tools</span>
+            <span class="quick-pill">BCrypt 12 Rounds</span>
           </div>
-          <div class="table-container mt-0">
-            <table class="data-table">
-              <thead>
-                <tr><th>Email</th><th>Password</th><th>Role</th></tr>
-              </thead>
-              <tbody>
-                <tr><td><code>alex@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-pk">OWNER</span></td></tr>
-                <tr><td><code>sarah@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-fk">ADMIN</span></td></tr>
-                <tr><td><code>dev@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-uk">MEMBER</span></td></tr>
-              </tbody>
-            </table>
+
+          <div class="kv-list">
+            <div class="kv-item"><span class="kv-key">Hash Algorithm</span><span class="kv-val">BCrypt (Cost Factor 12)</span></div>
+            <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly)</span></div>
+            <div class="kv-item"><span class="kv-key">CSRF Protection</span><span class="kv-val">XSRF-TOKEN (Cookie + Header)</span></div>
           </div>
 
           <div>
-            <span class="snippet-label">Reset Password to Admin@123 SQL Snippet (BCrypt 12 rounds):</span>
+            <span class="snippet-label">Reset Password to Admin@123 SQL Snippet:</span>
             <div class="code-box">
               <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
               <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <span class="snippet-label">Verify Active Users & Memberships SQL:</span>
+            <div class="code-box">
+              <span class="code-text" id="verify-users-sql">SELECT u.email, u.full_name, m.role, o.name AS org_name FROM users u JOIN organization_memberships m ON u.id = m.user_id JOIN organizations o ON m.organization_id = o.id;</span>
+              <button class="copy-btn" onclick="copySnippet('verify-users-sql')">Copy</button>
             </div>
           </div>
         </div>
