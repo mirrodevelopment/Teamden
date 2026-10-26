@@ -101,9 +101,14 @@ aside.dash-sidebar {
   top: 0;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
   z-index: 50;
-  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color var(--transition-normal),
+              border-color var(--transition-normal);
 }
 
 aside.dash-sidebar::-webkit-scrollbar {
@@ -116,7 +121,14 @@ aside.dash-sidebar::-webkit-scrollbar {
   gap: 1.5rem;
 }
 
-/* Brand Logo */
+/* Brand Logo & Collapse Header Row */
+.dash-sidebar-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .dash-brand {
   display: flex;
   align-items: center;
@@ -124,6 +136,7 @@ aside.dash-sidebar::-webkit-scrollbar {
   text-decoration: none;
   color: var(--dash-text-main);
   padding: 0 0.25rem;
+  overflow: hidden;
 }
 
 .dash-brand-name {
@@ -132,6 +145,46 @@ aside.dash-sidebar::-webkit-scrollbar {
   letter-spacing: -0.05em;
   color: var(--dash-text-main);
   line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.dash-brand-collapsed-badge {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--dash-text-main);
+  color: var(--dash-card-bg);
+  font-family: 'Montserrat' !important;
+  font-weight: 900;
+  font-size: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  text-transform: lowercase;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+.dash-sidebar-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: var(--radius-sm);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dash-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.dash-sidebar-toggle-btn:hover {
+  background: var(--dash-card-subtle);
+  color: var(--dash-text-main);
+  border-color: var(--dash-text-muted);
 }
 
 /* Workspace Selector */
@@ -321,6 +374,35 @@ header.dash-topbar {
   padding: 1.125rem 2rem;
   background-color: transparent;
   gap: 1.5rem;
+}
+
+.dash-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex: 1;
+  max-width: 480px;
+}
+
+.dash-topbar-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: var(--radius-md);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dash-text-body);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.dash-topbar-toggle-btn:hover {
+  background: var(--dash-card-subtle);
+  color: var(--dash-text-main);
+  border-color: var(--dash-text-muted);
 }
 
 .dash-search-container {
@@ -1584,3 +1666,126 @@ header.dash-topbar {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* --------------------------------------------------------------------------
+   COLLAPSIBLE SIDEBAR STATES (Desktop + Mobile)
+   -------------------------------------------------------------------------- */
+body.dash-sidebar-collapsed aside.dash-sidebar,
+html.dash-sidebar-collapsed aside.dash-sidebar {
+  width: 72px;
+  min-width: 72px;
+  padding: 1.5rem 0.5rem;
+}
+
+body.dash-sidebar-collapsed .dash-brand-name,
+body.dash-sidebar-collapsed .dash-workspace-box,
+body.dash-sidebar-collapsed .dash-pinned-section,
+body.dash-sidebar-collapsed .dash-nav-num,
+body.dash-sidebar-collapsed .dash-nav-label,
+html.dash-sidebar-collapsed .dash-brand-name,
+html.dash-sidebar-collapsed .dash-workspace-box,
+html.dash-sidebar-collapsed .dash-pinned-section,
+html.dash-sidebar-collapsed .dash-nav-num,
+html.dash-sidebar-collapsed .dash-nav-label {
+  display: none !important;
+}
+
+body.dash-sidebar-collapsed .dash-brand,
+html.dash-sidebar-collapsed .dash-brand {
+  justify-content: center;
+  padding: 0;
+}
+
+body.dash-sidebar-collapsed .dash-brand-collapsed-badge,
+html.dash-sidebar-collapsed .dash-brand-collapsed-badge {
+  display: flex !important;
+}
+
+body.dash-sidebar-collapsed .dash-sidebar-header-row,
+html.dash-sidebar-collapsed .dash-sidebar-header-row {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+body.dash-sidebar-collapsed .dash-sidebar-toggle-btn svg,
+html.dash-sidebar-collapsed .dash-sidebar-toggle-btn svg {
+  transform: rotate(180deg);
+}
+
+body.dash-sidebar-collapsed .dash-nav-item,
+html.dash-sidebar-collapsed .dash-nav-item {
+  justify-content: center;
+  padding: 0.65rem 0;
+  width: 44px;
+  margin: 0 auto;
+  position: relative;
+}
+
+body.dash-sidebar-collapsed .dash-nav-icon,
+html.dash-sidebar-collapsed .dash-nav-icon {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+/* Floating Tooltip in Collapsed Mode */
+body.dash-sidebar-collapsed .dash-nav-item:hover::after,
+html.dash-sidebar-collapsed .dash-nav-item:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--dash-text-main);
+  color: var(--dash-card-bg);
+  font-family: 'Montserrat' !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 0.35rem 0.625rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 120;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: tooltipFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dash-sidebar-collapsed .dash-nav-item:hover::before,
+html.dash-sidebar-collapsed .dash-nav-item:hover::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 4px solid transparent;
+  border-right-color: var(--dash-text-main);
+  pointer-events: none;
+  z-index: 120;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+/* Mobile responsive drawer */
+@media (max-width: 900px) {
+  aside.dash-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  body.dash-sidebar-mobile-open aside.dash-sidebar {
+    transform: translateX(0);
+  }
+
+  .dash-topbar-toggle-btn {
+    display: flex;
+  }
+}
+

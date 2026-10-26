@@ -20,19 +20,34 @@
   <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/pages/dashboard/dashboard.css">
   <script src="/fragments/company-data/company-data.js"></script>
+  <script>
+    if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+      document.documentElement.classList.add('dash-sidebar-collapsed');
+    }
+  </script>
 </head>
 
 <body class="dashboard-body">
 
   <!-- =========================================================================
-       1. LEFT SIDEBAR (brick)
+       1. LEFT SIDEBAR (collapsible)
        ========================================================================= -->
   <aside class="dash-sidebar" id="dash-sidebar">
     <div class="sidebar-top">
-      <!-- Brand Logo -->
-      <a href="/pages/dashboard/dashboard.html" class="dash-brand">
-        <span class="dash-brand-name" data-company="name">teamden</span>
-      </a>
+      <!-- Brand Logo & Collapse Toggle -->
+      <div class="dash-sidebar-header-row">
+        <a href="/pages/dashboard/dashboard.html" class="dash-brand" title="teamden">
+          <span class="dash-brand-name" data-company="name">teamden</span>
+          <span class="dash-brand-collapsed-badge">t</span>
+        </a>
+        <button class="dash-sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar (Ctrl+[)" aria-label="Toggle Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+            <path d="m14 15-3-3 3-3"></path>
+          </svg>
+        </button>
+      </div>
 
       <!-- Workspace Selector -->
       <div class="dash-workspace-box">
@@ -45,40 +60,40 @@
 
       <!-- Numbered Nav Menu -->
       <nav class="dash-nav-list" aria-label="Main Navigation">
-        <a href="/pages/dashboard/dashboard.html" class="dash-nav-item nav-active" id="nav-today">
+        <a href="/pages/dashboard/dashboard.html" class="dash-nav-item nav-active" id="nav-today" data-tooltip="Today" title="Today">
           <span class="dash-nav-num">01</span>
           <span class="dash-nav-icon">⌂</span>
-          <span>Today</span>
+          <span class="dash-nav-label">Today</span>
         </a>
 
-        <a href="#projects" class="dash-nav-item" id="nav-projects">
+        <a href="#projects" class="dash-nav-item" id="nav-projects" data-tooltip="Projects" title="Projects">
           <span class="dash-nav-num">02</span>
           <span class="dash-nav-icon">📁</span>
-          <span>Projects</span>
+          <span class="dash-nav-label">Projects</span>
         </a>
 
-        <a href="#workspace" class="dash-nav-item" id="nav-workspace">
+        <a href="#workspace" class="dash-nav-item" id="nav-workspace" data-tooltip="Workspace" title="Workspace">
           <span class="dash-nav-num">03</span>
           <span class="dash-nav-icon">⬡</span>
-          <span>Workspace</span>
+          <span class="dash-nav-label">Workspace</span>
         </a>
 
-        <a href="#team" class="dash-nav-item" id="nav-team">
+        <a href="#team" class="dash-nav-item" id="nav-team" data-tooltip="Team" title="Team">
           <span class="dash-nav-num">04</span>
           <span class="dash-nav-icon">👥</span>
-          <span>Team</span>
+          <span class="dash-nav-label">Team</span>
         </a>
 
-        <a href="#calendar" class="dash-nav-item" id="nav-calendar">
+        <a href="#calendar" class="dash-nav-item" id="nav-calendar" data-tooltip="Calendar" title="Calendar">
           <span class="dash-nav-num">05</span>
           <span class="dash-nav-icon">📅</span>
-          <span>Calendar</span>
+          <span class="dash-nav-label">Calendar</span>
         </a>
 
-        <a href="#overview" class="dash-nav-item" id="nav-overview">
+        <a href="#overview" class="dash-nav-item" id="nav-overview" data-tooltip="Overview" title="Overview">
           <span class="dash-nav-num">06</span>
           <span class="dash-nav-icon">📈</span>
-          <span>Overview</span>
+          <span class="dash-nav-label">Overview</span>
         </a>
       </nav>
 
@@ -101,14 +116,14 @@
 
     <!-- Sidebar Bottom: Settings & Help -->
     <div class="sidebar-bottom">
-      <a href="#settings" class="dash-nav-item" id="nav-settings">
+      <a href="#settings" class="dash-nav-item" id="nav-settings" data-tooltip="Settings" title="Settings">
         <span class="dash-nav-icon">⚙</span>
-        <span>Settings</span>
+        <span class="dash-nav-label">Settings</span>
       </a>
-      <a href="mailto:teamden@gmil.com" data-company="mail" class="dash-nav-item" id="nav-help"
+      <a href="mailto:teamden@gmil.com" data-company="mail" class="dash-nav-item" id="nav-help" data-tooltip="Help & Support"
         title="Email Teamden Support">
         <span class="dash-nav-icon">❓</span>
-        <span>Help & Support</span>
+        <span class="dash-nav-label">Help & Support</span>
       </a>
     </div>
   </aside>
@@ -120,12 +135,21 @@
 
     <!-- Top Bar -->
     <header class="dash-topbar">
-      <!-- Search Input -->
-      <div class="dash-search-container">
-        <div class="dash-search-box">
-          <span class="dash-search-icon">🔍</span>
-          <input type="text" class="dash-search-input" placeholder="Search for anything..." id="global-search-input">
-          <span class="dash-search-shortcut">⌘ K</span>
+      <!-- Topbar Left: Toggle Button + Search Input -->
+      <div class="dash-topbar-left">
+        <button class="dash-topbar-toggle-btn" id="topbar-sidebar-toggle-btn" title="Toggle Sidebar (Ctrl+[)" aria-label="Toggle Sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="dash-search-container">
+          <div class="dash-search-box">
+            <span class="dash-search-icon">🔍</span>
+            <input type="text" class="dash-search-input" placeholder="Search for anything..." id="global-search-input">
+            <span class="dash-search-shortcut">⌘ K</span>
+          </div>
         </div>
       </div>
 

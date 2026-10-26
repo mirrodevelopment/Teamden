@@ -10,6 +10,18 @@ const Sidebar = (() => {
       });
     }
 
+    const collapseBtn = document.getElementById('sidebar-collapse-btn');
+    if (collapseBtn) {
+      collapseBtn.addEventListener('click', () => {
+        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('teamden-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+      });
+    }
+
+    if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+      document.body.classList.add('sidebar-collapsed');
+    }
+
     // Close sidebar on mobile when navigating
     const navItems = document.querySelectorAll('.app-sidebar .nav-item:not(.nav-item-disabled)');
     navItems.forEach(item => {

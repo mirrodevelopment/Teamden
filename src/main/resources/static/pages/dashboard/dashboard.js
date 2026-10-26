@@ -337,6 +337,57 @@ function setupDashboardInteractions() {
       }
     });
   }
+
+  // 10. Sidebar Collapse Toggle
+  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+  const topbarSidebarToggleBtn = document.getElementById('topbar-sidebar-toggle-btn');
+
+  function toggleSidebar(forceState) {
+    const isCurrentlyCollapsed = document.body.classList.contains('dash-sidebar-collapsed');
+    const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyCollapsed;
+
+    if (newState) {
+      document.body.classList.add('dash-sidebar-collapsed');
+      document.documentElement.classList.add('dash-sidebar-collapsed');
+      localStorage.setItem('teamden-sidebar-collapsed', 'true');
+      if (sidebarToggleBtn) sidebarToggleBtn.setAttribute('title', 'Expand Sidebar (Ctrl+[)');
+    } else {
+      document.body.classList.remove('dash-sidebar-collapsed');
+      document.documentElement.classList.remove('dash-sidebar-collapsed');
+      localStorage.setItem('teamden-sidebar-collapsed', 'false');
+      if (sidebarToggleBtn) sidebarToggleBtn.setAttribute('title', 'Collapse Sidebar (Ctrl+[)');
+    }
+
+    // On mobile, also toggle drawer
+    if (window.innerWidth <= 900) {
+      document.body.classList.toggle('dash-sidebar-mobile-open');
+    }
+  }
+
+  // Restore saved state
+  if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+    document.body.classList.add('dash-sidebar-collapsed');
+    document.documentElement.classList.add('dash-sidebar-collapsed');
+    if (sidebarToggleBtn) sidebarToggleBtn.setAttribute('title', 'Expand Sidebar (Ctrl+[)');
+  }
+
+  sidebarToggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSidebar();
+  });
+
+  topbarSidebarToggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSidebar();
+  });
+
+  // Keyboard shortcut Ctrl+[ or Cmd+[
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === '[' || e.key === 'b')) {
+      e.preventDefault();
+      toggleSidebar();
+    }
+  });
 }
 
 /**
