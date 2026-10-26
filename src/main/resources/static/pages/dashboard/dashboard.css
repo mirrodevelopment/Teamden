@@ -376,35 +376,6 @@ header.dash-topbar {
   gap: 1.5rem;
 }
 
-.dash-topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  flex: 1;
-  max-width: 480px;
-}
-
-.dash-topbar-toggle-btn {
-  background: transparent;
-  border: 1px solid var(--dash-border);
-  border-radius: var(--radius-md);
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--dash-text-body);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.dash-topbar-toggle-btn:hover {
-  background: var(--dash-card-subtle);
-  color: var(--dash-text-main);
-  border-color: var(--dash-text-muted);
-}
-
 .dash-search-container {
   max-width: 420px;
   width: 100%;
@@ -1782,10 +1753,6 @@ html.dash-sidebar-collapsed .dash-nav-item:hover::before {
 
   body.dash-sidebar-mobile-open aside.dash-sidebar {
     transform: translateX(0);
-  }
-
-  .dash-topbar-toggle-btn {
-    display: flex;
   }
 }
 

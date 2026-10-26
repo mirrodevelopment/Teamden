@@ -340,7 +340,6 @@ function setupDashboardInteractions() {
 
   // 10. Sidebar Collapse Toggle
   const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-  const topbarSidebarToggleBtn = document.getElementById('topbar-sidebar-toggle-btn');
 
   function toggleSidebar(forceState) {
     const isCurrentlyCollapsed = document.body.classList.contains('dash-sidebar-collapsed');
@@ -372,11 +371,6 @@ function setupDashboardInteractions() {
   }
 
   sidebarToggleBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleSidebar();
-  });
-
-  topbarSidebarToggleBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     toggleSidebar();
   });
