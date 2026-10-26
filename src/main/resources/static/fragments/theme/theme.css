@@ -2,60 +2,16 @@
    Teamden by shed — Central Design Token & Theme System
    Path: fragments/theme/theme.css
    Single source of truth for ALL colors, theme surfaces, typography, and tokens.
+   Supports: Light Theme (default) & Black and White Theme.
    ========================================================================== */
 
 @import url('../fonts/fonts.css');
 
+/* ==========================================================================
+   GLOBAL CONSTANTS (Shared across all themes: typography, layout, radii)
+   ========================================================================== */
 :root {
-  /* ========================================================================
-     1. BRAND & PRIMARY ACCENT PALETTE
-     ======================================================================== */
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-primary-active: #1E40AF;
-  --color-primary-light: #EFF6FF;
-  --color-primary-subtle: rgba(37, 99, 235, 0.12);
-  --color-primary-glow: rgba(37, 99, 235, 0.25);
-  --color-primary-gradient: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-  --color-primary-gradient-subtle: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(30, 64, 175, 0.04) 100%);
-
-  /* Secondary Brand & Executive Accents */
-  --color-brand-dark: #0F172A;
-  --color-brand-navy: #1E293B;
-  --color-brand-slate: #334155;
-  --color-brand-cyan: #06B6D4;
-  --color-brand-indigo: #6366F1;
-  --color-brand-purple: #8B5CF6;
-  --color-brand-amber: #F59E0B;
-
-  /* ========================================================================
-     2. BACKGROUNDS & SURFACES
-     ======================================================================== */
-  --color-bg-body: #F8FAFC;
-  --color-bg-surface: #FFFFFF;
-  --color-bg-subtle: #F1F5F9;
-  --color-bg-muted: #E2E8F0;
-  --color-bg-card: #FFFFFF;
-  --color-bg-card-hover: #F8FAFC;
-  --color-bg-sidebar: #0F172A;
-  --color-bg-sidebar-alt: #1E293B;
-  --color-bg-header: #FFFFFF;
-  --color-bg-input: #FFFFFF;
-  --color-bg-input-focus: #FFFFFF;
-  --color-bg-overlay: rgba(15, 23, 42, 0.65);
-
-  /* Dark Theme & Gradient Variations */
-  --bg-dark-body: #0B0F17;
-  --bg-dark-surface: #111827;
-  --bg-dark-card: rgba(17, 24, 39, 0.85);
-  --bg-dark-header: rgba(15, 23, 42, 0.90);
-  --bg-dark-input: rgba(255, 255, 255, 0.06);
-  --bg-dark-gradient: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-  --bg-dark-gradient-radial: radial-gradient(circle at 50% 20%, #1E293B 0%, #0F172A 100%);
-
-  /* ========================================================================
-     3. TYPOGRAPHY
-     ======================================================================== */
+  /* Typography */
   --font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-family-base: var(--font-family);
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -80,75 +36,7 @@
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.625;
 
-  /* ========================================================================
-     4. TEXT COLORS
-     ======================================================================== */
-  --color-text-main: #0F172A;
-  --color-text-body: #334155;
-  --color-text-muted: #64748B;
-  --color-text-light: #94A3B8;
-  --color-text-white: #FFFFFF;
-  --color-text-on-dark: #F8FAFC;
-  --color-text-on-dark-muted: #94A3B8;
-  --color-text-primary: #2563EB;
-
-  /* ========================================================================
-     5. BORDERS & GLASS EFFECTS
-     ======================================================================== */
-  --color-border: #E2E8F0;
-  --color-border-hover: #CBD5E1;
-  --color-border-focus: #2563EB;
-  --color-border-subtle: #F1F5F9;
-  --color-border-glass: rgba(255, 255, 255, 0.12);
-  --color-border-glass-dark: rgba(255, 255, 255, 0.08);
-
-  /* ========================================================================
-     6. STATUS & FEEDBACK COLORS
-     ======================================================================== */
-  /* Success */
-  --color-success: #10B981;
-  --color-success-bg: #ECFDF5;
-  --color-success-border: #A7F3D0;
-  --color-success-text: #065F46;
-
-  /* Warning */
-  --color-warning: #F59E0B;
-  --color-warning-bg: #FFFBEB;
-  --color-warning-border: #FDE68A;
-  --color-warning-text: #92400E;
-
-  /* Danger / Error */
-  --color-danger: #EF4444;
-  --color-danger-bg: #FEF2F2;
-  --color-danger-border: #FECACA;
-  --color-danger-text: #991B1B;
-
-  /* Info */
-  --color-info: #3B82F6;
-  --color-info-bg: #EFF6FF;
-  --color-info-border: #BFDBFE;
-  --color-info-text: #1E40AF;
-
-  /* Neutral / Pending */
-  --color-neutral: #64748B;
-  --color-neutral-bg: #F1F5F9;
-  --color-neutral-border: #CBD5E1;
-  --color-neutral-text: #475569;
-
-  /* ========================================================================
-     7. SHADOWS & ELEVATION
-     ======================================================================== */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.18);
-  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-
-  /* ========================================================================
-     8. BORDER RADII
-     ======================================================================== */
+  /* Border Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -156,16 +44,12 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
-  /* ========================================================================
-     9. TRANSITIONS
-     ======================================================================== */
+  /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ========================================================================
-     10. LAYOUT CONSTANTS
-     ======================================================================== */
+  /* Layout Constants */
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 72px;
   --topbar-height: 64px;
@@ -178,15 +62,111 @@
   --z-fixed: 100;
   --z-modal: 1000;
   --z-toast: 1100;
+}
 
-  /* ========================================================================
-     11. COMPONENT & FRAGMENT ALIASES
-     ======================================================================== */
+/* ==========================================================================
+   THEME 1: LIGHT THEME (Default)
+   Clean, vibrant modern SaaS theme with crisp surfaces and high readability.
+   ========================================================================== */
+:root,
+[data-theme="light"],
+.theme-light {
+  /* Brand & Primary Accent */
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-active: #1E40AF;
+  --color-primary-light: #EFF6FF;
+  --color-primary-subtle: rgba(37, 99, 235, 0.12);
+  --color-primary-glow: rgba(37, 99, 235, 0.25);
+  --color-primary-gradient: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  --color-primary-gradient-subtle: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(30, 64, 175, 0.04) 100%);
+  --color-btn-primary-text: #FFFFFF;
+
+  /* Executive Brand Accents */
+  --color-brand-dark: #0F172A;
+  --color-brand-navy: #1E293B;
+  --color-brand-slate: #334155;
+  --color-brand-cyan: #06B6D4;
+  --color-brand-indigo: #6366F1;
+  --color-brand-purple: #8B5CF6;
+  --color-brand-amber: #F59E0B;
+
+  /* Surfaces & Backgrounds */
+  --color-bg-body: #F8FAFC;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-subtle: #F1F5F9;
+  --color-bg-muted: #E2E8F0;
+  --color-bg-card: #FFFFFF;
+  --color-bg-card-hover: #F8FAFC;
+  --color-bg-sidebar: #0F172A;
+  --color-bg-sidebar-alt: #1E293B;
+  --color-bg-header: #FFFFFF;
+  --color-bg-input: #FFFFFF;
+  --color-bg-input-focus: #FFFFFF;
+  --color-bg-overlay: rgba(15, 23, 42, 0.65);
+  --bg-login-gradient: radial-gradient(circle at 50% 0%, #EFF6FF 0%, #F8FAFC 60%, #F1F5F9 100%);
+  --card-top-accent: linear-gradient(90deg, #2563EB, #06B6D4, #3B82F6);
+
+  /* Typography / Text */
+  --color-text-main: #0F172A;
+  --color-text-body: #334155;
+  --color-text-muted: #64748B;
+  --color-text-light: #94A3B8;
+  --color-text-white: #FFFFFF;
+  --color-text-on-dark: #F8FAFC;
+  --color-text-on-dark-muted: #94A3B8;
+  --color-text-primary: #2563EB;
+
+  /* Borders & Glass */
+  --color-border: #E2E8F0;
+  --color-border-hover: #CBD5E1;
+  --color-border-focus: #2563EB;
+  --color-border-subtle: #F1F5F9;
+  --color-border-glass: rgba(255, 255, 255, 0.12);
+  --color-border-glass-dark: rgba(255, 255, 255, 0.08);
+
+  /* Status Colors */
+  --color-success: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-success-border: #A7F3D0;
+  --color-success-text: #065F46;
+
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-border: #FDE68A;
+  --color-warning-text: #92400E;
+
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEF2F2;
+  --color-danger-border: #FECACA;
+  --color-danger-text: #991B1B;
+
+  --color-info: #3B82F6;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
+  --color-info-text: #1E40AF;
+
+  --color-neutral: #64748B;
+  --color-neutral-bg: #F1F5F9;
+  --color-neutral-border: #CBD5E1;
+  --color-neutral-text: #475569;
+
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.18);
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Component & Fragment Aliases */
   --primary: var(--color-primary);
   --primary-hover: var(--color-primary-hover);
   --primary-light: var(--color-primary-light);
   --primary-active: var(--color-primary-active);
 
+  --bg-primary: var(--color-bg-body);
   --bg-surface: var(--color-bg-surface);
   --bg-secondary: var(--color-bg-subtle);
   --bg-hover: var(--color-bg-card-hover);
@@ -212,3 +192,133 @@
   --info-light: var(--color-info-bg);
 }
 
+/* ==========================================================================
+   THEME 2: BLACK AND WHITE THEME
+   High-contrast, modern monochrome aesthetic with deep obsidian blacks,
+   graphite surface borders, and pure white typography.
+   ========================================================================== */
+[data-theme="black-and-white"],
+[data-theme="bw"],
+[data-theme="dark"],
+.theme-black-and-white,
+.theme-dark {
+  /* Brand & Primary Accent (High Contrast Monochrome) */
+  --color-primary: #FFFFFF;
+  --color-primary-hover: #E4E4E7;
+  --color-primary-active: #D4D4D8;
+  --color-primary-light: #18181B;
+  --color-primary-subtle: rgba(255, 255, 255, 0.12);
+  --color-primary-glow: rgba(255, 255, 255, 0.20);
+  --color-primary-gradient: linear-gradient(135deg, #FFFFFF 0%, #A1A1AA 100%);
+  --color-primary-gradient-subtle: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --color-btn-primary-text: #000000;
+
+  /* Executive Brand Accents (Monochrome Grayscale) */
+  --color-brand-dark: #000000;
+  --color-brand-navy: #18181B;
+  --color-brand-slate: #27272A;
+  --color-brand-cyan: #FAFAFA;
+  --color-brand-indigo: #E4E4E7;
+  --color-brand-purple: #D4D4D8;
+  --color-brand-amber: #F4F4F5;
+
+  /* Surfaces & Backgrounds */
+  --color-bg-body: #000000;
+  --color-bg-surface: #0C0C0E;
+  --color-bg-subtle: #141417;
+  --color-bg-muted: #1F1F24;
+  --color-bg-card: #0C0C0E;
+  --color-bg-card-hover: #16161A;
+  --color-bg-sidebar: #050506;
+  --color-bg-sidebar-alt: #0D0D0F;
+  --color-bg-header: rgba(12, 12, 14, 0.90);
+  --color-bg-input: #121215;
+  --color-bg-input-focus: #18181D;
+  --color-bg-overlay: rgba(0, 0, 0, 0.88);
+  --bg-login-gradient: radial-gradient(circle at 50% 0%, #18181B 0%, #09090B 60%, #000000 100%);
+  --card-top-accent: linear-gradient(90deg, #FFFFFF 0%, #71717A 50%, #27272A 100%);
+
+  /* Typography / Text (Pure White & Grayscale) */
+  --color-text-main: #FFFFFF;
+  --color-text-body: #E4E4E7;
+  --color-text-muted: #A1A1AA;
+  --color-text-light: #71717A;
+  --color-text-white: #FFFFFF;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: #A1A1AA;
+  --color-text-primary: #FFFFFF;
+
+  /* Borders & Glass */
+  --color-border: #27272A;
+  --color-border-hover: #3F3F46;
+  --color-border-focus: #FFFFFF;
+  --color-border-subtle: #18181B;
+  --color-border-glass: rgba(255, 255, 255, 0.15);
+  --color-border-glass-dark: rgba(255, 255, 255, 0.08);
+
+  /* Status Colors (High Contrast Black & White with subtle tints) */
+  --color-success: #FFFFFF;
+  --color-success-bg: rgba(255, 255, 255, 0.08);
+  --color-success-border: rgba(255, 255, 255, 0.25);
+  --color-success-text: #FFFFFF;
+
+  --color-warning: #E4E4E7;
+  --color-warning-bg: rgba(255, 255, 255, 0.06);
+  --color-warning-border: rgba(255, 255, 255, 0.20);
+  --color-warning-text: #F4F4F5;
+
+  --color-danger: #FFFFFF;
+  --color-danger-bg: rgba(255, 255, 255, 0.10);
+  --color-danger-border: rgba(255, 255, 255, 0.30);
+  --color-danger-text: #FFFFFF;
+
+  --color-info: #FFFFFF;
+  --color-info-bg: rgba(255, 255, 255, 0.08);
+  --color-info-border: rgba(255, 255, 255, 0.20);
+  --color-info-text: #FFFFFF;
+
+  --color-neutral: #A1A1AA;
+  --color-neutral-bg: #18181B;
+  --color-neutral-border: #27272A;
+  --color-neutral-text: #D4D4D8;
+
+  /* Elevation & Shadows (Pitch black shadows with crisp edge definition) */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.85);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.90), 0 1px 2px -1px rgba(0, 0, 0, 0.90);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.95), 0 2px 4px -2px rgba(0, 0, 0, 0.95);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.98), 0 4px 6px -4px rgba(0, 0, 0, 0.98);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.99), 0 8px 10px -6px rgba(0, 0, 0, 0.99);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.18);
+  --shadow-card: 0 0 0 1px #27272A, 0 4px 12px rgba(0, 0, 0, 0.65);
+
+  /* Component & Fragment Aliases */
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --primary-light: var(--color-primary-light);
+  --primary-active: var(--color-primary-active);
+
+  --bg-primary: var(--color-bg-body);
+  --bg-surface: var(--color-bg-surface);
+  --bg-secondary: var(--color-bg-subtle);
+  --bg-hover: var(--color-bg-card-hover);
+  --bg-muted: var(--color-bg-muted);
+  --bg-body: var(--color-bg-body);
+
+  --border-color: var(--color-border);
+  --border-color-hover: var(--color-border-hover);
+  --border-color-focus: var(--color-border-focus);
+
+  --text-primary: var(--color-text-main);
+  --text-secondary: var(--color-text-body);
+  --text-tertiary: var(--color-text-muted);
+  --text-light: var(--color-text-light);
+
+  --danger: var(--color-danger);
+  --danger-light: var(--color-danger-bg);
+  --success: var(--color-success);
+  --success-light: var(--color-success-bg);
+  --warning: var(--color-warning);
+  --warning-light: var(--color-warning-bg);
+  --info: var(--color-info);
+  --info-light: var(--color-info-bg);
+}

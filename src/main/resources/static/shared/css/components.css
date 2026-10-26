@@ -27,7 +27,7 @@
 
 .btn-primary {
   background-color: var(--color-primary);
-  color: var(--color-text-white);
+  color: var(--color-btn-primary-text, var(--color-text-white));
   border-color: var(--color-primary);
   box-shadow: var(--shadow-xs);
 }

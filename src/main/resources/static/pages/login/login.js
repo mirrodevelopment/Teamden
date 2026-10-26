@@ -43,6 +43,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     showAlert('Welcome! Please configure your initial organization and administrator account.', 'info');
   }
 
+  // Theme toggle on login screen
+  const loginThemeBtn = document.getElementById('login-theme-btn');
+  if (loginThemeBtn) {
+    loginThemeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const isBW = (current === 'black-and-white' || current === 'bw' || current === 'dark');
+      const next = isBW ? 'light' : 'black-and-white';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('teamden-theme', next);
+    });
+  }
+
   // 3. Check workspace setup status
   checkSetupStatus();
 

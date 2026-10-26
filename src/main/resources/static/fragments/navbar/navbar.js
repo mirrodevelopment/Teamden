@@ -55,9 +55,61 @@ const Navbar = (() => {
         document.body.classList.toggle('sidebar-mobile-open');
       });
     }
+
+    // --- Theme Switcher (Light <-> Black and White) ---
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const menuThemeBtn = document.getElementById('menu-item-theme');
+    const menuThemeLabel = document.getElementById('menu-theme-label');
+
+    function updateThemeUI(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('teamden-theme', theme);
+
+      const isBW = (theme === 'black-and-white' || theme === 'bw' || theme === 'dark');
+      if (themeBtn) {
+        const sun = themeBtn.querySelector('.theme-icon-sun');
+        const moon = themeBtn.querySelector('.theme-icon-moon');
+        if (sun && moon) {
+          sun.style.display = isBW ? 'block' : 'none';
+          moon.style.display = isBW ? 'none' : 'block';
+        }
+        themeBtn.title = isBW ? 'Switch to Light Theme' : 'Switch to Black & White Theme';
+      }
+
+      if (menuThemeLabel) {
+        menuThemeLabel.textContent = isBW ? 'Theme: Black & White' : 'Theme: Light';
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const isBW = (current === 'black-and-white' || current === 'bw' || current === 'dark');
+      const nextTheme = isBW ? 'light' : 'black-and-white';
+      updateThemeUI(nextTheme);
+    }
+
+    // Initialize on load
+    const savedTheme = localStorage.getItem('teamden-theme') || 'light';
+    updateThemeUI(savedTheme);
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleTheme();
+      });
+    }
+
+    if (menuThemeBtn) {
+      menuThemeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleTheme();
+        if (menu) menu.classList.remove('show');
+      });
+    }
   }
 
   return { init };
 })();
 
 window.Navbar = Navbar;
+
