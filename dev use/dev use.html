@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="black-and-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teamden by shed — Developer Reference Portal</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+
+  <!-- Montserrat Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-family: 'Montserrat';
+      --font-family-base: 'Montserrat';
+      --font-mono: 'Montserrat', monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg-body: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-surface-alt: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --bg-input: #FFFFFF;
+      --border-color: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --text-main: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --color-primary: #2563EB;
+      --color-primary-hover: #1D4ED8;
+      --color-primary-text: #FFFFFF;
+      --color-primary-light: #EFF6FF;
+      --badge-bg: #EFF6FF;
+      --badge-text: #1E40AF;
+      --code-bg: #F1F5F9;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08);
+    }
+
+    /* Black and White Theme */
+    [data-theme="black-and-white"],
+    [data-theme="dark"] {
+      --bg-body: #000000;
+      --bg-surface: #0C0C0E;
+      --bg-surface-alt: #141417;
+      --bg-card: #0C0C0E;
+      --bg-input: #121215;
+      --border-color: #27272A;
+      --border-hover: #3F3F46;
+      --text-main: #FFFFFF;
+      --text-body: #E4E4E7;
+      --text-muted: #A1A1AA;
+      --color-primary: #FFFFFF;
+      --color-primary-hover: #E4E4E7;
+      --color-primary-text: #000000;
+      --color-primary-light: #18181B;
+      --badge-bg: #18181B;
+      --badge-text: #FFFFFF;
+      --code-bg: #111114;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.85);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.9);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-body);
+      color: var(--text-body);
+      line-height: 1.6;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header.dev-header {
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+
+    .brand-logo-badge {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+      color: #FFFFFF;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.125rem;
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .brand-titles h1 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-titles p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .quick-pill {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-full);
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--border-color);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.4375rem 0.875rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-family);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all var(--transition-fast);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Navigation Tabs */
+    nav.nav-tabs {
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tabs-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-family);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--text-main);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* Main Container */
+    main.dev-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .section-block {
+      display: none;
+      animation: fadeIn 200ms ease;
+    }
+
+    .section-block.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Cards Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Data Key-Value List */
+    .kv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+
+    .kv-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-surface-alt);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      font-size: 0.8125rem;
+    }
+
+    .kv-key {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .kv-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Code Snippet Box */
+    .code-box {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.875rem 1rem;
+      position: relative;
+      margin-top: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--text-main);
+      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .code-text {
+      white-space: pre;
+    }
+
+    .copy-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.6875rem;
+      font-family: var(--font-family);
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .copy-btn:hover {
+      color: var(--text-main);
+      border-color: var(--border-hover);
+    }
+
+    .copy-btn.copied {
+      background: #10B981;
+      color: #FFFFFF;
+      border-color: #10B981;
+    }
+
+    /* Tables */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      margin-top: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.8125rem;
+    }
+
+    table.data-table th {
+      background-color: var(--bg-surface-alt);
+      color: var(--text-main);
+      font-weight: 700;
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    table.data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-body);
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.data-table tr:hover td {
+      background-color: var(--bg-surface-alt);
+    }
+
+    .badge-pk {
+      background: #EF4444;
+      color: #FFFFFF;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .badge-fk {
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .badge-uk {
+      background: #8B5CF6;
+      color: #FFFFFF;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .badge-method {
+      font-size: 0.6875rem;
+      font-weight: 800;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.5px;
+    }
+
+    .badge-get { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-post { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    /* Schema Selector Pills */
+    .schema-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .schema-pill {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.4375rem 0.875rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .schema-pill:hover {
+      color: var(--text-main);
+      border-color: var(--border-hover);
+    }
+
+    .schema-pill.active {
+      background: var(--color-primary);
+      color: var(--color-primary-text);
+      border-color: var(--color-primary);
+    }
+
+    /* Footer */
+    footer.dev-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background-color: var(--bg-surface);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="dev-header">
+    <div class="header-inner">
+      <div class="brand-section">
+        <div class="brand-logo-badge">TD</div>
+        <div class="brand-titles">
+          <h1>Teamden Developer Portal</h1>
+          <p>Database Schemas · Users & Passwords · API Specifications · Local Development</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <span class="quick-pill">Spring Boot 3.5</span>
+        <span class="quick-pill">PostgreSQL 17</span>
+        <span class="quick-pill">Port 8080</span>
+        <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-text">Light Theme</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <div class="tabs-inner">
+      <button class="tab-btn active" data-target="tab-overview">⚡ Environment & DB</button>
+      <button class="tab-btn" data-target="tab-tables">🗄️ Relational Tables (8)</button>
+      <button class="tab-btn" data-target="tab-users">👥 Users & Passwords</button>
+      <button class="tab-btn" data-target="tab-apis">🔌 REST APIs</button>
+      <button class="tab-btn" data-target="tab-scripts">💻 Commands & Launcher</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="dev-container">
+
+    <!-- TAB 1: OVERVIEW & DATABASE CONNECTION -->
+    <section class="section-block active" id="tab-overview">
+      <div class="section-header">
+        <h2>Database Connection & Environment</h2>
+        <p>Local PostgreSQL configuration and Spring Boot runtime parameters.</p>
+      </div>
+
+      <div class="grid-2">
+        <!-- PostgreSQL Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>🐘 PostgreSQL Connection</span>
+            <span class="quick-pill" style="background:#10B981; color:#FFFFFF;">ACTIVE</span>
+          </div>
+          <div class="kv-list">
+            <div class="kv-item"><span class="kv-key">Host</span><span class="kv-val">localhost (127.0.0.1)</span></div>
+            <div class="kv-item"><span class="kv-key">Port</span><span class="kv-val">5432</span></div>
+            <div class="kv-item"><span class="kv-key">Database Name</span><span class="kv-val">teamden</span></div>
+            <div class="kv-item"><span class="kv-key">Username</span><span class="kv-val">postgres</span></div>
+            <div class="kv-item"><span class="kv-key">Password</span><span class="kv-val">crazy@8</span></div>
+            <div class="kv-item"><span class="kv-key">Driver</span><span class="kv-val">org.postgresql.Driver</span></div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">JDBC Connection URL:</span>
+            <div class="code-box">
+              <span class="code-text" id="jdbc-url">jdbc:postgresql://localhost:5432/teamden</span>
+              <button class="copy-btn" onclick="copySnippet('jdbc-url')">Copy</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">PowerShell Direct PSQL Connect:</span>
+            <div class="code-box">
+              <span class="code-text" id="psql-cmd">$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -U postgres -d teamden</span>
+              <button class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spring Boot Runtime -->
+        <div class="card">
+          <div class="card-title">
+            <span>🚀 Application Runtime</span>
+            <span class="quick-pill">Port 8080</span>
+          </div>
+          <div class="kv-list">
+            <div class="kv-item"><span class="kv-key">Java Version</span><span class="kv-val">JDK 21 (Adoptium / Eclipse)</span></div>
+            <div class="kv-item"><span class="kv-key">Spring Boot</span><span class="kv-val">3.5.x</span></div>
+            <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly, Lax)</span></div>
+            <div class="kv-item"><span class="kv-key">Password Encoder</span><span class="kv-val">BCrypt (12 rounds)</span></div>
+            <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql</span></div>
+            <div class="kv-item"><span class="kv-key">Design Tokens</span><span class="kv-val">fragments/theme/theme.css</span></div>
+            <div class="kv-item"><span class="kv-key">Global Font</span><span class="kv-val">Montserrat</span></div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Web Endpoints:</span>
+            <div class="kv-list" style="margin-top: 0.5rem;">
+              <div class="kv-item"><span class="kv-key">Login Desk</span><span class="kv-val"><a href="http://localhost:8080/pages/login/login.html" target="_blank" style="color:var(--color-primary); text-decoration:none;">/pages/login/login.html ↗</a></span></div>
+              <div class="kv-item"><span class="kv-key">Dashboard</span><span class="kv-val"><a href="http://localhost:8080/pages/dashboard/dashboard.html" target="_blank" style="color:var(--color-primary); text-decoration:none;">/pages/dashboard/dashboard.html ↗</a></span></div>
+              <div class="kv-item"><span class="kv-key">Actuator Health</span><span class="kv-val"><a href="http://localhost:8080/actuator/health" target="_blank" style="color:var(--color-primary); text-decoration:none;">/actuator/health ↗</a></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: RELATIONAL TABLES -->
+    <section class="section-block" id="tab-tables">
+      <div class="section-header">
+        <h2>Relational Schema Tables</h2>
+        <p>Interactive inspector for all 8 database relations defined in Flyway V1 migration.</p>
+      </div>
+
+      <div class="schema-pills">
+        <button class="schema-pill active" onclick="switchTable('tbl-users')">users</button>
+        <button class="schema-pill" onclick="switchTable('tbl-organizations')">organizations</button>
+        <button class="schema-pill" onclick="switchTable('tbl-memberships')">organization_memberships</button>
+        <button class="schema-pill" onclick="switchTable('tbl-projects')">projects</button>
+        <button class="schema-pill" onclick="switchTable('tbl-tasks')">tasks</button>
+        <button class="schema-pill" onclick="switchTable('tbl-attendance')">attendance_records</button>
+        <button class="schema-pill" onclick="switchTable('tbl-activity')">activity_events</button>
+        <button class="schema-pill" onclick="switchTable('tbl-flyway')">flyway_schema_history</button>
+      </div>
+
+      <!-- Table: users -->
+      <div class="table-pane" id="tbl-users">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>full_name</strong></td><td>VARCHAR(150)</td><td>NO</td><td>—</td><td>Employee / User display name</td></tr>
+              <tr><td><strong>email</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td><span class="badge-uk">UNIQUE uk_users_email</span> Login email</td></tr>
+              <tr><td><strong>password_hash</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>BCrypt password hash (strength 12)</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, DISABLED, PENDING_INVITE</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Account creation timestamp</td></tr>
+              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
+              <tr><td><strong>last_login_at</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Timestamp of last authenticated login</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: organizations -->
+      <div class="table-pane" id="tbl-organizations" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>name</strong></td><td>VARCHAR(150)</td><td>NO</td><td>—</td><td>Company / Workspace name</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, SUSPENDED, ARCHIVED</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
+              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: organization_memberships -->
+      <div class="table-pane" id="tbl-memberships" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
+              <tr><td><strong>user_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
+              <tr><td><strong>role</strong></td><td>VARCHAR(30)</td><td>NO</td><td>—</td><td>OWNER, ADMIN, MEMBER, GUEST</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, SUSPENDED</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: projects -->
+      <div class="table-pane" id="tbl-projects" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
+              <tr><td><strong>name</strong></td><td>VARCHAR(200)</td><td>NO</td><td>—</td><td>Project name</td></tr>
+              <tr><td><strong>description</strong></td><td>TEXT</td><td>YES</td><td>NULL</td><td>Detailed project overview</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>PLANNING, ACTIVE, COMPLETED, ON_HOLD</td></tr>
+              <tr><td><strong>owner_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span> Project lead</td></tr>
+              <tr><td><strong>start_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Planned start date</td></tr>
+              <tr><td><strong>due_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Target completion date</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
+              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: tasks -->
+      <div class="table-pane" id="tbl-tasks" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
+              <tr><td><strong>project_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> projects(id)</span></td></tr>
+              <tr><td><strong>title</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>Task title</td></tr>
+              <tr><td><strong>description</strong></td><td>TEXT</td><td>YES</td><td>NULL</td><td>Task acceptance criteria & notes</td></tr>
+              <tr><td><strong>assignee_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
+              <tr><td><strong>creator_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
+              <tr><td><strong>priority</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'MEDIUM'</td><td>LOW, MEDIUM, HIGH, URGENT</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'TODO'</td><td>TODO, IN_PROGRESS, IN_REVIEW, DONE</td></tr>
+              <tr><td><strong>due_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Deadline</td></tr>
+              <tr><td><strong>completed_at</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Completion timestamp</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
+              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: attendance_records -->
+      <div class="table-pane" id="tbl-attendance" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
+              <tr><td><strong>employee_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
+              <tr><td><strong>attendance_date</strong></td><td>DATE</td><td>NO</td><td>—</td><td>Daily work date (UTC)</td></tr>
+              <tr><td><strong>check_in_time</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>—</td><td>Punch-in timestamp</td></tr>
+              <tr><td><strong>check_out_time</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Punch-out timestamp</td></tr>
+              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'PRESENT'</td><td>PRESENT, HALF_DAY, ON_LEAVE, ABSENT</td></tr>
+              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
+              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
+          ℹ️ <strong>Business Rule:</strong> Users with role <code>OWNER</code> are automatically exempt from punch-in checks.
+        </div>
+      </div>
+
+      <!-- Table: activity_events -->
+      <div class="table-pane" id="tbl-activity" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
+              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
+              <tr><td><strong>actor_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span> Action author</td></tr>
+              <tr><td><strong>event_type</strong></td><td>VARCHAR(50)</td><td>NO</td><td>—</td><td>TASK_CREATED, PROJECT_CREATED, etc.</td></tr>
+              <tr><td><strong>entity_type</strong></td><td>VARCHAR(50)</td><td>NO</td><td>—</td><td>TASK, PROJECT, ORGANIZATION</td></tr>
+              <tr><td><strong>entity_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td>UUID of referenced entity</td></tr>
+              <tr><td><strong>title</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>Event title summary</td></tr>
+              <tr><td><strong>description</strong></td><td>VARCHAR(500)</td><td>YES</td><td>NULL</td><td>Detailed event description</td></tr>
+              <tr><td><strong>event_timestamp</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Event creation time</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: flyway_schema_history -->
+      <div class="table-pane" id="tbl-flyway" style="display:none;">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>installed_rank</strong></td><td>INTEGER</td><td>NO</td><td>—</td><td>Migration sequence order</td></tr>
+              <tr><td><strong>version</strong></td><td>VARCHAR</td><td>YES</td><td>—</td><td>Version number (e.g. 1)</td></tr>
+              <tr><td><strong>description</strong></td><td>VARCHAR</td><td>NO</td><td>—</td><td>init schema</td></tr>
+              <tr><td><strong>script</strong></td><td>VARCHAR</td><td>NO</td><td>—</td><td>V1__init_schema.sql</td></tr>
+              <tr><td><strong>installed_on</strong></td><td>TIMESTAMP</td><td>NO</td><td>now()</td><td>Execution timestamp</td></tr>
+              <tr><td><strong>success</strong></td><td>BOOLEAN</td><td>NO</td><td>—</td><td>Migration success flag</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: USERS & PASSWORDS -->
+    <section class="section-block" id="tab-users">
+      <div class="section-header">
+        <h2>Users, Credentials & Passwords</h2>
+        <p>Active live database accounts and test suites authentication data.</p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Live User Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>👑 Live System Owner</span>
+            <span class="quick-pill" style="background:#10B981; color:#FFFFFF;">ACTIVE</span>
+          </div>
+          <div class="kv-list">
+            <div class="kv-item"><span class="kv-key">Full Name</span><span class="kv-val">SIVASURYA S</span></div>
+            <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val" id="owner-email">sivasurya.official.8@gmail.com</span></div>
+            <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">OWNER</span></div>
+            <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">siva</span></div>
+            <div class="kv-item"><span class="kv-key">Org ID</span><span class="kv-val">6a6ed829-7154-4a7d-b3a8-3fb104035b69</span></div>
+            <div class="kv-item"><span class="kv-key">User ID</span><span class="kv-val">86d8385a-440e-4bfc-acbf-dff2d7d86510</span></div>
+            <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val" style="color:#10B981;">Exempt (Owner)</span></div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Copy Login Email:</span>
+            <div class="code-box">
+              <span class="code-text">sivasurya.official.8@gmail.com</span>
+              <button class="copy-btn" onclick="copySnippetText('sivasurya.official.8@gmail.com')">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Standard Test Accounts -->
+        <div class="card">
+          <div class="card-title">
+            <span>🧪 Standard Test Accounts</span>
+            <span class="quick-pill">Integration Tests</span>
+          </div>
+          <div class="table-container" style="margin-top: 0;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Email</th><th>Password</th><th>Role</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>alex@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-pk">OWNER</span></td></tr>
+                <tr><td><code>sarah@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-fk">ADMIN</span></td></tr>
+                <tr><td><code>dev@acme.com</code></td><td><code>SecurePass123!</code></td><td><span class="badge-uk">MEMBER</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Reset Password SQL Snippet (BCrypt 12 rounds):</span>
+            <div class="code-box">
+              <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$UOf2DGvimct/gWdZm/vOnOsglBQMifDxdIj5m/j8i1BtTDMVWIDlO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
+              <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: REST APIS -->
+    <section class="section-block" id="tab-apis">
+      <div class="section-header">
+        <h2>REST API Endpoint Specifications</h2>
+        <p>Complete HTTP API interface available on port 8080.</p>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr><th>Method</th><th>Endpoint</th><th>Auth Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/auth/login</code></td>
+              <td>No</td>
+              <td>Authenticate user with JSON <code>{"email": "...", "password": "..."}</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/auth/logout</code></td>
+              <td>Yes</td>
+              <td>Terminates authenticated session and clears cookie</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/auth/session</code></td>
+              <td>Yes</td>
+              <td>Returns user profile, active role, and organization</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/auth/csrf</code></td>
+              <td>No</td>
+              <td>Retrieves XSRF-TOKEN cookie</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/setup/status</code></td>
+              <td>No</td>
+              <td>Check if workspace has been provisioned</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/setup</code></td>
+              <td>No</td>
+              <td>Create initial organization and owner account</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dashboard/summary</code></td>
+              <td>Yes</td>
+              <td>KPIs, attendance metrics, open tasks, recent activity</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/attendance/check-in</code></td>
+              <td>Yes</td>
+              <td>Employee check-in for current date</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/attendance/check-out</code></td>
+              <td>Yes</td>
+              <td>Employee check-out</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects</code></td>
+              <td>Yes</td>
+              <td>List organization projects</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/projects</code></td>
+              <td>Yes</td>
+              <td>Create new project</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/tasks</code></td>
+              <td>Yes</td>
+              <td>List organization tasks</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/tasks</code></td>
+              <td>Yes</td>
+              <td>Create new task</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/actuator/health</code></td>
+              <td>No</td>
+              <td>System health probe (Returns HTTP 200 UP)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: COMMANDS & SCRIPTS -->
+    <section class="section-block" id="tab-scripts">
+      <div class="section-header">
+        <h2>Developer Commands & Launcher</h2>
+        <p>Pre-configured scripts to run, build, and test Teamden.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🚀 One-Click Launcher (start.bat)</div>
+          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+            Starts PostgreSQL service, verifies port 8080, launches background Chrome monitor, and streams Spring Boot logs.
+          </p>
+          <div class="code-box">
+            <span class="code-text">.\start.bat</span>
+            <button class="copy-btn" onclick="copySnippetText('.\\start.bat')">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🧪 Run Automated Tests</div>
+          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+            Executes all 14 integration and unit test suites via Maven Wrapper.
+          </p>
+          <div class="code-box">
+            <span class="code-text">.\mvnw.cmd test</span>
+            <button class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd test')">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📦 Compile Project</div>
+          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+            Verifies all Java classes and copies static resources to target directory.
+          </p>
+          <div class="code-box">
+            <span class="code-text">.\mvnw.cmd compile</span>
+            <button class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd compile')">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🐘 Start PostgreSQL Service Manually</div>
+          <p style="font-size: 0.8125rem; color: var(--text-body); margin-bottom: 0.75rem;">
+            Starts PostgreSQL 17 Windows service via net start or pg_ctl.
+          </p>
+          <div class="code-box">
+            <span class="code-text">net start postgresql-x64-17</span>
+            <button class="copy-btn" onclick="copySnippetText('net start postgresql-x64-17')">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="dev-footer">
+    Teamden by shed — Internal Developer Reference Portal · All systems operational on port 8080
+  </footer>
+
+  <script>
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section-block').forEach(s => s.classList.remove('active'));
+
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) targetSection.classList.add('active');
+      });
+    });
+
+    // Schema Table Switcher
+    function switchTable(tableId) {
+      document.querySelectorAll('.schema-pill').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.table-pane').forEach(p => p.style.display = 'none');
+
+      const activePill = Array.from(document.querySelectorAll('.schema-pill')).find(p => p.textContent.trim() === tableId.replace('tbl-', ''));
+      if (activePill) activePill.classList.add('active');
+
+      const activePane = document.getElementById(tableId);
+      if (activePane) activePane.style.display = 'block';
+    }
+
+    // Theme Switcher
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('teamden-theme', t);
+      const isBW = (t === 'black-and-white' || t === 'dark');
+      themeIcon.textContent = isBW ? '☀️' : '🌙';
+      themeText.textContent = isBW ? 'Light Theme' : 'Black & White';
+    }
+
+    const savedTheme = localStorage.getItem('teamden-theme') || 'black-and-white';
+    applyTheme(savedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'black-and-white';
+      const isBW = (current === 'black-and-white' || current === 'dark');
+      applyTheme(isBW ? 'light' : 'black-and-white');
+    });
+
+    // Copy to clipboard
+    function copySnippet(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+        const btn = el.parentElement.querySelector('.copy-btn');
+        if (btn) {
+          const old = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = old;
+            btn.classList.remove('copied');
+          }, 1500);
+        }
+      });
+    }
+
+    function copySnippetText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        event.target.textContent = 'Copied!';
+        event.target.classList.add('copied');
+        setTimeout(() => {
+          event.target.textContent = 'Copy';
+          event.target.classList.remove('copied');
+        }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
