@@ -481,19 +481,141 @@ header.dash-topbar {
   border-radius: var(--radius-full);
 }
 
-/* User Avatar */
+/* User Avatar (Double Letter Initials) */
 .dash-avatar-wrapper {
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .dash-user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  object-fit: cover;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #111827;
+  color: #FFFFFF;
   border: 1.5px solid var(--dash-border);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat' !important;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  user-select: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.dash-user-avatar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.dash-avatar-wrapper:focus-within .dash-user-avatar {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+/* User Profile Dropdown */
+.dash-user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 220px;
+  background: var(--dash-card-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--dash-shadow);
+  padding: 0.75rem 0.5rem;
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.dash-user-dropdown.show {
+  display: flex;
+}
+
+.dash-user-dropdown-header {
+  padding: 0.25rem 0.75rem 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dash-user-dropdown-header .dropdown-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--dash-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-user-dropdown-header .dropdown-email {
+  font-size: 0.75rem;
+  color: var(--dash-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-user-dropdown-header .dropdown-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--dash-tag-bg);
+  color: var(--dash-text-muted);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+.dash-user-dropdown-divider {
+  height: 1px;
+  background: var(--dash-border);
+  margin: 0.35rem 0;
+}
+
+.dash-user-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #EF4444;
+  font-family: 'Montserrat' !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dash-user-dropdown-item:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+[data-theme="black-and-white"] .dash-user-avatar,
+[data-theme="dark"] .dash-user-avatar {
+  background: #FFFFFF;
+  color: #111827;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="black-and-white"] .dash-avatar-wrapper:focus-within .dash-user-avatar,
+[data-theme="dark"] .dash-avatar-wrapper:focus-within .dash-user-avatar {
+  outline: 2px solid #FFFFFF;
 }
 
 /* --------------------------------------------------------------------------

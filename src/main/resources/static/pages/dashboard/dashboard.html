@@ -162,10 +162,22 @@
           <span class="notification-dot"></span>
         </button>
 
-        <!-- User Profile Avatar -->
+        <!-- User Profile Avatar (Double Letter Initials) -->
         <div class="dash-avatar-wrapper" id="user-profile-wrapper" title="User Profile">
-          <img src="/assets/avatar.jpg" alt="Profile" class="dash-user-avatar" id="topbar-user-avatar"
-            onerror="this.onerror=null; this.src='/assets/icon.png';">
+          <div class="dash-user-avatar" id="topbar-user-avatar" aria-haspopup="true" aria-expanded="false">
+            --
+          </div>
+          <div class="dash-user-dropdown" id="user-profile-dropdown" role="menu">
+            <div class="dash-user-dropdown-header">
+              <span class="dropdown-name" id="dropdown-profile-name">User</span>
+              <span class="dropdown-email" id="dropdown-profile-email"></span>
+              <span class="dropdown-badge" id="dropdown-profile-role">MEMBER</span>
+            </div>
+            <div class="dash-user-dropdown-divider"></div>
+            <button class="dash-user-dropdown-item" id="topbar-logout-btn">
+              <span>🚪</span> Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </header>

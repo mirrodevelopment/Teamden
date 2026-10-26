@@ -14,7 +14,16 @@ const Navbar = (() => {
     if (user) {
       if (orgNameEl) orgNameEl.textContent = user.activeOrganizationName || 'My Workspace';
       if (userRoleEl) userRoleEl.textContent = user.role || 'MEMBER';
-      if (avatarEl) avatarEl.textContent = user.initials || 'U';
+      if (avatarEl) {
+        let doubleLetter = 'TD';
+        if (user.initials) {
+          doubleLetter = user.initials;
+        } else if (user.fullName) {
+          const parts = user.fullName.trim().split(/\s+/);
+          doubleLetter = parts.length === 1 ? parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        avatarEl.textContent = doubleLetter;
+      }
       if (userNameEl) userNameEl.textContent = user.fullName || 'User';
       if (userEmailEl) userEmailEl.textContent = user.email || '';
       if (dropdownUserNameEl) dropdownUserNameEl.textContent = user.fullName || 'User';

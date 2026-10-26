@@ -71,6 +71,30 @@ function initDashboardHeader(user) {
   if (wsNameEl && user && user.activeOrganizationName) {
     wsNameEl.textContent = user.activeOrganizationName;
   }
+
+  // User Profile Initials Avatar (Double letter of user name)
+  const avatarEl = document.getElementById('topbar-user-avatar');
+  if (avatarEl) {
+    let doubleLetter = 'TD';
+    if (user && user.initials) {
+      doubleLetter = user.initials;
+    } else if (user && user.fullName) {
+      const parts = user.fullName.trim().split(/\s+/);
+      doubleLetter = parts.length === 1 ? parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    avatarEl.textContent = doubleLetter;
+    if (user && user.fullName) {
+      avatarEl.setAttribute('title', `${user.fullName} (${user.email || ''})`);
+    }
+  }
+
+  // Populate dropdown header elements
+  const profileNameEl = document.getElementById('dropdown-profile-name');
+  const profileEmailEl = document.getElementById('dropdown-profile-email');
+  const profileRoleEl = document.getElementById('dropdown-profile-role');
+  if (profileNameEl && user && user.fullName) profileNameEl.textContent = user.fullName;
+  if (profileEmailEl && user && user.email) profileEmailEl.textContent = user.email;
+  if (profileRoleEl && user && user.role) profileRoleEl.textContent = user.role;
 }
 
 /**
@@ -286,6 +310,33 @@ function setupDashboardInteractions() {
   document.getElementById('pinned-add-btn')?.addEventListener('click', () => {
     openModal(projectModal);
   });
+
+  // 9. User profile dropdown & Sign Out
+  const userProfileWrapper = document.getElementById('user-profile-wrapper');
+  const userProfileDropdown = document.getElementById('user-profile-dropdown');
+  const userLogoutBtn = document.getElementById('topbar-logout-btn');
+
+  if (userProfileWrapper && userProfileDropdown) {
+    userProfileWrapper.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userProfileDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+      userProfileDropdown.classList.remove('show');
+    });
+  }
+
+  if (userLogoutBtn) {
+    userLogoutBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (window.Auth) {
+        await Auth.logout();
+      } else {
+        window.location.href = '/pages/login/login.html';
+      }
+    });
+  }
 }
 
 /**
