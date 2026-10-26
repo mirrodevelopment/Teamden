@@ -15,10 +15,10 @@
   </script>
 
   <!-- Central Design System & Fonts -->
-  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
-  <link rel="stylesheet" href="/fragments/theme/theme.css">
-  <link rel="stylesheet" href="/shared/css/variables.css">
-  <link rel="stylesheet" href="/shared/css/utilities.css">
+  <link rel="stylesheet" href="../src/main/resources/static/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="../src/main/resources/static/fragments/theme/theme.css">
+  <link rel="stylesheet" href="../src/main/resources/static/shared/css/variables.css">
+  <link rel="stylesheet" href="../src/main/resources/static/shared/css/utilities.css">
   <link rel="stylesheet" href="dev use.css">
 </head>
 <body>
@@ -135,14 +135,14 @@
       </div>
 
       <div class="schema-pills">
-        <button class="schema-pill active" onclick="switchTable('tbl-users')">users</button>
-        <button class="schema-pill" onclick="switchTable('tbl-organizations')">organizations</button>
-        <button class="schema-pill" onclick="switchTable('tbl-memberships')">organization_memberships</button>
-        <button class="schema-pill" onclick="switchTable('tbl-projects')">projects</button>
-        <button class="schema-pill" onclick="switchTable('tbl-tasks')">tasks</button>
-        <button class="schema-pill" onclick="switchTable('tbl-attendance')">attendance_records</button>
-        <button class="schema-pill" onclick="switchTable('tbl-activity')">activity_events</button>
-        <button class="schema-pill" onclick="switchTable('tbl-flyway')">flyway_schema_history</button>
+        <button class="schema-pill active" data-table="tbl-users" onclick="switchTable('tbl-users', this)">users</button>
+        <button class="schema-pill" data-table="tbl-organizations" onclick="switchTable('tbl-organizations', this)">organizations</button>
+        <button class="schema-pill" data-table="tbl-memberships" onclick="switchTable('tbl-memberships', this)">organization_memberships</button>
+        <button class="schema-pill" data-table="tbl-projects" onclick="switchTable('tbl-projects', this)">projects</button>
+        <button class="schema-pill" data-table="tbl-tasks" onclick="switchTable('tbl-tasks', this)">tasks</button>
+        <button class="schema-pill" data-table="tbl-attendance" onclick="switchTable('tbl-attendance', this)">attendance_records</button>
+        <button class="schema-pill" data-table="tbl-activity" onclick="switchTable('tbl-activity', this)">activity_events</button>
+        <button class="schema-pill" data-table="tbl-flyway" onclick="switchTable('tbl-flyway', this)">flyway_schema_history</button>
       </div>
 
       <!-- Table: users -->
@@ -571,17 +571,40 @@
       });
     });
 
-    // Schema Table Switcher
-    function switchTable(tableId) {
+    // Schema Table Switcher & Filter
+    function switchTable(tableId, btn) {
+      // Deactivate all pills
       document.querySelectorAll('.schema-pill').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.table-pane').forEach(p => p.classList.add('d-none'));
 
-      const activePill = Array.from(document.querySelectorAll('.schema-pill')).find(p => p.textContent.trim() === tableId.replace('tbl-', ''));
-      if (activePill) activePill.classList.add('active');
+      // Hide all table panes with class and inline style for bulletproof switching
+      document.querySelectorAll('.table-pane').forEach(p => {
+        p.classList.add('d-none');
+        p.style.display = 'none';
+      });
 
+      // Highlight active pill
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const found = document.querySelector(`.schema-pill[data-table="${tableId}"]`);
+        if (found) found.classList.add('active');
+      }
+
+      // Show selected table pane
       const activePane = document.getElementById(tableId);
-      if (activePane) activePane.classList.remove('d-none');
+      if (activePane) {
+        activePane.classList.remove('d-none');
+        activePane.style.display = 'block';
+      }
     }
+
+    // Attach click listener to all schema filter pills
+    document.querySelectorAll('.schema-pill').forEach(pill => {
+      pill.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-table');
+        if (targetId) switchTable(targetId, this);
+      });
+    });
 
     // Theme Switcher
     const themeBtn = document.getElementById('theme-toggle');
