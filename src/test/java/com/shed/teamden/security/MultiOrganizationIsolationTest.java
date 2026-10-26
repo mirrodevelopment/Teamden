@@ -1,5 +1,7 @@
 package com.shed.teamden.security;
 
+import com.shed.teamden.activity.repository.ActivityEventRepository;
+import com.shed.teamden.attendance.repository.AttendanceRecordRepository;
 import com.shed.teamden.organization.entity.MembershipRole;
 import com.shed.teamden.organization.entity.MembershipStatus;
 import com.shed.teamden.organization.entity.Organization;
@@ -63,6 +65,12 @@ public class MultiOrganizationIsolationTest {
     private TaskRepository taskRepository;
 
     @Autowired
+    private ActivityEventRepository activityEventRepository;
+
+    @Autowired
+    private AttendanceRecordRepository attendanceRecordRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private Organization orgAlpha;
@@ -82,6 +90,8 @@ public class MultiOrganizationIsolationTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        activityEventRepository.deleteAll();
+        attendanceRecordRepository.deleteAll();
         taskRepository.deleteAll();
         projectRepository.deleteAll();
         membershipRepository.deleteAll();

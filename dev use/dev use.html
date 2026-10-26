@@ -34,9 +34,12 @@
         </div>
       </div>
       <div class="header-controls">
-        <span class="quick-pill">Spring Boot 3.5</span>
-        <span class="quick-pill">PostgreSQL 17</span>
-        <span class="quick-pill">Port 8080</span>
+        <span class="status-active-pill" id="db-status-pill">
+          <span class="live-status-dot"></span> <span id="db-status-text">PostgreSQL 17</span>
+        </span>
+        <button class="db-refresh-btn" id="db-refresh-btn" onclick="refreshDatabaseData()" title="Reload all tables and data from Database">
+          <span id="refresh-icon">🔄</span> Refresh from DB
+        </button>
         <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
           <span id="theme-icon">☀️</span>
           <span id="theme-text">Light Theme</span>
@@ -49,8 +52,8 @@
   <nav class="nav-tabs">
     <div class="tabs-inner">
       <button class="tab-btn active" data-target="tab-overview">⚡ Environment & DB</button>
-      <button class="tab-btn" data-target="tab-tables">🗄️ Relational Tables (8)</button>
-      <button class="tab-btn" data-target="tab-users">👥 Users & Passwords</button>
+      <button class="tab-btn" data-target="tab-tables">🗄️ Relational Tables <span id="nav-tables-count" class="pill-count">...</span></button>
+      <button class="tab-btn" data-target="tab-users">👥 Users & Passwords <span id="nav-users-count" class="pill-count">...</span></button>
       <button class="tab-btn" data-target="tab-apis">🔌 REST APIs</button>
       <button class="tab-btn" data-target="tab-scripts">💻 Commands & Launcher</button>
     </div>
@@ -59,11 +62,24 @@
   <!-- Main Content -->
   <main class="dev-container">
 
+    <!-- Connection Notice (if backend is offline) -->
+    <div id="db-error-banner" class="card d-none mb-4" style="border-color: var(--color-danger); background-color: var(--color-danger-bg);">
+      <div class="d-flex justify-between align-center flex-wrap gap-2">
+        <div>
+          <strong style="color: var(--color-danger-text);">⚠️ Could not connect to backend API server</strong>
+          <p class="text-xs" style="color: var(--color-danger-text); margin-top: 0.25rem;">
+            Ensure the Spring Boot server is running on <code>http://localhost:8080</code> (via <code>.\start.bat</code>).
+          </p>
+        </div>
+        <button class="db-refresh-btn" onclick="refreshDatabaseData()">Retry Connection</button>
+      </div>
+    </div>
+
     <!-- TAB 1: OVERVIEW & DATABASE CONNECTION -->
     <section class="section-block active" id="tab-overview">
       <div class="section-header">
         <h2>Database Connection & Environment</h2>
-        <p>Local PostgreSQL configuration and Spring Boot runtime parameters.</p>
+        <p>Live PostgreSQL connection metrics and Spring Boot runtime parameters.</p>
       </div>
 
       <div class="grid-2">
@@ -71,12 +87,14 @@
         <div class="card">
           <div class="card-title">
             <span>🐘 PostgreSQL Connection</span>
-            <span class="status-active-pill">ACTIVE</span>
+            <span class="status-active-pill" id="card-db-status">CONNECTED</span>
           </div>
           <div class="kv-list">
             <div class="kv-item"><span class="kv-key">Host</span><span class="kv-val">localhost (127.0.0.1)</span></div>
             <div class="kv-item"><span class="kv-key">Port</span><span class="kv-val">5432</span></div>
-            <div class="kv-item"><span class="kv-key">Database Name</span><span class="kv-val">teamden</span></div>
+            <div class="kv-item"><span class="kv-key">Database Name</span><span class="kv-val" id="ov-db-name">teamden</span></div>
+            <div class="kv-item"><span class="kv-key">Product & Engine</span><span class="kv-val" id="ov-db-engine">PostgreSQL 17</span></div>
+            <div class="kv-item"><span class="kv-key">Total Schema Tables</span><span class="kv-val" id="ov-table-count">...</span></div>
             <div class="kv-item"><span class="kv-key">Username</span><span class="kv-val">postgres</span></div>
             <div class="kv-item"><span class="kv-key">Password</span><span class="kv-val">crazy@8</span></div>
             <div class="kv-item"><span class="kv-key">Driver</span><span class="kv-val">org.postgresql.Driver</span></div>
@@ -93,7 +111,7 @@
           <div>
             <span class="snippet-label">PowerShell Direct PSQL Connect:</span>
             <div class="code-box">
-              <span class="code-text" id="psql-cmd">$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -U postgres -d teamden</span>
+              <span class="code-text" id="psql-cmd">$env:PGPASSWORD='crazy@8'; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -h 127.0.0.1 -U postgres -d teamden</span>
               <button class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
             </div>
           </div>
@@ -106,12 +124,13 @@
             <span class="quick-pill">Port 8080</span>
           </div>
           <div class="kv-list">
-            <div class="kv-item"><span class="kv-key">Java Version</span><span class="kv-val">JDK 21 (Adoptium / Eclipse)</span></div>
-            <div class="kv-item"><span class="kv-key">Spring Boot</span><span class="kv-val">3.5.x</span></div>
+            <div class="kv-item"><span class="kv-key">Active Users in DB</span><span class="kv-val" id="ov-user-count">...</span></div>
+            <div class="kv-item"><span class="kv-key">Organizations in DB</span><span class="kv-val" id="ov-org-count">...</span></div>
+            <div class="kv-item"><span class="kv-key">Java Version</span><span class="kv-val">JDK 17 / 21</span></div>
+            <div class="kv-item"><span class="kv-key">Spring Boot</span><span class="kv-val">4.1.2</span></div>
             <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly, Lax)</span></div>
             <div class="kv-item"><span class="kv-key">Password Encoder</span><span class="kv-val">BCrypt (12 rounds)</span></div>
             <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql</span></div>
-            <div class="kv-item"><span class="kv-key">Design Tokens</span><span class="kv-val">fragments/theme/theme.css</span></div>
             <div class="kv-item"><span class="kv-key">Global Font</span><span class="kv-val">Montserrat</span></div>
           </div>
 
@@ -127,268 +146,66 @@
       </div>
     </section>
 
-    <!-- TAB 2: RELATIONAL TABLES -->
+    <!-- TAB 2: RELATIONAL TABLES (100% FROM DATABASE) -->
     <section class="section-block" id="tab-tables">
       <div class="section-header">
-        <h2>Relational Schema Tables</h2>
-        <p>Interactive inspector for all 8 database relations defined in Flyway V1 migration.</p>
+        <h2>Live Relational Tables & Columns</h2>
+        <p>All tables, column definitions, constraints, and data rows are retrieved dynamically from the database.</p>
       </div>
 
-      <div class="schema-pills">
-        <button class="schema-pill active" data-table="tbl-users" onclick="switchTable('tbl-users', this)">users</button>
-        <button class="schema-pill" data-table="tbl-organizations" onclick="switchTable('tbl-organizations', this)">organizations</button>
-        <button class="schema-pill" data-table="tbl-memberships" onclick="switchTable('tbl-memberships', this)">organization_memberships</button>
-        <button class="schema-pill" data-table="tbl-projects" onclick="switchTable('tbl-projects', this)">projects</button>
-        <button class="schema-pill" data-table="tbl-tasks" onclick="switchTable('tbl-tasks', this)">tasks</button>
-        <button class="schema-pill" data-table="tbl-attendance" onclick="switchTable('tbl-attendance', this)">attendance_records</button>
-        <button class="schema-pill" data-table="tbl-activity" onclick="switchTable('tbl-activity', this)">activity_events</button>
-        <button class="schema-pill" data-table="tbl-flyway" onclick="switchTable('tbl-flyway', this)">flyway_schema_history</button>
+      <!-- Dynamic Schema Filter Pills (Loaded from DB) -->
+      <div class="schema-pills" id="schema-pills-container">
+        <span class="text-xs text-muted">Loading tables from database...</span>
       </div>
 
-      <!-- Table: users -->
-      <div class="table-pane" id="tbl-users">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>full_name</strong></td><td>VARCHAR(150)</td><td>NO</td><td>—</td><td>Employee / User display name</td></tr>
-              <tr><td><strong>email</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td><span class="badge-uk">UNIQUE uk_users_email</span> Login email</td></tr>
-              <tr><td><strong>password_hash</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>BCrypt password hash (strength 12)</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, DISABLED, PENDING_INVITE</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Account creation timestamp</td></tr>
-              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
-              <tr><td><strong>last_login_at</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Timestamp of last authenticated login</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: organizations -->
-      <div class="table-pane d-none" id="tbl-organizations">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>name</strong></td><td>VARCHAR(150)</td><td>NO</td><td>—</td><td>Company / Workspace name</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, SUSPENDED, ARCHIVED</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
-              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: organization_memberships -->
-      <div class="table-pane d-none" id="tbl-memberships">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
-              <tr><td><strong>user_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
-              <tr><td><strong>role</strong></td><td>VARCHAR(30)</td><td>NO</td><td>—</td><td>OWNER, ADMIN, MEMBER, GUEST</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>ACTIVE, SUSPENDED</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: projects -->
-      <div class="table-pane d-none" id="tbl-projects">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
-              <tr><td><strong>name</strong></td><td>VARCHAR(200)</td><td>NO</td><td>—</td><td>Project name</td></tr>
-              <tr><td><strong>description</strong></td><td>TEXT</td><td>YES</td><td>NULL</td><td>Detailed project overview</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'ACTIVE'</td><td>PLANNING, ACTIVE, COMPLETED, ON_HOLD</td></tr>
-              <tr><td><strong>owner_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span> Project lead</td></tr>
-              <tr><td><strong>start_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Planned start date</td></tr>
-              <tr><td><strong>due_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Target completion date</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
-              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: tasks -->
-      <div class="table-pane d-none" id="tbl-tasks">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
-              <tr><td><strong>project_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> projects(id)</span></td></tr>
-              <tr><td><strong>title</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>Task title</td></tr>
-              <tr><td><strong>description</strong></td><td>TEXT</td><td>YES</td><td>NULL</td><td>Task acceptance criteria & notes</td></tr>
-              <tr><td><strong>assignee_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
-              <tr><td><strong>creator_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
-              <tr><td><strong>priority</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'MEDIUM'</td><td>LOW, MEDIUM, HIGH, URGENT</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'TODO'</td><td>TODO, IN_PROGRESS, IN_REVIEW, DONE</td></tr>
-              <tr><td><strong>due_date</strong></td><td>DATE</td><td>YES</td><td>NULL</td><td>Deadline</td></tr>
-              <tr><td><strong>completed_at</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Completion timestamp</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
-              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: attendance_records -->
-      <div class="table-pane d-none" id="tbl-attendance">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
-              <tr><td><strong>employee_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> users(id)</span></td></tr>
-              <tr><td><strong>attendance_date</strong></td><td>DATE</td><td>NO</td><td>—</td><td>Daily work date (UTC)</td></tr>
-              <tr><td><strong>check_in_time</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>—</td><td>Punch-in timestamp</td></tr>
-              <tr><td><strong>check_out_time</strong></td><td>TIMESTAMPTZ</td><td>YES</td><td>NULL</td><td>Punch-out timestamp</td></tr>
-              <tr><td><strong>status</strong></td><td>VARCHAR(30)</td><td>NO</td><td>'PRESENT'</td><td>PRESENT, HALF_DAY, ON_LEAVE, ABSENT</td></tr>
-              <tr><td><strong>created_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Creation timestamp</td></tr>
-              <tr><td><strong>updated_at</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Last update timestamp</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="table-info-note">
-          ℹ️ <strong>Business Rule:</strong> Users with role <code>OWNER</code> are automatically exempt from punch-in checks.
-        </div>
-      </div>
-
-      <!-- Table: activity_events -->
-      <div class="table-pane d-none" id="tbl-activity">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-pk">PRIMARY KEY</span></td></tr>
-              <tr><td><strong>organization_id</strong></td><td>UUID</td><td>NO</td><td>—</td><td><span class="badge-fk">FK -> organizations(id)</span></td></tr>
-              <tr><td><strong>actor_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td><span class="badge-fk">FK -> users(id)</span> Action author</td></tr>
-              <tr><td><strong>event_type</strong></td><td>VARCHAR(50)</td><td>NO</td><td>—</td><td>TASK_CREATED, PROJECT_CREATED, etc.</td></tr>
-              <tr><td><strong>entity_type</strong></td><td>VARCHAR(50)</td><td>NO</td><td>—</td><td>TASK, PROJECT, ORGANIZATION</td></tr>
-              <tr><td><strong>entity_id</strong></td><td>UUID</td><td>YES</td><td>NULL</td><td>UUID of referenced entity</td></tr>
-              <tr><td><strong>title</strong></td><td>VARCHAR(255)</td><td>NO</td><td>—</td><td>Event title summary</td></tr>
-              <tr><td><strong>description</strong></td><td>VARCHAR(500)</td><td>YES</td><td>NULL</td><td>Detailed event description</td></tr>
-              <tr><td><strong>event_timestamp</strong></td><td>TIMESTAMPTZ</td><td>NO</td><td>CURRENT_TIMESTAMP</td><td>Event creation time</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Table: flyway_schema_history -->
-      <div class="table-pane d-none" id="tbl-flyway">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints & Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>installed_rank</strong></td><td>INTEGER</td><td>NO</td><td>—</td><td>Migration sequence order</td></tr>
-              <tr><td><strong>version</strong></td><td>VARCHAR</td><td>YES</td><td>—</td><td>Version number (e.g. 1)</td></tr>
-              <tr><td><strong>description</strong></td><td>VARCHAR</td><td>NO</td><td>—</td><td>init schema</td></tr>
-              <tr><td><strong>script</strong></td><td>VARCHAR</td><td>NO</td><td>—</td><td>V1__init_schema.sql</td></tr>
-              <tr><td><strong>installed_on</strong></td><td>TIMESTAMP</td><td>NO</td><td>now()</td><td>Execution timestamp</td></tr>
-              <tr><td><strong>success</strong></td><td>BOOLEAN</td><td>NO</td><td>—</td><td>Migration success flag</td></tr>
-            </tbody>
-          </table>
+      <!-- Active Table Inspector -->
+      <div id="table-inspector-container">
+        <!-- Will be populated dynamically by JavaScript -->
+        <div class="loading-state-card" id="tables-loading-state">
+          Loading relational schema tables directly from database...
         </div>
       </div>
     </section>
 
-    <!-- TAB 3: USERS & PASSWORDS -->
+    <!-- TAB 3: USERS & PASSWORDS (100% FROM DATABASE) -->
     <section class="section-block" id="tab-users">
       <div class="section-header">
         <h2>Users, Credentials & Passwords</h2>
-        <p>Active live database credentials and authenticated account access.</p>
+        <p>Active user accounts and developer credentials retrieved dynamically from the database.</p>
       </div>
 
-      <div class="grid-2">
-        <!-- Live User Card -->
-        <div class="card">
-          <div class="card-title">
-            <span>👑 Live System Owner</span>
-            <span class="status-active-pill">ACTIVE</span>
-          </div>
-          <div class="kv-list">
-            <div class="kv-item"><span class="kv-key">Full Name</span><span class="kv-val">SIVASURYA S</span></div>
-            <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val" id="owner-email">sivasurya.official.8@gmail.com</span></div>
-            <div class="kv-item kv-item-highlight">
-              <span class="kv-key kv-key-highlight">Unhashed Password</span>
-              <span class="kv-val kv-val-highlight">Admin@123</span>
-            </div>
-            <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">OWNER</span></div>
-            <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">siva</span></div>
-            <div class="kv-item"><span class="kv-key">Org ID</span><span class="kv-val">6a6ed829-7154-4a7d-b3a8-3fb104035b69</span></div>
-            <div class="kv-item"><span class="kv-key">User ID</span><span class="kv-val">86d8385a-440e-4bfc-acbf-dff2d7d86510</span></div>
-            <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val kv-val-exempt">Exempt (Owner)</span></div>
-          </div>
-          <div>
-            <span class="snippet-label">Copy Login Email:</span>
-            <div class="code-box">
-              <span class="code-text">sivasurya.official.8@gmail.com</span>
-              <button class="copy-btn" onclick="copySnippetText('sivasurya.official.8@gmail.com')">Copy</button>
-            </div>
-          </div>
-          <div>
-            <span class="snippet-label-highlight">Copy Unhashed Password:</span>
-            <div class="code-box code-box-highlight">
-              <span class="code-text code-text-highlight">Admin@123</span>
-              <button class="copy-btn" onclick="copySnippetText('Admin@123')">Copy</button>
-            </div>
+      <div class="grid-2" id="users-grid-container">
+        <div class="loading-state-card" style="grid-column: 1 / -1;">
+          Loading user records from database...
+        </div>
+      </div>
+
+      <!-- Security & Database Tools -->
+      <div class="card mt-4">
+        <div class="card-title">
+          <span>🔐 Authentication & Database Tools</span>
+          <span class="quick-pill">BCrypt 12 Rounds</span>
+        </div>
+
+        <div class="kv-list">
+          <div class="kv-item"><span class="kv-key">Hash Algorithm</span><span class="kv-val">BCrypt (Cost Factor 12)</span></div>
+          <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly)</span></div>
+          <div class="kv-item"><span class="kv-key">CSRF Protection</span><span class="kv-val">XSRF-TOKEN (Cookie + Header)</span></div>
+        </div>
+
+        <div>
+          <span class="snippet-label">Reset Password to Admin@123 SQL Snippet:</span>
+          <div class="code-box">
+            <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
+            <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
           </div>
         </div>
 
-        <!-- Security & Database Operations -->
-        <div class="card">
-          <div class="card-title">
-            <span>🔐 Authentication & Database Tools</span>
-            <span class="quick-pill">BCrypt 12 Rounds</span>
-          </div>
-
-          <div class="kv-list">
-            <div class="kv-item"><span class="kv-key">Hash Algorithm</span><span class="kv-val">BCrypt (Cost Factor 12)</span></div>
-            <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly)</span></div>
-            <div class="kv-item"><span class="kv-key">CSRF Protection</span><span class="kv-val">XSRF-TOKEN (Cookie + Header)</span></div>
-          </div>
-
-          <div>
-            <span class="snippet-label">Reset Password to Admin@123 SQL Snippet:</span>
-            <div class="code-box">
-              <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '$2a$12$q0ih/l2MyEsIm3kq22ylIen/7gr3bZtERpEqcSulpwL9lPLPbxzpO' WHERE email = 'sivasurya.official.8@gmail.com';</span>
-              <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
-            </div>
-          </div>
-
-          <div>
-            <span class="snippet-label">Verify Active Users & Memberships SQL:</span>
-            <div class="code-box">
-              <span class="code-text" id="verify-users-sql">SELECT u.email, u.full_name, m.role, o.name AS org_name FROM users u JOIN organization_memberships m ON u.id = m.user_id JOIN organizations o ON m.organization_id = o.id;</span>
-              <button class="copy-btn" onclick="copySnippet('verify-users-sql')">Copy</button>
-            </div>
+        <div>
+          <span class="snippet-label">Verify Active Users & Memberships SQL:</span>
+          <div class="code-box">
+            <span class="code-text" id="verify-users-sql">SELECT u.email, u.full_name, m.role, o.name AS org_name FROM users u JOIN organization_memberships m ON u.id = m.user_id JOIN organizations o ON m.organization_id = o.id;</span>
+            <button class="copy-btn" onclick="copySnippet('verify-users-sql')">Copy</button>
           </div>
         </div>
       </div>
@@ -407,6 +224,36 @@
             <tr><th>Method</th><th>Endpoint</th><th>Auth Required</th><th>Description</th></tr>
           </thead>
           <tbody>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dev/tables</code></td>
+              <td>No</td>
+              <td>Live introspection of all database tables and column schemas</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dev/tables/{name}/data</code></td>
+              <td>No</td>
+              <td>Live rows from database table (SELECT * FROM table LIMIT 50)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dev/users</code></td>
+              <td>No</td>
+              <td>Live user accounts, roles, and developer credentials from DB</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dev/overview</code></td>
+              <td>No</td>
+              <td>Database product version, table counts, and runtime status</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/setup/register-company</code></td>
+              <td>No</td>
+              <td>Register new company workspace and Owner account</td>
+            </tr>
             <tr>
               <td><span class="badge-method badge-post">POST</span></td>
               <td><code>/api/auth/login</code></td>
@@ -433,57 +280,9 @@
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>
-              <td><code>/api/setup/status</code></td>
-              <td>No</td>
-              <td>Check if workspace has been provisioned</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-post">POST</span></td>
-              <td><code>/api/setup</code></td>
-              <td>No</td>
-              <td>Create initial organization and owner account</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-get">GET</span></td>
               <td><code>/api/dashboard/summary</code></td>
               <td>Yes</td>
               <td>KPIs, attendance metrics, open tasks, recent activity</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-post">POST</span></td>
-              <td><code>/api/attendance/check-in</code></td>
-              <td>Yes</td>
-              <td>Employee check-in for current date</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-post">POST</span></td>
-              <td><code>/api/attendance/check-out</code></td>
-              <td>Yes</td>
-              <td>Employee check-out</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-get">GET</span></td>
-              <td><code>/api/projects</code></td>
-              <td>Yes</td>
-              <td>List organization projects</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-post">POST</span></td>
-              <td><code>/api/projects</code></td>
-              <td>Yes</td>
-              <td>Create new project</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-get">GET</span></td>
-              <td><code>/api/tasks</code></td>
-              <td>Yes</td>
-              <td>List organization tasks</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-post">POST</span></td>
-              <td><code>/api/tasks</code></td>
-              <td>Yes</td>
-              <td>Create new task</td>
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>
@@ -518,7 +317,7 @@
         <div class="card">
           <div class="card-title">🧪 Run Automated Tests</div>
           <p class="card-desc">
-            Executes all 14 integration and unit test suites via Maven Wrapper.
+            Executes all integration and unit test suites via Maven Wrapper.
           </p>
           <div class="code-box">
             <span class="code-text">.\mvnw.cmd test</span>
@@ -554,10 +353,21 @@
 
   <!-- Footer -->
   <footer class="dev-footer">
-    Teamden by shed — Internal Developer Reference Portal · All systems operational on port 8080
+    Teamden by shed — Internal Developer Reference Portal · Connected directly to PostgreSQL Database
   </footer>
 
   <script>
+    // Configuration
+    const API_BASE = (window.location.origin && window.location.origin.startsWith('http'))
+      ? window.location.origin
+      : 'http://localhost:8080';
+
+    // State
+    let databaseTables = [];
+    let activeTableName = '';
+    let currentViewMode = 'schema'; // 'schema' | 'data'
+    const tableDataCache = {};
+
     // Tab Switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -568,41 +378,6 @@
         const targetId = btn.getAttribute('data-target');
         const targetSection = document.getElementById(targetId);
         if (targetSection) targetSection.classList.add('active');
-      });
-    });
-
-    // Schema Table Switcher & Filter
-    function switchTable(tableId, btn) {
-      // Deactivate all pills
-      document.querySelectorAll('.schema-pill').forEach(p => p.classList.remove('active'));
-
-      // Hide all table panes with class and inline style for bulletproof switching
-      document.querySelectorAll('.table-pane').forEach(p => {
-        p.classList.add('d-none');
-        p.style.display = 'none';
-      });
-
-      // Highlight active pill
-      if (btn) {
-        btn.classList.add('active');
-      } else {
-        const found = document.querySelector(`.schema-pill[data-table="${tableId}"]`);
-        if (found) found.classList.add('active');
-      }
-
-      // Show selected table pane
-      const activePane = document.getElementById(tableId);
-      if (activePane) {
-        activePane.classList.remove('d-none');
-        activePane.style.display = 'block';
-      }
-    }
-
-    // Attach click listener to all schema filter pills
-    document.querySelectorAll('.schema-pill').forEach(pill => {
-      pill.addEventListener('click', function () {
-        const targetId = this.getAttribute('data-table');
-        if (targetId) switchTable(targetId, this);
       });
     });
 
@@ -648,14 +423,312 @@
 
     function copySnippetText(text) {
       navigator.clipboard.writeText(text).then(() => {
-        event.target.textContent = 'Copied!';
-        event.target.classList.add('copied');
-        setTimeout(() => {
-          event.target.textContent = 'Copy';
-          event.target.classList.remove('copied');
-        }, 1500);
+        if (event && event.target) {
+          const old = event.target.textContent;
+          event.target.textContent = 'Copied!';
+          event.target.classList.add('copied');
+          setTimeout(() => {
+            event.target.textContent = old;
+            event.target.classList.remove('copied');
+          }, 1500);
+        }
       });
     }
+
+    // --- Dynamic Database Fetching & Rendering ---
+
+    async function fetchApi(endpoint) {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      const json = await res.json();
+      return json.data;
+    }
+
+    async function loadDatabaseOverview() {
+      try {
+        const data = await fetchApi('/api/dev/overview');
+        if (!data) return;
+
+        document.getElementById('db-status-pill').innerHTML = `<span class="live-status-dot"></span> <span>${data.databaseProduct} ${data.databaseVersion ? data.databaseVersion.split(' ')[0] : '17'}</span>`;
+        document.getElementById('card-db-status').textContent = data.status || 'CONNECTED';
+        document.getElementById('ov-db-name').textContent = data.databaseName || 'teamden';
+        document.getElementById('ov-db-engine').textContent = `${data.databaseProduct} ${data.databaseVersion || ''}`;
+        document.getElementById('ov-table-count').textContent = `${data.tableCount} tables`;
+        document.getElementById('ov-user-count').textContent = data.userCount;
+        document.getElementById('ov-org-count').textContent = data.organizationCount;
+        document.getElementById('nav-tables-count').textContent = data.tableCount;
+        document.getElementById('nav-users-count').textContent = data.userCount;
+        document.getElementById('db-error-banner').classList.add('d-none');
+      } catch (err) {
+        console.warn('Could not load overview from DB', err);
+        document.getElementById('db-error-banner').classList.remove('d-none');
+      }
+    }
+
+    async function loadDatabaseTables() {
+      const container = document.getElementById('schema-pills-container');
+      const inspector = document.getElementById('table-inspector-container');
+
+      try {
+        const tables = await fetchApi('/api/dev/tables');
+        if (!tables || !tables.length) {
+          container.innerHTML = '<span class="text-xs text-muted">No tables found in public schema.</span>';
+          return;
+        }
+
+        databaseTables = tables;
+        document.getElementById('nav-tables-count').textContent = tables.length;
+
+        // Render Schema Filter Pills
+        container.innerHTML = tables.map((t, idx) => `
+          <button class="schema-pill ${idx === 0 ? 'active' : ''}" data-table="${escapeHtml(t.tableName)}" onclick="selectTable('${escapeHtml(t.tableName)}')">
+            ${escapeHtml(t.tableName)} <span class="pill-count">${t.rowCount}</span>
+          </button>
+        `).join('');
+
+        // Select first table by default
+        if (tables.length > 0) {
+          selectTable(tables[0].tableName);
+        }
+      } catch (err) {
+        console.error('Error fetching tables from DB', err);
+        container.innerHTML = `<span class="text-xs" style="color: var(--color-danger);">Failed to load schema from database: ${escapeHtml(err.message)}</span>`;
+        inspector.innerHTML = `
+          <div class="card text-center py-4">
+            <p class="text-muted">Database API connection failed. Check if server is running on port 8080.</p>
+            <button class="db-refresh-btn mt-3" onclick="refreshDatabaseData()">Retry Loading Tables</button>
+          </div>
+        `;
+      }
+    }
+
+    function selectTable(tableName) {
+      activeTableName = tableName;
+
+      // Highlight active pill
+      document.querySelectorAll('.schema-pill').forEach(pill => {
+        if (pill.getAttribute('data-table') === tableName) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+
+      renderActiveTable();
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      renderActiveTable();
+    }
+
+    async function renderActiveTable() {
+      const inspector = document.getElementById('table-inspector-container');
+      const table = databaseTables.find(t => t.tableName.toLowerCase() === activeTableName.toLowerCase());
+
+      if (!table) {
+        inspector.innerHTML = `<div class="card py-4 text-center text-muted">Table "${escapeHtml(activeTableName)}" not found.</div>`;
+        return;
+      }
+
+      // Render Meta Header with View Mode Switcher
+      let html = `
+        <div class="table-meta-header">
+          <div class="table-meta-title">
+            <h3>${escapeHtml(table.tableName)}</h3>
+            <span class="quick-pill">${table.columns.length} columns</span>
+            <span class="quick-pill">${table.rowCount} ${table.rowCount === 1 ? 'row' : 'rows'}</span>
+          </div>
+          <div class="view-mode-tabs">
+            <button class="view-mode-btn ${currentViewMode === 'schema' ? 'active' : ''}" onclick="setViewMode('schema')">
+              Columns & Schema
+            </button>
+            <button class="view-mode-btn ${currentViewMode === 'data' ? 'active' : ''}" onclick="setViewMode('data')">
+              Live Data Rows (SELECT *)
+            </button>
+          </div>
+        </div>
+      `;
+
+      if (currentViewMode === 'schema') {
+        // Schema & Columns Table
+        html += `
+          <div class="table-container" style="border-top-left-radius: 0; border-top-right-radius: 0; margin-top: 0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Column Name</th>
+                  <th>Data Type</th>
+                  <th>Nullable</th>
+                  <th>Default Value</th>
+                  <th>Keys & Constraints</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${table.columns.map(c => `
+                  <tr>
+                    <td class="text-xs text-muted">${c.ordinalPosition}</td>
+                    <td><strong>${escapeHtml(c.columnName)}</strong></td>
+                    <td><code>${escapeHtml(c.dataType)}</code></td>
+                    <td>${c.nullable ? '<span class="text-muted">YES</span>' : '<strong>NO</strong>'}</td>
+                    <td>${c.defaultValue ? `<code>${escapeHtml(c.defaultValue)}</code>` : '<span class="text-muted">—</span>'}</td>
+                    <td>
+                      ${c.primaryKey ? '<span class="badge-pk">PRIMARY KEY</span> ' : ''}
+                      ${c.foreignKeyTarget ? `<span class="badge-fk">FK → ${escapeHtml(c.foreignKeyTarget)}</span> ` : ''}
+                      ${c.uniqueConstraint ? `<span class="badge-uk">UNIQUE</span> ` : ''}
+                      ${(!c.primaryKey && !c.foreignKeyTarget && !c.uniqueConstraint) ? '<span class="text-muted text-xs">—</span>' : ''}
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+        inspector.innerHTML = html;
+      } else {
+        // Live Table Data Rows View
+        inspector.innerHTML = html + `
+          <div class="table-container" style="border-top-left-radius: 0; border-top-right-radius: 0; margin-top: 0;">
+            <div id="table-data-content" class="py-4 text-center text-muted text-sm">
+              Loading live rows from database for <code>${escapeHtml(table.tableName)}</code>...
+            </div>
+          </div>
+        `;
+
+        try {
+          const data = await fetchApi(`/api/dev/tables/${encodeURIComponent(table.tableName)}/data?limit=50`);
+          const dataContainer = document.getElementById('table-data-content');
+          if (!dataContainer) return;
+
+          if (!data || !data.rows || data.rows.length === 0) {
+            dataContainer.outerHTML = `
+              <div class="empty-table-state">
+                <p>Table <code>${escapeHtml(table.tableName)}</code> currently contains <strong>0 records</strong> in the database.</p>
+              </div>
+            `;
+            return;
+          }
+
+          let dataTableHtml = `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  ${data.columnNames.map(col => `<th>${escapeHtml(col)}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${data.rows.map(row => `
+                  <tr>
+                    ${data.columnNames.map(col => {
+                      const val = row[col];
+                      return `<td>${val !== null && val !== undefined ? escapeHtml(String(val)) : '<span class="text-muted">NULL</span>'}</td>`;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+          dataContainer.outerHTML = dataTableHtml;
+        } catch (err) {
+          const dataContainer = document.getElementById('table-data-content');
+          if (dataContainer) {
+            dataContainer.innerHTML = `<span style="color: var(--color-danger);">Failed to load table rows: ${escapeHtml(err.message)}</span>`;
+          }
+        }
+      }
+    }
+
+    async function loadDatabaseUsers() {
+      const container = document.getElementById('users-grid-container');
+      try {
+        const users = await fetchApi('/api/dev/users');
+        if (!users || !users.length) {
+          container.innerHTML = '<div class="card py-4 text-center text-muted" style="grid-column: 1 / -1;">No users registered yet.</div>';
+          return;
+        }
+
+        document.getElementById('nav-users-count').textContent = users.length;
+
+        container.innerHTML = users.map(u => `
+          <div class="card">
+            <div class="card-title">
+              <span>${u.role === 'OWNER' ? '👑' : '👤'} ${escapeHtml(u.fullName || 'User')}</span>
+              <span class="${u.status === 'ACTIVE' ? 'status-active-pill' : 'quick-pill'}">${escapeHtml(u.status || 'ACTIVE')}</span>
+            </div>
+            <div class="kv-list">
+              <div class="kv-item"><span class="kv-key">Full Name</span><span class="kv-val">${escapeHtml(u.fullName || '—')}</span></div>
+              <div class="kv-item"><span class="kv-key">Email</span><span class="kv-val">${escapeHtml(u.email || '—')}</span></div>
+              <div class="kv-item kv-item-highlight">
+                <span class="kv-key kv-key-highlight">Unhashed Password</span>
+                <span class="kv-val kv-val-highlight">${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}</span>
+              </div>
+              <div class="kv-item"><span class="kv-key">Role</span><span class="kv-val">${escapeHtml(u.role || 'MEMBER')}</span></div>
+              <div class="kv-item"><span class="kv-key">Organization</span><span class="kv-val">${escapeHtml(u.organizationName || 'None')}</span></div>
+              <div class="kv-item"><span class="kv-key">Org ID</span><span class="kv-val text-xs">${escapeHtml(u.organizationId || '—')}</span></div>
+              <div class="kv-item"><span class="kv-key">User ID</span><span class="kv-val text-xs">${escapeHtml(u.id || '—')}</span></div>
+              <div class="kv-item"><span class="kv-key">Attendance</span><span class="kv-val ${u.role === 'OWNER' ? 'kv-val-exempt' : ''}">${u.role === 'OWNER' ? 'Exempt (Owner)' : 'Tracked Daily'}</span></div>
+            </div>
+            <div>
+              <span class="snippet-label">Copy Login Email:</span>
+              <div class="code-box">
+                <span class="code-text">${escapeHtml(u.email || '')}</span>
+                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.email || '')}')">Copy</button>
+              </div>
+            </div>
+            <div>
+              <span class="snippet-label-highlight">Copy Password:</span>
+              <div class="code-box code-box-highlight">
+                <span class="code-text code-text-highlight">${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}</span>
+                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Admin@123')}')">Copy</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Error fetching users from DB', err);
+        container.innerHTML = `<div class="card py-4 text-center" style="grid-column: 1 / -1; color: var(--color-danger);">Failed to load users from DB: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    async function refreshDatabaseData() {
+      const refreshBtn = document.getElementById('db-refresh-btn');
+      const icon = document.getElementById('refresh-icon');
+      if (refreshBtn) refreshBtn.disabled = true;
+      if (icon) icon.style.display = 'inline-block';
+
+      try {
+        await Promise.all([
+          loadDatabaseOverview(),
+          loadDatabaseTables(),
+          loadDatabaseUsers()
+        ]);
+      } catch (e) {
+        console.warn('Refresh error', e);
+      } finally {
+        if (refreshBtn) refreshBtn.disabled = false;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Initial Load on Page Load
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshDatabaseData();
+    });
   </script>
 </body>
 </html>
