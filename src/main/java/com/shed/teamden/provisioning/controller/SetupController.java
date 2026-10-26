@@ -26,4 +26,10 @@ public class SetupController {
         setupService.provisionInitialWorkspace(request);
         return ResponseEntity.ok(ApiResponse.success("Initial workspace and owner account provisioned successfully", null));
     }
+
+    @PostMapping("/register-company")
+    public ResponseEntity<ApiResponse<Void>> registerCompany(@Valid @RequestBody SetupRequest request) {
+        setupService.registerNewCompany(request);
+        return ResponseEntity.ok(ApiResponse.success("Company workspace and owner account registered successfully", null));
+    }
 }

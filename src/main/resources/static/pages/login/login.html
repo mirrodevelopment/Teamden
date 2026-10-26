@@ -36,16 +36,26 @@
       <!-- Header & Branding -->
       <header class="login-header">
         <img src="/assets/logo.png" alt="Teamden by shed Logo" class="login-logo">
-        <h1 class="login-title">Sign in to Teamden</h1>
-        <p class="login-subtitle">All-in-one team and work management workspace</p>
+        <h1 class="login-title" id="auth-main-title">Sign in to Teamden</h1>
+        <p class="login-subtitle" id="auth-main-subtitle">All-in-one team and work management workspace</p>
       </header>
+
+      <!-- Segmented Auth Mode Switcher -->
+      <div class="auth-mode-tabs" role="tablist">
+        <button type="button" class="auth-mode-tab active" id="tab-sign-in" role="tab" aria-selected="true">
+          Sign In
+        </button>
+        <button type="button" class="auth-mode-tab" id="tab-register-company" role="tab" aria-selected="false">
+          🏢 Register as New Company
+        </button>
+      </div>
 
       <!-- Feedback / Alert Banner -->
       <div id="login-alert" class="alert alert-danger d-none" role="alert">
         <span id="login-alert-text"></span>
       </div>
 
-      <!-- One-time Setup Banner (appears only if database is completely empty) -->
+      <!-- One-time Setup Banner (if database has 0 companies) -->
       <div id="setup-banner" class="setup-notice d-none">
         <div class="setup-notice-content">
           <strong>Workspace Setup Required</strong>
@@ -54,7 +64,7 @@
         <button type="button" id="open-setup-modal-btn" class="btn btn-sm btn-outline">Initialize Workspace</button>
       </div>
 
-      <!-- Login Form -->
+      <!-- Sign In Form -->
       <form id="login-form" novalidate>
         <div class="form-group">
           <label for="email" class="form-label">Work Email <span class="required" aria-hidden="true">*</span></label>
@@ -113,6 +123,96 @@
         <button type="submit" id="submit-btn" class="btn btn-primary btn-block">
           <span id="btn-text">Sign In</span>
         </button>
+
+        <div class="auth-switch-prompt">
+          <span class="text-xs text-muted">Need a workspace for your team? </span>
+          <a href="#" id="switch-to-register-link" class="auth-switch-link text-xs">Register as New Company</a>
+        </div>
+      </form>
+
+      <!-- Register as New Company Form -->
+      <form id="register-company-form" class="d-none" novalidate>
+        <div class="form-group">
+          <label for="reg-org-name" class="form-label">Company / Organization Name <span class="required" aria-hidden="true">*</span></label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="reg-org-name"
+              name="organizationName"
+              class="form-input"
+              placeholder="e.g. Acme Services Ltd"
+              required
+            >
+          </div>
+          <div id="reg-org-error" class="form-error d-none"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-admin-name" class="form-label">Owner Full Name <span class="required" aria-hidden="true">*</span></label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="reg-admin-name"
+              name="adminName"
+              class="form-input"
+              placeholder="e.g. Jane Doe"
+              required
+            >
+          </div>
+          <div id="reg-name-error" class="form-error d-none"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-admin-email" class="form-label">Owner Work Email <span class="required" aria-hidden="true">*</span></label>
+          <div class="input-wrapper">
+            <input
+              type="email"
+              id="reg-admin-email"
+              name="adminEmail"
+              class="form-input"
+              placeholder="you@company.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+          <div id="reg-email-error" class="form-error d-none"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-admin-password" class="form-label">Owner Password (min 8 chars) <span class="required" aria-hidden="true">*</span></label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="reg-admin-password"
+              name="adminPassword"
+              class="form-input"
+              placeholder="Create a secure password"
+              minlength="8"
+              required
+            >
+            <button
+              type="button"
+              id="reg-toggle-password-btn"
+              class="password-toggle-btn"
+              aria-label="Show password"
+            >
+              <svg id="reg-eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div id="reg-password-error" class="form-error d-none"></div>
+        </div>
+
+        <button type="submit" id="reg-submit-btn" class="btn btn-primary btn-block mt-3">
+          <span id="reg-btn-text">Register Company & Start Workspace</span>
+        </button>
+
+        <div class="auth-switch-prompt">
+          <span class="text-xs text-muted">Already registered your company? </span>
+          <a href="#" id="switch-to-login-link" class="auth-switch-link text-xs">Sign in to your account</a>
+        </div>
       </form>
 
       <footer class="login-footer">

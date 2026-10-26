@@ -62,11 +62,16 @@ public class SetupService implements CommandLineRunner {
 
     @Transactional
     public void provisionInitialWorkspace(SetupRequest request) {
-        if (isProvisioned()) {
-            throw new ConflictException("The workspace has already been provisioned. Initial setup is locked.");
-        }
+        registerNewCompany(request);
+    }
 
+    @Transactional
+    public void registerNewCompany(SetupRequest request) {
         String normalizedEmail = request.getAdminEmail().trim().toLowerCase();
+
+        if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+            throw new ConflictException("An account with email '" + normalizedEmail + "' already exists. Please sign in or use another work email.");
+        }
 
         // 1. Create Organization
         Organization organization = Organization.builder()
@@ -100,11 +105,11 @@ public class SetupService implements CommandLineRunner {
                 ActivityEventType.WORKSPACE_PROVISIONED,
                 "ORGANIZATION",
                 organization.getId(),
-                "Workspace Initialized",
-                "Initial workspace and Owner account created for " + adminUser.getFullName()
+                "Company Registered",
+                "New company workspace '" + organization.getName() + "' registered with Owner " + adminUser.getFullName()
         );
 
-        log.info("Initial workspace '{}' and Owner user '{}' provisioned successfully.",
+        log.info("New company '{}' registered with Owner '{}' successfully.",
                 organization.getName(), normalizedEmail);
     }
 
