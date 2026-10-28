@@ -13,7 +13,7 @@
 }
 
 .app-sidebar {
-  width: 195px;
+  width: 210px;
   height: 100vh;
   background-color: var(--dash-bg-canvas);
   border-right: 1px solid var(--dash-border);

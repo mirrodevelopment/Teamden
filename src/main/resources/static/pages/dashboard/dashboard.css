@@ -29,7 +29,7 @@ body.dashboard-body {
 
 /* Sidebar Mount Area */
 .sidebar-mount-area {
-  width: 195px;
+  width: 210px;
   flex-shrink: 0;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -57,7 +57,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 /* Two-Column Grid matching the Topbar's two sections */
 .dash-content-split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 265px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   min-height: calc(100vh - 60px);
 }
 
@@ -122,10 +122,10 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .dash-title-today {
-  font-size: 4.5rem;
+  font-size: clamp(4.5rem, 6.5vw, 6.75rem);
   font-weight: 900;
-  letter-spacing: -0.045em;
-  line-height: 0.95;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
   color: var(--dash-text-primary);
   margin: 0;
 }
@@ -408,6 +408,18 @@ body.sidebar-collapsed .sidebar-mount-area {
   flex-direction: column;
   gap: 0.55rem;
   min-width: 0;
+}
+
+#kanban-col-now {
+  background-color: #EBE7DD;
+}
+
+#kanban-col-next {
+  background-color: #E6E3EB;
+}
+
+#kanban-col-later {
+  background-color: #E2E6E2;
 }
 
 .kanban-col-header {
@@ -759,13 +771,13 @@ body.sidebar-collapsed .sidebar-mount-area {
    ========================================================================== */
 .dash-right-rail {
   border-left: 1px solid var(--dash-border);
-  padding: 1.5rem 1.25rem 4rem 1.25rem;
+  padding: 1.5rem 1.5rem 4rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  min-width: 265px;
-  max-width: 265px;
-  width: 265px;
+  min-width: 320px;
+  max-width: 320px;
+  width: 320px;
   background-color: var(--dash-bg-canvas);
   position: relative;
   z-index: 2;
@@ -852,8 +864,9 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .rail-title {
+  font-family: var(--font-family-display, 'Inter');
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.08em;
   color: var(--dash-text-primary);
   text-transform: uppercase;
