@@ -40,24 +40,26 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  max-width: 130px;
 }
 
-.brand-text-brick {
-  font-size: 2.15rem;
-  font-weight: 900;
-  letter-spacing: -0.045em;
-  color: var(--dash-text-primary);
-  line-height: 1;
+.brand-typography-img {
+  width: auto;
+  max-width: 125px;
+  height: auto;
+  max-height: 36px;
+  object-fit: contain;
+  object-position: left center;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
 }
 
-.brand-icon-collapsed {
-  font-size: 1.75rem;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  color: var(--dash-text-primary);
-  line-height: 1;
+.brand-icon-img {
+  width: 32px;
+  height: 34px;
+  object-fit: contain;
   display: none;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Sidebar Collapse Button */
@@ -344,7 +346,7 @@ body.sidebar-collapsed .sidebar-header {
   position: relative;
 }
 
-body.sidebar-collapsed .brand-text-brick,
+body.sidebar-collapsed .brand-typography-img,
 body.sidebar-collapsed .sidebar-workspace-select,
 body.sidebar-collapsed .nav-num,
 body.sidebar-collapsed .nav-label,
@@ -354,8 +356,12 @@ body.sidebar-collapsed .footer-label {
   display: none !important;
 }
 
-body.sidebar-collapsed .brand-icon-collapsed {
+body.sidebar-collapsed .brand-icon-img {
   display: block !important;
+  width: 30px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 body.sidebar-collapsed .collapse-icon {

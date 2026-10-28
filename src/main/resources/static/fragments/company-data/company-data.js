@@ -11,9 +11,9 @@
 
   // Internal Company Configuration State
   const COMPANY_STATE = {
-    name: 'teamden',
-    displayName: 'Teamden',
-    brandName: 'Teamden by shed',
+    name: 'BRICK',
+    displayName: 'BRICK',
+    brandName: 'BRICK by shed',
     mail: 'teamden@gmil.com',
     email: 'teamden@gmil.com',
     supportMail: 'teamden@gmil.com',
@@ -36,23 +36,23 @@
     version: '1.0',
 
     // Logo & Visual Branding
-    logo: '/assets/teamden-minimalist-logo.png',
-    logoUrl: '/assets/teamden-minimalist-logo.png',
-    logoImg: '/assets/teamden-minimalist-logo.png',
-    logoAlt: 'Teamden Logo',
+    logo: '/assets/bric-typography.png',
+    logoUrl: '/assets/bric-typography.png',
+    logoImg: '/assets/bric-typography.png',
+    logoAlt: 'BRICK',
 
     // Collapsed Icon Mark & Favicon
-    icon: '/assets/teamden-minimalist-icon.png',
-    iconUrl: '/assets/teamden-minimalist-icon.png',
-    iconImg: '/assets/teamden-minimalist-icon.png',
-    iconAlt: 'Teamden Icon',
-    favicon: '/assets/teamden-minimalist-icon.png',
+    icon: '/assets/bric-icon.png',
+    iconUrl: '/assets/bric-icon.png',
+    iconImg: '/assets/bric-icon.png',
+    iconAlt: 'BRICK Icon',
+    favicon: '/assets/bric-icon.png',
 
     // Typo (Brand Typography & Emblem Logo)
-    typo: '/assets/teamden-minimalist-logo.png',
-    typoUrl: '/assets/teamden-minimalist-logo.png',
-    typoLogo: '/assets/teamden-minimalist-logo.png',
-    typoText: 'Teamden by shed',
+    typo: '/assets/bric-typography.png',
+    typoUrl: '/assets/bric-typography.png',
+    typoLogo: '/assets/bric-typography.png',
+    typoText: 'BRICK Team and Work Management',
     typoFont: 'Montserrat',
     font: 'Montserrat',
     fontFamily: 'Montserrat'
@@ -325,7 +325,7 @@
     if (el.tagName === 'A') {
       if (k === 'url' || k === 'homeurl' || k === 'dashboardurl' || k === 'website' || k === 'websiteurl' || k === 'link') {
         el.setAttribute('href', val);
-        if (!el.textContent.trim() || el.hasAttribute('data-company-replace')) {
+        if (el.children.length === 0 && (!el.textContent.trim() || el.hasAttribute('data-company-replace'))) {
           el.textContent = COMPANY_STATE.brandName || COMPANY_STATE.name;
         }
         return;

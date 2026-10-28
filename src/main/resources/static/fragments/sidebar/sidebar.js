@@ -23,6 +23,11 @@ const Sidebar = (() => {
       document.body.classList.add('sidebar-collapsed');
     }
 
+    // Hydrate company branding
+    if (window.CompanyData && typeof CompanyData.hydrate === 'function') {
+      CompanyData.hydrate(document.getElementById('app-sidebar'));
+    }
+
     // Set workspace name from user if available
     const workspaceNameEl = document.getElementById('sidebar-workspace-name');
     if (workspaceNameEl && user && user.activeOrganizationName) {
