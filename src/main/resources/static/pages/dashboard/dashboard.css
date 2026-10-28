@@ -180,7 +180,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .hero-task-title {
-  font-family: var(--font-family-display, 'Inter', sans-serif);
+  font-family: var(--font-family-display, 'Inter');
   font-size: 1.5rem;
   font-weight: 900;
   color: #FFFFFF;
@@ -313,7 +313,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .due-number {
-  font-family: var(--font-family-display, 'Inter', sans-serif);
+  font-family: var(--font-family-display, 'Inter');
   font-size: 1.65rem;
   font-weight: 900;
   line-height: 1;
@@ -371,7 +371,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 
 h2,
 .dash-section-title {
-  font-family: var(--font-family-display, 'Inter', sans-serif);
+  font-family: var(--font-family-display, 'Inter');
   font-size: 0.9375rem;
   font-weight: 900;
   letter-spacing: 0.06em;
@@ -811,7 +811,7 @@ h2,
 }
 
 .date-huge-number {
-  font-family: var(--font-family-display, 'Inter', sans-serif);
+  font-family: var(--font-family-display, 'Inter');
   font-size: 5.5rem;
   font-weight: 900;
   line-height: 0.82;
