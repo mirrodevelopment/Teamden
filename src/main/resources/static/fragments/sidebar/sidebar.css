@@ -2,6 +2,7 @@
    Teamden by shed — Sidebar Fragment Styles (sidebar.css)
    Path: fragments/sidebar/sidebar.css
    Pixel-accurate matching of neo-editorial 'brick' sidebar layout.
+   Collapsible to compact 64px icon rail with floating tooltips.
    100% Montserrat font only.
    ========================================================================== */
 @import url('../theme/theme.css');
@@ -23,14 +24,16 @@
   left: 0;
   z-index: var(--z-fixed);
   font-family: 'Montserrat' !important;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Header & Brand: 'brick' wordmark */
+/* Header & Brand */
 .sidebar-header {
   height: 60px;
-  padding: 1.25rem 1.25rem 0.25rem 1.25rem;
+  padding: 1.25rem 1rem 0.25rem 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .sidebar-brand-logo {
@@ -45,11 +48,48 @@
   letter-spacing: -0.045em;
   color: var(--dash-text-primary);
   line-height: 1;
+  display: block;
+}
+
+.brand-icon-collapsed {
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--dash-text-primary);
+  line-height: 1;
+  display: none;
+}
+
+/* Sidebar Collapse Button */
+.sidebar-collapse-btn {
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  color: var(--dash-text-muted);
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-collapse-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--dash-text-primary);
+  border-color: #888888;
+}
+
+.collapse-icon {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Workspace Selector */
 .sidebar-workspace-select {
   padding: 0.5rem 1.25rem 0.85rem 1.25rem;
+  transition: opacity var(--transition-fast);
 }
 
 .workspace-eyebrow {
@@ -89,9 +129,25 @@
 .sidebar-nav-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0.25rem 0.75rem;
   display: flex;
   flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.sidebar-nav-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.sidebar-nav-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .sidebar-nav {
@@ -112,7 +168,8 @@
   color: var(--dash-text-primary);
   text-decoration: none;
   font-family: 'Montserrat' !important;
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  position: relative;
 }
 
 .nav-num {
@@ -132,6 +189,7 @@
   flex: 1;
   font-size: 0.8125rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .nav-item:hover:not(.active) {
@@ -217,7 +275,8 @@
   color: #333333;
   text-decoration: none;
   font-family: 'Montserrat' !important;
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  position: relative;
 }
 
 .pinned-icon {
@@ -256,6 +315,7 @@
   text-decoration: none;
   font-family: 'Montserrat' !important;
   transition: color var(--transition-fast);
+  position: relative;
 }
 
 .sidebar-footer-link svg {
@@ -269,4 +329,134 @@
 
 .sidebar-footer-link:hover svg {
   color: #000000;
+}
+
+/* ==========================================================================
+   COLLAPSED SIDEBAR STATE (body.sidebar-collapsed)
+   ========================================================================== */
+body.sidebar-collapsed .app-sidebar {
+  width: 64px;
+}
+
+body.sidebar-collapsed .sidebar-header {
+  padding: 1rem 0.5rem;
+  justify-content: center;
+  position: relative;
+}
+
+body.sidebar-collapsed .brand-text-brick,
+body.sidebar-collapsed .sidebar-workspace-select,
+body.sidebar-collapsed .nav-num,
+body.sidebar-collapsed .nav-label,
+body.sidebar-collapsed .sidebar-pinned-section .pinned-header,
+body.sidebar-collapsed .pinned-label,
+body.sidebar-collapsed .footer-label {
+  display: none !important;
+}
+
+body.sidebar-collapsed .brand-icon-collapsed {
+  display: block !important;
+}
+
+body.sidebar-collapsed .collapse-icon {
+  transform: rotate(180deg);
+}
+
+body.sidebar-collapsed .sidebar-collapse-btn {
+  position: absolute;
+  top: 17px;
+  right: -13px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+body.sidebar-collapsed .sidebar-nav-container {
+  padding: 0.5rem 0.4rem;
+  align-items: center;
+  overflow: visible !important;
+}
+
+body.sidebar-collapsed .nav-item {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+body.sidebar-collapsed .nav-item:hover,
+body.sidebar-collapsed .pinned-item:hover,
+body.sidebar-collapsed .sidebar-footer-link:hover {
+  z-index: 100;
+}
+
+body.sidebar-collapsed .nav-item.active {
+  background-color: var(--dash-accent-lime);
+}
+
+body.sidebar-collapsed .sidebar-pinned-section {
+  align-items: center;
+  overflow: visible;
+}
+
+body.sidebar-collapsed .pinned-item {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+}
+
+body.sidebar-collapsed .sidebar-footer {
+  padding: 1rem 0.4rem;
+  align-items: center;
+}
+
+body.sidebar-collapsed .sidebar-footer-link {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* Floating Tooltips in Collapsed Mode */
+body.sidebar-collapsed .app-sidebar [data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #111111;
+  color: #FFFFFF;
+  font-family: 'Montserrat' !important;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+/* Tooltip arrow pointer */
+body.sidebar-collapsed .app-sidebar [data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px 6px 5px 0;
+  border-style: solid;
+  border-color: transparent #111111 transparent transparent;
+  pointer-events: none;
+  z-index: 10000;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
 }

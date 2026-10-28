@@ -1,9 +1,15 @@
 <aside class="app-sidebar" id="app-sidebar">
-  <!-- Brand Wordmark Header -->
+  <!-- Brand Wordmark Header & Collapse Toggle -->
   <div class="sidebar-header">
     <a href="/pages/dashboard/dashboard.html" class="sidebar-brand-logo" title="brick">
       <span class="brand-text-brick" id="sidebar-brand-name">brick</span>
+      <span class="brand-icon-collapsed">b.</span>
     </a>
+    <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" aria-label="Toggle sidebar collapse" title="Toggle Sidebar">
+      <svg class="collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
   </div>
 
   <!-- Workspace Selector Dropdown -->
@@ -87,14 +93,14 @@
         <button class="pinned-add-btn" id="pinned-add-btn" title="Add pinned item" aria-label="Add pinned item">+</button>
       </div>
       <div class="pinned-list">
-        <a href="#website-redesign" class="pinned-item">
+        <a href="#website-redesign" class="pinned-item" data-tooltip="Website Redesign">
           <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
           <span class="pinned-label">Website Redesign</span>
         </a>
 
-        <a href="#brand-guidelines" class="pinned-item">
+        <a href="#brand-guidelines" class="pinned-item" data-tooltip="Brand Guidelines">
           <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -105,7 +111,7 @@
           <span class="pinned-label">Brand Guidelines</span>
         </a>
 
-        <a href="#client-onboarding" class="pinned-item">
+        <a href="#client-onboarding" class="pinned-item" data-tooltip="Client Onboarding">
           <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -116,14 +122,14 @@
           <span class="pinned-label">Client Onboarding</span>
         </a>
 
-        <a href="#marketing" class="pinned-item">
+        <a href="#marketing" class="pinned-item" data-tooltip="Marketing">
           <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
           <span class="pinned-label">Marketing</span>
         </a>
 
-        <a href="#product-roadmap" class="pinned-item">
+        <a href="#product-roadmap" class="pinned-item" data-tooltip="Product Roadmap">
           <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
@@ -135,21 +141,21 @@
 
   <!-- Sidebar Footer: Settings & Help -->
   <div class="sidebar-footer">
-    <a href="#settings" class="sidebar-footer-link" id="nav-settings" title="Settings">
+    <a href="#settings" class="sidebar-footer-link" id="nav-settings" title="Settings" data-tooltip="Settings">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
       </svg>
-      <span>Settings</span>
+      <span class="footer-label">Settings</span>
     </a>
 
-    <a href="#help" class="sidebar-footer-link" id="nav-help" title="Help & Support">
+    <a href="#help" class="sidebar-footer-link" id="nav-help" title="Help & Support" data-tooltip="Help & Support">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
       </svg>
-      <span>Help & Support</span>
+      <span class="footer-label">Help & Support</span>
     </a>
   </div>
 </aside>
