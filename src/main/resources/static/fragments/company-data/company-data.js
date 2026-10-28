@@ -9,8 +9,8 @@
 (function (global) {
   'use strict';
 
-  // Core Company Configuration
-  const COMPANY_RAW = {
+  // Internal Company Configuration State
+  const COMPANY_STATE = {
     name: 'teamden',
     displayName: 'Teamden',
     brandName: 'Teamden by shed',
@@ -22,10 +22,13 @@
     address: '100 Innovation Way, Suite 400, Tech City, CA 94016',
     website: 'https://teamden.com',
     websiteUrl: 'https://teamden.com',
+
+    // Primary Application URLs
     url: '/pages/dashboard/dashboard.html',
     homeUrl: '/pages/dashboard/dashboard.html',
     dashboardUrl: '/pages/dashboard/dashboard.html',
     loginUrl: '/pages/login/login.html',
+
     tagline: 'Team Productivity, Work Management & SaaS Platform',
     copyright: '© 2026 Teamden. All rights reserved.',
     foundedYear: '2026',
@@ -55,11 +58,9 @@
     fontFamily: 'Montserrat'
   };
 
-  const COMPANY_DATA = Object.freeze({ ...COMPANY_RAW });
-
   /**
    * Universal getter for company properties.
-   * If called with no arguments or with 'name', returns the company name ('teamden').
+   * If called with no arguments or with 'name', returns company name ('teamden').
    * Examples:
    *   Company()          => "teamden"
    *   Company('name')    => "teamden"
@@ -68,39 +69,45 @@
    *   Company('typo')    => "/assets/teamden-minimalist-logo.png"
    *   Company('url')     => "/pages/dashboard/dashboard.html"
    *   Company('mail')    => "teamden@gmil.com"
-   *   Company('ph')      => "+1 (555) 019-2834"
-   *   Company('address') => "100 Innovation Way, Suite 400, Tech City, CA 94016"
    */
   function Company(key) {
-    if (!key) return COMPANY_DATA.name;
+    if (!key) return COMPANY_STATE.name;
     const normalizedKey = String(key).trim().toLowerCase();
 
-    // Exact or lowercase match
-    if (normalizedKey in COMPANY_DATA) {
-      return COMPANY_DATA[normalizedKey];
+    // Exact match
+    if (key in COMPANY_STATE) {
+      return COMPANY_STATE[key];
     }
-    // Handle camelCase aliases
-    if (key in COMPANY_DATA) {
-      return COMPANY_DATA[key];
+    // Lowercase match
+    if (normalizedKey in COMPANY_STATE) {
+      return COMPANY_STATE[normalizedKey];
     }
-    // Aliases
+    // Common aliases
     if (normalizedKey === 'typo' || normalizedKey === 'typography' || normalizedKey === 'typo_url') {
-      return COMPANY_DATA.typo;
+      return COMPANY_STATE.typo;
     }
     if (normalizedKey === 'typotext' || normalizedKey === 'typo_text') {
-      return COMPANY_DATA.typoText;
+      return COMPANY_STATE.typoText;
     }
     if (normalizedKey === 'link' || normalizedKey === 'home' || normalizedKey === 'dashboard') {
-      return COMPANY_DATA.url;
+      return COMPANY_STATE.url;
     }
-    return COMPANY_DATA.name;
+    if (normalizedKey === 'login') {
+      return COMPANY_STATE.loginUrl;
+    }
+    return COMPANY_STATE.name;
   }
 
-  // Attach properties to Company function for direct access: Company.name, Company.logo, Company.url
-  Object.keys(COMPANY_DATA).forEach((k) => {
+  // Attach dynamic getter properties to Company function: Company.name, Company.logo, Company.url
+  Object.keys(COMPANY_STATE).forEach((k) => {
     Object.defineProperty(Company, k, {
-      get: () => COMPANY_DATA[k],
-      enumerable: true
+      get: () => COMPANY_STATE[k],
+      set: (val) => {
+        COMPANY_STATE[k] = val;
+        CompanyData.hydrate();
+      },
+      enumerable: true,
+      configurable: true
     });
   });
 
@@ -108,87 +115,121 @@
    * Full CompanyData API Object
    */
   const CompanyData = {
-    ...COMPANY_DATA,
+    // Dynamic getters
+    get name() { return COMPANY_STATE.name; },
+    get displayName() { return COMPANY_STATE.displayName; },
+    get brandName() { return COMPANY_STATE.brandName; },
+    get mail() { return COMPANY_STATE.mail; },
+    get email() { return COMPANY_STATE.email; },
+    get ph() { return COMPANY_STATE.ph; },
+    get phone() { return COMPANY_STATE.phone; },
+    get address() { return COMPANY_STATE.address; },
+    get website() { return COMPANY_STATE.website; },
+    get websiteUrl() { return COMPANY_STATE.websiteUrl; },
+    get url() { return COMPANY_STATE.url; },
+    get homeUrl() { return COMPANY_STATE.homeUrl; },
+    get dashboardUrl() { return COMPANY_STATE.dashboardUrl; },
+    get loginUrl() { return COMPANY_STATE.loginUrl; },
+    get tagline() { return COMPANY_STATE.tagline; },
+    get copyright() { return COMPANY_STATE.copyright; },
+    get logo() { return COMPANY_STATE.logo; },
+    get icon() { return COMPANY_STATE.icon; },
+    get typo() { return COMPANY_STATE.typo; },
+    get typoText() { return COMPANY_STATE.typoText; },
+    get fontFamily() { return COMPANY_STATE.fontFamily; },
 
     /**
      * Safe lookup with fallback
      */
     get(key, fallback = '') {
-      if (!key) return COMPANY_DATA.name;
+      if (!key) return COMPANY_STATE.name;
       const k = String(key).trim();
-      return COMPANY_DATA[k] || COMPANY_DATA[k.toLowerCase()] || fallback;
+      return COMPANY_STATE[k] || COMPANY_STATE[k.toLowerCase()] || fallback;
     },
 
     /**
-     * Formats a browser title using the centralized company name
-     * Example: CompanyData.formatTitle('Sign In') => 'Sign In — teamden'
+     * Runtime setters (automatically re-hydrates all pages and elements)
      */
+    setUrl(newUrl) {
+      if (!newUrl) return;
+      COMPANY_STATE.url = newUrl;
+      COMPANY_STATE.homeUrl = newUrl;
+      COMPANY_STATE.dashboardUrl = newUrl;
+      CompanyData.hydrate();
+      return newUrl;
+    },
+
+    setLoginUrl(newLoginUrl) {
+      if (!newLoginUrl) return;
+      COMPANY_STATE.loginUrl = newLoginUrl;
+      CompanyData.hydrate();
+      return newLoginUrl;
+    },
+
+    setLogo(newLogo) {
+      if (!newLogo) return;
+      COMPANY_STATE.logo = newLogo;
+      COMPANY_STATE.logoUrl = newLogo;
+      COMPANY_STATE.typo = newLogo;
+      CompanyData.hydrate();
+      return newLogo;
+    },
+
+    setIcon(newIcon) {
+      if (!newIcon) return;
+      COMPANY_STATE.icon = newIcon;
+      COMPANY_STATE.iconUrl = newIcon;
+      COMPANY_STATE.favicon = newIcon;
+      CompanyData.hydrate();
+      return newIcon;
+    },
+
     formatTitle(pageTitle) {
-      if (!pageTitle) return COMPANY_DATA.brandName;
-      return `${pageTitle} — ${COMPANY_DATA.name}`;
+      if (!pageTitle) return COMPANY_STATE.brandName;
+      return `${pageTitle} — ${COMPANY_STATE.name}`;
     },
 
-    /**
-     * Helper getters
-     */
-    getLogo() {
-      return COMPANY_DATA.logo;
-    },
-
-    getIcon() {
-      return COMPANY_DATA.icon;
-    },
-
-    getTypo() {
-      return COMPANY_DATA.typo;
-    },
-
-    getUrl() {
-      return COMPANY_DATA.url;
-    },
-
-    getTypoText() {
-      return COMPANY_DATA.typoText;
-    },
+    getLogo() { return COMPANY_STATE.logo; },
+    getIcon() { return COMPANY_STATE.icon; },
+    getTypo() { return COMPANY_STATE.typo; },
+    getUrl() { return COMPANY_STATE.url; },
+    getLoginUrl() { return COMPANY_STATE.loginUrl; },
+    getTypoText() { return COMPANY_STATE.typoText; },
 
     /**
      * HTML Generators for quick dynamic embedding in other pages
      */
     renderBrand(options = {}) {
-      const url = options.url || COMPANY_DATA.url;
-      const logoSrc = options.logo || COMPANY_DATA.logo;
-      const iconSrc = options.icon || COMPANY_DATA.icon;
+      const url = options.url || COMPANY_STATE.url;
+      const logoSrc = options.logo || COMPANY_STATE.logo;
+      const iconSrc = options.icon || COMPANY_STATE.icon;
       const logoClass = options.logoClass || 'dash-brand-logo-img';
       const iconClass = options.iconClass || 'dash-brand-icon-img';
       const linkClass = options.linkClass || 'dash-brand';
-      const title = options.title || COMPANY_DATA.brandName;
+      const title = options.title || COMPANY_STATE.brandName;
 
       return `<a href="${url}" class="${linkClass}" title="${title}" data-company="url">
         <img src="${logoSrc}" alt="${title}" class="${logoClass}" data-company="logo">
-        <img src="${iconSrc}" alt="${COMPANY_DATA.displayName} Icon" class="${iconClass}" data-company="icon">
+        <img src="${iconSrc}" alt="${COMPANY_STATE.displayName} Icon" class="${iconClass}" data-company="icon">
       </a>`;
     },
 
     renderLogo(options = {}) {
-      const src = options.src || COMPANY_DATA.logo;
+      const src = options.src || COMPANY_STATE.logo;
       const className = options.className || 'company-logo';
-      const alt = options.alt || COMPANY_DATA.brandName;
+      const alt = options.alt || COMPANY_STATE.brandName;
       return `<img src="${src}" alt="${alt}" class="${className}" data-company="logo">`;
     },
 
     renderIcon(options = {}) {
-      const src = options.src || COMPANY_DATA.icon;
+      const src = options.src || COMPANY_STATE.icon;
       const className = options.className || 'company-icon';
-      const alt = options.alt || COMPANY_DATA.displayName + ' Icon';
+      const alt = options.alt || COMPANY_STATE.displayName + ' Icon';
       return `<img src="${src}" alt="${alt}" class="${className}" data-company="icon">`;
     },
 
     /**
      * Automatically hydrates HTML elements with company data.
-     * Supports:
-     *   - [data-company="name|mail|ph|address|logo|icon|typo|url|..."]
-     *   - [data-company-name], [data-company-logo], [data-company-url], etc.
-     *   - Classes: .company-name, .company-mail, .company-logo, .company-icon, .company-url, .company-copyright
      */
     hydrate(root = document) {
       if (!root || typeof root.querySelectorAll !== 'function') return;
@@ -203,49 +244,49 @@
       });
 
       // 2. Individual data-company-* attributes
-      Object.keys(COMPANY_DATA).forEach((k) => {
+      Object.keys(COMPANY_STATE).forEach((k) => {
         const attr = `data-company-${k.toLowerCase()}`;
         root.querySelectorAll(`[${attr}]`).forEach((el) => {
-          applyValueToElement(el, k, COMPANY_DATA[k]);
+          applyValueToElement(el, k, COMPANY_STATE[k]);
         });
       });
 
       // 3. Special shortcuts: [data-company-url], [data-company-logo], [data-company-icon], [data-company-typo]
       root.querySelectorAll('[data-company-url]').forEach((el) => {
-        if (el.tagName === 'A') {
-          el.setAttribute('href', COMPANY_DATA.url);
-        } else {
-          el.addEventListener('click', () => { window.location.href = COMPANY_DATA.url; });
-        }
+        applyValueToElement(el, 'url', COMPANY_STATE.url);
+      });
+
+      root.querySelectorAll('[data-company-login]').forEach((el) => {
+        applyValueToElement(el, 'loginUrl', COMPANY_STATE.loginUrl);
       });
 
       root.querySelectorAll('[data-company-logo]').forEach((el) => {
-        applyValueToElement(el, 'logo', COMPANY_DATA.logo);
+        applyValueToElement(el, 'logo', COMPANY_STATE.logo);
       });
 
       root.querySelectorAll('[data-company-icon]').forEach((el) => {
-        applyValueToElement(el, 'icon', COMPANY_DATA.icon);
+        applyValueToElement(el, 'icon', COMPANY_STATE.icon);
       });
 
       root.querySelectorAll('[data-company-typo]').forEach((el) => {
-        applyValueToElement(el, 'typo', COMPANY_DATA.typo);
+        applyValueToElement(el, 'typo', COMPANY_STATE.typo);
       });
 
       // 4. Common class helpers
       const classMap = {
-        'company-name': COMPANY_DATA.name,
-        'company-display-name': COMPANY_DATA.displayName,
-        'company-brand': COMPANY_DATA.brandName,
-        'company-mail': COMPANY_DATA.mail,
-        'company-ph': COMPANY_DATA.ph,
-        'company-address': COMPANY_DATA.address,
-        'company-tagline': COMPANY_DATA.tagline,
-        'company-copyright': COMPANY_DATA.copyright,
-        'company-logo': COMPANY_DATA.logo,
-        'company-icon': COMPANY_DATA.icon,
-        'company-typo': COMPANY_DATA.typo,
-        'company-url': COMPANY_DATA.url,
-        'company-link': COMPANY_DATA.url
+        'company-name': COMPANY_STATE.name,
+        'company-display-name': COMPANY_STATE.displayName,
+        'company-brand': COMPANY_STATE.brandName,
+        'company-mail': COMPANY_STATE.mail,
+        'company-ph': COMPANY_STATE.ph,
+        'company-address': COMPANY_STATE.address,
+        'company-tagline': COMPANY_STATE.tagline,
+        'company-copyright': COMPANY_STATE.copyright,
+        'company-logo': COMPANY_STATE.logo,
+        'company-icon': COMPANY_STATE.icon,
+        'company-typo': COMPANY_STATE.typo,
+        'company-url': COMPANY_STATE.url,
+        'company-link': COMPANY_STATE.url
       };
 
       Object.entries(classMap).forEach(([className, val]) => {
@@ -263,16 +304,20 @@
 
     // 1. Image elements (logo, icon, typo)
     if (el.tagName === 'IMG') {
-      el.src = val;
+      if (el.src !== val && !el.src.endsWith(val)) {
+        el.src = val;
+      }
       if (!el.getAttribute('alt')) {
-        el.alt = COMPANY_DATA.brandName || COMPANY_DATA.name;
+        el.alt = COMPANY_STATE.brandName || COMPANY_STATE.name;
       }
       return;
     }
 
     // 2. Favicon / Link elements
     if (el.tagName === 'LINK' && (k.includes('icon') || k.includes('favicon') || (el.rel && el.rel.includes('icon')))) {
-      el.href = val;
+      if (el.href !== val && !el.href.endsWith(val)) {
+        el.href = val;
+      }
       return;
     }
 
@@ -281,8 +326,12 @@
       if (k === 'url' || k === 'homeurl' || k === 'dashboardurl' || k === 'website' || k === 'websiteurl' || k === 'link') {
         el.setAttribute('href', val);
         if (!el.textContent.trim() || el.hasAttribute('data-company-replace')) {
-          el.textContent = COMPANY_DATA.brandName || COMPANY_DATA.name;
+          el.textContent = COMPANY_STATE.brandName || COMPANY_STATE.name;
         }
+        return;
+      }
+      if (k === 'loginurl' || k === 'login') {
+        el.setAttribute('href', val);
         return;
       }
       if (k.includes('mail') || k.includes('email')) {
@@ -316,19 +365,63 @@
     }
 
     // 5. Standard text elements
-    el.textContent = val;
+    if (el.textContent !== val) {
+      el.textContent = val;
+    }
+  }
+
+  // Setup DOM MutationObserver to auto-hydrate any elements dynamically added later
+  let mutationTimeout = null;
+  function setupMutationObserver() {
+    if (typeof MutationObserver === 'undefined' || typeof document === 'undefined') return;
+    const observer = new MutationObserver((mutations) => {
+      let shouldHydrate = false;
+      for (let i = 0; i < mutations.length; i++) {
+        const m = mutations[i];
+        if (m.addedNodes && m.addedNodes.length > 0) {
+          shouldHydrate = true;
+          break;
+        }
+      }
+      if (shouldHydrate) {
+        if (mutationTimeout) clearTimeout(mutationTimeout);
+        mutationTimeout = setTimeout(() => CompanyData.hydrate(), 30);
+      }
+    });
+
+    observer.observe(document.documentElement || document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  // Global click delegator fallback for brand and company links
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', (e) => {
+      const link = e.target && e.target.closest ? e.target.closest('[data-company-url], [data-company="url"]') : null;
+      if (link && link.tagName === 'A') {
+        const currentUrl = Company('url');
+        if (currentUrl && link.getAttribute('href') !== currentUrl) {
+          link.setAttribute('href', currentUrl);
+        }
+      }
+    }, true);
   }
 
   // Expose globally
   global.CompanyData = CompanyData;
   global.Company = Company;
 
-  // Auto-hydrate on DOM ready
+  // Auto-hydrate on DOM ready & setup observer
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => CompanyData.hydrate());
+      document.addEventListener('DOMContentLoaded', () => {
+        CompanyData.hydrate();
+        setupMutationObserver();
+      });
     } else {
       CompanyData.hydrate();
+      setupMutationObserver();
     }
   }
 

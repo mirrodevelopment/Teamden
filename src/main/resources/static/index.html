@@ -389,7 +389,8 @@
           if (setupStatus && !setupStatus.provisioned) {
             updateStatus('Workspace setup required. Launching...', 90);
             setTimeout(() => {
-              window.location.replace('/pages/login/login.html?setup=true');
+              const loginUrl = (typeof Company === 'function' ? Company('loginUrl') : '/pages/login/login.html');
+              window.location.replace(`${loginUrl}?setup=true`);
             }, 300);
             return;
           }
@@ -402,13 +403,15 @@
           if (currentUser) {
             updateStatus(`Welcome back, ${currentUser.fullName}! Launching dashboard...`, 100);
             setTimeout(() => {
-              window.location.replace('/pages/dashboard/dashboard.html');
+              const dashboardUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+              window.location.replace(dashboardUrl);
             }, 350);
           } else {
             const companyName = (typeof Company === 'function' ? Company('displayName') : 'Teamden');
             updateStatus(`Starting ${companyName} Sign In...`, 100);
             setTimeout(() => {
-              window.location.replace('/pages/login/login.html');
+              const loginUrl = (typeof Company === 'function' ? Company('loginUrl') : '/pages/login/login.html');
+              window.location.replace(loginUrl);
             }, 300);
           }
 

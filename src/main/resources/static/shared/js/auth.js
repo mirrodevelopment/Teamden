@@ -41,7 +41,8 @@ const Auth = (() => {
   async function requireAuth() {
     const user = await checkSession();
     if (!user) {
-      window.location.href = '/pages/login/login.html?expired=true';
+      const loginUrl = (typeof Company === 'function' ? Company('loginUrl') : '/pages/login/login.html');
+      window.location.href = `${loginUrl}?expired=true`;
       return null;
     }
     return user;
@@ -53,7 +54,8 @@ const Auth = (() => {
   async function redirectIfAuthenticated() {
     const user = await checkSession();
     if (user) {
-      window.location.href = '/pages/dashboard/dashboard.html';
+      const target = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+      window.location.href = target;
       return user;
     }
     return null;
