@@ -187,6 +187,7 @@ body.sidebar-collapsed .sidebar-mount-area {
   margin: 0;
   line-height: 1.25;
   letter-spacing: -0.02em;
+  text-transform: none;
 }
 
 .hero-tags-row {
@@ -313,9 +314,9 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .due-number {
-  font-family: var(--font-family-number, 'Monument Extended', 'Unbounded', 'Montserrat');
+  font-family: 'Monument Extended', 'Unbounded', 'Montserrat' !important;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 800 !important;
   line-height: 1;
   color: #FFFFFF;
   letter-spacing: -0.04em;
@@ -369,7 +370,6 @@ body.sidebar-collapsed .sidebar-mount-area {
   justify-content: space-between;
 }
 
-h2,
 .dash-section-title {
   font-family: var(--font-family-display, 'Inter');
   font-size: 0.9375rem;
@@ -811,9 +811,9 @@ h2,
 }
 
 .date-huge-number {
-  font-family: var(--font-family-number, 'Monument Extended', 'Unbounded', 'Montserrat');
+  font-family: 'Monument Extended', 'Unbounded', 'Montserrat' !important;
   font-size: 5.25rem;
-  font-weight: 800;
+  font-weight: 800 !important;
   line-height: 0.85;
   letter-spacing: -0.04em;
   color: var(--dash-text-primary);
@@ -979,9 +979,9 @@ h2,
 }
 
 .attention-count {
-  font-family: var(--font-family-number, 'Monument Extended', 'Unbounded', 'Montserrat');
+  font-family: 'Monument Extended', 'Unbounded', 'Montserrat' !important;
   font-size: 1.85rem;
-  font-weight: 800;
+  font-weight: 800 !important;
   line-height: 1;
   letter-spacing: -0.04em;
   min-width: 2.25rem;
