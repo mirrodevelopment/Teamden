@@ -1,41 +1,47 @@
-/* Sidebar Fragment Styles */
+/* ==========================================================================
+   Teamden by shed — Sidebar Fragment Styles (sidebar.css)
+   Path: fragments/sidebar/sidebar.css
+   Pixel-accurate matching of neo-editorial sidebar design.
+   100% Montserrat font only.
+   ========================================================================== */
 @import url('../theme/theme.css');
 
 .app-sidebar {
   width: var(--sidebar-width);
   height: 100vh;
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-color);
+  background-color: var(--dash-bg-canvas);
+  border-right: 1px solid var(--dash-border);
   display: flex;
   flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
   z-index: var(--z-fixed);
+  font-family: 'Montserrat' !important;
   transition: width var(--transition-normal), transform var(--transition-normal);
 }
 
+/* Header & Brand */
 .sidebar-header {
   height: var(--header-height);
   padding: 0 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar-brand {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: var(--text-primary);
+  color: var(--dash-text-primary);
   flex: 1;
   min-width: 0;
 }
 
 .brand-logo-full {
-  height: 38px;
-  max-width: 155px;
+  height: 34px;
+  max-width: 140px;
   width: auto;
   object-fit: contain;
   object-position: left center;
@@ -44,8 +50,8 @@
 
 .brand-icon-collapsed {
   display: none;
-  height: 38px;
-  width: 38px;
+  height: 34px;
+  width: 34px;
   object-fit: contain;
 }
 
@@ -57,10 +63,10 @@
 
 .sidebar-collapse-btn {
   background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text-muted);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.3rem;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -69,175 +75,310 @@
 }
 
 .sidebar-collapse-btn:hover {
-  background-color: var(--bg-hover);
-  color: var(--text-primary);
-  border-color: var(--text-tertiary);
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--dash-text-primary);
+  border-color: var(--dash-border-strong);
 }
 
 .sidebar-close-btn {
   display: none;
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--dash-text-muted);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.3rem;
   border-radius: var(--radius-sm);
 }
 
+/* Workspace Selector */
+.sidebar-workspace-select {
+  padding: 0.25rem 1.25rem 0.875rem 1.25rem;
+}
+
+.workspace-eyebrow {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--dash-text-light);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.workspace-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Montserrat' !important;
+  color: var(--dash-text-primary);
+  text-align: left;
+}
+
+.workspace-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dash-text-primary);
+}
+
+.workspace-chevron {
+  color: var(--dash-text-muted);
+  transition: transform var(--transition-fast);
+}
+
+/* Nav Container */
 .sidebar-nav-container {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem 0.75rem;
+  padding: 0.5rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.3rem;
 }
 
-.nav-section-title {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--text-tertiary);
-  letter-spacing: 0.05em;
-  padding: 0.75rem 0.75rem 0.25rem 0.75rem;
-  text-transform: uppercase;
-}
-
+/* Navigation Items */
 .nav-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5625rem 0.75rem;
+  padding: 0.6rem 0.875rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--dash-text-body);
   text-decoration: none;
+  font-family: 'Montserrat' !important;
   transition: all var(--transition-fast);
   position: relative;
 }
 
-.nav-item:hover:not(.nav-item-disabled) {
-  background-color: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.nav-item.active {
-  background-color: var(--primary-light);
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.nav-item.active .nav-icon {
-  color: var(--primary);
+.nav-num {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--dash-text-light);
+  min-width: 1.25rem;
+  letter-spacing: 0.02em;
 }
 
 .nav-icon {
-  color: var(--text-tertiary);
+  color: var(--dash-text-muted);
   flex-shrink: 0;
   transition: color var(--transition-fast);
 }
 
-.nav-item-disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  user-select: none;
+.nav-label {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
-.nav-badge-soon {
-  margin-left: auto;
-  font-size: 0.625rem;
+.nav-item:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--dash-text-primary);
+}
+
+.nav-item:hover:not(.active) .nav-icon {
+  color: var(--dash-text-primary);
+}
+
+/* Active Nav Item: Neon Chartreuse Pill */
+.nav-item.active {
+  background-color: var(--dash-accent-lime);
+  color: var(--dash-accent-lime-text);
   font-weight: 700;
-  text-transform: uppercase;
-  padding: 0.125rem 0.375rem;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  color: var(--text-tertiary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid var(--border-color);
+.nav-item.active .nav-num {
+  color: var(--dash-accent-lime-text);
 }
 
-.workspace-summary-box {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 0.75rem;
+.nav-item.active .nav-icon {
+  color: var(--dash-accent-lime-text);
+  stroke-width: 2.2;
 }
 
-.workspace-meta {
+/* Pinned Section */
+.sidebar-pinned-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+}
+
+.pinned-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.25rem;
+  padding: 0 0.5rem 0.25rem 0.5rem;
 }
 
-.workspace-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-primary);
+.pinned-title {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--dash-text-light);
+  text-transform: uppercase;
 }
 
-.workspace-status-text {
-  font-size: 0.6875rem;
-  color: var(--text-tertiary);
+.pinned-add-btn {
+  background: transparent;
+  border: none;
+  color: var(--dash-text-muted);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  font-family: 'Montserrat' !important;
+  transition: color var(--transition-fast);
 }
 
-/* Sidebar Collapsed State */
+.pinned-add-btn:hover {
+  color: var(--dash-text-primary);
+}
+
+.pinned-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pinned-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.625rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--dash-text-muted);
+  text-decoration: none;
+  font-family: 'Montserrat' !important;
+  transition: all var(--transition-fast);
+}
+
+.pinned-icon {
+  color: var(--dash-text-light);
+  flex-shrink: 0;
+}
+
+.pinned-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pinned-item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--dash-text-primary);
+}
+
+.pinned-item:hover .pinned-icon {
+  color: var(--dash-text-primary);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border-top: 1px solid var(--dash-border);
+}
+
+.sidebar-footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--dash-text-muted);
+  text-decoration: none;
+  font-family: 'Montserrat' !important;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-footer-link svg {
+  color: var(--dash-text-muted);
+  flex-shrink: 0;
+}
+
+.sidebar-footer-link:hover {
+  color: var(--dash-text-primary);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.sidebar-footer-link:hover svg {
+  color: var(--dash-text-primary);
+}
+
+/* Collapsed State */
 body.sidebar-collapsed .app-sidebar {
   width: var(--sidebar-collapsed-width);
 }
 
-body.sidebar-collapsed .brand-text,
+body.sidebar-collapsed .brand-logo-full,
+body.sidebar-collapsed .brand-logo-text,
+body.sidebar-collapsed .sidebar-workspace-select,
+body.sidebar-collapsed .nav-num,
 body.sidebar-collapsed .nav-label,
-body.sidebar-collapsed .nav-badge-soon,
-body.sidebar-collapsed .nav-section-title,
-body.sidebar-collapsed .sidebar-footer {
-  display: none;
+body.sidebar-collapsed .sidebar-pinned-section,
+body.sidebar-collapsed .footer-label {
+  display: none !important;
+}
+
+body.sidebar-collapsed .brand-icon-collapsed {
+  display: block !important;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+}
+
+body.sidebar-collapsed .app-sidebar .sidebar-header {
+  padding: 0.75rem 0.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: auto;
 }
 
 body.sidebar-collapsed .sidebar-collapse-btn svg {
   transform: rotate(180deg);
 }
 
-body.sidebar-collapsed .app-sidebar .sidebar-header {
-  padding: 1rem 0.5rem 0.75rem 0.5rem;
-  flex-direction: column;
-  gap: 0.75rem;
-  justify-content: center;
-  height: auto;
-}
-
-body.sidebar-collapsed .app-sidebar .brand-logo-full {
-  display: none !important;
-}
-
-body.sidebar-collapsed .app-sidebar .brand-icon-collapsed {
-  display: block !important;
-  width: 38px;
-  height: 38px;
-  margin: 0 auto;
-}
-
 body.sidebar-collapsed .nav-item {
   justify-content: center;
-  padding: 0.75rem;
-  position: relative;
+  padding: 0.75rem 0;
 }
 
-body.sidebar-collapsed .app-sidebar .nav-item:hover::after {
+body.sidebar-collapsed .sidebar-footer {
+  padding: 0.75rem 0.5rem;
+  align-items: center;
+}
+
+body.sidebar-collapsed .sidebar-footer-link {
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+body.sidebar-collapsed .app-sidebar [data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
   left: calc(100% + 10px);
   top: 50%;
   transform: translateY(-50%);
-  background: var(--text-primary);
-  color: var(--bg-surface);
+  background: var(--dash-text-primary);
+  color: var(--dash-text-white);
   font-family: 'Montserrat' !important;
   font-size: 0.75rem;
   font-weight: 700;
@@ -246,10 +387,10 @@ body.sidebar-collapsed .app-sidebar .nav-item:hover::after {
   white-space: nowrap;
   pointer-events: none;
   z-index: 100;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Mobile responsive drawer */
+/* Mobile Responsive */
 @media (max-width: 1024px) {
   .app-sidebar {
     transform: translateX(-100%);
@@ -257,7 +398,7 @@ body.sidebar-collapsed .app-sidebar .nav-item:hover::after {
 
   body.sidebar-mobile-open .app-sidebar {
     transform: translateX(0);
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 
   .sidebar-close-btn {

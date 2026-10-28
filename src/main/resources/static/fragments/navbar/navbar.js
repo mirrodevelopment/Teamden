@@ -1,50 +1,95 @@
 /**
- * Teamden by shed — Topbar Fragment Logic (navbar.js)
+ * Teamden by shed — Topbar / Navbar Fragment Logic (navbar.js)
+ * Path: fragments/navbar/navbar.js
  */
 const Navbar = (() => {
   function init(user) {
-    const orgNameEl = document.getElementById('topbar-org-name');
-    const userRoleEl = document.getElementById('topbar-user-role');
     const avatarEl = document.getElementById('topbar-user-avatar');
-    const userNameEl = document.getElementById('topbar-user-name');
-    const userEmailEl = document.getElementById('topbar-user-email');
     const dropdownUserNameEl = document.getElementById('dropdown-user-name');
     const dropdownUserRoleEl = document.getElementById('dropdown-user-role');
+    const searchInput = document.getElementById('global-search-input');
+    const kbdShortcut = document.getElementById('search-kbd-shortcut');
 
-    if (user) {
-      if (orgNameEl) orgNameEl.textContent = user.activeOrganizationName || 'My Workspace';
-      if (userRoleEl) userRoleEl.textContent = user.role || 'MEMBER';
-      if (avatarEl) {
-        let doubleLetter = 'TD';
-        if (user.initials) {
-          doubleLetter = user.initials;
-        } else if (user.fullName) {
-          const parts = user.fullName.trim().split(/\s+/);
-          doubleLetter = parts.length === 1 ? parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-        avatarEl.textContent = doubleLetter;
-      }
-      if (userNameEl) userNameEl.textContent = user.fullName || 'User';
-      if (userEmailEl) userEmailEl.textContent = user.email || '';
-      if (dropdownUserNameEl) dropdownUserNameEl.textContent = user.fullName || 'User';
-      if (dropdownUserRoleEl) dropdownUserRoleEl.textContent = `${user.role || 'MEMBER'} · ${user.activeOrganizationName || ''}`;
+    // Adapt shortcut text for Mac vs Windows/Linux
+    if (kbdShortcut) {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      kbdShortcut.textContent = isMac ? '⌘ K' : 'Ctrl K';
     }
 
-    // Toggle dropdown
-    const userBtn = document.getElementById('user-profile-btn');
-    const menu = document.getElementById('user-dropdown-menu');
+    // Keyboard shortcut handler
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+    });
 
-    if (userBtn && menu) {
+    if (user) {
+      if (avatarEl) {
+        let initials = 'TD';
+        if (user.initials) {
+          initials = user.initials;
+        } else if (user.fullName) {
+          const parts = user.fullName.trim().split(/\s+/);
+          initials = parts.length === 1 
+            ? parts[0].substring(0, Math.min(2, parts[0].length)).toUpperCase() 
+            : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        avatarEl.textContent = initials;
+      }
+      if (dropdownUserNameEl) dropdownUserNameEl.textContent = user.fullName || 'User';
+      if (dropdownUserRoleEl) dropdownUserRoleEl.textContent = `${user.role || 'Member'} · ${user.activeOrganizationName || 'Teamden'}`;
+    }
+
+    // User Profile dropdown
+    const userBtn = document.getElementById('user-profile-btn');
+    const userMenu = document.getElementById('user-dropdown-menu');
+
+    if (userBtn && userMenu) {
       userBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        menu.classList.toggle('show');
+        userMenu.classList.toggle('show');
+        if (createMenu) createMenu.classList.remove('show');
       });
 
       document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target) && !userBtn.contains(e.target)) {
-          menu.classList.remove('show');
+        if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+          userMenu.classList.remove('show');
         }
       });
+    }
+
+    // + Create dropdown
+    const createBtn = document.getElementById('btn-create-pill');
+    const createMenu = document.getElementById('create-menu');
+
+    if (createBtn && createMenu) {
+      createBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        createMenu.classList.toggle('show');
+        if (userMenu) userMenu.classList.remove('show');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!createMenu.contains(e.target) && !createBtn.contains(e.target)) {
+          createMenu.classList.remove('show');
+        }
+      });
+
+      // Handlers for menu actions
+      const taskAction = document.getElementById('create-action-task');
+      if (taskAction) {
+        taskAction.addEventListener('click', (e) => {
+          e.preventDefault();
+          createMenu.classList.remove('show');
+          if (typeof window.triggerAddTaskPrompt === 'function') {
+            window.triggerAddTaskPrompt('NOW');
+          }
+        });
+      }
     }
 
     // Logout button handler
@@ -52,67 +97,19 @@ const Navbar = (() => {
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        await Auth.logout();
+        if (window.Auth && typeof Auth.logout === 'function') {
+          await Auth.logout();
+        } else {
+          window.location.href = '/pages/login/login.html';
+        }
       });
     }
 
-    // Sidebar toggle trigger
+    // Mobile sidebar toggle trigger
     const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
     if (sidebarToggleBtn) {
       sidebarToggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('sidebar-collapsed');
         document.body.classList.toggle('sidebar-mobile-open');
-      });
-    }
-
-    // --- Theme Switcher (Light <-> Black and White) ---
-    const themeBtn = document.getElementById('theme-toggle-btn');
-    const menuThemeBtn = document.getElementById('menu-item-theme');
-    const menuThemeLabel = document.getElementById('menu-theme-label');
-
-    function updateThemeUI(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('teamden-theme', theme);
-
-      const isBW = (theme === 'black-and-white' || theme === 'bw' || theme === 'dark');
-      if (themeBtn) {
-        const sun = themeBtn.querySelector('.theme-icon-sun');
-        const moon = themeBtn.querySelector('.theme-icon-moon');
-        if (sun && moon) {
-          sun.style.display = isBW ? 'block' : 'none';
-          moon.style.display = isBW ? 'none' : 'block';
-        }
-        themeBtn.title = isBW ? 'Switch to Light Theme' : 'Switch to Black & White Theme';
-      }
-
-      if (menuThemeLabel) {
-        menuThemeLabel.textContent = isBW ? 'Theme: Black & White' : 'Theme: Light';
-      }
-    }
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const isBW = (current === 'black-and-white' || current === 'bw' || current === 'dark');
-      const nextTheme = isBW ? 'light' : 'black-and-white';
-      updateThemeUI(nextTheme);
-    }
-
-    // Initialize on load
-    const savedTheme = localStorage.getItem('teamden-theme') || 'light';
-    updateThemeUI(savedTheme);
-
-    if (themeBtn) {
-      themeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleTheme();
-      });
-    }
-
-    if (menuThemeBtn) {
-      menuThemeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleTheme();
-        if (menu) menu.classList.remove('show');
       });
     }
   }
@@ -121,4 +118,3 @@ const Navbar = (() => {
 })();
 
 window.Navbar = Navbar;
-

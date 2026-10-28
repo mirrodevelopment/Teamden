@@ -24,9 +24,9 @@
     websiteUrl: 'https://teamden.com',
 
     // Primary Application URLs
-    url: '/',
-    homeUrl: '/',
-    dashboardUrl: '/',
+    url: '/pages/dashboard/dashboard.html',
+    homeUrl: '/pages/dashboard/dashboard.html',
+    dashboardUrl: '/pages/dashboard/dashboard.html',
     loginUrl: '/pages/login/login.html',
 
     tagline: 'Team Productivity, Work Management & SaaS Platform',

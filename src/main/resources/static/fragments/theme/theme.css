@@ -62,6 +62,72 @@
   --z-fixed: 100;
   --z-modal: 1000;
   --z-toast: 1100;
+
+  /* ==========================================================================
+     DASHBOARD & NEO-EDITORIAL COLOR TOKENS (fragments/theme/theme.css)
+     Used by dashboard, sidebar, and navbar fragments for pixel-accurate design.
+     ========================================================================== */
+  /* Surfaces & Canvas */
+  --dash-bg-canvas: #F4F1EA;
+  --dash-bg-sidebar: #EDE8DF;
+  --dash-bg-card: #FAF8F4;
+  --dash-bg-card-pure: #FFFFFF;
+  --dash-bg-card-subtle: #EFECE5;
+  --dash-bg-card-column: #EAE6DC;
+  --dash-bg-card-column-header: #E2DDD2;
+
+  /* Hero Priority Card (Matte Black) */
+  --dash-hero-bg: #191A1B;
+  --dash-hero-text: #FFFFFF;
+  --dash-hero-text-muted: #B3B3B3;
+  --dash-hero-border: rgba(255, 255, 255, 0.15);
+  --dash-hero-cta-bg: #F5F2EB;
+  --dash-hero-cta-text: #111111;
+
+  /* Neon Chartreuse / Electric Lime High-Contrast Accent */
+  --dash-accent-lime: #E3FF37;
+  --dash-accent-lime-hover: #D4F72C;
+  --dash-accent-lime-text: #111111;
+
+  /* Peach / Warm Tan Alert Accent */
+  --dash-accent-peach: #E8DAC8;
+  --dash-accent-peach-hover: #E0CFC0;
+  --dash-accent-peach-text: #1E1B18;
+
+  /* Neutral Alert & Action Cards */
+  --dash-card-neutral: #EAE5DB;
+  --dash-card-neutral-hover: #E3DDCF;
+
+  /* Typography / Text */
+  --dash-text-primary: #111111;
+  --dash-text-body: #333333;
+  --dash-text-muted: #666666;
+  --dash-text-light: #8E8E93;
+  --dash-text-white: #FFFFFF;
+
+  /* Borders & Dividers */
+  --dash-border: rgba(0, 0, 0, 0.08);
+  --dash-border-subtle: rgba(0, 0, 0, 0.05);
+  --dash-border-strong: rgba(0, 0, 0, 0.14);
+  --dash-border-dark: rgba(255, 255, 255, 0.12);
+
+  /* Status Dots */
+  --dash-dot-red: #E53935;
+  --dash-dot-orange: #F59E0B;
+  --dash-dot-blue: #3B82F6;
+  --dash-dot-green: #10B981;
+  --dash-dot-purple: #8B5CF6;
+  --dash-dot-gray: #9E9E9E;
+
+  /* Activity Timeline Type Badges */
+  --dash-badge-comment-bg: #EDE9FE;
+  --dash-badge-comment-text: #6D28D9;
+  --dash-badge-completed-bg: #D1FAE5;
+  --dash-badge-completed-text: #065F46;
+  --dash-badge-document-bg: #FEF3C7;
+  --dash-badge-document-text: #92400E;
+  --dash-badge-assigned-bg: #E0F2FE;
+  --dash-badge-assigned-text: #0369A1;
 }
 
 /* ==========================================================================

@@ -1,8 +1,9 @@
 <aside class="app-sidebar" id="app-sidebar">
   <div class="sidebar-header">
-    <a href="/" class="sidebar-brand" title="Teamden by shed" data-company-url data-company="url">
+    <a href="/pages/dashboard/dashboard.html" class="sidebar-brand" title="Teamden" data-company-url data-company="url">
       <img src="/assets/teamden-minimalist-logo.png" alt="Teamden Logo" class="brand-logo-full" data-company="logo">
       <img src="/assets/teamden-minimalist-icon.png" alt="Teamden Icon" class="brand-icon-collapsed" data-company="icon">
+      <span class="brand-logo-text" id="sidebar-brand-text" data-company="displayName" style="display:none; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.03em; color: var(--dash-text-primary);">brick</span>
     </a>
     <div class="sidebar-header-actions">
       <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" aria-label="Toggle sidebar collapse" title="Toggle Sidebar">
@@ -18,79 +19,143 @@
     </div>
   </div>
 
+  <!-- Workspace Selector Dropdown -->
+  <div class="sidebar-workspace-select">
+    <div class="workspace-eyebrow">WORKSPACE</div>
+    <button class="workspace-dropdown-trigger" id="workspace-dropdown-trigger" aria-haspopup="true" aria-expanded="false" title="Switch Workspace">
+      <span class="workspace-name" id="sidebar-workspace-name">Acme Co.</span>
+      <svg class="workspace-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+  </div>
+
   <div class="sidebar-nav-container">
     <nav class="sidebar-nav" aria-label="Main Navigation">
-      <div class="nav-section-title">MAIN</div>
-      
-      <a href="/" class="nav-item active" id="nav-dashboard" data-company-url data-company="url" data-tooltip="Home" title="Home">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span class="nav-label">Dashboard</span>
+      <a href="/pages/dashboard/dashboard.html" class="nav-item active" id="nav-today" data-tooltip="Today">
+        <span class="nav-num">01</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="nav-label">Today</span>
       </a>
 
-      <a href="#my-tasks-section" class="nav-item" id="nav-my-tasks" data-tooltip="My Tasks" title="My Tasks">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-        <span class="nav-label">My Tasks</span>
-      </a>
-
-      <a href="#projects-section" class="nav-item" id="nav-projects" data-tooltip="Projects" title="Projects">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      <a href="#projects" class="nav-item" id="nav-projects" data-tooltip="Projects">
+        <span class="nav-num">02</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
         <span class="nav-label">Projects</span>
       </a>
 
-      <div class="nav-section-title">WORKFLOWS</div>
-
-      <div class="nav-item nav-item-disabled" data-tooltip="Daily Updates" title="Daily Updates module coming soon in next milestone">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        <span class="nav-label">Daily Updates</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
-
-      <a href="#attendance-section" class="nav-item" id="nav-attendance" data-tooltip="Attendance" title="Attendance">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span class="nav-label">Attendance</span>
+      <a href="#workspace" class="nav-item" id="nav-workspace" data-tooltip="Workspace">
+        <span class="nav-num">03</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <span class="nav-label">Workspace</span>
       </a>
 
-      <div class="nav-item nav-item-disabled" data-tooltip="Leave Requests" title="Leave Requests module coming soon">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        <span class="nav-label">Leave Requests</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
-
-      <div class="nav-section-title">ORGANIZATION</div>
-
-      <div class="nav-item nav-item-disabled" data-tooltip="Team" title="Team Directory module coming soon">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      <a href="#team" class="nav-item" id="nav-team" data-tooltip="Team">
+        <span class="nav-num">04</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
         <span class="nav-label">Team</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
+      </a>
 
-      <div class="nav-item nav-item-disabled" data-tooltip="Knowledge Base" title="Knowledge Base coming soon">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-        <span class="nav-label">Knowledge Base</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
+      <a href="#calendar" class="nav-item" id="nav-calendar" data-tooltip="Calendar">
+        <span class="nav-num">05</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span class="nav-label">Calendar</span>
+      </a>
 
-      <div class="nav-item nav-item-disabled" data-tooltip="Reports" title="Analytics & Reports module coming soon">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-        <span class="nav-label">Reports</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
-
-      <div class="nav-item nav-item-disabled" data-tooltip="Settings" title="Workspace Settings coming soon">
-        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span class="nav-label">Settings</span>
-        <span class="nav-badge-soon">Soon</span>
-      </div>
+      <a href="#overview" class="nav-item" id="nav-overview" data-tooltip="Overview">
+        <span class="nav-num">06</span>
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span class="nav-label">Overview</span>
+      </a>
     </nav>
+
+    <!-- Pinned Items Section -->
+    <div class="sidebar-pinned-section">
+      <div class="pinned-header">
+        <span class="pinned-title">PINNED</span>
+        <button class="pinned-add-btn" id="pinned-add-btn" title="Add pinned item" aria-label="Add pinned item">+</button>
+      </div>
+      <div class="pinned-list">
+        <a href="#website-redesign" class="pinned-item" data-tooltip="Website Redesign">
+          <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="pinned-label">Website Redesign</span>
+        </a>
+
+        <a href="#brand-guidelines" class="pinned-item" data-tooltip="Brand Guidelines">
+          <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="pinned-label">Brand Guidelines</span>
+        </a>
+
+        <a href="#client-onboarding" class="pinned-item" data-tooltip="Client Onboarding">
+          <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="pinned-label">Client Onboarding</span>
+        </a>
+
+        <a href="#marketing" class="pinned-item" data-tooltip="Marketing">
+          <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="pinned-label">Marketing</span>
+        </a>
+
+        <a href="#product-roadmap" class="pinned-item" data-tooltip="Product Roadmap">
+          <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="pinned-label">Product Roadmap</span>
+        </a>
+      </div>
+    </div>
   </div>
 
+  <!-- Sidebar Footer Links -->
   <div class="sidebar-footer">
-    <div class="workspace-summary-box">
-      <div class="workspace-meta">
-        <span class="workspace-label">Current Tier</span>
-        <span class="badge badge-active" style="font-size: 0.6875rem;">Pro Team</span>
-      </div>
-      <div class="workspace-status-text">5–50 seats active</div>
-    </div>
+    <a href="#settings" class="sidebar-footer-link" id="nav-settings" title="Settings" data-tooltip="Settings">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <span class="footer-label">Settings</span>
+    </a>
+
+    <a href="#help" class="sidebar-footer-link" id="nav-help" title="Help & Support" data-tooltip="Help & Support">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span class="footer-label">Help & Support</span>
+    </a>
   </div>
 </aside>

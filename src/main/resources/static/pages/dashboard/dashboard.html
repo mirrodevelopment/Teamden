@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today — Teamden</title>
+  <link rel="icon" type="image/png" href="/assets/teamden-minimalist-icon.png" data-company="icon">
+
+  <!-- Typography & Central Design Tokens (Fonts: 100% Montserrat only) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="/fragments/theme/theme.css">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css">
+
+  <!-- Modular Fragment Styles (Sidebar & Navbar) -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css">
+
+  <!-- Dashboard Specific Styling -->
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dash-master-container">
+    <!-- Modular Sidebar Container (Loaded dynamically from /fragments/sidebar/sidebar.html) -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Application Area -->
+    <div class="dash-app-main">
+      <!-- Modular Navbar Container (Loaded dynamically from /fragments/navbar/navbar.html) -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Dashboard Grid Content (Center Workspace + Right Rail) -->
+      <div class="dash-grid-layout">
+        <!-- ===================================================================
+             CENTER WORKSPACE COLUMN
+             =================================================================== -->
+        <main class="dash-center-column">
+          <!-- Workspace Breadcrumb & Dynamic Date -->
+          <div class="dash-header-meta">
+            <span class="dash-breadcrumb-text" id="dash-breadcrumb">YOUR WORKSPACE / 01</span>
+            <span class="dash-date-heading" id="dash-date-text">SUN, 25 OCT 2026</span>
+          </div>
+
+          <!-- Gigantic Neo-Editorial Headline -->
+          <div class="dash-headline-group">
+            <h1 class="dash-title-today">today.</h1>
+            <p class="dash-subtitle">Everything that needs your attention.</p>
+          </div>
+
+          <!-- Hero Priority Card (Matte Black) -->
+          <section class="dash-hero-card" id="dash-hero-card" aria-label="Next Priority">
+            <div class="hero-top-row">
+              <span class="hero-badge-prefix" id="hero-prefix">01 / NEXT PRIORITY</span>
+              <button class="hero-options-btn" aria-label="Hero options" title="Options">•••</button>
+            </div>
+
+            <h2 class="hero-task-title" id="hero-title">Finalise the website service card</h2>
+
+            <div class="hero-tags-row">
+              <span class="hero-tag-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span id="hero-project-tag">Website Redesign</span>
+              </span>
+              <span class="hero-tag-sep">•</span>
+              <span class="hero-tag-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span id="hero-team-tag">Design Team</span>
+              </span>
+              <span class="hero-tag-sep">•</span>
+              <span class="hero-priority-pill">
+                <span class="pill-dot dot-red"></span>
+                <span id="hero-priority-label">High</span>
+              </span>
+            </div>
+
+            <p class="hero-description" id="hero-desc">
+              Update the content, refine the visuals and get approval from the client.
+            </p>
+
+            <div class="hero-bottom-row">
+              <div class="hero-attachments" id="hero-attachments">
+                <span class="attachment-pill">
+                  <span class="att-icon">🎨</span> Design File
+                </span>
+                <span class="attachment-pill">
+                  <span class="att-icon">📄</span> Client Brief
+                </span>
+                <span class="attachment-pill">
+                  <span class="att-icon">🖼️</span> References
+                </span>
+                <span class="attachment-count-pill">+2</span>
+              </div>
+
+              <div class="hero-cta-group">
+                <div class="hero-due-box">
+                  <span class="due-label">DUE TODAY</span>
+                  <div class="due-date-split">
+                    <span class="due-number" id="hero-due-day">25</span>
+                    <span class="due-my" id="hero-due-my">OCT<br>2026</span>
+                  </div>
+                </div>
+                <button class="hero-continue-btn" id="hero-continue-btn">
+                  <span>Continue task</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Kanban Priorities Section (NOW, NEXT, LATER) -->
+          <section class="dash-priorities-block" aria-label="Your Priorities">
+            <div class="dash-section-head">
+              <h2 class="dash-section-title">YOUR PRIORITIES</h2>
+              <a href="#all-tasks" class="dash-action-link" id="dash-total-tasks-link">
+                <span id="dash-total-tasks-count">06 TASKS</span> →
+              </a>
+            </div>
+
+            <div class="kanban-grid-three">
+              <!-- Column NOW -->
+              <div class="kanban-column" id="kanban-col-now">
+                <div class="kanban-col-header">
+                  <span class="col-title">NOW</span>
+                  <span class="col-badge" id="badge-count-now">02</span>
+                </div>
+                <div class="kanban-task-list" id="list-tasks-now">
+                  <!-- Rendered dynamically -->
+                </div>
+                <button class="kanban-add-btn" onclick="openAddTaskModal('NOW')">
+                  + Add task
+                </button>
+              </div>
+
+              <!-- Column NEXT -->
+              <div class="kanban-column" id="kanban-col-next">
+                <div class="kanban-col-header">
+                  <span class="col-title">NEXT</span>
+                  <span class="col-badge" id="badge-count-next">02</span>
+                </div>
+                <div class="kanban-task-list" id="list-tasks-next">
+                  <!-- Rendered dynamically -->
+                </div>
+                <button class="kanban-add-btn" onclick="openAddTaskModal('NEXT')">
+                  + Add task
+                </button>
+              </div>
+
+              <!-- Column LATER -->
+              <div class="kanban-column" id="kanban-col-later">
+                <div class="kanban-col-header">
+                  <span class="col-title">LATER</span>
+                  <span class="col-badge" id="badge-count-later">02</span>
+                </div>
+                <div class="kanban-task-list" id="list-tasks-later">
+                  <!-- Rendered dynamically -->
+                </div>
+                <button class="kanban-add-btn" onclick="openAddTaskModal('LATER')">
+                  + Add task
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Recent Activity Section -->
+          <section class="dash-activity-block" aria-label="Recent Activity">
+            <div class="dash-section-head activity-head">
+              <div class="activity-head-left">
+                <h2 class="dash-section-title">RECENT ACTIVITY</h2>
+                <span class="activity-subtitle" id="activity-movements-label">LATEST MOVEMENTS / SUN, 25 OCT 2026</span>
+              </div>
+              <a href="#activities" class="dash-action-link">View all →</a>
+            </div>
+
+            <div class="activity-timeline" id="activity-timeline-list">
+              <!-- Rendered dynamically from /api/dashboard/data -->
+            </div>
+          </section>
+        </main>
+
+        <!-- ===================================================================
+             RIGHT COMPANION RAIL
+             =================================================================== -->
+        <aside class="dash-right-rail" aria-label="Agenda and Attention Items">
+          <!-- Giant Calendar Date Card -->
+          <div class="rail-date-card" id="rail-date-card">
+            <div class="date-card-top">
+              <div class="date-card-left">
+                <span class="date-month-text" id="rail-month">OCT</span>
+                <span class="date-year-text" id="rail-year">2026</span>
+              </div>
+              <div class="date-huge-number" id="rail-day">25</div>
+            </div>
+            <div class="date-dow-label" id="rail-dow">SUNDAY</div>
+          </div>
+
+          <!-- YOUR DAY Schedule -->
+          <div class="rail-section-block">
+            <div class="rail-section-head">
+              <h3 class="rail-title">YOUR DAY</h3>
+              <a href="#calendar" class="rail-link">View calendar →</a>
+            </div>
+            <div class="rail-schedule-list" id="rail-schedule-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- NEEDS ATTENTION -->
+          <div class="rail-section-block">
+            <div class="rail-section-head">
+              <h3 class="rail-title">NEEDS ATTENTION</h3>
+              <a href="#attention" class="rail-link">View all →</a>
+            </div>
+            <div class="rail-attention-cards" id="rail-attention-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- DAILY UPDATE Card -->
+          <div class="rail-section-block">
+            <div class="rail-section-head">
+              <h3 class="rail-title">DAILY UPDATE</h3>
+              <a href="#daily-update" class="rail-link">→</a>
+            </div>
+            <div class="daily-update-card">
+              <div class="update-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <div class="update-copy">
+                <strong>Your draft is ready</strong>
+                <p>Review and share your daily update.</p>
+              </div>
+              <button class="update-action-btn" title="Open Daily Update" aria-label="Open Daily Update">
+                ➜
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared & Company Scripts -->
+  <script src="/fragments/company-data/company-data.js"></script>
+  <script src="/shared/js/api.js"></script>
+  <script src="/shared/js/auth.js"></script>
+  <script src="/fragments/sidebar/sidebar.js"></script>
+  <script src="/fragments/navbar/navbar.js"></script>
+
+  <!-- Dashboard Controller Script -->
+  <script src="dashboard.js"></script>
+</body>
+</html>
