@@ -94,6 +94,23 @@ body.sidebar-collapsed .sidebar-mount-area {
   letter-spacing: 0.08em;
   color: var(--dash-text-muted);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.live-date-val {
+  color: var(--dash-text-muted);
+}
+
+.live-time-val {
+  color: var(--dash-text-primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.live-date-sep {
+  color: #BBBBBB;
 }
 
 /* Headline Group: today. */
@@ -774,13 +791,27 @@ body.sidebar-collapsed .sidebar-mount-area {
   color: var(--dash-text-primary);
 }
 
+.date-card-bottom-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
 .date-dow-label {
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #777777;
   text-transform: uppercase;
-  margin-top: 0.15rem;
+}
+
+.date-time-label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--dash-text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Dividers */

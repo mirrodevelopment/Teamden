@@ -40,7 +40,11 @@
           <!-- Breadcrumb & Date -->
           <div class="dash-header-meta">
             <span class="dash-breadcrumb-text">YOUR WORKSPACE / 01</span>
-            <span class="dash-date-heading" id="dash-date-text">SUN, 25 OCT 2026</span>
+            <div class="dash-date-heading" id="dash-date-text">
+              <span class="live-date-val" id="dash-date-val">WED, 28 OCT 2026</span>
+              <span class="live-date-sep">•</span>
+              <span class="live-time-val" id="dash-time-val">--:--:--</span>
+            </div>
           </div>
 
           <!-- Headline: today. -->
@@ -97,8 +101,8 @@
                 <div class="hero-due-box">
                   <span class="due-label">DUE TODAY</span>
                   <div class="due-date-split">
-                    <span class="due-number">25</span>
-                    <span class="due-my">OCT<br>2026</span>
+                    <span class="due-number" id="hero-due-day">28</span>
+                    <span class="due-my" id="hero-due-my">OCT<br>2026</span>
                   </div>
                 </div>
                 <button class="hero-continue-btn" id="hero-continue-btn">
@@ -179,12 +183,15 @@
           <div class="rail-date-card">
             <div class="date-card-top">
               <div class="date-card-left">
-                <span class="date-month-text">OCT</span>
-                <span class="date-year-text">2026</span>
+                <span class="date-month-text" id="rail-month">OCT</span>
+                <span class="date-year-text" id="rail-year">2026</span>
               </div>
-              <div class="date-huge-number">25</div>
+              <div class="date-huge-number" id="rail-day">28</div>
             </div>
-            <div class="date-dow-label">SUNDAY</div>
+            <div class="date-card-bottom-row">
+              <span class="date-dow-label" id="rail-dow">WEDNESDAY</span>
+              <span class="date-time-label" id="rail-live-time">--:--:--</span>
+            </div>
           </div>
 
           <!-- Divider -->

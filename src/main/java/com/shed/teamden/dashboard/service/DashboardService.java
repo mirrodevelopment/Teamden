@@ -92,11 +92,13 @@ public class DashboardService {
     }
 
     public DashboardDataDto getDashboardData() {
-        String dayOfWeek = "SUNDAY";
-        String month = "OCT";
-        String year = "2026";
-        String dayNum = "25";
-        String formattedDate = "SUN, 25 OCT 2026";
+        LocalDate today = LocalDate.now();
+        String dayOfWeek = today.getDayOfWeek().name();
+        String month = today.getMonth().name().substring(0, 3);
+        String year = String.valueOf(today.getYear());
+        String dayNum = String.format("%02d", today.getDayOfMonth());
+        String shortDow = dayOfWeek.substring(0, 3);
+        String formattedDate = shortDow + ", " + dayNum + " " + month + " " + year;
 
         HeroPriorityDto hero = HeroPriorityDto.builder()
                 .prefix("01 / NEXT PRIORITY")

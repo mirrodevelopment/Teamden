@@ -254,6 +254,72 @@
   };
 
   /**
+   * Real-time dynamic live clock and date updater
+   */
+  function startLiveDateTimeClock() {
+    function updateClock() {
+      const now = new Date();
+      const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      const fullDays = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+      const dow = days[now.getDay()];
+      const fullDow = fullDays[now.getDay()];
+      const dayNum = String(now.getDate()).padStart(2, '0');
+      const month = months[now.getMonth()];
+      const year = now.getFullYear();
+
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = String(hours % 12 || 12).padStart(2, '0');
+      const timeStr = `${displayHours}:${minutes}:${seconds} ${ampm}`;
+      const dateStr = `${dow}, ${dayNum} ${month} ${year}`;
+
+      // Center header date and live time
+      const dateValEl = document.getElementById('dash-date-val');
+      const timeValEl = document.getElementById('dash-time-val');
+      if (dateValEl) dateValEl.textContent = dateStr;
+      if (timeValEl) timeValEl.textContent = timeStr;
+
+      // Fallback if elements not yet present
+      const dateEl = document.getElementById('dash-date-text');
+      if (dateEl && !dateValEl) {
+        dateEl.innerHTML = `<span class="live-date-val">${dateStr}</span> <span class="live-date-sep">•</span> <span class="live-time-val">${timeStr}</span>`;
+      }
+
+      // Right rail date card
+      const railDay = document.getElementById('rail-day');
+      const railMonth = document.getElementById('rail-month');
+      const railYear = document.getElementById('rail-year');
+      const railDow = document.getElementById('rail-dow');
+      const railTime = document.getElementById('rail-live-time');
+
+      if (railDay) railDay.textContent = dayNum;
+      if (railMonth) railMonth.textContent = month;
+      if (railYear) railYear.textContent = String(year);
+      if (railDow) railDow.textContent = fullDow;
+      if (railTime) railTime.textContent = timeStr;
+
+      // Update movements subtitle if present
+      const actLabel = document.getElementById('activity-movements-label');
+      if (actLabel) {
+        actLabel.textContent = `LATEST MOVEMENTS / ${dateStr}`;
+      }
+
+      // Update hero due date if present
+      const heroDueDay = document.getElementById('hero-due-day');
+      const heroDueMy = document.getElementById('hero-due-my');
+      if (heroDueDay) heroDueDay.textContent = dayNum;
+      if (heroDueMy) heroDueMy.innerHTML = `${month}<br>${year}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  /**
    * Main Initialization Procedure
    */
   async function init() {
@@ -317,24 +383,6 @@
 
     // 5. Populate DOM Elements
     if (currentDashboardData) {
-      const dateEl = document.getElementById('dash-date-text');
-      if (dateEl && currentDashboardData.currentDateLabel) {
-        dateEl.textContent = currentDashboardData.currentDateLabel;
-      }
-      const actLabel = document.getElementById('activity-movements-label');
-      if (actLabel && currentDashboardData.currentDateLabel) {
-        actLabel.textContent = `LATEST MOVEMENTS / ${currentDashboardData.currentDateLabel}`;
-      }
-
-      // Right rail date card
-      const railDay = document.getElementById('rail-day');
-      const railMonth = document.getElementById('rail-month');
-      const railYear = document.getElementById('rail-year');
-      const railDow = document.getElementById('rail-dow');
-      if (railDay) railDay.textContent = currentDashboardData.dayNumber || '25';
-      if (railMonth) railMonth.textContent = currentDashboardData.month || 'OCT';
-      if (railYear) railYear.textContent = currentDashboardData.year || '2026';
-      if (railDow) railDow.textContent = currentDashboardData.dayOfWeek || 'SUNDAY';
 
       // Hero Card
       const hero = currentDashboardData.heroPriority;
@@ -372,7 +420,10 @@
       renderAttention(currentDashboardData.attentionItems || []);
     }
 
-    // 6. Hook Continue Task CTA button
+    // 6. Start Real Time and Date Live Clock
+    startLiveDateTimeClock();
+
+    // 7. Hook Continue Task CTA button
     const continueBtn = document.getElementById('hero-continue-btn');
     if (continueBtn) {
       continueBtn.addEventListener('click', () => {
