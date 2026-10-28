@@ -29,7 +29,7 @@
   <header class="dev-header">
     <div class="header-inner">
       <div class="brand-section">
-        <a href="/pages/dashboard/dashboard.html" data-company-url data-company="url" title="Go to Teamden Dashboard" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+        <a href="/" data-company-url data-company="url" title="Go to Teamden Home" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
           <img src="/assets/teamden-minimalist-icon.png" alt="Teamden Icon" class="brand-icon-dev" data-company="icon" style="width: 36px; height: 36px; object-fit: contain;">
           <div class="brand-titles">
             <h1>Teamden Developer Portal</h1>
@@ -142,7 +142,7 @@
             <span class="snippet-label">Web Endpoints:</span>
             <div class="kv-list mt-2">
               <div class="kv-item"><span class="kv-key">Login Desk</span><span class="kv-val"><a href="/pages/login/login.html" data-company-login target="_blank" class="portal-link">/pages/login/login.html ↗</a></span></div>
-              <div class="kv-item"><span class="kv-key">Dashboard</span><span class="kv-val"><a href="/pages/dashboard/dashboard.html" data-company-url data-company="url" target="_blank" class="portal-link">/pages/dashboard/dashboard.html ↗</a></span></div>
+              <div class="kv-item"><span class="kv-key">App Home</span><span class="kv-val"><a href="/" data-company-url data-company="url" target="_blank" class="portal-link">/ ↗</a></span></div>
               <div class="kv-item"><span class="kv-key">Actuator Health</span><span class="kv-val"><a href="http://localhost:8080/actuator/health" target="_blank" class="portal-link">/actuator/health ↗</a></span></div>
             </div>
           </div>
@@ -281,12 +281,6 @@
               <td><code>/api/auth/csrf</code></td>
               <td>No</td>
               <td>Retrieves XSRF-TOKEN cookie</td>
-            </tr>
-            <tr>
-              <td><span class="badge-method badge-get">GET</span></td>
-              <td><code>/api/dashboard/summary</code></td>
-              <td>Yes</td>
-              <td>KPIs, attendance metrics, open tasks, recent activity</td>
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>
@@ -892,7 +886,7 @@
         }
         showToast(`Signed in as ${name}! Opening Dashboard...`);
         setTimeout(() => {
-          const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+          const targetUrl = (typeof Company === 'function' ? Company('url') : '/');
           window.open(targetUrl, '_blank');
         }, 500);
       } catch (err) {

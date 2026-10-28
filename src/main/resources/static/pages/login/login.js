@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         await Auth.login(email, password);
         // Success: redirect to company dashboard URL
-        const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+        const targetUrl = (typeof Company === 'function' ? Company('url') : '/');
         window.location.href = targetUrl;
       } catch (err) {
         setLoading(false);
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(async () => {
           try {
             await Auth.login(adminEmail, adminPassword);
-            const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+            const targetUrl = (typeof Company === 'function' ? Company('url') : '/');
             window.location.href = targetUrl;
           } catch (loginErr) {
             setRegLoading(false);
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(async () => {
           try {
             await Auth.login(adminEmail, adminPassword);
-            const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+            const targetUrl = (typeof Company === 'function' ? Company('url') : '/');
             window.location.href = targetUrl;
           } catch (err) {
             showAlert('Workspace created. Please sign in with your credentials.', 'success');

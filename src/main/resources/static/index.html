@@ -268,7 +268,7 @@
     
     <!-- Branding Header -->
     <div class="brand-group">
-      <a href="/pages/dashboard/dashboard.html" class="brand-logo-container" data-company-url data-company="url" title="Teamden by shed">
+      <a href="/" class="brand-logo-container" data-company-url data-company="url" title="Teamden by shed">
         <div class="brand-glow"></div>
         <img src="/assets/teamden-minimalist-logo.png" alt="Teamden by shed" class="brand-logo" data-company="logo">
       </a>
@@ -403,7 +403,7 @@
           if (currentUser) {
             updateStatus(`Welcome back, ${currentUser.fullName}! Launching dashboard...`, 100);
             setTimeout(() => {
-              const dashboardUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+              const dashboardUrl = (typeof Company === 'function' ? Company('url') : '/');
               window.location.replace(dashboardUrl);
             }, 350);
           } else {

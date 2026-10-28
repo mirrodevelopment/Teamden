@@ -111,12 +111,10 @@ public class SecurityConfig {
                     "/actuator/health",
                     "/actuator/info"
                 ).permitAll()
-                // Protected Dashboard page and APIs
+                // Protected APIs & User Session
                 .requestMatchers(
-                    "/pages/dashboard/**",
                     "/api/auth/me",
-                    "/api/auth/logout",
-                    "/api/dashboard/**"
+                    "/api/auth/logout"
                 ).authenticated()
                 .anyRequest().authenticated()
             )

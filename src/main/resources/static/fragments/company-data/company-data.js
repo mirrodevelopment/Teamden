@@ -24,9 +24,9 @@
     websiteUrl: 'https://teamden.com',
 
     // Primary Application URLs
-    url: '/pages/dashboard/dashboard.html',
-    homeUrl: '/pages/dashboard/dashboard.html',
-    dashboardUrl: '/pages/dashboard/dashboard.html',
+    url: '/',
+    homeUrl: '/',
+    dashboardUrl: '/',
     loginUrl: '/pages/login/login.html',
 
     tagline: 'Team Productivity, Work Management & SaaS Platform',
@@ -67,7 +67,7 @@
    *   Company('logo')    => "/assets/teamden-minimalist-logo.png"
    *   Company('icon')    => "/assets/teamden-minimalist-icon.png"
    *   Company('typo')    => "/assets/teamden-minimalist-logo.png"
-   *   Company('url')     => "/pages/dashboard/dashboard.html"
+   *   Company('url')     => "/"
    *   Company('mail')    => "teamden@gmil.com"
    */
   function Company(key) {

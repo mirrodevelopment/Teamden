@@ -239,11 +239,10 @@ Content-Type: application/json
 | `GET` | `/api/setup/status` | No | Check if workspace has been provisioned |
 | `POST` | `/api/setup` | No | Create initial organization and owner account |
 
-### 5.3. Dashboard & Operations
+### 5.3. Operations & Workspaces
 
 | Method | Endpoint | Auth Required | Description |
 | :--- | :--- | :---: | :--- |
-| `GET` | `/api/dashboard/summary` | Yes | KPIs, attendance status, tasks & activity |
 | `POST` | `/api/attendance/check-in` | Yes | Clock in for today (Standard members) |
 | `POST` | `/api/attendance/check-out` | Yes | Clock out for today |
 | `GET` | `/api/projects` | Yes | List projects for active workspace |

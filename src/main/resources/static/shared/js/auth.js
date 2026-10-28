@@ -54,7 +54,7 @@ const Auth = (() => {
   async function redirectIfAuthenticated() {
     const user = await checkSession();
     if (user) {
-      const target = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+      const target = (typeof Company === 'function' ? Company('url') : '/');
       window.location.href = target;
       return user;
     }
