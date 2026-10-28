@@ -180,8 +180,9 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .hero-task-title {
+  font-family: var(--font-family-display, 'Inter', sans-serif);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 900;
   color: #FFFFFF;
   margin: 0;
   line-height: 1.25;
@@ -312,6 +313,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .due-number {
+  font-family: var(--font-family-display, 'Inter', sans-serif);
   font-size: 1.65rem;
   font-weight: 900;
   line-height: 1;
@@ -367,9 +369,11 @@ body.sidebar-collapsed .sidebar-mount-area {
   justify-content: space-between;
 }
 
+h2,
 .dash-section-title {
+  font-family: var(--font-family-display, 'Inter', sans-serif);
   font-size: 0.9375rem;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.06em;
   color: var(--dash-text-primary);
   text-transform: uppercase;
@@ -807,6 +811,7 @@ body.sidebar-collapsed .sidebar-mount-area {
 }
 
 .date-huge-number {
+  font-family: var(--font-family-display, 'Inter', sans-serif);
   font-size: 5.5rem;
   font-weight: 900;
   line-height: 0.82;
