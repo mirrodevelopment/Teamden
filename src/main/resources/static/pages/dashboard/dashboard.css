@@ -767,68 +767,63 @@ body.sidebar-collapsed .sidebar-mount-area {
   z-index: 2;
 }
 
-/* Date Card */
+/* Date Card: OCT 2026 / 25 / SUNDAY */
 .rail-date-card {
   display: flex;
-  flex-direction: column;
-}
-
-.date-card-top {
-  display: flex;
-  align-items: baseline;
   justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 0.25rem;
 }
 
 .date-card-left {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.35rem;
 }
 
 .date-month-text {
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--dash-text-primary);
-  line-height: 1;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #73716E;
+  line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .date-year-text {
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--dash-text-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #73716E;
   line-height: 1.15;
 }
 
-.date-huge-number {
-  font-size: 5.25rem;
-  font-weight: 900;
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-  color: var(--dash-text-primary);
+.date-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.date-card-bottom-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-top: 0.25rem;
+.date-huge-number {
+  font-size: 5.5rem;
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  color: var(--dash-text-primary);
+  margin: 0;
+  padding: 0;
 }
 
 .date-dow-label {
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #777777;
+  color: #73716E;
   text-transform: uppercase;
-}
-
-.date-time-label {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--dash-text-primary);
-  font-variant-numeric: tabular-nums;
+  margin-top: 0.45rem;
+  padding: 0;
 }
 
 /* Dividers */

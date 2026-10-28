@@ -289,18 +289,21 @@
         dateEl.innerHTML = `<span class="live-date-val">${dateStr}</span> <span class="live-date-sep">•</span> <span class="live-time-val">${timeStr}</span>`;
       }
 
-      // Right rail date card
-      const railDay = document.getElementById('rail-day');
-      const railMonth = document.getElementById('rail-month');
-      const railYear = document.getElementById('rail-year');
-      const railDow = document.getElementById('rail-dow');
-      const railTime = document.getElementById('rail-live-time');
+      // Right rail date card (respects data-static="true" for exact mockup match)
+      const railCard = document.getElementById('rail-date-card');
+      const isStatic = railCard && railCard.getAttribute('data-static') === 'true';
 
-      if (railDay) railDay.textContent = dayNum;
-      if (railMonth) railMonth.textContent = month;
-      if (railYear) railYear.textContent = String(year);
-      if (railDow) railDow.textContent = fullDow;
-      if (railTime) railTime.textContent = timeStr;
+      if (!isStatic) {
+        const railDay = document.getElementById('rail-day');
+        const railMonth = document.getElementById('rail-month');
+        const railYear = document.getElementById('rail-year');
+        const railDow = document.getElementById('rail-dow');
+
+        if (railDay) railDay.textContent = dayNum;
+        if (railMonth) railMonth.textContent = month;
+        if (railYear) railYear.textContent = String(year);
+        if (railDow) railDow.textContent = fullDow;
+      }
 
       // Update movements subtitle if present
       const actLabel = document.getElementById('activity-movements-label');
