@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In — Teamden by shed</title>
-  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="icon" type="image/png" href="/assets/teamden-minimalist-icon.png" data-company="icon">
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
@@ -36,7 +36,9 @@
 
       <!-- Header & Branding -->
       <header class="login-header">
-        <img src="/assets/logo.png" alt="Teamden Logo" class="login-logo">
+        <a href="/pages/dashboard/dashboard.html" class="login-brand-link" data-company-url data-company="url" title="Teamden by shed">
+          <img src="/assets/teamden-minimalist-logo.png" alt="Teamden Logo" class="login-logo" data-company="logo">
+        </a>
         <h1 class="login-title" id="auth-main-title">Sign in to <span data-company="displayName">Teamden</span></h1>
         <p class="login-subtitle" id="auth-main-subtitle" data-company="tagline">All-in-one team and work management workspace</p>
       </header>

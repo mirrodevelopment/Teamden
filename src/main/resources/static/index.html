@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teamden by shed — Starting Application...</title>
-  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="icon" type="image/png" href="/assets/teamden-minimalist-icon.png" data-company="icon">
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
@@ -268,11 +268,11 @@
     
     <!-- Branding Header -->
     <div class="brand-group">
-      <div class="brand-logo-container">
+      <a href="/pages/dashboard/dashboard.html" class="brand-logo-container" data-company-url data-company="url" title="Teamden by shed">
         <div class="brand-glow"></div>
-        <img src="/assets/logo.png" alt="Teamden by shed" class="brand-logo">
-      </div>
-      <span class="boot-tagline">Team & Work Management Platform</span>
+        <img src="/assets/teamden-minimalist-logo.png" alt="Teamden by shed" class="brand-logo" data-company="logo">
+      </a>
+      <span class="boot-tagline" data-company="tagline">Team Productivity, Work Management &amp; SaaS Platform</span>
     </div>
 
     <!-- Active Loading / Booting State -->
