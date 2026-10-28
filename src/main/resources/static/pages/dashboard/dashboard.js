@@ -122,7 +122,9 @@
     container.innerHTML = scheduleItems.map(item => `
       <div class="schedule-item">
         <span class="schedule-time">${escapeHtml(item.time)}</span>
-        <span class="schedule-dot pill-dot dot-${item.dotColor || 'gray'}"></span>
+        <div class="schedule-dot-wrap">
+          <span class="schedule-dot pill-dot dot-${item.dotColor || 'gray'}"></span>
+        </div>
         <div class="schedule-details">
           <span class="schedule-title">${escapeHtml(item.title)}</span>
           ${item.subMeta ? `<span class="schedule-submeta">${escapeHtml(item.subMeta)}</span>` : ''}

@@ -1,111 +1,94 @@
 /* ==========================================================================
    Teamden by shed — Topbar / Navbar Fragment Styles (navbar.css)
    Path: fragments/navbar/navbar.css
-   Pixel-accurate matching of neo-editorial top navigation.
+   Pixel-accurate matching of neo-editorial topbar layout.
    100% Montserrat font only.
    ========================================================================== */
 @import url('../theme/theme.css');
 
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: 'Montserrat' !important;
+}
+
 .app-topbar {
-  height: var(--topbar-height);
+  height: 60px;
   background-color: var(--dash-bg-canvas);
-  border-bottom: 1px solid var(--dash-border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
+  border-bottom: 1px solid var(--dash-border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 265px;
   position: sticky;
   top: 0;
   z-index: var(--z-topbar);
   font-family: 'Montserrat' !important;
 }
 
-.topbar-left {
+/* Center Section (Spans across Center Column) */
+.topbar-center-section {
+  padding: 0.65rem 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex: 1;
-  max-width: 520px;
 }
 
-.sidebar-toggle-btn {
-  display: none;
-  background: transparent;
-  border: 1px solid var(--dash-border);
-  color: var(--dash-text-primary);
-  cursor: pointer;
-  padding: 0.4rem;
-  border-radius: var(--radius-sm);
-  align-items: center;
-  justify-content: center;
-}
-
-/* Search Pill */
-.topbar-search-pill {
+.topbar-search-box {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background-color: var(--dash-bg-card-pure);
-  border: 1px solid var(--dash-border);
-  border-radius: var(--radius-full);
-  padding: 0.45rem 1rem;
+  gap: 0.65rem;
+  background-color: #EBE7DE;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
   width: 100%;
-  max-width: 440px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all var(--transition-fast);
 }
 
-.topbar-search-pill:focus-within {
-  border-color: var(--dash-text-primary);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+.topbar-search-box:focus-within {
+  background-color: #E5E1D7;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
 }
 
 .search-icon {
-  color: var(--dash-text-light);
+  color: #777777;
   flex-shrink: 0;
 }
 
-.topbar-search-pill input {
+.topbar-search-box input {
   background: transparent;
   border: none;
   outline: none;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--dash-text-primary);
   font-family: 'Montserrat' !important;
-  font-weight: 500;
   width: 100%;
 }
 
-.topbar-search-pill input::placeholder {
-  color: var(--dash-text-light);
+.topbar-search-box input::placeholder {
+  color: #777777;
 }
 
 .search-kbd {
-  background-color: var(--dash-card-neutral);
-  color: var(--dash-text-muted);
+  background-color: #DED9CE;
+  color: #666666;
   font-size: 0.6875rem;
   font-weight: 700;
-  padding: 0.15rem 0.45rem;
+  padding: 0.15rem 0.35rem;
   border-radius: 4px;
   font-family: 'Montserrat' !important;
   white-space: nowrap;
   pointer-events: none;
-  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* Right Section */
-.topbar-right {
+/* Right Section (Spans across Right Rail) */
+.topbar-right-section {
+  border-left: 1px solid var(--dash-border);
+  padding: 0.65rem 1.5rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-/* Neon Chartreuse + Create Button */
+/* Lime + Create ⌵ Button */
 .create-dropdown-wrapper {
   position: relative;
 }
@@ -113,48 +96,51 @@
 .btn-create-pill {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   background-color: var(--dash-accent-lime);
-  color: var(--dash-accent-lime-text);
+  color: #111111;
   border: none;
-  padding: 0.55rem 1.15rem;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
   font-weight: 700;
   font-family: 'Montserrat' !important;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: background-color var(--transition-fast);
 }
 
 .btn-create-pill:hover {
   background-color: var(--dash-accent-lime-hover);
-  transform: translateY(-1px);
 }
 
 .create-plus {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   line-height: 1;
   font-weight: 700;
 }
 
+.create-text {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
 .create-chevron {
-  transition: transform var(--transition-fast);
+  stroke-width: 2.5;
+  color: #111111;
 }
 
 .create-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
-  background-color: var(--dash-bg-card-pure);
+  background-color: #FFFFFF;
   border: 1px solid var(--dash-border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-  min-width: 180px;
-  padding: 0.4rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  padding: 0.35rem;
   display: none;
   z-index: var(--z-dropdown);
-  animation: fadeIn 0.15s ease-out;
 }
 
 .create-menu.show {
@@ -162,100 +148,91 @@
 }
 
 .create-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.8rem;
+  display: block;
+  padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--dash-text-body);
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
   font-family: 'Montserrat' !important;
-  transition: all var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .create-menu-item:hover {
-  background-color: var(--dash-bg-card-subtle);
-  color: var(--dash-text-primary);
+  background-color: #F4F1EA;
+  color: #000000;
 }
 
 /* Notification Bell */
-.topbar-icon-btn {
+.topbar-bell-btn {
   background: transparent;
   border: none;
-  color: var(--dash-text-primary);
+  color: #111111;
   cursor: pointer;
-  padding: 0.4rem;
-  border-radius: var(--radius-sm);
+  padding: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all var(--transition-fast);
 }
 
-.topbar-icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-.notification-red-dot {
+.bell-red-dot {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 8px;
-  height: 8px;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
   background-color: var(--dash-dot-red);
   border-radius: 50%;
-  border: 2px solid var(--dash-bg-canvas);
 }
 
-/* User Profile Avatar */
+/* User Avatar & Chevron */
 .user-menu-wrapper {
   position: relative;
 }
 
-.user-avatar-btn {
+.user-profile-trigger {
   background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
-  border-radius: 50%;
-  transition: transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
-.user-avatar-btn:hover {
-  transform: scale(1.05);
-}
-
-.topbar-avatar {
-  width: 38px;
-  height: 38px;
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--dash-hero-bg);
-  color: var(--dash-text-white);
+  background-color: #D1D5DB;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  font-family: 'Montserrat' !important;
-  border: 2px solid var(--dash-border);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
-/* User Dropdown Menu */
+.user-avatar-circle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.user-chevron {
+  color: #111111;
+  stroke-width: 2.5;
+}
+
 .user-dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
-  background-color: var(--dash-bg-card-pure);
+  background-color: #FFFFFF;
   border: 1px solid var(--dash-border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-  min-width: 200px;
-  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  padding: 0.4rem;
   display: none;
   z-index: var(--z-dropdown);
 }
@@ -265,49 +242,46 @@
 }
 
 .dropdown-header {
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.6rem;
 }
 
 .dropdown-user-name {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  color: var(--dash-text-primary);
+  color: #111111;
 }
 
 .dropdown-user-role {
   font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--dash-text-light);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  color: #777777;
 }
 
 .dropdown-divider {
   height: 1px;
   background-color: var(--dash-border);
-  margin: 0.4rem 0;
+  margin: 0.3rem 0;
 }
 
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--dash-text-body);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333333;
   text-decoration: none;
   background: transparent;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
   text-align: left;
   font-family: 'Montserrat' !important;
   cursor: pointer;
-  transition: all var(--transition-fast);
 }
 
 .dropdown-item:hover {
-  background-color: var(--dash-bg-card-subtle);
-  color: var(--dash-text-primary);
+  background-color: #F4F1EA;
+  color: #000000;
 }
 
 .dropdown-item.logout-action {
@@ -316,20 +290,4 @@
 
 .dropdown-item.logout-action:hover {
   background-color: #FEE2E2;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .app-topbar {
-    padding: 0 1.25rem;
-  }
-
-  .sidebar-toggle-btn {
-    display: flex;
-  }
 }

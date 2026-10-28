@@ -1,13 +1,18 @@
 /* ==========================================================================
    Teamden by shed — Sidebar Fragment Styles (sidebar.css)
    Path: fragments/sidebar/sidebar.css
-   Pixel-accurate matching of neo-editorial sidebar design.
+   Pixel-accurate matching of neo-editorial 'brick' sidebar layout.
    100% Montserrat font only.
    ========================================================================== */
 @import url('../theme/theme.css');
 
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: 'Montserrat' !important;
+}
+
 .app-sidebar {
-  width: var(--sidebar-width);
+  width: 195px;
   height: 100vh;
   background-color: var(--dash-bg-canvas);
   border-right: 1px solid var(--dash-border);
@@ -18,90 +23,42 @@
   left: 0;
   z-index: var(--z-fixed);
   font-family: 'Montserrat' !important;
-  transition: width var(--transition-normal), transform var(--transition-normal);
 }
 
-/* Header & Brand */
+/* Header & Brand: 'brick' wordmark */
 .sidebar-header {
-  height: var(--header-height);
-  padding: 0 1.25rem;
+  height: 60px;
+  padding: 1.25rem 1.25rem 0.25rem 1.25rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
-.sidebar-brand {
-  display: flex;
-  align-items: center;
+.sidebar-brand-logo {
   text-decoration: none;
-  color: var(--dash-text-primary);
-  flex: 1;
-  min-width: 0;
-}
-
-.brand-logo-full {
-  height: 34px;
-  max-width: 140px;
-  width: auto;
-  object-fit: contain;
-  object-position: left center;
-  display: block;
-}
-
-.brand-icon-collapsed {
-  display: none;
-  height: 34px;
-  width: 34px;
-  object-fit: contain;
-}
-
-.sidebar-header-actions {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
 }
 
-.sidebar-collapse-btn {
-  background: transparent;
-  border: 1px solid var(--dash-border);
-  color: var(--dash-text-muted);
-  cursor: pointer;
-  padding: 0.3rem;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-collapse-btn:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+.brand-text-brick {
+  font-size: 2.15rem;
+  font-weight: 900;
+  letter-spacing: -0.045em;
   color: var(--dash-text-primary);
-  border-color: var(--dash-border-strong);
-}
-
-.sidebar-close-btn {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--dash-text-muted);
-  cursor: pointer;
-  padding: 0.3rem;
-  border-radius: var(--radius-sm);
+  line-height: 1;
 }
 
 /* Workspace Selector */
 .sidebar-workspace-select {
-  padding: 0.25rem 1.25rem 0.875rem 1.25rem;
+  padding: 0.5rem 1.25rem 0.85rem 1.25rem;
 }
 
 .workspace-eyebrow {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--dash-text-light);
   text-transform: uppercase;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .workspace-dropdown-trigger {
@@ -115,104 +72,105 @@
   cursor: pointer;
   font-family: 'Montserrat' !important;
   color: var(--dash-text-primary);
-  text-align: left;
 }
 
 .workspace-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--dash-text-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #555555;
 }
 
 .workspace-chevron {
-  color: var(--dash-text-muted);
-  transition: transform var(--transition-fast);
+  color: #111111;
+  stroke-width: 2.5;
 }
 
 /* Nav Container */
 .sidebar-nav-container {
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem 0.875rem;
+  padding: 0.25rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 
 /* Navigation Items */
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.875rem;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--dash-text-body);
+  gap: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dash-text-primary);
   text-decoration: none;
   font-family: 'Montserrat' !important;
-  transition: all var(--transition-fast);
-  position: relative;
+  transition: background-color var(--transition-fast);
 }
 
 .nav-num {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: var(--dash-text-light);
-  min-width: 1.25rem;
+  color: #888888;
+  min-width: 1.15rem;
   letter-spacing: 0.02em;
 }
 
 .nav-icon {
-  color: var(--dash-text-muted);
+  color: var(--dash-text-primary);
   flex-shrink: 0;
-  transition: color var(--transition-fast);
 }
 
 .nav-label {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .nav-item:hover:not(.active) {
-  background-color: rgba(0, 0, 0, 0.03);
-  color: var(--dash-text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
-.nav-item:hover:not(.active) .nav-icon {
-  color: var(--dash-text-primary);
-}
-
-/* Active Nav Item: Neon Chartreuse Pill */
+/* Active Nav Item: Full Neon Chartreuse Pill */
 .nav-item.active {
   background-color: var(--dash-accent-lime);
-  color: var(--dash-accent-lime-text);
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  color: #111111;
+  border-radius: 6px;
 }
 
 .nav-item.active .nav-num {
-  color: var(--dash-accent-lime-text);
+  color: #111111;
+  font-weight: 800;
 }
 
 .nav-item.active .nav-icon {
-  color: var(--dash-accent-lime-text);
+  color: #111111;
   stroke-width: 2.2;
+}
+
+.nav-item.active .nav-label {
+  font-weight: 700;
+}
+
+/* Divider before PINNED */
+.sidebar-divider {
+  height: 1px;
+  background-color: var(--dash-border);
+  margin: 1.25rem 0.5rem 0.75rem 0.5rem;
 }
 
 /* Pinned Section */
 .sidebar-pinned-section {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding-top: 0.5rem;
+  gap: 0.25rem;
 }
 
 .pinned-header {
@@ -223,9 +181,9 @@
 }
 
 .pinned-title {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--dash-text-light);
   text-transform: uppercase;
 }
@@ -233,41 +191,37 @@
 .pinned-add-btn {
   background: transparent;
   border: none;
-  color: var(--dash-text-muted);
-  font-size: 1.125rem;
+  color: var(--dash-text-primary);
+  font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
   padding: 0 0.25rem;
   font-family: 'Montserrat' !important;
-  transition: color var(--transition-fast);
-}
-
-.pinned-add-btn:hover {
-  color: var(--dash-text-primary);
+  font-weight: 600;
 }
 
 .pinned-list {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.25rem;
 }
 
 .pinned-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.45rem 0.625rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
+  gap: 0.65rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: var(--dash-text-muted);
+  color: #333333;
   text-decoration: none;
   font-family: 'Montserrat' !important;
-  transition: all var(--transition-fast);
+  transition: background-color var(--transition-fast);
 }
 
 .pinned-icon {
-  color: var(--dash-text-light);
+  color: #333333;
   flex-shrink: 0;
 }
 
@@ -278,130 +232,41 @@
 }
 
 .pinned-item:hover {
-  background-color: rgba(0, 0, 0, 0.03);
-  color: var(--dash-text-primary);
-}
-
-.pinned-item:hover .pinned-icon {
-  color: var(--dash-text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #000000;
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  border-top: 1px solid var(--dash-border);
+  gap: 0.65rem;
 }
 
 .sidebar-footer-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.45rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
+  gap: 0.65rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: var(--dash-text-muted);
+  color: #333333;
   text-decoration: none;
   font-family: 'Montserrat' !important;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
 .sidebar-footer-link svg {
-  color: var(--dash-text-muted);
+  color: #333333;
   flex-shrink: 0;
 }
 
 .sidebar-footer-link:hover {
-  color: var(--dash-text-primary);
-  background-color: rgba(0, 0, 0, 0.03);
+  color: #000000;
 }
 
 .sidebar-footer-link:hover svg {
-  color: var(--dash-text-primary);
-}
-
-/* Collapsed State */
-body.sidebar-collapsed .app-sidebar {
-  width: var(--sidebar-collapsed-width);
-}
-
-body.sidebar-collapsed .brand-logo-full,
-body.sidebar-collapsed .brand-logo-text,
-body.sidebar-collapsed .sidebar-workspace-select,
-body.sidebar-collapsed .nav-num,
-body.sidebar-collapsed .nav-label,
-body.sidebar-collapsed .sidebar-pinned-section,
-body.sidebar-collapsed .footer-label {
-  display: none !important;
-}
-
-body.sidebar-collapsed .brand-icon-collapsed {
-  display: block !important;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto;
-}
-
-body.sidebar-collapsed .app-sidebar .sidebar-header {
-  padding: 0.75rem 0.5rem;
-  flex-direction: column;
-  gap: 0.5rem;
-  height: auto;
-}
-
-body.sidebar-collapsed .sidebar-collapse-btn svg {
-  transform: rotate(180deg);
-}
-
-body.sidebar-collapsed .nav-item {
-  justify-content: center;
-  padding: 0.75rem 0;
-}
-
-body.sidebar-collapsed .sidebar-footer {
-  padding: 0.75rem 0.5rem;
-  align-items: center;
-}
-
-body.sidebar-collapsed .sidebar-footer-link {
-  justify-content: center;
-  padding: 0.5rem 0;
-}
-
-body.sidebar-collapsed .app-sidebar [data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--dash-text-primary);
-  color: var(--dash-text-white);
-  font-family: 'Montserrat' !important;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.35rem 0.6rem;
-  border-radius: var(--radius-xs);
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Mobile Responsive */
-@media (max-width: 1024px) {
-  .app-sidebar {
-    transform: translateX(-100%);
-  }
-
-  body.sidebar-mobile-open .app-sidebar {
-    transform: translateX(0);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  .sidebar-close-btn {
-    display: block;
-  }
+  color: #000000;
 }
