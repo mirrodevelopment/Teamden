@@ -1,19 +1,52 @@
 /* ==========================================================================
-   BRICK Font Architecture — Central Font Definition (fonts.css)
+   BRICK Font Architecture — Unified Central Font Definition (fonts.css)
    Path: fragments/fonts/fonts.css
-   Single source of truth for ALL typography and fonts across the platform.
+   Single consolidated source of truth for ALL typography and fonts across Teamden:
    - Mostarct: Primary font for all text, labels, inputs, dates, descriptions
    - Inter: Dedicated to H2 section headings only
-   - Monument Extended: Display numbers (25, 01, 02, etc.)
+   - Jx Tabe Black & Monument Extended: Universal display and number fonts
    ========================================================================== */
 
-@import url('../font.css');
-@import url('mostarct.css');
-@import url('inter.css');
+/* ── 1. Google Web Font Imports (Must precede all rules) ─────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@800;900&display=swap');
 
-/* Local Monument Extended (Ultra-Wide Brutalist Numbers) */
+/* ── 2. Universal Number Font: Jx Tabe Black (@font-face) ───────────────── */
+@font-face {
+  font-family: 'Jx Tabe Black';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Jx Tabe Black'),
+       local('JxTabe-Black'),
+       local('Jx Tabe'),
+       local('JxTabe'),
+       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
+       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
+       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
+       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
+       url('./MonumentExtended-Ultrabold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Jx Tabe';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Jx Tabe Black'),
+       local('JxTabe-Black'),
+       local('Jx Tabe'),
+       local('JxTabe'),
+       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
+       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
+       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
+       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
+       url('./MonumentExtended-Ultrabold.woff') format('woff');
+}
+
+/* ── 3. Brutalist Display Numbers: Monument Extended (@font-face) ────────── */
 @font-face {
   font-family: 'Monument Extended';
   font-style: normal;
@@ -50,16 +83,99 @@
        url('./MonumentExtended-Ultrabold.woff') format('woff');
 }
 
+/* ── 4. Primary Font Aliases: Mostarct (@font-face to local Montserrat) ──── */
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('Mostarct Light'), local('Montserrat Light'), local('Montserrat-Light');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Mostarct Regular'), local('Montserrat Regular'), local('Montserrat-Regular');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Mostarct Medium'), local('Montserrat Medium'), local('Montserrat-Medium');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Mostarct SemiBold'), local('Montserrat SemiBold'), local('Montserrat-SemiBold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Mostarct Bold'), local('Montserrat Bold'), local('Montserrat-Bold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Mostarct ExtraBold'), local('Montserrat ExtraBold'), local('Montserrat-ExtraBold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Mostarct Black'), local('Montserrat Black'), local('Montserrat-Black');
+}
+
+/* ── 5. Section Heading Scoping: Inter H2 ────────────────────────────────── */
+h2.dash-section-title,
+.dash-section-head h2,
+.activity-head h2,
+.rail-section-head h3,
+.rail-title {
+  font-family: 'Inter' !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em;
+}
+
+/* ── 6. Central Typography Tokens & Design System Variables ─────────────── */
 :root {
-  --font-family: 'Mostarct', 'Montserrat';
-  --font-family-base: 'Mostarct', 'Montserrat';
-  --font-mono: 'Mostarct', 'Montserrat';
-  --font-family-mono: 'Mostarct', 'Montserrat';
-  --font-family-display: 'Inter';
-  --font-family-h2: 'Inter';
+  /* Mostarct Core Typography */
+  --font-family: 'Mostarct', 'Montserrat', sans-serif;
+  --font-family-base: 'Mostarct', 'Montserrat', sans-serif;
+  --font-family-primary: 'Mostarct', 'Montserrat', sans-serif;
+  --font-family-body: 'Mostarct', 'Montserrat', sans-serif;
+  --font-mono: 'Mostarct', 'Montserrat', monospace;
+  --font-family-mono: 'Mostarct', 'Montserrat', monospace;
+
+  /* Inter Display Typography */
+  --font-family-display: 'Inter', sans-serif;
+  --font-family-h2: 'Inter', sans-serif;
   --font-family-today: 'Inter Tight', 'Inter', sans-serif;
+
+  /* Universal Number Font Tokens (Jx Tabe Black) */
   --number-font: 'Jx Tabe Black', 'Jx Tabe', 'Monument Extended', 'Unbounded', sans-serif;
   --font-number: var(--number-font);
   --font-family-number: var(--number-font);
 }
 
+/* ── 7. Universal Utility Classes ────────────────────────────────────────── */
+.number-font,
+.font-number,
+[data-font="number"] {
+  font-family: var(--number-font) !important;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}

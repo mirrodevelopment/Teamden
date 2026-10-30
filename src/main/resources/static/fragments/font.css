@@ -1,51 +1,6 @@
 /* ==========================================================================
-   Teamden — Central Number Font Definition (font.css)
+   Teamden — Central Font Definition (fragments/font.css)
    Path: fragments/font.css
-   Single source of truth for Jx Tabe Black "number font" across all pages.
+   Alias to the consolidated font bundle located under fragments/fonts/fonts.css.
    ========================================================================== */
-
-/* Jx Tabe Black (@font-face) */
-@font-face {
-  font-family: 'Jx Tabe Black';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: local('Jx Tabe Black'),
-       local('JxTabe-Black'),
-       local('Jx Tabe'),
-       local('JxTabe'),
-       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
-       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
-       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Jx Tabe';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: local('Jx Tabe Black'),
-       local('JxTabe-Black'),
-       local('Jx Tabe'),
-       local('JxTabe'),
-       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
-       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
-       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
-}
-
-/* Global Number Font Token */
-:root {
-  --number-font: 'Jx Tabe Black', 'Jx Tabe', 'Monument Extended', 'Unbounded', sans-serif;
-  --font-number: var(--number-font);
-  --font-family-number: var(--number-font);
-}
-
-/* Universal Utility Class for Numbers */
-.number-font,
-.font-number,
-[data-font="number"] {
-  font-family: var(--number-font) !important;
-  font-feature-settings: 'tnum' on, 'lnum' on;
-}
+@import url('fonts/fonts.css');
