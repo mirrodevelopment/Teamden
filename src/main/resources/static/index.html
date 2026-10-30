@@ -385,12 +385,11 @@
             return;
           }
 
-          // Step 2: If fresh database and not yet provisioned, route to setup wizard
+          // Step 2: If fresh database and not yet provisioned, route to company registration
           if (setupStatus && !setupStatus.provisioned) {
-            updateStatus('Workspace setup required. Launching...', 90);
+            updateStatus('Workspace setup required. Launching registration...', 90);
             setTimeout(() => {
-              const loginUrl = (typeof Company === 'function' ? Company('loginUrl') : '/pages/login/login.html');
-              window.location.replace(`${loginUrl}?setup=true`);
+              window.location.replace('/pages/register/register.html');
             }, 300);
             return;
           }

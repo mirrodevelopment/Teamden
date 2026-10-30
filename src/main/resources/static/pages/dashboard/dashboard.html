@@ -7,48 +7,18 @@
   <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
 
   <!-- Display & Typography Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
-  <style>
-    @font-face {
-      font-family: 'Monument Extended';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url('/fragments/fonts/MonumentExtended-Regular.woff') format('woff');
-    }
-    @font-face {
-      font-family: 'Monument Extended';
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
-    }
-    @font-face {
-      font-family: 'Monument Extended';
-      font-style: normal;
-      font-weight: 800;
-      font-display: swap;
-      src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
-    }
-    @font-face {
-      font-family: 'Monument Extended';
-      font-style: normal;
-      font-weight: 900;
-      font-display: swap;
-      src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
-    }
-  </style>
-  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=3">
-  <link rel="stylesheet" href="/fragments/theme/theme.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
   <link rel="stylesheet" href="/shared/css/reset.css">
-  <link rel="stylesheet" href="/shared/css/variables.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
 
   <!-- Modular Fragment Styles (Called from fragments folder) -->
-  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css">
-  <link rel="stylesheet" href="/fragments/navbar/navbar.css">
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=10">
 
   <!-- Dashboard Page Styles -->
-  <link rel="stylesheet" href="dashboard.css?v=3">
+  <link rel="stylesheet" href="dashboard.css?v=20">
 </head>
 <body class="dashboard-body">
 
@@ -57,7 +27,7 @@
     <div id="sidebar-mount" class="sidebar-mount-area"></div>
 
     <!-- Main Workspace Container -->
-    <div class="dash-app-main">
+    <div class="dash-main-area dash-app-main">
       <!-- Modular Topbar Mount (Loaded dynamically from /fragments/navbar/navbar.html) -->
       <div id="navbar-mount" class="navbar-mount-area"></div>
 
@@ -67,14 +37,10 @@
              CENTER WORKSPACE COLUMN
              =================================================================== -->
         <main class="dash-center-column">
-          <!-- Breadcrumb & Date -->
+          <!-- Breadcrumb & Top-Right Live Date -->
           <div class="dash-header-meta">
-            <span class="dash-breadcrumb-text">YOUR WORKSPACE / 01</span>
-            <div class="dash-date-heading" id="dash-date-text">
-              <span class="live-date-val" id="dash-date-val">WED, 28 OCT 2026</span>
-              <span class="live-date-sep">•</span>
-              <span class="live-time-val" id="dash-time-val">--:--:--</span>
-            </div>
+            <span class="dash-breadcrumb-text" id="dash-breadcrumb-text">YOUR WORKSPACE / 01</span>
+            <span class="dash-header-date" id="dash-header-date">SUN, 25 OCT 2026</span>
           </div>
 
           <!-- Headline: today. -->
@@ -85,61 +51,79 @@
 
           <!-- Next Priority Card (Matte Black Hero) -->
           <section class="dash-hero-card" aria-label="Next Priority">
-            <div class="hero-top-row">
+            <!-- Left Column: Details & Attachments -->
+            <div class="hero-left-col">
               <span class="hero-badge-prefix">01 / NEXT PRIORITY</span>
-              <button class="hero-options-btn" aria-label="Hero options">•••</button>
-            </div>
+              <h2 class="hero-task-title" id="hero-title">Finalise the<br>website service card</h2>
 
-            <h2 class="hero-task-title">Finalise the website service card</h2>
-
-            <div class="hero-tags-row">
-              <span class="hero-tag-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                <span>Website Redesign</span>
-              </span>
-              <span class="hero-tag-sep">•</span>
-              <span class="hero-tag-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                <span>Design Team</span>
-              </span>
-              <span class="hero-tag-sep">•</span>
-              <span class="hero-priority-pill">
-                <span class="pill-dot dot-red"></span>
-                <span>High</span>
-              </span>
-            </div>
-
-            <p class="hero-description">
-              Update the content, refine the visuals and get approval from the client.
-            </p>
-
-            <div class="hero-bottom-row">
-              <div class="hero-attachments">
-                <span class="attachment-pill">
-                  <span class="att-icon">🎨</span> Design File
+              <div class="hero-tags-row">
+                <span class="hero-tag-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <span id="hero-project-tag">Website Redesign</span>
                 </span>
-                <span class="attachment-pill">
-                  <span class="att-icon">📄</span> Client Brief
+                <span class="hero-tag-sep">•</span>
+                <span class="hero-tag-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <span id="hero-team-tag">Design Team</span>
                 </span>
-                <span class="attachment-pill">
-                  <span class="att-icon">🖼️</span> References
+                <span class="hero-tag-sep">•</span>
+                <span class="hero-priority-pill">
+                  <span class="pill-dot dot-red"></span>
+                  <span id="hero-priority-label">High</span>
                 </span>
-                <span class="attachment-count-pill">+2</span>
               </div>
 
-              <div class="hero-cta-group">
-                <div class="hero-due-box">
-                  <span class="due-label">DUE TODAY</span>
-                  <div class="due-date-split">
-                    <span class="due-number" id="hero-due-day">28</span>
-                    <span class="due-my" id="hero-due-my">OCT<br>2026</span>
-                  </div>
-                </div>
-                <button class="hero-continue-btn" id="hero-continue-btn">
-                  <span>Continue task</span>
-                  <span class="btn-arrow">→</span>
+              <p class="hero-description" id="hero-desc">
+                Update the content, refine the visuals and get approval from the client.
+              </p>
+
+              <div class="hero-attachments">
+                <span class="attachment-pill" id="hero-att-figma" onclick="window.openAttachmentPreview('Design File')" title="View Design File">
+                  <svg class="att-figma-icon" width="11" height="16" viewBox="0 0 38 57" fill="none">
+                    <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                    <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                    <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                    <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                    <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                  </svg>
+                  <span>Design File</span>
+                </span>
+                <span class="attachment-pill" id="hero-att-brief" onclick="window.openAttachmentPreview('Client Brief')" title="View Client Brief">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                  <span>Client Brief</span>
+                </span>
+                <span class="attachment-pill" id="hero-att-ref" onclick="window.openAttachmentPreview('References')" title="View References">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <span>References</span>
+                </span>
+                <span class="attachment-count-pill" id="hero-att-more" onclick="window.openAttachmentPreview('+2 Additional Files')" title="View 2 more files">+2</span>
+              </div>
+            </div>
+
+            <!-- Right Column: Options, Due Date & Continue Task Button -->
+            <div class="hero-right-col">
+              <div class="hero-right-top">
+                <button class="hero-options-btn" id="hero-options-btn" onclick="window.openHeroOptions()" aria-label="Hero options" title="Task options">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="5" cy="12" r="1.75"/>
+                    <circle cx="12" cy="12" r="1.75"/>
+                    <circle cx="19" cy="12" r="1.75"/>
+                  </svg>
                 </button>
               </div>
+
+              <div class="hero-due-box">
+                <span class="due-label">DUE TODAY</span>
+                <div class="due-date-split">
+                  <span class="due-number" id="hero-due-day">25</span>
+                  <span class="due-my" id="hero-due-my">OCT<br>2026</span>
+                </div>
+              </div>
+
+              <button class="hero-continue-btn" id="hero-continue-btn" onclick="window.openHeroTaskDrawer()">
+                <span>Continue task</span>
+                <span class="btn-arrow">→</span>
+              </button>
             </div>
           </section>
 
@@ -147,7 +131,7 @@
           <section class="dash-priorities-block" aria-label="Your Priorities">
             <div class="dash-section-head">
               <h2 class="dash-section-title">YOUR PRIORITIES</h2>
-              <a href="#all-tasks" class="dash-action-link" id="dash-total-tasks-link">
+              <a href="#all-tasks" class="dash-action-link" id="dash-total-tasks-link" onclick="window.openAllTasksModal(event)">
                 <span id="dash-total-tasks-count">06 TASKS</span> →
               </a>
             </div>
@@ -198,7 +182,7 @@
                 <h2 class="dash-section-title">RECENT ACTIVITY</h2>
                 <span class="activity-subtitle" id="activity-movements-label">LATEST MOVEMENTS / SUN, 25 OCT 2026</span>
               </div>
-              <a href="#activities" class="dash-action-link">View all →</a>
+              <a href="#activities" class="dash-action-link" id="activity-view-all-link">View all →</a>
             </div>
 
             <div class="activity-timeline" id="activity-timeline-list"></div>
@@ -228,7 +212,7 @@
           <div class="rail-section-block">
             <div class="rail-section-head">
               <h3 class="rail-title">YOUR DAY</h3>
-              <a href="#calendar" class="rail-link">View calendar →</a>
+              <a href="#calendar" class="rail-link" onclick="window.openCalendarView(event)">View calendar →</a>
             </div>
             <div class="rail-schedule-list" id="rail-schedule-list"></div>
           </div>
@@ -240,7 +224,7 @@
           <div class="rail-section-block">
             <div class="rail-section-head">
               <h3 class="rail-title">NEEDS ATTENTION</h3>
-              <a href="#attention" class="rail-link">View all →</a>
+              <a href="#attention" class="rail-link" onclick="window.openAttentionSummaryModal(event)">View all →</a>
             </div>
             <div class="rail-attention-cards" id="rail-attention-list"></div>
           </div>
@@ -252,9 +236,9 @@
           <div class="rail-section-block">
             <div class="rail-section-head">
               <h3 class="rail-title">DAILY UPDATE</h3>
-              <a href="#daily-update" class="rail-link">→</a>
+              <a href="#daily-update" class="rail-link" onclick="window.openDailyUpdateModal(event)">→</a>
             </div>
-            <div class="daily-update-card">
+            <div class="daily-update-card" onclick="window.openDailyUpdateModal()" style="cursor: pointer;">
               <div class="update-icon-box">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -268,8 +252,8 @@
                 <strong>Your draft is ready</strong>
                 <p>Review and share your daily update.</p>
               </div>
-              <button class="update-action-btn" title="Open Daily Update" aria-label="Open Daily Update">
-                ➜
+              <button class="update-action-btn" title="Open Daily Update" aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
+                ➔
               </button>
             </div>
           </div>
@@ -279,13 +263,13 @@
   </div>
 
   <!-- Shared Scripts -->
-  <script src="/fragments/company-data/company-data.js"></script>
-  <script src="/shared/js/api.js"></script>
-  <script src="/shared/js/auth.js"></script>
-  <script src="/fragments/sidebar/sidebar.js"></script>
-  <script src="/fragments/navbar/navbar.js"></script>
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
 
   <!-- Dashboard Script -->
-  <script src="dashboard.js"></script>
+  <script src="dashboard.js?v=4"></script>
 </body>
 </html>

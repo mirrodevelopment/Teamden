@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace — Teamden</title>
+  <meta name="description" content="Your Teamden Workspace — the central knowledge hub for your company's documents, libraries, projects, and resources.">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=10">
+  <link rel="stylesheet" href="workspace.css?v=1">
+</head>
+<body class="workspace-body">
+  <div class="ws-master-wrapper">
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+    <div class="ws-main-area">
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+      <!-- Workspace sub-nav (tab strip) -->
+      <nav class="ws-workspace-subnav" aria-label="Workspace sections">
+        <a href="/pages/workspace/workspace.html" class="ws-subnav-tab ws-subnav-tab--active" id="ws-tab-hub">Overview</a>
+        <a href="/pages/workspace/team-libraries/team-libraries.html" class="ws-subnav-tab" id="ws-tab-libraries">Team Libraries</a>
+        <a href="#" class="ws-subnav-tab" id="ws-tab-shared">Shared Resources</a>
+        <a href="#" class="ws-subnav-tab" id="ws-tab-company">Company Docs</a>
+      </nav>
+      <div class="ws-content-split">
+        <main class="ws-center-column">
+          <div class="ws-breadcrumb">
+            <span class="ws-breadcrumb-text">YOUR WORKSPACE / 03</span>
+          </div>
+          <div class="ws-headline-group">
+            <h1 class="ws-title">workspace.</h1>
+            <p class="ws-subtitle">The central knowledge hub of your company.</p>
+          </div>
+          <section class="ws-continue-card" aria-label="Continue Working">
+            <div class="ws-continue-left">
+              <span class="ws-continue-prefix">CONTINUE WORKING</span>
+              <h2 class="ws-continue-doc-title" id="ws-continue-title">Brand Guidelines — Visual Identity</h2>
+              <div class="ws-continue-meta-row">
+                <span class="ws-continue-meta-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                  <span id="ws-continue-section">Design Library</span>
+                </span>
+                <span class="ws-continue-sep">•</span>
+                <span class="ws-continue-meta-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span id="ws-continue-time">Last edited 2h ago</span>
+                </span>
+                <span class="ws-continue-sep">•</span>
+                <span class="ws-continue-status-pill">
+                  <span class="ws-status-dot dot-blue"></span>
+                  <span>In Progress</span>
+                </span>
+              </div>
+              <p class="ws-continue-desc" id="ws-continue-desc">Typography system, colour palette, logo usage rules and component library documentation.</p>
+            </div>
+            <div class="ws-continue-right">
+              <div class="ws-continue-progress-box">
+                <span class="ws-progress-label">COMPLETION</span>
+                <div class="ws-progress-num" id="ws-continue-pct">68%</div>
+                <div class="ws-progress-bar-track">
+                  <div class="ws-progress-bar-fill" id="ws-continue-bar" style="width: 68%;"></div>
+                </div>
+              </div>
+              <button class="ws-continue-btn" id="ws-continue-btn">
+                <span>Open document</span>
+                <span class="ws-btn-arrow">&#8594;</span>
+              </button>
+            </div>
+          </section>
+          <section class="ws-knowledge-index" aria-label="Knowledge Index">
+            <div class="ws-section-head">
+              <h2 class="ws-section-title">KNOWLEDGE INDEX</h2>
+              <a href="#" class="ws-action-link" id="ws-ki-view-all">View all &#8594;</a>
+            </div>
+            <div class="ws-ki-grid" id="ws-ki-grid">
+              <div class="ws-ki-card ws-ki-personal" id="ki-card-personal">
+                <div class="ws-ki-card-header">
+                  <div class="ws-ki-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <span class="ws-ki-count" id="ki-count-personal">12</span>
+                </div>
+                <h3 class="ws-ki-label">My Documents</h3>
+                <p class="ws-ki-desc">Personal notes, drafts, and private references.</p>
+                <div class="ws-ki-recent-files" id="ki-files-personal"></div>
+                <a href="#" class="ws-ki-link">Browse &#8594;</a>
+              </div>
+              <div class="ws-ki-card ws-ki-team" id="ki-card-team">
+                <div class="ws-ki-card-header">
+                  <div class="ws-ki-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  </div>
+                  <span class="ws-ki-count" id="ki-count-team">34</span>
+                </div>
+                <h3 class="ws-ki-label">Team Library</h3>
+                <p class="ws-ki-desc">Shared team knowledge, playbooks, and processes.</p>
+                <div class="ws-ki-recent-files" id="ki-files-team"></div>
+                <a href="/pages/workspace/team-libraries/team-libraries.html" class="ws-ki-link">Browse &#8594;</a>
+              </div>
+              <div class="ws-ki-card ws-ki-projects" id="ki-card-projects">
+                <div class="ws-ki-card-header">
+                  <div class="ws-ki-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  </div>
+                  <span class="ws-ki-count" id="ki-count-projects">58</span>
+                </div>
+                <h3 class="ws-ki-label">Project Documents</h3>
+                <p class="ws-ki-desc">Specs, briefs, and deliverables across all projects.</p>
+                <div class="ws-ki-recent-files" id="ki-files-projects"></div>
+                <a href="#" class="ws-ki-link">Browse &#8594;</a>
+              </div>
+              <div class="ws-ki-card ws-ki-company" id="ki-card-company">
+                <div class="ws-ki-card-header">
+                  <div class="ws-ki-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                  </div>
+                  <span class="ws-ki-count" id="ki-count-company">21</span>
+                </div>
+                <h3 class="ws-ki-label">Company Resources</h3>
+                <p class="ws-ki-desc">Policies, brand assets, templates, and guidelines.</p>
+                <div class="ws-ki-recent-files" id="ki-files-company"></div>
+                <a href="#" class="ws-ki-link">Browse &#8594;</a>
+              </div>
+            </div>
+          </section>
+          <section class="ws-recent-section" aria-label="Recently in Motion">
+            <div class="ws-section-head">
+              <div class="ws-section-head-left">
+                <h2 class="ws-section-title">RECENTLY IN MOTION</h2>
+                <span class="ws-section-subtitle" id="ws-recent-date-label">LATEST EDITS / TODAY</span>
+              </div>
+              <a href="#" class="ws-action-link" id="ws-recent-view-all">View all &#8594;</a>
+            </div>
+            <div class="ws-recent-list" id="ws-recent-list"></div>
+          </section>
+        </main>
+        <aside class="ws-right-rail" aria-label="Your Desk and Knowledge Shortcuts">
+          <div class="ws-rail-block">
+            <div class="ws-rail-head">
+              <h3 class="ws-rail-title">YOUR DESK</h3>
+              <a href="#" class="ws-rail-link">Manage &#8594;</a>
+            </div>
+            <div class="ws-desk-item" id="ws-desk-drafts">
+              <div class="ws-desk-icon-wrap ws-desk-icon-draft">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              </div>
+              <div class="ws-desk-copy">
+                <span class="ws-desk-label">Drafts</span>
+                <span class="ws-desk-val" id="ws-desk-drafts-count">4 unsaved</span>
+              </div>
+              <span class="ws-desk-arrow">&#8594;</span>
+            </div>
+            <div class="ws-desk-item" id="ws-desk-review">
+              <div class="ws-desk-icon-wrap ws-desk-icon-review">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </div>
+              <div class="ws-desk-copy">
+                <span class="ws-desk-label">Under Review</span>
+                <span class="ws-desk-val" id="ws-desk-review-count">2 awaiting</span>
+              </div>
+              <span class="ws-desk-arrow">&#8594;</span>
+            </div>
+            <div class="ws-desk-item" id="ws-desk-recent">
+              <div class="ws-desk-icon-wrap ws-desk-icon-recent">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              <div class="ws-desk-copy">
+                <span class="ws-desk-label">Recently Viewed</span>
+                <span class="ws-desk-val" id="ws-desk-recent-count">7 documents</span>
+              </div>
+              <span class="ws-desk-arrow">&#8594;</span>
+            </div>
+            <div class="ws-desk-item" id="ws-desk-starred">
+              <div class="ws-desk-icon-wrap ws-desk-icon-starred">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </div>
+              <div class="ws-desk-copy">
+                <span class="ws-desk-label">Starred</span>
+                <span class="ws-desk-val" id="ws-desk-starred-count">6 items</span>
+              </div>
+              <span class="ws-desk-arrow">&#8594;</span>
+            </div>
+          </div>
+          <div class="ws-rail-divider"></div>
+          <div class="ws-rail-block">
+            <div class="ws-rail-head">
+              <h3 class="ws-rail-title">KNOWLEDGE SHORTCUTS</h3>
+              <a href="#" class="ws-rail-link">Edit &#8594;</a>
+            </div>
+            <div class="ws-shortcuts-list" id="ws-shortcuts-list"></div>
+          </div>
+          <div class="ws-rail-divider"></div>
+          <div class="ws-rail-block">
+            <div class="ws-rail-head">
+              <h3 class="ws-rail-title">WORKSPACE STATS</h3>
+            </div>
+            <div class="ws-stats-grid">
+              <div class="ws-stat-cell">
+                <span class="ws-stat-num" id="ws-stat-docs">125</span>
+                <span class="ws-stat-label">Documents</span>
+              </div>
+              <div class="ws-stat-cell">
+                <span class="ws-stat-num" id="ws-stat-members">08</span>
+                <span class="ws-stat-label">Members</span>
+              </div>
+              <div class="ws-stat-cell">
+                <span class="ws-stat-num" id="ws-stat-updates">24</span>
+                <span class="ws-stat-label">Updates Today</span>
+              </div>
+              <div class="ws-stat-cell">
+                <span class="ws-stat-num" id="ws-stat-projects">06</span>
+                <span class="ws-stat-label">Active Projects</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+  <script src="workspace.js?v=1"></script>
+</body>
+</html>

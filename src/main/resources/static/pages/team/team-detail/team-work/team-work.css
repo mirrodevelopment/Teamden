@@ -1,0 +1,933 @@
+/* ==========================================================================
+   Teamden — Team Work Tab Stylesheet (team-work.css)
+   Path: pages/team/team-detail/team-work/team-work.css
+   Pixel-accurate match to Brick Team Work execution register screenshot.
+   ========================================================================== */
+
+/* ── Split Layout (~73% Main Register, ~27% Right Rail) ─────────────────── */
+.tw-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 295px;
+  gap: 0;
+  width: 100%;
+  min-height: 0;
+}
+
+/* ── Main Work Register Column ──────────────────────────────────────────── */
+.tw-main-col {
+  padding: 1.25rem 2rem 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+  border-right: 1px solid var(--dash-border, #E5E1D9);
+}
+
+/* ── Section 01: Team Execution Header ──────────────────────────────────── */
+.tw-exec-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.tw-exec-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tw-exec-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-eyebrow-num {
+  color: var(--dash-text-primary, #111111);
+}
+
+.tw-eyebrow-sep {
+  color: var(--dash-text-light, #8E8A84);
+}
+
+.tw-eyebrow-label {
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-exec-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #111111;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.tw-title-dot {
+  color: #111111;
+}
+
+/* + New Task Button (Lime Pill) */
+.tw-new-task-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  background: var(--dash-accent-lime, #C9F34A);
+  color: #111111;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 120ms, box-shadow 150ms, filter 150ms;
+  white-space: nowrap;
+}
+
+.tw-new-task-btn:hover {
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tw-plus-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* ── Toolbar & Filters Row ──────────────────────────────────────────────── */
+.tw-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tw-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* View Pills: All Team Work vs My Work */
+.tw-view-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.tw-view-pill {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--dash-text-body, #2B2B2B);
+  transition: all 150ms;
+}
+
+.tw-view-pill.active {
+  background: #111111;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.tw-view-pill:not(.active) {
+  background: #FAF7F1;
+  border-color: var(--dash-border, #E5E1D9);
+}
+
+.tw-view-pill:hover:not(.active) {
+  background: #F3EFE7;
+  color: #111111;
+}
+
+/* Dropdown Filters */
+.tw-filter-dropdown-wrap {
+  position: relative;
+}
+
+.tw-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  background: #FAF7F1;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dash-text-primary, #111111);
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+}
+
+.tw-dropdown-btn:hover {
+  background: #F3EFE7;
+}
+
+.tw-chevron {
+  font-size: 0.65rem;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #FAF7F1;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 170px;
+  display: none;
+  flex-direction: column;
+  padding: 0.35rem 0;
+  overflow: hidden;
+}
+
+.tw-dropdown-menu.open {
+  display: flex;
+}
+
+.tw-dropdown-item {
+  padding: 0.45rem 0.85rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--dash-text-primary, #111111);
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.tw-dropdown-item:hover {
+  background: #F0ECE4;
+}
+
+.tw-dropdown-item.active {
+  background: #EAE6DE;
+  font-weight: 700;
+}
+
+/* Toolbar Right Icons */
+.tw-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tw-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tw-search-input {
+  display: none;
+  width: 170px;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: 6px;
+  background: #FFFFFF;
+  font-size: 0.75rem;
+  color: #111;
+  outline: none;
+  margin-right: 0.35rem;
+}
+
+.tw-search-input.open {
+  display: block;
+}
+
+.tw-tool-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FAF7F1;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--dash-text-muted, #77736C);
+  transition: background 150ms, color 150ms, border-color 150ms;
+}
+
+.tw-tool-icon-btn:hover {
+  background: #F3EFE7;
+  color: #111111;
+  border-color: #D2CDC2;
+}
+
+/* ── Team Task Register Card ────────────────────────────────────────────── */
+.tw-register-card {
+  background: #FFFFFF;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: var(--radius-md, 10px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Group Section Header */
+.tw-group {
+  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+}
+
+.tw-group:last-child {
+  border-bottom: none;
+}
+
+.tw-group-header {
+  padding: 0.85rem 1.25rem;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  transition: background 120ms;
+}
+
+.tw-group-header:hover {
+  background: #FAF7F1;
+}
+
+.tw-group-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.tw-group-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tw-group-dot--blue  { background: #3B82F6; }
+.tw-group-dot--amber { background: #F59E0B; }
+.tw-group-dot--gray  { background: #9CA3AF; }
+.tw-group-dot--green { background: #10B981; }
+
+.tw-group-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #111111;
+}
+
+.tw-group-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--dash-text-muted, #77736C);
+  margin-left: 0.25rem;
+}
+
+.tw-group-chevron {
+  font-size: 0.8rem;
+  color: var(--dash-text-muted, #77736C);
+  transition: transform 150ms;
+}
+
+/* Group Body & Pale Blue In Progress container */
+.tw-group-body--blue {
+  background: #E5EDF7;
+  padding: 0.25rem 0;
+}
+
+/* Task Row */
+.tw-task-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.tw-task-row:last-child {
+  border-bottom: none;
+}
+
+.tw-task-row:hover {
+  background: rgba(0, 0, 0, 0.025);
+}
+
+.tw-task-checkbox {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #94A3B8;
+  border-radius: 3px;
+  cursor: pointer;
+  accent-color: #111111;
+  flex-shrink: 0;
+}
+
+/* Icon Container */
+.tw-task-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-xs, 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tw-task-icon--purple { background: #EDEAF5; color: #4E446B; }
+.tw-task-icon--blue   { background: #E5EDF7; color: #365369; }
+.tw-task-icon--green  { background: #EFF1E2; color: #3E5224; }
+.tw-task-icon--amber  { background: #FBF3E8; color: #7A5520; }
+
+.tw-task-info-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.tw-task-meta-top {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--dash-text-muted, #77736C);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tw-task-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tw-task-meta-sub {
+  font-size: 0.7rem;
+  color: var(--dash-text-muted, #77736C);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.tw-task-meta-sep {
+  color: var(--dash-text-light, #8E8A84);
+}
+
+.tw-task-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #111111;
+  flex-shrink: 0;
+}
+
+.tw-status-pill {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tw-status-pill--progress { background: #D6E4F0; color: #2C4A6F; }
+.tw-status-pill--review   { background: #F2E9DC; color: #7A5520; }
+.tw-status-pill--todo     { background: #EAE8E2; color: #524F4A; }
+.tw-status-pill--done     { background: #EFF1E2; color: #3E5224; }
+
+.tw-task-arrow {
+  font-size: 0.85rem;
+  color: var(--dash-text-muted, #77736C);
+  flex-shrink: 0;
+  transition: transform 150ms, color 150ms;
+}
+
+.tw-task-row:hover .tw-task-arrow {
+  transform: translateX(3px);
+  color: #111111;
+}
+
+/* ── Right Information Rail (~27%) ──────────────────────────────────────── */
+.tw-right-rail {
+  padding: 1.25rem 1.25rem 3rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--dash-bg-canvas, #F8F6F0);
+  overflow-y: auto;
+}
+
+/* Card 1: Review Desk (Pale Beige Card #FBF3E8) */
+.tw-rail-card--beige {
+  background: #FBF3E8;
+  border: 1px solid #EADCCC;
+  border-radius: var(--radius-md, 10px);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tw-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tw-rail-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-rail-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-rail-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111111;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.tw-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.tw-review-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+.tw-review-item:last-child {
+  border-bottom: none;
+}
+
+.tw-review-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs, 4px);
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-review-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tw-review-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.tw-review-meta {
+  font-size: 0.6875rem;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-review-time {
+  font-size: 0.65rem;
+  color: var(--dash-text-light, #8E8A84);
+}
+
+.tw-review-arrow {
+  font-size: 0.85rem;
+  color: var(--dash-text-light, #8E8A84);
+  flex-shrink: 0;
+  transition: transform 150ms, color 150ms;
+}
+
+.tw-review-item:hover .tw-review-arrow {
+  transform: translateX(2px);
+  color: #111111;
+}
+
+.tw-rail-bottom-link-wrap {
+  margin-top: 0.25rem;
+}
+
+.tw-rail-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #111111;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 120ms;
+}
+
+.tw-rail-link-btn:hover {
+  opacity: 0.65;
+}
+
+.tw-link-arrow {
+  font-size: 0.85rem;
+}
+
+/* Card 2: Handoff Queue (Pale Green Card #EFF1E2) */
+.tw-rail-card--green {
+  background: #EFF1E2;
+  border: 1px solid #DEE1CC;
+  border-radius: var(--radius-md, 10px);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Badges Flow */
+.tw-handoff-flow-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tw-flow-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.tw-flow-badge--lavender { background: #EDEAF5; color: #4E446B; }
+.tw-flow-badge--blue     { background: #E5EDF7; color: #365369; }
+
+.tw-flow-arrow {
+  color: var(--dash-text-muted, #77736C);
+  font-size: 0.8rem;
+}
+
+.tw-handoff-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tw-handoff-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.tw-handoff-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs, 4px);
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #111111;
+}
+
+.tw-handoff-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tw-handoff-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.3;
+}
+
+.tw-handoff-meta {
+  font-size: 0.6875rem;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tw-handoff-meta2 {
+  font-size: 0.65rem;
+  color: var(--dash-text-light, #8E8A84);
+}
+
+.tw-handoff-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.65rem 0.95rem;
+  background: #111111;
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 150ms, transform 120ms;
+}
+
+.tw-handoff-action-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* Card 3: Work by Owner (Bordered Card) */
+.tw-rail-card {
+  background: #FAF7F1;
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: var(--radius-md, 10px);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tw-rail-head-link {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--dash-text-muted, #77736C);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.tw-rail-head-link:hover {
+  color: #111111;
+}
+
+.tw-owners-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tw-owner-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.tw-owner-row:hover {
+  background: #F0ECE4;
+}
+
+.tw-owner-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #111111;
+  flex-shrink: 0;
+}
+
+.tw-owner-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tw-owner-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.tw-owner-meta {
+  font-size: 0.6875rem;
+  color: var(--dash-text-muted, #77736C);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tw-owner-arrow {
+  font-size: 0.85rem;
+  color: var(--dash-text-light, #8E8A84);
+  flex-shrink: 0;
+  transition: transform 150ms, color 150ms;
+}
+
+.tw-owner-row:hover .tw-owner-arrow {
+  transform: translateX(2px);
+  color: #111111;
+}
+
+/* ── Slide-Out Task Details Drawer ──────────────────────────────────────── */
+.tw-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.tw-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tw-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 440px;
+  max-width: 90vw;
+  height: 100%;
+  background: #FAF7F1;
+  border-left: 1px solid var(--dash-border, #E5E1D9);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.15);
+  transform: translateX(100%);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10001;
+}
+
+.tw-drawer-backdrop.open .tw-drawer {
+  transform: translateX(0);
+}
+
+.tw-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  background: #FFFFFF;
+}
+
+.tw-drawer-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tw-drawer-project { color: var(--dash-text-muted, #77736C); }
+.tw-drawer-id { color: #111111; }
+
+.tw-drawer-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--dash-text-muted, #77736C);
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+}
+
+.tw-drawer-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Responsive Behavior ───────────────────────────────────────────────── */
+@media (max-width: 1120px) {
+  .tw-split-layout {
+    grid-template-columns: 1fr;
+  }
+  .tw-main-col {
+    border-right: none;
+    border-bottom: 1px solid var(--dash-border, #E5E1D9);
+    padding: 1.25rem 1.5rem 3rem;
+  }
+  .tw-right-rail {
+    padding: 1.25rem 1.5rem 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tw-exec-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .tw-toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tw-toolbar-left {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tw-task-title {
+    max-width: 180px;
+  }
+}

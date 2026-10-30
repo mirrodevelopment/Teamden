@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — team.</title>
+  <meta name="description" content="Teamden Team Collaboration Hub — The people behind everything we build.">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=10">
+
+  <!-- Team Dashboard Page Styles -->
+  <link rel="stylesheet" href="team.css?v=1">
+</head>
+<body class="team-body">
+
+  <div class="team-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Team Application Area -->
+    <div class="team-main-area">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Content Split (Main Content + Right Collaboration Rail) -->
+      <div class="team-content-split">
+
+        <!-- ===================================================================
+             MAIN TEAM CONTENT COLUMN (Left ~73%)
+             =================================================================== -->
+        <main class="team-main-col">
+
+          <!-- Top Meta Row / Breadcrumb -->
+          <div class="team-header-meta">
+            <span class="team-breadcrumb-text">YOUR WORKSPACE / 04</span>
+            <span class="team-org-name" id="team-org-name">ACME CO.</span>
+          </div>
+
+          <!-- Headline Block -->
+          <div class="team-headline-group">
+            <h1 class="team-title">team<span class="team-title-dot">.</span></h1>
+            <p class="team-subtitle">The people behind everything we build.</p>
+          </div>
+
+          <!-- Search and Directory Toolbar -->
+          <div class="team-toolbar" role="search" aria-label="Find people or teams">
+            <div class="team-search-wrap">
+              <svg class="team-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" class="team-search-input" id="team-search-input" placeholder="Find people or teams..." autocomplete="off" aria-label="Find people or teams">
+            </div>
+
+            <div class="team-directory-wrap">
+              <button class="team-directory-btn" id="team-directory-btn" aria-haspopup="true" aria-expanded="false" title="Team Directory filter">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="21" x2="4" y2="14"></line>
+                  <line x1="4" y1="10" x2="4" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="3"></line>
+                  <line x1="20" y1="21" x2="20" y2="16"></line>
+                  <line x1="20" y1="12" x2="20" y2="3"></line>
+                  <line x1="1" y1="14" x2="7" y2="14"></line>
+                  <line x1="9" y1="8" x2="15" y2="8"></line>
+                  <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                <span>Directory</span>
+                <svg class="team-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="team-dir-dropdown" id="team-dir-dropdown" role="menu">
+                <button class="team-dir-opt" data-dept="all" role="menuitem">All Departments</button>
+                <button class="team-dir-opt" data-dept="design" role="menuitem">Design</button>
+                <button class="team-dir-opt" data-dept="engineering" role="menuitem">Engineering</button>
+                <button class="team-dir-opt" data-dept="content" role="menuitem">Content</button>
+                <button class="team-dir-opt" data-dept="operations" role="menuitem">Operations</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Section 01: Your Team ─────────────────────────────────── -->
+          <section class="team-section" aria-labelledby="sec-your-team-label">
+            <div class="team-section-eyebrow">
+              <span class="team-eyebrow-num">01</span>
+              <span class="team-eyebrow-sep">/</span>
+              <span class="team-eyebrow-label" id="sec-your-team-label">YOUR TEAM</span>
+            </div>
+
+            <div class="team-featured-card" id="team-featured-card">
+              <button class="team-featured-popout" id="team-featured-popout" title="Open team space in full view" aria-label="Open team space">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="7" y1="17" x2="17" y2="7"></line>
+                  <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+              </button>
+
+              <div class="team-featured-header-row">
+                <div class="team-featured-heading-wrap">
+                  <h2 class="team-featured-title" id="team-featured-title">Design Team<span class="team-featured-dot">.</span></h2>
+                  <p class="team-featured-desc" id="team-featured-desc">Building consistent, intuitive digital experiences across projects.</p>
+                </div>
+                <div class="team-featured-stats-wrap" id="team-featured-stats">
+                  <span id="team-featured-members-count">4 members</span>
+                  <span class="team-featured-stats-sep">·</span>
+                  <span id="team-featured-projects-count">3 active projects</span>
+                </div>
+              </div>
+
+              <div class="team-featured-bottom-row">
+                <div class="team-featured-avatars" id="team-featured-avatars" aria-label="Team members">
+                  <!-- Injected via JS -->
+                </div>
+
+                <button class="team-featured-btn" id="team-featured-open-btn">
+                  <span>Open team</span>
+                  <span class="team-btn-arrow">&#8594;</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── Section 02: Explore Your Teams ────────────────────────── -->
+          <section class="team-section" aria-labelledby="sec-explore-teams-label">
+            <div class="team-section-head-row">
+              <div class="team-section-eyebrow">
+                <span class="team-eyebrow-num">02</span>
+                <span class="team-eyebrow-sep">/</span>
+                <span class="team-eyebrow-label" id="sec-explore-teams-label">EXPLORE YOUR TEAMS</span>
+              </div>
+              <button class="team-action-link" id="team-view-dir-btn">
+                <span>View directory</span>
+                <span class="team-link-arrow">&#8594;</span>
+              </button>
+            </div>
+
+            <div class="team-explore-list" id="team-explore-list">
+              <!-- Injected via JS -->
+            </div>
+          </section>
+
+          <!-- ── Section 03: Across Teams ──────────────────────────────── -->
+          <section class="team-section" aria-labelledby="sec-across-teams-label">
+            <div class="team-section-head-row">
+              <div class="team-section-eyebrow">
+                <span class="team-eyebrow-num">03</span>
+                <span class="team-eyebrow-sep">/</span>
+                <span class="team-eyebrow-label" id="sec-across-teams-label">ACROSS TEAMS</span>
+              </div>
+              <button class="team-action-link" id="team-view-across-btn">
+                <span>View all</span>
+                <span class="team-link-arrow">&#8594;</span>
+              </button>
+            </div>
+
+            <div class="team-across-grid" id="team-across-grid">
+              <!-- Injected via JS -->
+            </div>
+
+            <!-- Carousel Pagination Dots -->
+            <div class="team-across-pagination" id="team-across-pagination">
+              <button class="team-page-arrow" id="team-page-prev" title="Previous" aria-label="Previous page">&lt;</button>
+              <span class="team-page-dot active"></span>
+              <span class="team-page-dot"></span>
+              <button class="team-page-arrow" id="team-page-next" title="Next" aria-label="Next page">&gt;</button>
+            </div>
+          </section>
+
+          <!-- ── Section 04: From Your Teams ───────────────────────────── -->
+          <section class="team-section" aria-labelledby="sec-from-teams-label">
+            <div class="team-section-head-row">
+              <div class="team-section-eyebrow">
+                <span class="team-eyebrow-num">04</span>
+                <span class="team-eyebrow-sep">/</span>
+                <span class="team-eyebrow-label" id="sec-from-teams-label">FROM YOUR TEAMS</span>
+              </div>
+              <button class="team-action-link" id="team-view-updates-btn">
+                <span>View all</span>
+                <span class="team-link-arrow">&#8594;</span>
+              </button>
+            </div>
+
+            <div class="team-updates-grid" id="team-updates-grid">
+              <!-- Injected via JS -->
+            </div>
+          </section>
+
+        </main>
+
+        <!-- ===================================================================
+             RIGHT COLLABORATION PANEL (Right ~27%)
+             =================================================================== -->
+        <aside class="team-right-panel" aria-label="Team Collaboration Panel">
+
+          <!-- ── Card 1: Your Collaborations (Dark Card) ────────────────── -->
+          <div class="team-dark-card" id="team-collabs-card">
+            <div class="team-dark-eyebrow">YOUR COLLABORATIONS</div>
+            <h2 class="team-dark-title">Needs your input<span class="team-dark-dot">.</span></h2>
+            <p class="team-dark-desc">Decisions and discussions where your contribution is needed.</p>
+            <div class="team-dark-divider"></div>
+            <button class="team-dark-cta-btn" id="team-view-collabs-btn">
+              <span>View all requests</span>
+              <span class="team-btn-arrow">&#8594;</span>
+            </button>
+          </div>
+
+          <!-- ── Card 2: Awaiting Your Response ─────────────────────────── -->
+          <div class="team-panel-card team-panel-card--awaiting" id="team-awaiting-card">
+            <div class="team-card-head-row">
+              <span class="team-card-eyebrow">AWAITING YOUR RESPONSE</span>
+              <button class="team-card-link" id="team-awaiting-view-all">View all &#8594;</button>
+            </div>
+            <div class="team-awaiting-list" id="team-awaiting-list">
+              <!-- Injected via JS -->
+            </div>
+            <div class="team-empty-state" id="team-awaiting-empty" style="display:none;">
+              <p>You&#39;re all caught up.</p>
+            </div>
+          </div>
+
+          <!-- ── Card 3: Mentions & Requests ────────────────────────────── -->
+          <div class="team-panel-card team-panel-card--mentions" id="team-mentions-card">
+            <div class="team-card-head-row">
+              <span class="team-card-eyebrow">MENTIONS &amp; REQUESTS</span>
+              <button class="team-card-link" id="team-mentions-view-all">View all &#8594;</button>
+            </div>
+            <div class="team-mentions-list" id="team-mentions-list">
+              <!-- Injected via JS -->
+            </div>
+            <div class="team-empty-state" id="team-mentions-empty" style="display:none;">
+              <p>No mentions or tags yet.</p>
+            </div>
+          </div>
+
+          <!-- ── Card 4: People ─────────────────────────────────────────── -->
+          <div class="team-panel-card team-panel-card--people" id="team-people-card">
+            <div class="team-card-head-row">
+              <span class="team-card-eyebrow">PEOPLE</span>
+              <button class="team-card-link" id="team-people-view-dir">View directory &#8594;</button>
+            </div>
+            <div class="team-people-avatars-wrap" id="team-people-avatars">
+              <!-- Injected via JS -->
+            </div>
+            <button class="team-people-browse-btn" id="team-people-browse-btn">
+              <span>Browse team directory</span>
+              <span class="team-btn-arrow">&#8594;</span>
+            </button>
+          </div>
+
+        </aside>
+
+      </div><!-- /.team-content-split -->
+    </div><!-- /.team-main-area -->
+  </div><!-- /.team-master-wrapper -->
+
+  <!-- Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+  <script src="team.js?v=1"></script>
+</body>
+</html>

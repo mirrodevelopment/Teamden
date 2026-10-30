@@ -1,0 +1,1066 @@
+/* ==========================================================================
+   Teamden / Brick — Project Documents Tab Styles (project-documents.css)
+   Path: pages/project/project-documents/project-documents.css
+   Authentic Brick SaaS styling adhering strictly to the visual reference.
+   ========================================================================== */
+
+/* Main Split: Left Library Panel (~295px) + Right Document Viewer (flexible) */
+.documents-workspace-split {
+  display: grid;
+  grid-template-columns: 295px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+  margin-top: 0.25rem;
+  box-sizing: border-box;
+}
+
+.documents-workspace-split.library-collapsed {
+  grid-template-columns: 48px minmax(0, 1fr);
+}
+
+/* ==========================================================================
+   REGION B — PROJECT LIBRARY PANEL (Left column)
+   ========================================================================== */
+.docs-library-panel {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 12px;
+  padding: 1.15rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  min-height: 520px;
+}
+
+.documents-workspace-split.library-collapsed .docs-library-panel {
+  padding: 1rem 0.5rem;
+}
+
+.documents-workspace-split.library-collapsed .docs-library-header .docs-library-title,
+.documents-workspace-split.library-collapsed .docs-search-row,
+.documents-workspace-split.library-collapsed .docs-category-filters,
+.documents-workspace-split.library-collapsed .docs-library-list,
+.documents-workspace-split.library-collapsed .docs-library-footer {
+  display: none !important;
+}
+
+.docs-library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.docs-library-title {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #555555;
+}
+
+.btn-library-collapse {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #777777;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.15rem 0.35rem;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.btn-library-collapse:hover {
+  background-color: #F3F0EA;
+  color: #111111;
+}
+
+/* Search input & Quick add button */
+.docs-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.docs-search-input-wrap {
+  flex: 1;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 0.65rem;
+  transition: border-color 0.15s ease;
+}
+
+.docs-search-input-wrap:focus-within {
+  border-color: #111111;
+}
+
+.search-icon-svg {
+  color: #888888;
+  flex-shrink: 0;
+}
+
+.docs-search-input {
+  border: none;
+  background: transparent;
+  font-size: 0.78125rem;
+  font-family: inherit;
+  color: #111111;
+  outline: none;
+  width: 100%;
+}
+
+.docs-search-input::placeholder {
+  color: #888888;
+}
+
+.btn-add-doc-quick {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 1px solid #E5E1D9;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.btn-add-doc-quick:hover {
+  background-color: #F3F0EA;
+  border-color: #D3CEC4;
+}
+
+/* Category filter pills */
+.docs-category-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.doc-cat-pill {
+  background-color: #FAF9F6;
+  border: 1px solid #E5E1D9;
+  border-radius: 9999px;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #555555;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  user-select: none;
+}
+
+.doc-cat-pill:hover:not(.active) {
+  background-color: #F0ECE4;
+  color: #111111;
+}
+
+.doc-cat-pill.active {
+  background-color: #111111;
+  border-color: #111111;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* Document list */
+.docs-library-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.15rem;
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
+
+.doc-library-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.doc-library-item:hover:not(.selected) {
+  background-color: #F5F2EB;
+}
+
+.doc-library-item.selected {
+  background-color: #EEE2CF;
+  border-color: #E2D3BE;
+}
+
+.doc-item-icon-wrap {
+  flex-shrink: 0;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-item-svg {
+  stroke: #222222;
+}
+
+.doc-item-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.doc-item-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-item-details {
+  font-size: 0.6875rem;
+  color: #666666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta-dot {
+  margin: 0 0.15rem;
+  color: #888888;
+}
+
+.doc-item-more-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  color: #777777;
+  cursor: pointer;
+  padding: 0.2rem 0.25rem;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  line-height: 1;
+}
+
+.doc-item-more-btn:hover {
+  opacity: 1;
+  color: #111111;
+}
+
+/* Footer: + New document */
+.docs-library-footer {
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #F0ECE4;
+}
+
+.btn-new-document-bottom {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: none;
+  color: #111111;
+  font-size: 0.78125rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.4rem 0.2rem;
+  transition: color 0.15s ease;
+}
+
+.btn-new-document-bottom:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.btn-plus-icon {
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   REGION C — DOCUMENT VIEWER CARD (Center / Right flexible viewer)
+   ========================================================================== */
+.doc-viewer-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 12px;
+  padding: 1.75rem 2rem 2.25rem 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Top Row */
+.doc-viewer-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.doc-ident-tag {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #77736C;
+}
+
+.doc-top-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.doc-collab-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.doc-collab-circle,
+.doc-attendee-avatar,
+.linked-avatar-pill {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #111111;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Curated subtle pastel avatars */
+.avatar-mj { background-color: #E0E7FF; color: #3730A3; }
+.avatar-pk { background-color: #FFEDD5; color: #9A3412; }
+.avatar-ar { background-color: #EDE9FE; color: #5B21B6; }
+.avatar-sk { background-color: #FEF3C7; color: #92400E; }
+
+.doc-collab-add-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #E5E1D9;
+  background-color: #FFFFFF;
+  color: #555555;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.doc-collab-add-btn:hover {
+  background-color: #F3F0EA;
+  color: #111111;
+}
+
+.doc-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 8px;
+  padding: 0.32rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111111;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-share-btn:hover {
+  background-color: #F5F2EB;
+}
+
+.doc-more-menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #666666;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.doc-more-menu-btn:hover {
+  color: #111111;
+}
+
+/* Title & Subtitle Row */
+.doc-viewer-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.doc-title-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.doc-viewer-title {
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #111111;
+  margin: 0;
+}
+
+.doc-viewer-meta-info {
+  font-size: 0.78125rem;
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.doc-status-version-stack {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.doc-saved-indicator {
+  font-size: 0.75rem;
+  color: #77736C;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.saved-check-icon {
+  font-weight: 800;
+  color: #77736C;
+}
+
+.btn-version-history {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #77736C;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.15s ease;
+}
+
+.btn-version-history:hover {
+  color: #111111;
+}
+
+/* Document Sections Generic Styles */
+.doc-section {
+  margin-top: 1.65rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #F0ECE4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.doc-section-tag {
+  font-size: 0.65625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #77736C;
+}
+
+/* ==========================================================================
+   SECTION 01 / ATTENDEES
+   ========================================================================== */
+.doc-attendees-row {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.doc-attendee-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.doc-attendee-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+/* ==========================================================================
+   SECTION 02 / DISCUSSION + CREATE LINKED TASK
+   ========================================================================== */
+.doc-discussion-grid-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(285px, 330px);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.doc-discussion-text-col {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.doc-text-paragraph {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #222222;
+  margin: 0 0 1rem 0;
+  font-weight: 400;
+}
+
+.doc-selected-highlight {
+  background-color: transparent;
+  padding: 0.12rem 0.25rem;
+  border-radius: 4px;
+  color: inherit;
+  display: inline;
+  cursor: text;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doc-selected-highlight.is-selected {
+  background-color: #EEE2CF;
+  box-shadow: 0 0 14px rgba(238, 226, 207, 0.95), 0 0 3px rgba(201, 243, 74, 0.4);
+  color: #111111;
+}
+
+/* Custom text selection styling with warm soft glow */
+.doc-discussion-text-col ::selection,
+.doc-viewer-card ::selection {
+  background-color: #EEE2CF;
+  color: #111111;
+  text-shadow: 0 0 8px rgba(238, 226, 207, 0.85);
+}
+
+.doc-discussion-text-col ::-moz-selection,
+.doc-viewer-card ::-moz-selection {
+  background-color: #EEE2CF;
+  color: #111111;
+}
+
+/* Inline Floating Formatting Toolbar — only shown when text is selected */
+.doc-inline-formatting-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 8px;
+  padding: 0.3rem 0.45rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  width: fit-content;
+  position: absolute;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1), transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.doc-inline-formatting-toolbar.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.toolbar-icon-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #444444;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.toolbar-icon-btn.btn-italic {
+  font-style: italic;
+  font-family: serif;
+}
+
+.toolbar-icon-btn:hover {
+  background-color: #F3F0EA;
+  color: #111111;
+}
+
+/* Create Linked Task Card (Right column of Section 02) */
+.doc-linked-task-col {
+  width: 100%;
+}
+
+.create-linked-task-card {
+  background-color: #FAF8F4;
+  border: 1px solid #E5E1D9;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.linked-task-header-banner {
+  background-color: #F6EFE6;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid #EBE4D8;
+}
+
+.linked-task-icon-svg {
+  color: #111111;
+}
+
+.linked-task-header-title {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #111111;
+  margin: 0;
+}
+
+.linked-task-body-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background-color: #FAF8F4;
+}
+
+.linked-task-textarea-container {
+  width: 100%;
+}
+
+.linked-task-textarea {
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #111111;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.linked-task-textarea:focus {
+  border-color: #111111;
+}
+
+.linked-task-prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.linked-prop-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666666;
+}
+
+.linked-prop-control-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E1D9;
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.linked-prop-control-btn:hover {
+  background-color: #FAF9F6;
+  border-color: #D3CEC4;
+}
+
+.linked-assignee-name,
+.linked-due-date-str {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.calendar-icon-svg {
+  color: #555555;
+}
+
+.linked-prop-chevron {
+  font-size: 0.65rem;
+  color: #888888;
+}
+
+.btn-create-task-primary {
+  width: 100%;
+  background-color: #111111;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.btn-create-task-primary:hover {
+  background-color: #242424;
+}
+
+.btn-create-task-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-arrow-right {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.linked-task-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.25rem;
+}
+
+.linked-secondary-btn {
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: #666666;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  font-family: inherit;
+  transition: color 0.15s ease;
+}
+
+.linked-secondary-btn:hover {
+  color: #111111;
+}
+
+/* ==========================================================================
+   SECTION 03 / DECISIONS
+   ========================================================================== */
+.doc-decisions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.doc-decision-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.doc-decision-card.card-approved {
+  background-color: #EAF7EE;
+  border: 1px solid #D5EFE0;
+}
+
+.doc-decision-card.card-amber {
+  background-color: #FEF7EA;
+  border: 1px solid #FBEACF;
+}
+
+.decision-icon-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.decision-icon-circle.green {
+  background-color: #22C55E;
+  color: #FFFFFF;
+}
+
+.decision-icon-circle.amber {
+  background-color: #F59E0B;
+  color: #FFFFFF;
+}
+
+.decision-content-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.decision-item-heading {
+  font-size: 0.84375rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+}
+
+.decision-item-submeta {
+  font-size: 0.6875rem;
+  color: #555555;
+}
+
+.decision-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.decision-linked-task-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #2563EB;
+}
+
+.decision-nav-arrow-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #444444;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.decision-nav-arrow-btn:hover {
+  color: #111111;
+  transform: translateX(2px);
+}
+
+.decision-more-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.85rem;
+  color: #777777;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.decision-more-btn:hover {
+  color: #111111;
+}
+
+.doc-record-decision-row {
+  margin-top: 0.25rem;
+}
+
+.btn-record-decision-link {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #555555;
+  cursor: pointer;
+  padding: 0.35rem 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: inherit;
+  transition: color 0.15s ease;
+}
+
+.btn-record-decision-link:hover {
+  color: #111111;
+}
+
+.plus-sign {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   SECTION 04 / NEXT STEPS
+   ========================================================================== */
+.doc-next-steps-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.next-step-item-label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.next-step-input {
+  display: none;
+}
+
+.next-step-checkbox-custom {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #BBBBBB;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.next-step-item-label:hover .next-step-checkbox-custom {
+  border-color: #111111;
+}
+
+.next-step-input:checked + .next-step-checkbox-custom {
+  background-color: #111111;
+  border-color: #111111;
+}
+
+.next-step-input:checked + .next-step-checkbox-custom::after {
+  content: '✓';
+  color: #FFFFFF;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.next-step-item-text {
+  font-size: 0.8125rem;
+  color: #222222;
+  font-weight: 500;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.next-step-input:checked ~ .next-step-item-text {
+  color: #888888;
+  text-decoration: line-through;
+}
+
+/* ==========================================================================
+   RESPONSIVE BEHAVIOR
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .documents-workspace-split {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 1.15rem;
+  }
+
+  .doc-discussion-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .doc-linked-task-col {
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 860px) {
+  .documents-workspace-split {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-library-panel {
+    min-height: auto;
+  }
+
+  .doc-viewer-card {
+    padding: 1.25rem 1.15rem;
+  }
+
+  .doc-viewer-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .doc-status-version-stack {
+    align-items: flex-start;
+  }
+}

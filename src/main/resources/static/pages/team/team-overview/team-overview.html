@@ -1,0 +1,409 @@
+<!-- =======================================================================
+     Teamden — Team Overview Tab Component (team-overview.html)
+     Path: pages/team/team-overview/team-overview.html
+     Pixel-accurate match to Brick Team Overview screenshot.
+     ======================================================================= -->
+<div class="tov-split-layout" id="team-overview-root">
+
+  <!-- =====================================================================
+       MAIN TEAM WORKSPACE COLUMN (Left ~73%)
+       ===================================================================== -->
+  <div class="tov-main-col">
+
+    <!-- ── Section 01: Team Focus ──────────────────────────────────────── -->
+    <section class="tov-section" aria-labelledby="tov-focus-label">
+      <div class="tov-section-head-row">
+        <div class="tov-section-eyebrow">
+          <span class="tov-eyebrow-num">01</span>
+          <span class="tov-eyebrow-sep">/</span>
+          <span class="tov-eyebrow-label" id="tov-focus-label">TEAM FOCUS</span>
+        </div>
+        <span class="tov-eyebrow-tag">CURRENT PRIORITY</span>
+      </div>
+
+      <div class="tov-focus-card" id="tov-focus-card">
+        <div class="tov-focus-heading-wrap">
+          <h2 class="tov-focus-title" id="tov-focus-title">Website Redesign<span class="tov-focus-dot">.</span></h2>
+          <p class="tov-focus-desc" id="tov-focus-desc">Finalise the interface system and prepare approved designs for development.</p>
+        </div>
+
+        <div class="tov-focus-divider"></div>
+
+        <div class="tov-focus-bottom-row">
+          <div class="tov-focus-delivery-info">
+            <span class="tov-delivery-label">NEXT DELIVERY</span>
+            <span class="tov-delivery-val" id="tov-delivery-val">Design handoff · 30 Oct</span>
+          </div>
+
+          <button class="tov-focus-btn" id="tov-focus-open-btn">
+            <span>Open work</span>
+            <span class="tov-link-arrow">&#8594;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 02: Work in Motion ──────────────────────────────────── -->
+    <section class="tov-section" aria-labelledby="tov-motion-label">
+      <div class="tov-section-head-row">
+        <div class="tov-section-eyebrow">
+          <span class="tov-eyebrow-num">02</span>
+          <span class="tov-eyebrow-sep">/</span>
+          <span class="tov-eyebrow-label" id="tov-motion-label">WORK IN MOTION</span>
+        </div>
+        <button class="tov-action-link" id="tov-view-all-work">
+          <span>View all work</span>
+          <span class="tov-link-arrow">&#8594;</span>
+        </button>
+      </div>
+
+      <div class="tov-motion-grid" id="tov-motion-grid">
+        <!-- Card 1: In Progress (Pale Blue) -->
+        <div class="tov-motion-card tov-motion-card--blue" id="motion-card-progress" role="button" tabindex="0">
+          <div class="tov-motion-top">
+            <span class="tov-motion-status">IN PROGRESS</span>
+            <span class="tov-motion-count" id="count-in-progress">04</span>
+          </div>
+          <div class="tov-motion-divider"></div>
+          <h3 class="tov-motion-title">Interface system</h3>
+          <p class="tov-motion-desc">Being developed across components and layouts.</p>
+          <div class="tov-motion-bottom">
+            <span class="tov-motion-meta">OWNER / MJ</span>
+            <svg class="tov-motion-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 2: In Review (Pale Beige) -->
+        <div class="tov-motion-card tov-motion-card--beige" id="motion-card-review" role="button" tabindex="0">
+          <div class="tov-motion-top">
+            <span class="tov-motion-status">IN REVIEW</span>
+            <span class="tov-motion-count" id="count-in-review">02</span>
+          </div>
+          <div class="tov-motion-divider"></div>
+          <h3 class="tov-motion-title">Mobile navigation</h3>
+          <p class="tov-motion-desc">Awaiting feedback from stakeholders.</p>
+          <div class="tov-motion-bottom">
+            <span class="tov-motion-meta">REVIEWER / AR</span>
+            <svg class="tov-motion-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 3: Ready to Handoff (Pale Green) -->
+        <div class="tov-motion-card tov-motion-card--green" id="motion-card-handoff" role="button" tabindex="0">
+          <div class="tov-motion-top">
+            <span class="tov-motion-status">READY TO HANDOFF</span>
+            <span class="tov-motion-count" id="count-ready-handoff">01</span>
+          </div>
+          <div class="tov-motion-divider"></div>
+          <h3 class="tov-motion-title">Design tokens</h3>
+          <p class="tov-motion-desc">Ready for Engineering implementation.</p>
+          <div class="tov-motion-bottom">
+            <span class="tov-motion-meta">HANDOFF / ENGINEERING</span>
+            <svg class="tov-motion-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Two Side-by-Side Sections: Active Projects & Team Library ───── -->
+    <div class="tov-two-cols-wrap">
+
+      <!-- Section 03: Active Projects -->
+      <section class="tov-section" aria-labelledby="tov-projects-label">
+        <div class="tov-section-head-row">
+          <div class="tov-section-eyebrow">
+            <span class="tov-eyebrow-num">03</span>
+            <span class="tov-eyebrow-sep">/</span>
+            <span class="tov-eyebrow-label" id="tov-projects-label">ACTIVE PROJECTS</span>
+          </div>
+        </div>
+
+        <div class="tov-card-list" id="tov-projects-list">
+          <!-- Row 1: Website Redesign -->
+          <div class="tov-list-row" data-project-id="website-redesign" role="button" tabindex="0">
+            <span class="tov-row-num">01</span>
+            <div class="tov-row-icon-wrap tov-row-icon--purple">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Website Redesign</span>
+              <span class="tov-row-meta">Design review / Next delivery 30 Oct</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+
+          <!-- Row 2: Client Application -->
+          <div class="tov-list-row" data-project-id="client-application" role="button" tabindex="0">
+            <span class="tov-row-num">02</span>
+            <div class="tov-row-icon-wrap tov-row-icon--blue">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Client Application</span>
+              <span class="tov-row-meta">Interface refinement / In progress</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+
+          <!-- Row 3: Brand Development -->
+          <div class="tov-list-row" data-project-id="brand-development" role="button" tabindex="0">
+            <span class="tov-row-num">03</span>
+            <div class="tov-row-icon-wrap tov-row-icon--green">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line>
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.29 7 12 12.01 20.71 7"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Brand Development</span>
+              <span class="tov-row-meta">Identity system / Awaiting approval</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 04: Team Library -->
+      <section class="tov-section" aria-labelledby="tov-library-label">
+        <div class="tov-section-head-row">
+          <div class="tov-section-eyebrow">
+            <span class="tov-eyebrow-num">04</span>
+            <span class="tov-eyebrow-sep">/</span>
+            <span class="tov-eyebrow-label" id="tov-library-label">TEAM LIBRARY</span>
+          </div>
+          <button class="tov-action-link" id="tov-open-library-btn">
+            <span>Open library</span>
+            <span class="tov-link-arrow">&#8594;</span>
+          </button>
+        </div>
+
+        <div class="tov-card-list" id="tov-library-list">
+          <!-- Row 1: Design Guidelines -->
+          <div class="tov-list-row" data-doc-id="design-guidelines" role="button" tabindex="0">
+            <div class="tov-row-icon-wrap tov-row-icon--purple">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Design Guidelines</span>
+              <span class="tov-row-meta">Approved reference</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+
+          <!-- Row 2: Design Review Notes -->
+          <div class="tov-list-row" data-doc-id="review-notes" role="button" tabindex="0">
+            <div class="tov-row-icon-wrap tov-row-icon--blue">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Design Review Notes</span>
+              <span class="tov-row-meta">3 linked tasks</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+
+          <!-- Row 3: Component Standards -->
+          <div class="tov-list-row" data-doc-id="component-standards" role="button" tabindex="0">
+            <div class="tov-row-icon-wrap tov-row-icon--green">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <div class="tov-row-content">
+              <span class="tov-row-title">Component Standards</span>
+              <span class="tov-row-meta">Latest version / Shared</span>
+            </div>
+            <span class="tov-row-arrow">&#8594;</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── Section 05: Team Updates ────────────────────────────────────── -->
+    <section class="tov-section" aria-labelledby="tov-updates-label">
+      <div class="tov-section-head-row">
+        <div class="tov-section-eyebrow">
+          <span class="tov-eyebrow-num">05</span>
+          <span class="tov-eyebrow-sep">/</span>
+          <span class="tov-eyebrow-label" id="tov-updates-label">TEAM UPDATES</span>
+        </div>
+        <button class="tov-action-link" id="tov-view-all-updates">
+          <span>View all updates</span>
+          <span class="tov-link-arrow">&#8594;</span>
+        </button>
+      </div>
+
+      <div class="tov-updates-grid" id="tov-updates-grid">
+        <!-- Update Card 1: Alex R. -->
+        <div class="tov-update-card" data-update-id="u1" role="button" tabindex="0">
+          <div class="tov-update-avatar avatar--ar">AR</div>
+          <div class="tov-update-content">
+            <div class="tov-update-head">
+              <span class="tov-update-title">Design guidelines ready for review</span>
+              <span class="tov-update-arrow">&#8594;</span>
+            </div>
+            <p class="tov-update-desc">The updated guidelines are ready for feedback.</p>
+            <span class="tov-update-meta">Alex R. · 2 hrs ago · Linked to Design Guidelines</span>
+          </div>
+        </div>
+
+        <!-- Update Card 2: Maria J. -->
+        <div class="tov-update-card" data-update-id="u2" role="button" tabindex="0">
+          <div class="tov-update-avatar avatar--mj">MJ</div>
+          <div class="tov-update-content">
+            <div class="tov-update-head">
+              <span class="tov-update-title">Staging environment is ready</span>
+              <span class="tov-update-arrow">&#8594;</span>
+            </div>
+            <p class="tov-update-desc">The latest build is available for internal testing.</p>
+            <span class="tov-update-meta">Maria J. · 4 hrs ago · Linked to Client Application</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.tov-main-col -->
+
+  <!-- =====================================================================
+       RIGHT INFORMATION SIDEBAR (~27%)
+       ===================================================================== -->
+  <aside class="tov-right-rail" aria-label="Team Coordination Sidebar">
+
+    <!-- Card 1: Team Coordination / 01 (Dark Charcoal Card) -->
+    <div class="tov-dark-card" id="tov-coord-card">
+      <span class="tov-dark-eyebrow">TEAM COORDINATION / 01</span>
+      <h3 class="tov-dark-title">Next delivery<span style="color:#C9F34A;">.</span></h3>
+      <span class="tov-dark-sub" id="tov-coord-sub">Website Redesign · Design handoff</span>
+      <div class="tov-dark-divider"></div>
+      <span class="tov-dark-due" id="tov-coord-due">Due 30 Oct 2026</span>
+      <button class="tov-dark-btn" id="tov-view-milestone-btn">
+        <span>View milestone</span>
+        <span class="tov-link-arrow">&#8594;</span>
+      </button>
+    </div>
+
+    <!-- Card 2: Awaiting Review (Pale Beige Card) -->
+    <div class="tov-rail-card--beige" id="tov-awaiting-card">
+      <div class="tov-rail-card-head">
+        <span class="tov-rail-card-label">AWAITING REVIEW</span>
+      </div>
+      <div class="tov-review-row">
+        <div class="tov-review-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="tov-review-copy">
+          <span class="tov-review-title">Mobile navigation</span>
+          <span class="tov-review-desc">Feedback required from Design Lead.</span>
+        </div>
+      </div>
+      <div>
+        <button class="tov-review-action-btn" id="tov-review-work-btn">
+          <span>Review work</span>
+          <span class="tov-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3: Team Members -->
+    <div class="tov-rail-card" id="tov-members-card">
+      <div class="tov-rail-card-head">
+        <span class="tov-rail-card-label">TEAM MEMBERS</span>
+        <button class="tov-rail-card-link" id="tov-members-view-all">View all &#8594;</button>
+      </div>
+      <div class="tov-members-avatars-row">
+        <div class="tov-member-bubble avatar--pk" title="Priya Kapoor (PK)">PK</div>
+        <div class="tov-member-bubble avatar--ar" title="Alex Rivera (AR)">AR</div>
+        <div class="tov-member-bubble avatar--sk" title="Samir Khan (SK)">SK</div>
+        <div class="tov-member-bubble avatar--mj" title="Maya Jones (MJ)">MJ</div>
+      </div>
+      <span class="tov-members-summary" id="tov-members-summary">4 members · Design Team</span>
+      <div class="tov-members-divider"></div>
+      <button class="tov-settings-link-btn" id="tov-manage-settings-btn">
+        <span>Manage team settings</span>
+        <span class="tov-link-arrow">&#8594;</span>
+      </button>
+    </div>
+
+    <!-- Card 4: Upcoming Handoff (Pale Green) -->
+    <div class="tov-rail-card--green" id="tov-handoff-card">
+      <div class="tov-rail-card-head">
+        <span class="tov-rail-card-label">UPCOMING HANDOFF</span>
+      </div>
+      <div class="tov-handoff-row">
+        <div class="tov-handoff-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line>
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.29 7 12 12.01 20.71 7"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="tov-handoff-copy">
+          <span class="tov-handoff-title">Design tokens</span>
+          <span class="tov-handoff-sub">Ready for Engineering</span>
+          <span class="tov-handoff-meta">Handoff to Engineering Team · 3 days</span>
+        </div>
+      </div>
+      <div>
+        <button class="tov-handoff-action-btn" id="tov-view-handoff-btn">
+          <span>View handoff</span>
+          <span class="tov-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 5: Recent Decisions -->
+    <div class="tov-rail-card" id="tov-decisions-card">
+      <div class="tov-rail-card-head">
+        <span class="tov-rail-card-label">RECENT DECISIONS</span>
+        <button class="tov-rail-card-link" id="tov-decisions-view-all">View all &#8594;</button>
+      </div>
+      <div class="tov-decision-row" id="tov-decision-row" role="button" tabindex="0">
+        <div class="tov-decision-check">&#10003;</div>
+        <div class="tov-decision-copy">
+          <div class="tov-decision-head">
+            <span class="tov-decision-title">Homepage design approved</span>
+            <span class="tov-decision-arrow">&#8594;</span>
+          </div>
+          <span class="tov-decision-desc">Client design approved for development.</span>
+          <span class="tov-decision-meta">Website Redesign · 1 day ago</span>
+        </div>
+      </div>
+    </div>
+
+  </aside><!-- /.tov-right-rail -->
+
+</div><!-- /.tov-split-layout -->

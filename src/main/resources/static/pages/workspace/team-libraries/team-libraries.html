@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Library — Teamden Workspace</title>
+  <meta name="description" content="Team Libraries — The shared knowledge of the Design Team.">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=10">
+  <link rel="stylesheet" href="team-libraries.css?v=1">
+</head>
+<body class="tl-body">
+  <div class="tl-master-wrapper">
+    <!-- Sidebar fragment mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main area -->
+    <div class="tl-main-area">
+      <!-- Navbar fragment mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Workspace sub-nav (tab strip) -->
+      <nav class="tl-workspace-subnav" aria-label="Workspace sections">
+        <a href="/pages/workspace/workspace.html" class="tl-subnav-tab" id="tl-tab-hub">Overview</a>
+        <a href="/pages/workspace/team-libraries/team-libraries.html" class="tl-subnav-tab tl-subnav-tab--active" id="tl-tab-libraries">Team Libraries</a>
+        <a href="#" class="tl-subnav-tab" id="tl-tab-shared">Shared Resources</a>
+        <a href="#" class="tl-subnav-tab" id="tl-tab-company">Company Docs</a>
+      </nav>
+
+      <!-- Two-column split -->
+      <div class="tl-content-split">
+
+        <!-- ================================================================
+             MAIN CONTENT COLUMN
+             ================================================================ -->
+        <main class="tl-main-col">
+
+          <!-- Breadcrumb -->
+          <div class="tl-breadcrumb">
+            <a href="/pages/workspace/workspace.html" class="tl-bc-link">WORKSPACE</a>
+            <span class="tl-bc-sep">/</span>
+            <a href="#" class="tl-bc-link">TEAM LIBRARIES</a>
+            <span class="tl-bc-sep">/</span>
+            <span class="tl-bc-current">02</span>
+          </div>
+
+          <!-- Library Heading -->
+          <div class="tl-heading-block">
+            <h1 class="tl-page-title">design library<span class="tl-title-dot">.</span></h1>
+            <p class="tl-page-subtitle">The shared knowledge of the Design Team.</p>
+          </div>
+
+          <!-- Team Access Row -->
+          <div class="tl-team-access-row">
+            <div class="tl-avatars-group" id="tl-avatars-group" aria-label="Team members">
+              <!-- Populated by JS -->
+            </div>
+            <button class="tl-team-access-btn" id="tl-team-access-btn" aria-label="Team access">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Team access</span>
+            </button>
+          </div>
+
+          <!-- ── Section 01: Start Here ─────────────────────────────────── -->
+          <section class="tl-section" aria-labelledby="tl-start-here-label">
+            <div class="tl-section-eyebrow">
+              <span class="tl-eyebrow-num">01</span>
+              <span class="tl-eyebrow-sep">/</span>
+              <span class="tl-eyebrow-label">START HERE</span>
+            </div>
+
+            <div class="tl-start-card" id="tl-start-card">
+              <div class="tl-start-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <div class="tl-start-content">
+                <h2 class="tl-start-doc-title" id="tl-start-doc-title">Design Principles &amp; Standards.</h2>
+                <p class="tl-start-doc-desc" id="tl-start-doc-desc">The reference for visual consistency, accessibility and interface design.</p>
+              </div>
+              <div class="tl-start-badges" id="tl-start-badges">
+                <span class="tl-badge tl-badge--neutral">TEAM REFERENCE</span>
+                <span class="tl-badge tl-badge--approved">APPROVED</span>
+              </div>
+              <div class="tl-start-divider"></div>
+              <button class="tl-start-open-btn" id="tl-start-open-btn">
+                Open document <span class="tl-btn-arrow">&#8594;</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- ── Section 02: Collections ────────────────────────────────── -->
+          <section class="tl-section" aria-labelledby="tl-collections-label">
+            <div class="tl-section-eyebrow">
+              <span class="tl-eyebrow-num">02</span>
+              <span class="tl-eyebrow-sep">/</span>
+              <span class="tl-eyebrow-label">COLLECTIONS</span>
+            </div>
+            <h2 class="tl-section-main-title">Collections.</h2>
+
+            <div class="tl-collections-list" id="tl-collections-list">
+              <!-- Populated by JS -->
+            </div>
+          </section>
+
+          <!-- ── Section 03: Library Content ───────────────────────────── -->
+          <section class="tl-section" aria-labelledby="tl-content-label">
+            <div class="tl-section-eyebrow">
+              <span class="tl-eyebrow-num">03</span>
+              <span class="tl-eyebrow-sep">/</span>
+              <span class="tl-eyebrow-label">LIBRARY CONTENT</span>
+            </div>
+            <h2 class="tl-section-main-title">All documents.</h2>
+
+            <!-- Toolbar -->
+            <div class="tl-doc-toolbar">
+              <div class="tl-filter-pills" role="group" aria-label="Document filters">
+                <button class="tl-filter-pill tl-filter-pill--active" data-filter="all" id="tl-filter-all">All</button>
+                <button class="tl-filter-pill" data-filter="recent" id="tl-filter-recent">Recent</button>
+                <button class="tl-filter-pill" data-filter="starred" id="tl-filter-starred">Starred</button>
+              </div>
+              <div class="tl-doc-search-wrap">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="tl-doc-search" id="tl-doc-search" placeholder="Search documents..." autocomplete="off" aria-label="Search documents">
+              </div>
+              <div class="tl-sort-wrap">
+                <button class="tl-sort-btn" id="tl-sort-btn" aria-haspopup="true" aria-expanded="false">
+                  <span id="tl-sort-label">Latest</span>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+                <div class="tl-sort-menu" id="tl-sort-menu" role="menu">
+                  <button class="tl-sort-option" data-sort="latest" role="menuitem">Latest</button>
+                  <button class="tl-sort-option" data-sort="oldest" role="menuitem">Oldest</button>
+                  <button class="tl-sort-option" data-sort="title" role="menuitem">Title A–Z</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Document List -->
+            <div class="tl-doc-list" id="tl-doc-list">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Empty states -->
+            <div class="tl-empty-state" id="tl-empty-state" style="display:none;">
+              <p id="tl-empty-msg">No documents in this library yet.</p>
+            </div>
+          </section>
+
+        </main>
+
+        <!-- ================================================================
+             RIGHT CONTEXT PANEL
+             ================================================================ -->
+        <aside class="tl-right-panel" aria-label="Library Context">
+
+          <!-- Library Context header -->
+          <div class="tl-panel-title-row">
+            <span class="tl-panel-title">LIBRARY CONTEXT</span>
+          </div>
+
+          <!-- Managed By card -->
+          <div class="tl-context-card tl-context-card--managed" id="tl-managed-card">
+            <div class="tl-ctx-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="tl-ctx-copy">
+              <span class="tl-ctx-label">Managed by</span>
+              <span class="tl-ctx-value" id="tl-managed-by">Design Team</span>
+            </div>
+          </div>
+
+          <!-- Access card -->
+          <div class="tl-context-card tl-context-card--access">
+            <div class="tl-ctx-section-head">
+              <div class="tl-ctx-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <span class="tl-ctx-head-label">Access</span>
+            </div>
+            <div class="tl-ctx-nav-list">
+              <button class="tl-ctx-nav-row" id="tl-ctx-team-access">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Team access</span>
+                <span class="tl-ctx-arrow">&#8594;</span>
+              </button>
+              <button class="tl-ctx-nav-row" id="tl-ctx-manage-perms">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                <span>Manage permissions</span>
+                <span class="tl-ctx-arrow">&#8594;</span>
+              </button>
+              <button class="tl-ctx-nav-row" id="tl-ctx-lib-settings">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                <span>Library settings</span>
+                <span class="tl-ctx-arrow">&#8594;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Needs Review card -->
+          <div class="tl-context-card tl-context-card--review" id="tl-review-card">
+            <div class="tl-ctx-section-head">
+              <div class="tl-ctx-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <span class="tl-ctx-head-label">Needs review</span>
+            </div>
+            <div class="tl-review-doc-row" id="tl-review-doc-row">
+              <div class="tl-review-doc-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+              <div class="tl-review-doc-info">
+                <span class="tl-review-doc-title" id="tl-review-doc-title">Brand Guidelines v2.2</span>
+                <span class="tl-review-doc-desc" id="tl-review-doc-desc">Updated version awaiting approval.</span>
+              </div>
+            </div>
+            <button class="tl-review-action-btn" id="tl-review-action-btn">
+              Review document <span class="tl-btn-arrow">&#8594;</span>
+            </button>
+            <!-- No-review empty state -->
+            <div class="tl-review-empty" id="tl-review-empty" style="display:none;">
+              <p>You&#39;re all caught up.</p>
+            </div>
+          </div>
+
+          <!-- Connected Projects card -->
+          <div class="tl-context-card tl-context-card--projects">
+            <div class="tl-ctx-section-head">
+              <div class="tl-ctx-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="18" cy="18" r="3"></circle>
+                  <circle cx="6" cy="6" r="3"></circle>
+                  <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+                  <line x1="6" y1="9" x2="6" y2="21"></line>
+                </svg>
+              </div>
+              <span class="tl-ctx-head-label">Connected projects</span>
+            </div>
+            <div class="tl-projects-list" id="tl-projects-list">
+              <!-- Populated by JS -->
+            </div>
+            <div class="tl-projects-empty" id="tl-projects-empty" style="display:none;">
+              <p>No projects are connected to this library.</p>
+            </div>
+          </div>
+
+        </aside>
+      </div><!-- /.tl-content-split -->
+    </div><!-- /.tl-main-area -->
+  </div><!-- /.tl-master-wrapper -->
+
+  <!-- Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+  <script src="team-libraries.js?v=1"></script>
+</body>
+</html>

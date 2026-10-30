@@ -104,14 +104,6 @@ const Navbar = (() => {
         }
       });
     }
-
-    // Mobile sidebar toggle trigger
-    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-    if (sidebarToggleBtn) {
-      sidebarToggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('sidebar-mobile-open');
-      });
-    }
   }
 
   return { init };

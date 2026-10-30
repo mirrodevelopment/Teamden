@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Teamden — Individual Team Details & Host Stylesheet (team-detail.css)
+   Path: pages/team/team-detail/team-detail.css
+   Pixel-accurate match to Brick Team Details layout with Overview tab.
+   ========================================================================== */
+@import url('../../../fragments/fonts/fonts.css');
+@import url('../../../fragments/theme/theme.css');
+@import url('team-overview/team-overview.css');
+@import url('team-work/team-work.css');
+@import url('team-knowledge/team-knowledge.css');
+@import url('team-people/team-people.css');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  background: var(--dash-bg-canvas, #F8F6F0);
+  color: var(--dash-text-primary, #111111);
+  font-family: var(--font-family, 'Montserrat', sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Master Wrapper ────────────────────────────────────────────────────── */
+.tdet-master-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--dash-bg-canvas, #F8F6F0);
+}
+
+.sidebar-mount-area { width: 0; flex-shrink: 0; }
+
+.tdet-main-area {
+  flex: 1;
+  margin-left: var(--sidebar-width, 210px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  background: var(--dash-bg-canvas, #F8F6F0);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.sidebar-collapsed .tdet-main-area {
+  margin-left: var(--sidebar-collapsed-width, 64px);
+}
+
+/* ── Master Split Container (~73% Left Main, ~27% Right Rail) ──────────── */
+.tdet-split-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 305px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.tdet-center-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--dash-border, #E5E1D9);
+}
+
+.tdet-right-rail {
+  background: var(--dash-bg-canvas, #F8F6F0);
+  padding: 1.25rem 1.25rem 3rem 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.tdet-rail-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+/* Ensure inner tab layouts flow as full width inside the left column */
+.tov-split-layout,
+.tw-split-layout,
+.tk-split-layout,
+.tp-split-layout {
+  display: block !important;
+  width: 100% !important;
+}
+
+.tov-main-col,
+.tw-main-col,
+.tk-main-col,
+.tp-main-col {
+  border-right: none !important;
+  width: 100% !important;
+}
+
+/* Right rail containers when mounted inside tdet-right-rail */
+.tov-right-rail,
+.tw-right-rail,
+.tk-right-rail,
+.tp-right-rail {
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  width: 100% !important;
+}
+
+/* ── Team Header Section ───────────────────────────────────────────────── */
+.tdet-header {
+  padding: 1.25rem 2rem 0.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-canvas, #F8F6F0);
+}
+
+.tdet-header-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tdet-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dash-text-muted, #77736C);
+}
+
+.tdet-bc-link {
+  color: var(--dash-text-muted, #77736C);
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.tdet-bc-link:hover {
+  color: #111111;
+}
+
+.tdet-bc-sep {
+  color: var(--dash-text-light, #8E8A84);
+}
+
+.tdet-header-more-btn {
+  background: none;
+  border: none;
+  color: var(--dash-text-muted, #77736C);
+  font-size: 1.15rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.4rem;
+  transition: color 150ms;
+}
+
+.tdet-header-more-btn:hover {
+  color: #111111;
+}
+
+/* Headline */
+.tdet-headline-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: -0.2rem;
+}
+
+.tdet-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: clamp(3.75rem, 5.8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: #111111;
+  margin: 0;
+}
+
+.tdet-title-dot {
+  color: #111111;
+}
+
+.tdet-subtitle {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--dash-text-muted, #77736C);
+  margin: 0.2rem 0 0;
+}
+
+/* Members Row */
+.tdet-members-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
+.tdet-members-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.tdet-avatars-group {
+  display: flex;
+  align-items: center;
+}
+
+.tdet-avatar-bubble {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #111111;
+  border: 2px solid var(--dash-bg-canvas, #F8F6F0);
+  margin-left: -6px;
+  cursor: pointer;
+  transition: transform 120ms;
+}
+
+.tdet-avatar-bubble:first-child {
+  margin-left: 0;
+}
+
+.tdet-avatar-bubble:hover {
+  transform: translateY(-2px);
+  z-index: 5;
+}
+
+.avatar--pk { background: #D8E8C0; }
+.avatar--ar { background: #D8C8E8; }
+.avatar--sk { background: #EFF1E2; }
+.avatar--mj { background: #C8D8E8; }
+
+.tdet-members-count {
+  font-size: 0.78rem;
+  color: var(--dash-text-muted, #77736C);
+  margin-left: 0.25rem;
+}
+
+.tdet-members-pipe {
+  width: 1px;
+  height: 16px;
+  background: var(--dash-border, #E5E1D9);
+  margin: 0 0.5rem;
+}
+
+.tdet-workspace-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dash-text-primary, #111111);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  transition: background 150ms;
+}
+
+.tdet-workspace-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Tabs Pill Bar ─────────────────────────────────────────────────────── */
+.tdet-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.tdet-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1.05rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dash-text-body, #2B2B2B);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+  text-decoration: none;
+}
+
+.tdet-tab-btn:hover:not(.active) {
+  background: rgba(0, 0, 0, 0.04);
+  color: #111111;
+}
+
+.tdet-tab-btn.active {
+  background: #111111;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* ── Tab Panes ─────────────────────────────────────────────────────────── */
+.tdet-tab-pane {
+  display: none;
+  width: 100%;
+}
+
+.tdet-tab-pane.active {
+  display: block;
+}
+
+/* ── Sub-tabs Placeholders (Work, Knowledge, People) ───────────────────── */
+.tdet-subtab-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tdet-subtab-card {
+  background: var(--dash-bg-card, #FAF7F1);
+  border: 1px solid var(--dash-border, #E5E1D9);
+  border-radius: var(--radius-md, 10px);
+  padding: 1.5rem;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1120px) {
+  .tdet-split-container {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+  .tdet-header {
+    padding: 1.25rem 1.5rem 0.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .tdet-split-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .tdet-center-col {
+    border-right: none;
+    border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  }
+}
+
+@media (max-width: 768px) {
+  .tdet-header {
+    padding: 1rem 1rem 0.5rem;
+  }
+  .tdet-title {
+    font-size: 3.5rem;
+  }
+  .tdet-members-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .tdet-tabs-bar {
+    overflow-x: auto;
+    width: 100%;
+  }
+}

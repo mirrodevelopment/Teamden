@@ -1,0 +1,383 @@
+<!-- =======================================================================
+     Teamden — Team Knowledge Tab Component (team-knowledge.html)
+     Path: pages/team/team-detail/team-knowledge/team-knowledge.html
+     Pixel-accurate match to Brick Team Knowledge screenshot.
+     ======================================================================= -->
+<div class="tk-split-layout" id="team-knowledge-root">
+
+  <!-- =====================================================================
+       MAIN KNOWLEDGE COLUMN (Left ~73%)
+       ===================================================================== -->
+  <div class="tk-main-col">
+
+    <!-- ── Section 01: Team Playbook ───────────────────────────────────── -->
+    <section class="tk-section" aria-labelledby="tk-playbook-heading">
+      <div class="tk-playbook-card" id="tk-playbook-card">
+        <!-- Top row: label + book icon -->
+        <div class="tk-playbook-top-row">
+          <div class="tk-section-eyebrow">
+            <span class="tk-eyebrow-num">01</span>
+            <span class="tk-eyebrow-sep">/</span>
+            <span class="tk-eyebrow-label">TEAM PLAYBOOK</span>
+          </div>
+          <div class="tk-playbook-icon-wrap" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <line x1="12" y1="6" x2="16" y2="6"></line>
+              <line x1="12" y1="10" x2="16" y2="10"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Headline & description -->
+        <div class="tk-playbook-body">
+          <h2 class="tk-playbook-title" id="tk-playbook-heading">Design Principles &amp; Standards<span class="tk-title-dot">.</span></h2>
+          <p class="tk-playbook-desc">Our shared foundation for consistent, accessible and thoughtful digital experiences.</p>
+        </div>
+
+        <!-- Divider -->
+        <div class="tk-playbook-divider"></div>
+
+        <!-- Bottom row: current approved version + Open Playbook button -->
+        <div class="tk-playbook-bottom-row">
+          <div class="tk-playbook-version-meta">
+            <span class="tk-version-label">CURRENT APPROVED VERSION</span>
+            <span class="tk-version-value" id="tk-playbook-version-val">Version 2.1</span>
+          </div>
+
+          <button class="tk-playbook-btn" id="tk-open-playbook-btn" title="Open approved team playbook">
+            <span>Open playbook</span>
+            <span class="tk-link-arrow">&#8594;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 02: Connected Knowledge ─────────────────────────────── -->
+    <section class="tk-section" aria-labelledby="tk-connected-heading">
+      <div class="tk-section-head-row">
+        <div class="tk-section-eyebrow">
+          <span class="tk-eyebrow-num">02</span>
+          <span class="tk-eyebrow-sep">/</span>
+          <span class="tk-eyebrow-label">CONNECTED KNOWLEDGE</span>
+        </div>
+        <button class="tk-action-link" id="tk-view-all-connected" title="View all connected documents">
+          <span>View all</span>
+          <span class="tk-link-arrow">&#8594;</span>
+        </button>
+      </div>
+
+      <h2 class="tk-section-title" id="tk-connected-heading">Knowledge in use<span class="tk-title-dot">.</span></h2>
+
+      <div class="tk-connected-list" id="tk-connected-list">
+        <!-- Row 1: Design Review Notes (Pale Blue #E5EDF7) -->
+        <div class="tk-doc-row tk-doc-row--blue" data-doc-id="doc-review-notes" role="button" tabindex="0">
+          <div class="tk-doc-left">
+            <div class="tk-doc-icon-wrap tk-icon--blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <line x1="10" y1="9" x2="8" y2="9"></line>
+              </svg>
+            </div>
+            <div class="tk-doc-info">
+              <span class="tk-doc-title">Design Review Notes</span>
+              <span class="tk-doc-sub">Website Redesign · Meeting notes</span>
+              <div class="tk-doc-meta-row">
+                <span class="tk-doc-meta-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                  <span>3 linked tasks</span>
+                </span>
+                <span class="tk-meta-dot">·</span>
+                <span>1 recorded decision</span>
+                <span class="tk-meta-dot">·</span>
+                <span class="tk-doc-meta-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span>Updated 2 days ago</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="tk-doc-right">
+            <div class="tk-avatar-bubble avatar--ar" title="Alex Rivera (AR)">AR</div>
+            <span class="tk-row-arrow">&#8594;</span>
+          </div>
+        </div>
+
+        <!-- Row 2: Component Specifications (Pale Green #EFF1E2) -->
+        <div class="tk-doc-row tk-doc-row--green" data-doc-id="doc-comp-specs" role="button" tabindex="0">
+          <div class="tk-doc-left">
+            <div class="tk-doc-icon-wrap tk-icon--green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line>
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.29 7 12 12.01 20.71 7"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <div class="tk-doc-info">
+              <span class="tk-doc-title">Component Specifications</span>
+              <span class="tk-doc-sub">Website Redesign · Development handoff</span>
+              <div class="tk-doc-meta-row">
+                <span>Linked to Review milestone</span>
+                <span class="tk-meta-dot">·</span>
+                <span>Engineering handoff</span>
+                <span class="tk-meta-dot">·</span>
+                <span>Updated 5 days ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="tk-doc-right">
+            <div class="tk-avatar-bubble avatar--mj" title="Maya Jones (MJ)">MJ</div>
+            <span class="tk-row-arrow">&#8594;</span>
+          </div>
+        </div>
+
+        <!-- Row 3: Brand Guidelines (Neutral White #FFFFFF) -->
+        <div class="tk-doc-row tk-doc-row--white" data-doc-id="doc-brand-guidelines" role="button" tabindex="0">
+          <div class="tk-doc-left">
+            <div class="tk-doc-icon-wrap tk-icon--neutral">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <div class="tk-doc-info">
+              <span class="tk-doc-title">Brand Guidelines</span>
+              <span class="tk-doc-sub">Shared reference across 2 projects</span>
+              <div class="tk-doc-meta-row">
+                <span class="tk-doc-meta-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                  <span>5 linked tasks</span>
+                </span>
+                <span class="tk-meta-dot">·</span>
+                <span>Used in 2 projects</span>
+                <span class="tk-meta-dot">·</span>
+                <span>Updated 12 days ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="tk-doc-right">
+            <div class="tk-avatar-bubble avatar--sk" title="Samir Khan (SK)">SK</div>
+            <span class="tk-row-arrow">&#8594;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 03: Decisions & Learnings ───────────────────────────── -->
+    <section class="tk-section" aria-labelledby="tk-decisions-heading">
+      <div class="tk-section-head-row">
+        <div class="tk-section-eyebrow">
+          <span class="tk-eyebrow-num">03</span>
+          <span class="tk-eyebrow-sep">/</span>
+          <span class="tk-eyebrow-label">DECISIONS &amp; LEARNINGS</span>
+        </div>
+        <button class="tk-action-link" id="tk-view-all-decisions" title="View all decisions and learnings">
+          <span>View all</span>
+          <span class="tk-link-arrow">&#8594;</span>
+        </button>
+      </div>
+
+      <h2 class="tk-section-title" id="tk-decisions-heading">Decisions &amp; learnings<span class="tk-title-dot">.</span></h2>
+
+      <div class="tk-decisions-card">
+        <!-- Row 1: Approved Decision -->
+        <div class="tk-decision-item" data-decision-id="dec-unified-nav" role="button" tabindex="0">
+          <div class="tk-decision-left">
+            <div class="tk-decision-icon-wrap tk-icon--check">
+              <span>&#10003;</span>
+            </div>
+            <div class="tk-decision-info">
+              <span class="tk-decision-badge tk-badge--approved">APPROVED DECISION</span>
+              <span class="tk-decision-title">Unified navigation structure</span>
+              <span class="tk-decision-meta">Approved for the Website Redesign project · 18 Oct 2026</span>
+            </div>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+
+        <div class="tk-decision-divider"></div>
+
+        <!-- Row 2: Documented Learning -->
+        <div class="tk-decision-item" data-decision-id="learn-nav-layers" role="button" tabindex="0">
+          <div class="tk-decision-left">
+            <div class="tk-decision-icon-wrap tk-icon--lamp">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18h6"></path>
+                <path d="M10 22h4"></path>
+                <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+              </svg>
+            </div>
+            <div class="tk-decision-info">
+              <span class="tk-decision-badge tk-badge--learning">DOCUMENTED LEARNING</span>
+              <span class="tk-decision-title">Reduce unnecessary navigation layers</span>
+              <span class="tk-decision-meta">Recorded during the interface review · 12 Oct 2026</span>
+            </div>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.tk-main-col -->
+
+  <!-- =====================================================================
+       RIGHT KNOWLEDGE SIDEBAR (~27%)
+       ===================================================================== -->
+  <aside class="tk-right-rail" aria-label="Team Knowledge Sidebar">
+
+    <!-- Card 1: Team Knowledge Review (Dark Charcoal Card) -->
+    <div class="tk-dark-card" id="tk-review-card">
+      <span class="tk-dark-eyebrow">TEAM KNOWLEDGE / 01</span>
+      <h3 class="tk-dark-title">Keep knowledge current<span style="color:#C9F34A;">.</span></h3>
+      <p class="tk-dark-sub">Review important updates and maintain trusted team references.</p>
+      <div class="tk-dark-divider"></div>
+      <button class="tk-dark-btn" id="tk-open-review-queue-btn">
+        <span>Open review queue</span>
+        <span class="tk-link-arrow">&#8594;</span>
+      </button>
+    </div>
+
+    <!-- Card 2: Awaiting Approval (Pale Beige Card) -->
+    <div class="tk-rail-card--beige" id="tk-awaiting-card">
+      <div class="tk-rail-card-head">
+        <span class="tk-rail-card-label">AWAITING APPROVAL</span>
+        <span class="tk-rail-count-badge">01</span>
+      </div>
+      <div class="tk-awaiting-row">
+        <div class="tk-awaiting-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="tk-awaiting-copy">
+          <span class="tk-awaiting-title">Design Guidelines v2.2</span>
+          <span class="tk-awaiting-desc">A revised edition is ready for review. Version 2.1 remains approved.</span>
+        </div>
+      </div>
+      <div>
+        <button class="tk-awaiting-action-btn" id="tk-review-changes-btn">
+          <span>Review changes</span>
+          <span class="tk-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3: Knowledge Requests -->
+    <div class="tk-rail-card" id="tk-requests-card">
+      <div class="tk-rail-card-head">
+        <span class="tk-rail-card-label">KNOWLEDGE REQUESTS</span>
+        <button class="tk-rail-card-link" id="tk-requests-view-all">View all &#8594;</button>
+      </div>
+      <div class="tk-request-item" id="tk-request-item-01" role="button" tabindex="0">
+        <div class="tk-request-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <div class="tk-request-copy">
+          <span class="tk-request-title">Component usage clarification for mobile navigation</span>
+          <span class="tk-request-sub">Requested by Engineering</span>
+          <span class="tk-request-time">3 days ago</span>
+        </div>
+        <span class="tk-row-arrow">&#8594;</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Recently Contributed -->
+    <div class="tk-rail-card" id="tk-contributed-card">
+      <div class="tk-rail-card-head">
+        <span class="tk-rail-card-label">RECENTLY CONTRIBUTED</span>
+        <button class="tk-rail-card-link" id="tk-contributed-view-all">View all &#8594;</button>
+      </div>
+      <div class="tk-contributed-list">
+        <!-- Item 1 -->
+        <div class="tk-contributed-item" data-contrib-id="c1" role="button" tabindex="0">
+          <div class="tk-avatar-bubble avatar--ar">AR</div>
+          <div class="tk-contributed-copy">
+            <span class="tk-contributed-title">Design Review Notes</span>
+            <span class="tk-contributed-sub">Updated by Alex R.</span>
+            <span class="tk-contributed-time">2 days ago</span>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="tk-contributed-item" data-contrib-id="c2" role="button" tabindex="0">
+          <div class="tk-avatar-bubble avatar--pk">PK</div>
+          <div class="tk-contributed-copy">
+            <span class="tk-contributed-title">Typography guidelines</span>
+            <span class="tk-contributed-sub">Updated by Peter K.</span>
+            <span class="tk-contributed-time">5 days ago</span>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Team Resources -->
+    <div class="tk-rail-card" id="tk-resources-card">
+      <div class="tk-rail-card-head">
+        <span class="tk-rail-card-label">04 / TEAM RESOURCES</span>
+        <button class="tk-rail-card-link" id="tk-resources-open-library">Open library &#8594;</button>
+      </div>
+      <div class="tk-resources-list">
+        <!-- Resource 1 -->
+        <div class="tk-resource-row" data-res-id="res-standards" role="button" tabindex="0">
+          <div class="tk-resource-icon-wrap tk-icon--green">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
+          <div class="tk-resource-copy">
+            <span class="tk-resource-title">Design Standards</span>
+            <span class="tk-resource-desc">Approved references and patterns</span>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+
+        <!-- Resource 2 -->
+        <div class="tk-resource-row" data-res-id="res-templates" role="button" tabindex="0">
+          <div class="tk-resource-icon-wrap tk-icon--beige">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <div class="tk-resource-copy">
+            <span class="tk-resource-title">Project Templates</span>
+            <span class="tk-resource-desc">Reusable briefs and handoff documents</span>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+
+        <!-- Resource 3 -->
+        <div class="tk-resource-row" data-res-id="res-archive" role="button" tabindex="0">
+          <div class="tk-resource-icon-wrap tk-icon--blue">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <div class="tk-resource-copy">
+            <span class="tk-resource-title">Research Archive</span>
+            <span class="tk-resource-desc">Previous findings and observations</span>
+          </div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+      </div>
+    </div>
+
+  </aside><!-- /.tk-right-rail -->
+
+</div><!-- /.tk-split-layout -->

@@ -2,39 +2,62 @@
    Teamden by shed — Topbar / Navbar Fragment Styles (navbar.css)
    Path: fragments/navbar/navbar.css
    Pixel-accurate matching of neo-editorial topbar layout.
-   100% Montserrat font only.
+   Single source of truth: fragments/theme/theme.css
    ========================================================================== */
 @import url('../theme/theme.css');
 
 *, *::before, *::after {
   box-sizing: border-box;
-  font-family: 'Montserrat' !important;
 }
 
 .app-topbar {
-  height: 60px;
+  height: 52px;
   background-color: var(--dash-bg-canvas);
   border-bottom: 1px solid var(--dash-border);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width);
   position: sticky;
   top: 0;
   z-index: var(--z-topbar);
-  font-family: 'Montserrat' !important;
+  font-family: var(--font-family, 'Mostarct', 'Montserrat');
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Center Section (Spans across Center Column) */
 .topbar-center-section {
-  padding: 0.65rem 1.5rem;
+  padding: 0.45rem var(--dash-center-padding-x);
   display: flex;
   align-items: center;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topbar-mobile-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  color: var(--dash-text-primary);
+  cursor: pointer;
+  margin-right: 0.65rem;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .topbar-mobile-toggle {
+    display: inline-flex;
+  }
 }
 
 .topbar-search-box {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  background-color: #EBE7DE;
+  background-color: var(--dash-bg-search);
   border-radius: 8px;
   padding: 0.45rem 0.85rem;
   width: 100%;
@@ -42,12 +65,12 @@
 }
 
 .topbar-search-box:focus-within {
-  background-color: #E5E1D7;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+  background-color: var(--dash-bg-search-focus);
+  box-shadow: 0 0 0 2px var(--dash-border-strong);
 }
 
 .search-icon {
-  color: #777777;
+  color: var(--dash-text-muted);
   flex-shrink: 0;
 }
 
@@ -63,12 +86,12 @@
 }
 
 .topbar-search-box input::placeholder {
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .search-kbd {
-  background-color: #DED9CE;
-  color: #666666;
+  background-color: var(--dash-bg-kbd);
+  color: var(--dash-text-muted);
   font-size: 0.6875rem;
   font-weight: 700;
   padding: 0.15rem 0.35rem;
@@ -81,14 +104,18 @@
 /* Right Section (Spans across Right Rail) */
 .topbar-right-section {
   border-left: 1px solid var(--dash-border);
-  padding: 0.65rem 1.5rem;
+  padding: 0.45rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  width: 320px;
-  min-width: 320px;
-  max-width: 320px;
+  gap: 0.65rem;
+  width: var(--dash-right-rail-width);
+  min-width: var(--dash-right-rail-width);
+  max-width: var(--dash-right-rail-width);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Lime + Create ⌵ Button */
@@ -99,13 +126,13 @@
 .btn-create-pill {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  background-color: var(--dash-accent-lime);
-  color: #111111;
+  gap: 0.35rem;
+  background-color: var(--dash-btn-create-bg);
+  color: var(--dash-btn-create-text);
   border: none;
-  padding: 0.45rem 0.85rem;
-  border-radius: 8px;
-  font-size: 0.8125rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 700;
   font-family: 'Montserrat' !important;
   cursor: pointer;
@@ -113,7 +140,7 @@
 }
 
 .btn-create-pill:hover {
-  background-color: var(--dash-accent-lime-hover);
+  background-color: var(--dash-btn-create-hover);
 }
 
 .create-plus {
@@ -129,17 +156,17 @@
 
 .create-chevron {
   stroke-width: 2.5;
-  color: #111111;
+  color: var(--dash-btn-create-text);
 }
 
 .create-menu {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-card-pure);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   min-width: 160px;
   padding: 0.35rem;
   display: none;
@@ -163,15 +190,15 @@
 }
 
 .create-menu-item:hover {
-  background-color: #F4F1EA;
-  color: #000000;
+  background-color: var(--dash-bg-canvas);
+  color: var(--dash-text-primary);
 }
 
 /* Notification Bell */
 .topbar-bell-btn {
   background: transparent;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -209,7 +236,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #D1D5DB;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,10 +247,11 @@
 .user-avatar-circle svg {
   width: 22px;
   height: 22px;
+  color: var(--dash-text-white);
 }
 
 .user-chevron {
-  color: #111111;
+  color: var(--dash-text-primary);
   stroke-width: 2.5;
 }
 
@@ -230,10 +259,10 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-card-pure);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   min-width: 180px;
   padding: 0.4rem;
   display: none;
@@ -251,13 +280,13 @@
 .dropdown-user-name {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .dropdown-user-role {
   font-size: 0.6875rem;
   font-weight: 500;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .dropdown-divider {
@@ -272,7 +301,7 @@
   padding: 0.45rem 0.6rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #333333;
+  color: var(--dash-text-body);
   text-decoration: none;
   background: transparent;
   border: none;
@@ -283,8 +312,8 @@
 }
 
 .dropdown-item:hover {
-  background-color: #F4F1EA;
-  color: #000000;
+  background-color: var(--dash-bg-canvas);
+  color: var(--dash-text-primary);
 }
 
 .dropdown-item.logout-action {
@@ -292,5 +321,5 @@
 }
 
 .dropdown-item.logout-action:hover {
-  background-color: #FEE2E2;
+  background-color: rgba(229, 57, 53, 0.08);
 }

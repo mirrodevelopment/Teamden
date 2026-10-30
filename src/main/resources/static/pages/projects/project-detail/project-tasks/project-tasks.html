@@ -1,0 +1,994 @@
+<!-- ==========================================================================
+     Teamden / Brick — Project Tasks Tab Fragment (project-tasks.html)
+     Path: pages/project/project-tasks/project-tasks.html
+     Renders inside the Tasks tab (#pane-tasks) of the Project section
+     ========================================================================== -->
+<div class="tasks-workspace-split" id="tasks-workspace-split">
+
+  <!-- =======================================================================
+       MAIN TASKS WORKSPACE (~54-56% width when drawer is open)
+       ======================================================================= -->
+  <div class="tasks-main-workspace" id="tasks-main-workspace">
+
+    <!-- 01 / WORK STATUS SUMMARY CARD -->
+    <section class="tasks-work-status-card" aria-label="Work Status Summary">
+      <div class="work-status-top-row">
+        <span class="status-card-section-tag">01 / WORK STATUS</span>
+        <span class="status-card-total-badge">Total tasks <strong id="work-status-total-val">18</strong></span>
+      </div>
+
+      <!-- 5 Evenly-spaced Status Metrics -->
+      <div class="work-status-metrics-grid">
+        <!-- Metric 1: To Do -->
+        <div class="status-metric-cell">
+          <div class="metric-header-row">
+            <span class="metric-dot dot-gray"></span>
+            <span class="metric-label">TO DO</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-count" id="count-todo">08</span>
+            <span class="metric-sub" id="pct-todo">44%</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: In Progress -->
+        <div class="status-metric-cell">
+          <div class="metric-header-row">
+            <span class="metric-dot dot-amber"></span>
+            <span class="metric-label">IN PROGRESS</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-count" id="count-inprogress">05</span>
+            <span class="metric-sub" id="pct-inprogress">28%</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: In Review -->
+        <div class="status-metric-cell">
+          <div class="metric-header-row">
+            <span class="metric-dot dot-blue"></span>
+            <span class="metric-label">IN REVIEW</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-count" id="count-inreview">03</span>
+            <span class="metric-sub" id="pct-inreview">17%</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Completed -->
+        <div class="status-metric-cell">
+          <div class="metric-header-row">
+            <span class="metric-dot dot-dark"></span>
+            <span class="metric-label">COMPLETED</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-count" id="count-completed">02</span>
+            <span class="metric-sub" id="pct-completed">11%</span>
+          </div>
+        </div>
+
+        <!-- Metric 5: Blocked (Flag) -->
+        <div class="status-metric-cell cell-blocked">
+          <div class="metric-header-row">
+            <svg class="metric-triangle-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L1 21h22L12 2zm0 3.8L20.2 19H3.8L12 5.8zM11 10h2v4h-2v-4zm0 6h2v2h-2v-2z"/>
+            </svg>
+            <span class="metric-label label-blocked">BLOCKED (FLAG)</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-count" id="count-blocked">02</span>
+            <span class="metric-sub" id="sub-blocked">of 18 tasks <span class="info-circle-glyph" title="Blocked tasks">ⓘ</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 / WORK REGISTER -->
+    <section class="tasks-register-section" aria-label="Work Register">
+      <!-- Section Tag & New Task Button Row -->
+      <div class="register-header-top-row">
+        <span class="register-section-tag">02 / WORK REGISTER</span>
+        <button class="btn-new-task-lime" id="btn-new-task" title="Create a new task">
+          <span>+ New task</span>
+          <span class="btn-chevron">⌄</span>
+        </button>
+      </div>
+
+      <!-- Main Headline -->
+      <h2 class="register-main-title">Tasks in motion.</h2>
+
+      <!-- Toolbar: Views, Search, Filters, More Options -->
+      <div class="register-toolbar-row">
+        <!-- View Switcher Pills -->
+        <div class="view-switcher-group" role="tablist" aria-label="Task Views">
+          <span class="view-label-prefix">View</span>
+          <button class="view-btn active" id="view-btn-register" role="tab" aria-selected="true" data-view="register">
+            <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            <span>Register</span>
+          </button>
+          <button class="view-btn" id="view-btn-board" role="tab" aria-selected="false" data-view="board">
+            <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="3" width="7" height="18" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="11" rx="1"></rect>
+            </svg>
+            <span>Board</span>
+          </button>
+          <button class="view-btn" id="view-btn-timeline" role="tab" aria-selected="false" data-view="timeline">
+            <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="4" y1="6" x2="16" y2="6"></line>
+              <line x1="8" y1="12" x2="20" y2="12"></line>
+              <line x1="6" y1="18" x2="14" y2="18"></line>
+            </svg>
+            <span>Timeline</span>
+          </button>
+          <button class="view-btn" id="view-btn-calendar" role="tab" aria-selected="false" data-view="calendar">
+            <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Calendar</span>
+          </button>
+        </div>
+
+        <!-- Right Toolbar Actions -->
+        <div class="toolbar-actions-right">
+          <div class="toolbar-search-box">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="tasks-search-input" placeholder="Search tasks..." aria-label="Search tasks">
+          </div>
+
+          <button class="toolbar-btn btn-filters" id="btn-tasks-filters" title="Filter tasks">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span>Filters</span>
+            <span class="btn-chevron">⌄</span>
+          </button>
+
+          <button class="toolbar-btn btn-more" id="btn-tasks-more" title="More options" aria-label="More options">•••</button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TASK REGISTER ACCORDION GROUPS
+           =================================================================== -->
+      <div class="task-groups-container" id="task-groups-container">
+
+        <!-- GROUP 1: IN PROGRESS 05 (Expanded by default) -->
+        <div class="task-group-card expanded" id="group-in-progress" data-group-status="IN_PROGRESS">
+          <div class="group-header-row" role="button" tabindex="0" aria-expanded="true">
+            <div class="group-header-left">
+              <span class="group-status-dot dot-amber"></span>
+              <span class="group-title">IN PROGRESS</span>
+              <span class="group-count-pill" id="group-count-inprogress">05</span>
+            </div>
+            <button class="group-toggle-btn" aria-label="Toggle In Progress Group">
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="group-content-body">
+            <!-- Table Column Headers -->
+            <div class="task-table-header">
+              <div class="th-col th-select"><input type="checkbox" class="task-checkbox-all" aria-label="Select all in progress tasks"></div>
+              <div class="th-col th-task">TASK</div>
+              <div class="th-col th-assignee">ASSIGNEE</div>
+              <div class="th-col th-priority">PRIORITY</div>
+              <div class="th-col th-due">DUE DATE</div>
+              <div class="th-col th-links">LINKS</div>
+              <div class="th-col th-actions">•••</div>
+            </div>
+
+            <!-- Task Rows -->
+            <div class="task-rows-list" id="list-in-progress">
+              <!-- Row 1: Homepage development (SELECTED) -->
+              <div class="task-row selected" data-task-id="T-014" tabindex="0">
+                <div class="td-col td-select">
+                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Homepage development">
+                </div>
+                <div class="td-col td-task">
+                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <div class="task-name-desc-wrap">
+                    <span class="task-title-text">Homepage development</span>
+                    <span class="task-sub-meta">Milestone 06 · 3 subtasks · 2 linked documents</span>
+                  </div>
+                </div>
+                <div class="td-col td-assignee">
+                  <span class="assignee-avatar avatar-mj" title="Maya J. (MJ)">MJ</span>
+                </div>
+                <div class="td-col td-priority">
+                  <span class="priority-pill pill-high">High</span>
+                </div>
+                <div class="td-col td-due">
+                  <span class="due-text due-urgent">28 Oct</span>
+                </div>
+                <div class="td-col td-links">
+                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                  <span>2</span>
+                </div>
+                <div class="td-col td-actions">
+                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
+                </div>
+              </div>
+
+              <!-- Row 2: Mobile optimisation -->
+              <div class="task-row" data-task-id="T-026" tabindex="0">
+                <div class="td-col td-select">
+                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Mobile optimisation">
+                </div>
+                <div class="td-col td-task">
+                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <div class="task-name-desc-wrap">
+                    <span class="task-title-text">Mobile optimisation</span>
+                    <span class="task-sub-meta">Milestone 06 · 2 subtasks · 1 linked document</span>
+                  </div>
+                </div>
+                <div class="td-col td-assignee">
+                  <span class="assignee-avatar avatar-pk" title="Paul K. (PK)">PK</span>
+                </div>
+                <div class="td-col td-priority">
+                  <span class="priority-pill pill-medium">Medium</span>
+                </div>
+                <div class="td-col td-due">
+                  <span class="due-text">2 Nov</span>
+                </div>
+                <div class="td-col td-links">
+                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                  <span>1</span>
+                </div>
+                <div class="td-col td-actions">
+                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
+                </div>
+              </div>
+
+              <!-- Row 3: CMS implementation -->
+              <div class="task-row" data-task-id="T-028" tabindex="0">
+                <div class="td-col td-select">
+                  <input type="checkbox" class="task-row-checkbox" aria-label="Select CMS implementation">
+                </div>
+                <div class="td-col td-task">
+                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <div class="task-name-desc-wrap">
+                    <span class="task-title-text">CMS implementation</span>
+                    <span class="task-sub-meta">Milestone 06 · 4 subtasks</span>
+                  </div>
+                </div>
+                <div class="td-col td-assignee">
+                  <span class="assignee-avatar avatar-ar" title="Alex R. (AR)">AR</span>
+                </div>
+                <div class="td-col td-priority">
+                  <span class="priority-pill pill-medium">Medium</span>
+                </div>
+                <div class="td-col td-due">
+                  <span class="due-text">5 Nov</span>
+                </div>
+                <div class="td-col td-links">
+                  <span>0</span>
+                </div>
+                <div class="td-col td-actions">
+                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
+                </div>
+              </div>
+
+              <!-- Row 4: Analytics setup -->
+              <div class="task-row" data-task-id="T-031" tabindex="0">
+                <div class="td-col td-select">
+                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Analytics setup">
+                </div>
+                <div class="td-col td-task">
+                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <div class="task-name-desc-wrap">
+                    <span class="task-title-text">Analytics setup</span>
+                    <span class="task-sub-meta">Milestone 06 · 2 subtasks · 1 linked document</span>
+                  </div>
+                </div>
+                <div class="td-col td-assignee">
+                  <span class="assignee-avatar avatar-sk" title="Sara K. (SK)">SK</span>
+                </div>
+                <div class="td-col td-priority">
+                  <span class="priority-pill pill-low">Low</span>
+                </div>
+                <div class="td-col td-due">
+                  <span class="due-text">7 Nov</span>
+                </div>
+                <div class="td-col td-links">
+                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                  <span>1</span>
+                </div>
+                <div class="td-col td-actions">
+                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
+                </div>
+              </div>
+
+              <!-- Row 5: SEO optimisation -->
+              <div class="task-row" data-task-id="T-035" tabindex="0">
+                <div class="td-col td-select">
+                  <input type="checkbox" class="task-row-checkbox" aria-label="Select SEO optimisation">
+                </div>
+                <div class="td-col td-task">
+                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <div class="task-name-desc-wrap">
+                    <span class="task-title-text">SEO optimisation</span>
+                    <span class="task-sub-meta">Milestone 06 · 3 subtasks</span>
+                  </div>
+                </div>
+                <div class="td-col td-assignee">
+                  <span class="assignee-avatar avatar-mj" title="Maya J. (MJ)">MJ</span>
+                </div>
+                <div class="td-col td-priority">
+                  <span class="priority-pill pill-medium">Medium</span>
+                </div>
+                <div class="td-col td-due">
+                  <span class="due-text">10 Nov</span>
+                </div>
+                <div class="td-col td-links">
+                  <span>0</span>
+                </div>
+                <div class="td-col td-actions">
+                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Task Row -->
+            <button class="btn-group-add-task" id="btn-add-task-inprogress">
+              <span class="plus-icon">+</span>
+              <span>Add task</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- GROUP 2: IN REVIEW 03 (Collapsed) -->
+        <div class="task-group-card collapsed" id="group-in-review" data-group-status="IN_REVIEW">
+          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+            <div class="group-header-left">
+              <span class="group-status-dot dot-blue"></span>
+              <span class="group-title">IN REVIEW</span>
+              <span class="group-count-pill" id="group-count-inreview">03</span>
+            </div>
+            <button class="group-toggle-btn" aria-label="Toggle In Review Group">
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="group-content-body">
+            <div class="task-rows-list" id="list-in-review"></div>
+          </div>
+        </div>
+
+        <!-- GROUP 3: TO DO 08 (Collapsed) -->
+        <div class="task-group-card collapsed" id="group-to-do" data-group-status="TODO">
+          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+            <div class="group-header-left">
+              <span class="group-status-dot dot-gray"></span>
+              <span class="group-title">TO DO</span>
+              <span class="group-count-pill" id="group-count-todo">08</span>
+            </div>
+            <button class="group-toggle-btn" aria-label="Toggle To Do Group">
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="group-content-body">
+            <div class="task-rows-list" id="list-to-do"></div>
+          </div>
+        </div>
+
+        <!-- GROUP 4: COMPLETED 02 (Collapsed) -->
+        <div class="task-group-card collapsed" id="group-completed" data-group-status="COMPLETED">
+          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+            <div class="group-header-left">
+              <span class="group-status-dot dot-dark">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span class="group-title">COMPLETED</span>
+              <span class="group-count-pill" id="group-count-completed">02</span>
+            </div>
+            <button class="group-toggle-btn" aria-label="Toggle Completed Group">
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="group-content-body">
+            <div class="task-rows-list" id="list-completed"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =======================================================================
+       RIGHT TASKS OVERVIEW WIDGETS RAIL
+       Matches the Tasks Tab Right Rail:
+       1. CURRENT MILESTONE / 06 (Matte Obsidian)
+       2. BLOCKED TASKS (02)
+       3. TASKS BY MILESTONE (03-07 with 06 highlighted)
+       4. LINKED FROM PROJECT KNOWLEDGE
+       5. QUICK ACTIONS
+       ======================================================================= -->
+  <aside class="tasks-overview-widgets" id="tasks-overview-widgets" aria-label="Tasks Overview and Milestones">
+
+    <!-- 1. CURRENT MILESTONE CARD (Matte Obsidian) -->
+    <div class="tasks-milestone-dark-card" id="widget-current-milestone">
+      <div class="milestone-card-top">
+        <span class="milestone-tag">CURRENT MILESTONE / 06</span>
+        <div class="milestone-progress-ring-wrap">
+          <svg class="progress-ring-svg" width="36" height="36" viewBox="0 0 36 36">
+            <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2A2A2A" stroke-width="3.5" />
+            <path class="ring-fg" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#C9F34A" stroke-width="3.5" stroke-linecap="round" />
+          </svg>
+          <div class="milestone-dots-row">
+            <span class="m-dot active"></span>
+            <span class="m-dot"></span>
+            <span class="m-dot"></span>
+            <span class="m-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="milestone-title" id="rail-milestone-title">Review.</h3>
+
+      <div class="milestone-stats-row">
+        <span class="milestone-active-tasks" id="rail-active-tasks-count">5 active tasks</span>
+        <span class="milestone-sep">·</span>
+        <span class="milestone-blocked-tasks" id="rail-blocked-tasks-stat">2 blocked <span class="blocked-warn-triangle">▲</span></span>
+      </div>
+
+      <div class="milestone-card-divider"></div>
+
+      <a href="#milestones" class="milestone-action-link" id="action-open-milestone">
+        <span>Open milestone</span>
+        <span class="arrow-glyph">→</span>
+      </a>
+    </div>
+
+    <!-- 2. BLOCKED TASKS CARD -->
+    <div class="tasks-rail-card" id="widget-blocked-tasks">
+      <div class="blocked-tasks-header">
+        <div class="blocked-header-left">
+          <h4 class="rail-card-title">BLOCKED TASKS</h4>
+          <p class="rail-card-desc">Tasks in progress that require resolution.</p>
+        </div>
+        <span class="blocked-tasks-huge-count" id="rail-blocked-huge-count">02</span>
+      </div>
+
+      <div class="blocked-tasks-list" id="rail-blocked-tasks-list">
+        <!-- Item 1: Homepage development -->
+        <div class="blocked-task-item" data-task-id="T-014" tabindex="0">
+          <svg class="blocked-doc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <div class="blocked-item-info">
+            <h5 class="blocked-item-title">Homepage development</h5>
+            <span class="blocked-item-sub">T-014 · Waiting for design approval</span>
+          </div>
+          <span class="blocked-item-arrow">→</span>
+        </div>
+
+        <!-- Item 2: Content migration -->
+        <div class="blocked-task-item" data-task-id="T-026" tabindex="0">
+          <svg class="blocked-doc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <div class="blocked-item-info">
+            <h5 class="blocked-item-title">Content migration</h5>
+            <span class="blocked-item-sub">T-026 · Dependent on CMS access</span>
+          </div>
+          <span class="blocked-item-arrow">→</span>
+        </div>
+      </div>
+
+      <div class="rail-card-divider"></div>
+
+      <a href="#tasks?filter=blocked" class="rail-footer-link" id="link-view-all-blocked">
+        <span>View all blocked tasks</span>
+        <span class="arrow-glyph">→</span>
+      </a>
+    </div>
+
+    <!-- 3. TASKS BY MILESTONE CARD -->
+    <div class="tasks-rail-card" id="widget-tasks-by-milestone">
+      <div class="rail-card-header-row">
+        <h4 class="rail-card-title">TASKS BY MILESTONE</h4>
+        <a href="#milestones" class="rail-header-action" id="action-milestones-view-all">View all →</a>
+      </div>
+
+      <div class="milestones-table-list" id="rail-milestones-list">
+        <!-- 03 Development -->
+        <div class="milestone-table-row">
+          <span class="m-seq">03</span>
+          <span class="m-status-circle"></span>
+          <span class="m-name">Development</span>
+          <span class="m-count">5 tasks</span>
+          <span class="m-arrow">→</span>
+        </div>
+
+        <!-- 04 Testing -->
+        <div class="milestone-table-row">
+          <span class="m-seq">04</span>
+          <span class="m-status-circle"></span>
+          <span class="m-name">Testing</span>
+          <span class="m-count">4 tasks</span>
+          <span class="m-arrow">→</span>
+        </div>
+
+        <!-- 05 Content -->
+        <div class="milestone-table-row">
+          <span class="m-seq">05</span>
+          <span class="m-status-circle"></span>
+          <span class="m-name">Content</span>
+          <span class="m-count">3 tasks</span>
+          <span class="m-arrow">→</span>
+        </div>
+
+        <!-- 06 Review (ACTIVE CURRENT HIGHLIGHT - Soft lime background) -->
+        <div class="milestone-table-row current-active">
+          <span class="m-seq">06</span>
+          <span class="m-status-circle active-lime"></span>
+          <span class="m-name">Review</span>
+          <span class="m-count">5 tasks</span>
+          <span class="m-arrow">→</span>
+        </div>
+
+        <!-- 07 Launch Prep -->
+        <div class="milestone-table-row">
+          <span class="m-seq">07</span>
+          <span class="m-status-circle"></span>
+          <span class="m-name">Launch Prep</span>
+          <span class="m-count">1 task</span>
+          <span class="m-arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. LINKED FROM PROJECT KNOWLEDGE CARD -->
+    <div class="tasks-rail-card" id="widget-linked-knowledge">
+      <div class="rail-card-header-row">
+        <h4 class="rail-card-title">LINKED FROM PROJECT KNOWLEDGE</h4>
+      </div>
+
+      <div class="knowledge-links-list" id="rail-knowledge-list">
+        <!-- Item 1: Homepage Design Brief -->
+        <div class="knowledge-link-item">
+          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <div class="knowledge-item-info">
+            <span class="knowledge-title">Homepage Design Brief</span>
+            <span class="knowledge-meta">3 tasks linked</span>
+          </div>
+          <span class="knowledge-arrow">→</span>
+        </div>
+
+        <!-- Item 2: Content Strategy -->
+        <div class="knowledge-link-item">
+          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <div class="knowledge-item-info">
+            <span class="knowledge-title">Content Strategy</span>
+            <span class="knowledge-meta">2 tasks linked</span>
+          </div>
+          <span class="knowledge-arrow">→</span>
+        </div>
+
+        <!-- Item 3: Brand Guidelines -->
+        <div class="knowledge-link-item">
+          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <div class="knowledge-item-info">
+            <span class="knowledge-title">Brand Guidelines</span>
+            <span class="knowledge-meta">1 task linked</span>
+          </div>
+          <span class="knowledge-arrow">→</span>
+        </div>
+      </div>
+
+      <div class="rail-card-divider"></div>
+
+      <a href="#documents" class="rail-footer-link" id="link-view-all-docs">
+        <span>View all linked documents</span>
+        <span class="arrow-glyph">→</span>
+      </a>
+    </div>
+
+    <!-- 5. QUICK ACTIONS CARD -->
+    <div class="tasks-rail-card" id="widget-quick-actions">
+      <div class="rail-card-header-row">
+        <h4 class="rail-card-title">QUICK ACTIONS</h4>
+      </div>
+
+      <div class="quick-actions-list">
+        <button class="quick-action-row-btn" id="qa-create-task" title="Create new task">
+          <span class="qa-plus-glyph">+</span>
+          <span class="qa-label">Create new task</span>
+          <span class="qa-arrow">→</span>
+        </button>
+
+        <button class="quick-action-row-btn" id="qa-import-doc" title="Import from document">
+          <svg class="qa-svg-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="qa-label">Import from document</span>
+          <span class="qa-arrow">→</span>
+        </button>
+
+        <button class="quick-action-row-btn" id="qa-manage-deps" title="Manage dependencies">
+          <svg class="qa-svg-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="18" r="3"></circle>
+            <circle cx="6" cy="6" r="3"></circle>
+            <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+            <line x1="6" y1="9" x2="6" y2="21"></line>
+          </svg>
+          <span class="qa-label">Manage dependencies</span>
+          <span class="qa-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- =======================================================================
+       RIGHT TASK DETAILS DRAWER (~29-30% width, persistent attached panel)
+       ======================================================================= -->
+  <aside class="tasks-details-drawer" id="tasks-details-drawer" aria-label="Task Details">
+
+    <!-- Drawer Top Controls Bar -->
+    <div class="drawer-top-bar">
+      <div class="drawer-top-left">
+        <span class="drawer-status-dot dot-amber" id="drawer-header-dot"></span>
+        <span class="drawer-header-breadcrumb" id="drawer-header-breadcrumb">WEBSITE REDESIGN / T-014</span>
+      </div>
+
+      <div class="drawer-top-actions">
+        <button class="drawer-nav-btn" id="btn-prev-task" title="Previous task" aria-label="Previous task">‹</button>
+        <button class="drawer-nav-btn" id="btn-next-task" title="Next task" aria-label="Next task">›</button>
+        <button class="drawer-nav-btn" id="btn-drawer-options" title="Task actions" aria-label="Task options">•••</button>
+        <button class="drawer-close-btn" id="btn-close-drawer" title="Close drawer" aria-label="Close drawer">✕</button>
+      </div>
+    </div>
+
+    <!-- Drawer Title & Status Header -->
+    <div class="drawer-task-header">
+      <span class="drawer-task-seq-tag" id="drawer-task-seq">WEBSITE REDESIGN / T-014</span>
+      <h3 class="drawer-task-heading" id="drawer-task-title">homepage development.</h3>
+
+      <!-- Status Pills Row -->
+      <div class="drawer-status-pills-row">
+        <div class="drawer-pills-left">
+          <span class="drawer-pill pill-inprogress" id="drawer-pill-status">
+            <span class="pill-dot dot-amber"></span>
+            <span>In progress</span>
+          </span>
+          <span class="drawer-pill pill-blocked" id="drawer-pill-blocked">
+            <svg class="pill-flag-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+              <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            <span>Blocked</span>
+          </span>
+        </div>
+        <span class="drawer-task-id-badge" id="drawer-task-id-badge">T-014</span>
+      </div>
+    </div>
+
+    <!-- Full-Width "Mark complete" Button -->
+    <button class="btn-mark-complete-dark" id="btn-mark-complete" title="Mark this task complete">
+      <span class="btn-complete-label">Mark complete</span>
+      <span class="btn-complete-check">✓</span>
+    </button>
+
+    <!-- Drawer Horizontal Tabs -->
+    <nav class="drawer-tabs-bar" role="tablist" aria-label="Drawer Tabs">
+      <button class="drawer-tab-btn active" id="dtab-details" role="tab" aria-selected="true" data-tab="details">Details</button>
+      <button class="drawer-tab-btn" id="dtab-subtasks" role="tab" aria-selected="false" data-tab="subtasks">Subtasks <span class="tab-badge" id="dtab-sub-count">(1/3)</span></button>
+      <button class="drawer-tab-btn" id="dtab-linked" role="tab" aria-selected="false" data-tab="linked">Linked <span class="tab-badge">(2)</span></button>
+      <button class="drawer-tab-btn" id="dtab-comments" role="tab" aria-selected="false" data-tab="comments">Comments <span class="tab-badge">(3)</span></button>
+      <button class="drawer-tab-btn" id="dtab-history" role="tab" aria-selected="false" data-tab="history">History</button>
+    </nav>
+
+    <!-- Drawer Tab Panes -->
+    <div class="drawer-panes-wrap">
+
+      <!-- TAB PANE: DETAILS (Default Active) -->
+      <div class="drawer-pane active" id="dpane-details">
+
+        <!-- 01 / TASK PROPERTIES SECTION -->
+        <section class="drawer-section" aria-label="Task Properties">
+          <div class="drawer-section-header">
+            <span class="drawer-section-label">01 / TASK PROPERTIES</span>
+            <button class="btn-drawer-action" id="btn-edit-properties" title="Edit all properties">
+              <span>Edit all</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 2-Column Grid of 6 Compact Property Cards -->
+          <div class="properties-2col-grid">
+            <!-- Prop 1: Assignee -->
+            <div class="property-card" id="prop-card-assignee">
+              <span class="prop-label">Assignee</span>
+              <div class="prop-val-row">
+                <span class="assignee-avatar avatar-mj prop-avatar" id="prop-avatar">MJ</span>
+                <span class="prop-text" id="prop-assignee-name">Maria J.</span>
+                <span class="prop-chevron">⌄</span>
+              </div>
+            </div>
+
+            <!-- Prop 2: Due date -->
+            <div class="property-card" id="prop-card-duedate">
+              <span class="prop-label">Due date</span>
+              <div class="prop-val-row">
+                <svg class="prop-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="prop-text" id="prop-duedate-val">28 Oct 2026</span>
+                <span class="prop-chevron">⌄</span>
+              </div>
+            </div>
+
+            <!-- Prop 3: Priority -->
+            <div class="property-card" id="prop-card-priority">
+              <span class="prop-label">Priority</span>
+              <div class="prop-val-row">
+                <span class="prop-dot dot-red"></span>
+                <span class="prop-text" id="prop-priority-val">High</span>
+                <span class="prop-chevron">⌄</span>
+              </div>
+            </div>
+
+            <!-- Prop 4: Milestone -->
+            <div class="property-card" id="prop-card-milestone">
+              <span class="prop-label">Milestone</span>
+              <div class="prop-val-row">
+                <svg class="prop-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="6"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+                <span class="prop-text" id="prop-milestone-val">06 / Review</span>
+                <span class="prop-chevron">⌄</span>
+              </div>
+            </div>
+
+            <!-- Prop 5: Start date -->
+            <div class="property-card" id="prop-card-startdate">
+              <span class="prop-label">Start date</span>
+              <div class="prop-val-row">
+                <svg class="prop-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="prop-text" id="prop-startdate-val">12 Oct 2026</span>
+              </div>
+            </div>
+
+            <!-- Prop 6: Time estimate -->
+            <div class="property-card" id="prop-card-estimate">
+              <span class="prop-label">Time estimate</span>
+              <div class="prop-val-row">
+                <svg class="prop-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span class="prop-text" id="prop-estimate-val">12h</span>
+                <span class="prop-chevron">⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Centered Expandable "More properties ∨" Button -->
+          <button class="btn-more-properties" id="btn-more-properties">
+            <span>More properties</span>
+            <span class="btn-chevron">⌄</span>
+          </button>
+        </section>
+
+        <!-- 02 / DESCRIPTION SECTION -->
+        <section class="drawer-section" aria-label="Task Description">
+          <div class="drawer-section-header">
+            <span class="drawer-section-label">02 / DESCRIPTION</span>
+            <button class="btn-drawer-action" id="btn-edit-description" title="Edit description">
+              <span>Edit</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="drawer-desc-paragraph" id="drawer-desc-text">
+            Implement the approved homepage design, ensuring consistent responsive behaviour and accessibility across supported devices.
+          </p>
+        </section>
+
+        <!-- 03 / SUBTASKS SECTION -->
+        <section class="drawer-section" aria-label="Subtasks">
+          <div class="drawer-section-header">
+            <span class="drawer-section-label">03 / SUBTASKS</span>
+            <span class="subtasks-ratio-text" id="subtasks-ratio-text">1 of 3 complete</span>
+          </div>
+
+          <!-- Slim Horizontal Progress Bar -->
+          <div class="subtasks-progress-track">
+            <div class="subtasks-progress-bar" id="subtasks-progress-bar" style="width: 33.33%;"></div>
+          </div>
+
+          <!-- Subtasks List -->
+          <div class="subtasks-list" id="subtasks-list">
+            <!-- Subtask 1: Completed -->
+            <div class="subtask-row completed" data-subtask-id="sub-1">
+              <button class="subtask-checkbox-btn checked" aria-label="Toggle subtask 1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </button>
+              <span class="subtask-title">Implement desktop layout</span>
+              <span class="assignee-avatar avatar-mj subtask-avatar">MJ</span>
+              <span class="subtask-date">20 Oct</span>
+              <button class="subtask-more-btn" title="Subtask options">•••</button>
+            </div>
+
+            <!-- Subtask 2: Incomplete -->
+            <div class="subtask-row" data-subtask-id="sub-2">
+              <button class="subtask-checkbox-btn" aria-label="Toggle subtask 2"></button>
+              <span class="subtask-title">Complete responsive behaviour</span>
+              <span class="assignee-avatar avatar-pk subtask-avatar">PK</span>
+              <span class="subtask-date">24 Oct</span>
+              <button class="subtask-more-btn" title="Subtask options">•••</button>
+            </div>
+
+            <!-- Subtask 3: Incomplete -->
+            <div class="subtask-row" data-subtask-id="sub-3">
+              <button class="subtask-checkbox-btn" aria-label="Toggle subtask 3"></button>
+              <span class="subtask-title">Verify accessibility</span>
+              <span class="assignee-avatar avatar-sk subtask-avatar">SK</span>
+              <span class="subtask-date">28 Oct</span>
+              <button class="subtask-more-btn" title="Subtask options">•••</button>
+            </div>
+          </div>
+
+          <button class="btn-add-subtask" id="btn-add-subtask">
+            <span>+ Add subtask</span>
+          </button>
+        </section>
+
+        <!-- 04 / DEPENDENCIES & BLOCKERS SECTION -->
+        <section class="drawer-section" aria-label="Dependencies & Blockers">
+          <div class="drawer-section-header">
+            <span class="drawer-section-label">04 / DEPENDENCIES &amp; BLOCKERS</span>
+            <a href="#dependencies" class="drawer-link-action" id="action-manage-deps">Manage →</a>
+          </div>
+
+          <!-- 2 Example Cards -->
+          <div class="deps-cards-stack">
+            <!-- Card 1: Waiting On (Pale Warm Amber) -->
+            <div class="dep-card card-waiting" id="dep-card-waiting">
+              <div class="dep-card-top">
+                <div class="dep-card-tag-wrap">
+                  <svg class="dep-icon icon-amber" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L1 21h22L12 2zm0 3.8L20.2 19H3.8L12 5.8zM11 10h2v4h-2v-4zm0 6h2v2h-2v-2z"/>
+                  </svg>
+                  <span class="dep-tag tag-amber">WAITING ON</span>
+                </div>
+                <button class="dep-more-btn" title="Card options">•••</button>
+              </div>
+              <h5 class="dep-title">Homepage design approval</h5>
+              <span class="dep-subtext">T-009 · Awaiting review</span>
+              <div class="dep-card-footer">
+                <a href="#task-T-009" class="dep-open-link" id="link-open-dep-task">Open task ↗</a>
+              </div>
+            </div>
+
+            <!-- Card 2: Blocker (Pale Soft Red) -->
+            <div class="dep-card card-blocker" id="dep-card-blocker">
+              <div class="dep-card-top">
+                <div class="dep-card-tag-wrap">
+                  <svg class="dep-icon icon-red" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L1 21h22L12 2zm0 3.8L20.2 19H3.8L12 5.8zM11 10h2v4h-2v-4zm0 6h2v2h-2v-2z"/>
+                  </svg>
+                  <span class="dep-tag tag-red">BLOCKER</span>
+                </div>
+                <button class="dep-more-btn" title="Card options">•••</button>
+              </div>
+              <h5 class="dep-title">CMS content not finalised</h5>
+              <span class="dep-subtext">Content team to confirm final copy and assets.</span>
+              <div class="dep-card-footer">
+                <button class="btn-resolve-link" id="btn-resolve-blocker">Resolve ↗</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- TAB PANE: SUBTASKS -->
+      <div class="drawer-pane" id="dpane-subtasks">
+        <div class="drawer-secondary-placeholder">
+          <p class="placeholder-text">Manage all child subtasks and checklists.</p>
+        </div>
+      </div>
+
+      <!-- TAB PANE: LINKED -->
+      <div class="drawer-pane" id="dpane-linked">
+        <div class="drawer-secondary-placeholder">
+          <p class="placeholder-text">Linked documents, briefs, and designs.</p>
+        </div>
+      </div>
+
+      <!-- TAB PANE: COMMENTS -->
+      <div class="drawer-pane" id="dpane-comments">
+        <div class="drawer-secondary-placeholder">
+          <p class="placeholder-text">Discussion thread and mentions.</p>
+        </div>
+      </div>
+
+      <!-- TAB PANE: HISTORY -->
+      <div class="drawer-pane" id="dpane-history">
+        <div class="drawer-secondary-placeholder">
+          <p class="placeholder-text">Audit trail and activity log.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+</div>

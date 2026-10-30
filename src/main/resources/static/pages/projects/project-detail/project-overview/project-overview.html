@@ -1,0 +1,349 @@
+<!-- ==========================================================================
+     Teamden / Brick — Project Overview Tab Fragment (project-overview.html)
+     Path: pages/project/project-overview/project-overview.html
+     Renders inside the Overview tab of the Project section
+     ========================================================================== -->
+<div class="overview-tab-root" id="overview-tab-root">
+
+  <!-- =======================================================================
+       MAIN COLUMN (~70-75%)
+       ======================================================================= -->
+  <div class="overview-main-col">
+
+    <!-- 01 / PROJECT SPECIFICATION CARD -->
+    <section class="spec-card" aria-label="Project Specification">
+      <div class="spec-top-row">
+        <div class="spec-heading-group">
+          <span class="spec-section-tag">01 / PROJECT SPECIFICATION</span>
+          <h3 class="spec-main-title" id="spec-title">Build a better digital experience.</h3>
+        </div>
+        <a href="#brief" class="spec-view-brief-link" id="spec-view-brief-link">View full brief →</a>
+      </div>
+
+      <!-- 4 Compact Columns -->
+      <div class="spec-grid-columns">
+        <!-- Col 1: Objective -->
+        <div class="spec-column">
+          <div class="spec-col-header">
+            <svg class="spec-col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+            <span class="spec-col-title">OBJECTIVE</span>
+          </div>
+          <ul class="spec-col-list" id="spec-objectives-list">
+            <li>Improve user experience</li>
+            <li>Increase conversion rate</li>
+            <li>Strengthen brand presence</li>
+          </ul>
+        </div>
+
+        <!-- Col 2: Deliverables -->
+        <div class="spec-column">
+          <div class="spec-col-header">
+            <svg class="spec-col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="spec-col-title">DELIVERABLES</span>
+          </div>
+          <ul class="spec-col-list" id="spec-deliverables-list">
+            <li>Responsive website (desktop, tablet, mobile)</li>
+            <li>CMS implementation</li>
+            <li>Content migration</li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Success Criteria -->
+        <div class="spec-column">
+          <div class="spec-col-header">
+            <svg class="spec-col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="spec-col-title">SUCCESS CRITERIA</span>
+          </div>
+          <ul class="spec-col-list" id="spec-criteria-list">
+            <li>Higher engagement</li>
+            <li>Increased conversion rate</li>
+            <li>Meets accessibility standards</li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Project Context -->
+        <div class="spec-column">
+          <div class="spec-col-header">
+            <svg class="spec-col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="spec-col-title">PROJECT CONTEXT</span>
+          </div>
+          <div class="spec-context-dl" id="spec-context-block">
+            <div class="spec-context-row">
+              <span class="spec-context-label">Client:</span>
+              <span class="spec-context-val">Acme Co.</span>
+            </div>
+            <div class="spec-context-row">
+              <span class="spec-context-label">Type:</span>
+              <span class="spec-context-val">Design / Development</span>
+            </div>
+            <div class="spec-context-row">
+              <span class="spec-context-label">Focus:</span>
+              <span class="spec-context-val">Brand, performance and growth</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 / MILESTONES -->
+    <section class="milestones-section" aria-label="Project Milestones">
+      <div class="overview-section-header">
+        <span class="overview-section-label">02 / MILESTONES</span>
+        <div class="milestones-header-right">
+          <div class="milestones-ratio-badge-block">
+            <span class="milestones-ratio-label" id="milestones-ratio-label">06/09</span>
+            <span class="milestones-ratio-sub">COMPLETED</span>
+          </div>
+          <a href="#milestones" class="overview-section-action" id="action-view-all-milestones">View all →</a>
+        </div>
+      </div>
+
+      <!-- Horizontal 9-stage Timeline -->
+      <div class="milestones-timeline-scroll">
+        <div class="milestones-track" id="milestones-track-container">
+          <!-- Background continuous bar -->
+          <div class="milestones-track-line"></div>
+          <div class="milestones-track-line-progress" id="milestones-track-progress"></div>
+
+          <!-- 01 Discovery (Completed) -->
+          <div class="milestone-node completed" title="Discovery (Completed)">
+            <div class="node-circle">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="node-text-wrap">
+              <span class="node-num">01</span>
+              <span class="node-label">Discovery</span>
+            </div>
+          </div>
+
+          <!-- 02 Design (Completed) -->
+          <div class="milestone-node completed" title="Design (Completed)">
+            <div class="node-circle">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="node-text-wrap">
+              <span class="node-num">02</span>
+              <span class="node-label">Design</span>
+            </div>
+          </div>
+
+          <!-- 03 Development (Completed) -->
+          <div class="milestone-node completed" title="Development (Completed)">
+            <div class="node-circle">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="node-text-wrap">
+              <span class="node-num">03</span>
+              <span class="node-label">Development</span>
+            </div>
+          </div>
+
+          <!-- 04 Testing (Completed) -->
+          <div class="milestone-node completed" title="Testing (Completed)">
+            <div class="node-circle">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="node-text-wrap">
+              <span class="node-num">04</span>
+              <span class="node-label">Testing</span>
+            </div>
+          </div>
+
+          <!-- 05 Content (Completed) -->
+          <div class="milestone-node completed" title="Content (Completed)">
+            <div class="node-circle">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="node-text-wrap">
+              <span class="node-num">05</span>
+              <span class="node-label">Content</span>
+            </div>
+          </div>
+
+          <!-- 06 Review / In Progress (Current) -->
+          <div class="milestone-node current" title="Review (In Progress)">
+            <div class="node-circle">6</div>
+            <div class="node-text-wrap">
+              <span class="node-num">06</span>
+              <span class="node-label">Review</span>
+              <span class="node-subtag">In Progress</span>
+            </div>
+          </div>
+
+          <!-- 07 Launch Prep (Upcoming) -->
+          <div class="milestone-node upcoming" title="Launch Prep (Upcoming)">
+            <div class="node-circle">7</div>
+            <div class="node-text-wrap">
+              <span class="node-num">07</span>
+              <span class="node-label">Launch Prep</span>
+            </div>
+          </div>
+
+          <!-- 08 Go Live (Upcoming) -->
+          <div class="milestone-node upcoming" title="Go Live (Upcoming)">
+            <div class="node-circle">8</div>
+            <div class="node-text-wrap">
+              <span class="node-num">08</span>
+              <span class="node-label">Go Live</span>
+            </div>
+          </div>
+
+          <!-- 09 Post Launch (Upcoming) -->
+          <div class="milestone-node upcoming" title="Post Launch (Upcoming)">
+            <div class="node-circle">9</div>
+            <div class="node-text-wrap">
+              <span class="node-num">09</span>
+              <span class="node-label">Post Launch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 / WORK IN MOTION -->
+    <section class="work-motion-section" aria-label="Work in Motion">
+      <div class="overview-section-header">
+        <span class="overview-section-label">03 / WORK IN MOTION</span>
+        <a href="#tasks" class="overview-section-action" id="action-view-all-tasks">View all tasks →</a>
+      </div>
+
+      <!-- 4 Compact Status Cards -->
+      <div class="work-cards-grid" id="work-cards-grid">
+        <!-- Card 1: To Do -->
+        <article class="work-card" data-status-filter="TODO" tabindex="0">
+          <div class="work-card-top">
+            <span class="work-dot dot-gray"></span>
+            <span class="work-status-label">TO DO</span>
+          </div>
+          <span class="work-count-huge">08</span>
+          <p class="work-task-sample">Prepare responsive layouts</p>
+          <div class="work-card-bottom">
+            <span class="work-avatar avatar-ar" title="AR">AR</span>
+            <span class="work-link-text">View all →</span>
+          </div>
+        </article>
+
+        <!-- Card 2: In Progress -->
+        <article class="work-card" data-status-filter="IN_PROGRESS" tabindex="0">
+          <div class="work-card-top">
+            <span class="work-dot dot-amber"></span>
+            <span class="work-status-label">IN PROGRESS</span>
+          </div>
+          <span class="work-count-huge">05</span>
+          <p class="work-task-sample">Homepage development</p>
+          <div class="work-card-bottom">
+            <span class="work-avatar avatar-mj" title="MJ">MJ</span>
+            <span class="work-link-text">View all →</span>
+          </div>
+        </article>
+
+        <!-- Card 3: In Review -->
+        <article class="work-card" data-status-filter="IN_REVIEW" tabindex="0">
+          <div class="work-card-top">
+            <span class="work-dot dot-blue"></span>
+            <span class="work-status-label">IN REVIEW</span>
+          </div>
+          <span class="work-count-huge">03</span>
+          <p class="work-task-sample">Design system review</p>
+          <div class="work-card-bottom">
+            <span class="work-avatar avatar-sk" title="SK">SK</span>
+            <span class="work-link-text">View all →</span>
+          </div>
+        </article>
+
+        <!-- Card 4: Blocked -->
+        <article class="work-card" data-status-filter="BLOCKED" tabindex="0">
+          <div class="work-card-top">
+            <span class="work-dot dot-red"></span>
+            <span class="work-status-label">BLOCKED</span>
+          </div>
+          <span class="work-count-huge">02</span>
+          <p class="work-task-sample">Client copy approval</p>
+          <div class="work-card-bottom">
+            <span class="work-avatar avatar-pk" title="PK">PK</span>
+            <span class="work-link-text">View all →</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 04 / PROJECT KNOWLEDGE -->
+    <section class="knowledge-section" aria-label="Project Knowledge Documents">
+      <div class="overview-section-header">
+        <span class="overview-section-label">04 / PROJECT KNOWLEDGE</span>
+        <a href="#documents" class="overview-section-action" id="action-view-all-docs">View all →</a>
+      </div>
+
+      <!-- 3 Document Cards -->
+      <div class="knowledge-cards-grid" id="knowledge-cards-grid">
+        <!-- Doc 1: Project Brief (PDF) -->
+        <a href="#doc-brief" class="doc-card" id="doc-card-brief">
+          <div class="doc-icon-box doc-pdf">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <div class="doc-content">
+            <h4 class="doc-name">Project Brief</h4>
+            <span class="doc-meta">PDF · 1.2 MB</span>
+          </div>
+        </a>
+
+        <!-- Doc 2: Design Review Notes (DOC) -->
+        <a href="#doc-notes" class="doc-card" id="doc-card-notes">
+          <div class="doc-icon-box doc-doc">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="doc-content">
+            <h4 class="doc-name">Design Review Notes</h4>
+            <span class="doc-meta">DOC · 850 KB</span>
+          </div>
+        </a>
+
+        <!-- Doc 3: Design References (Figma) -->
+        <a href="#doc-figma" class="doc-card" id="doc-card-figma">
+          <div class="doc-icon-box doc-figma">
+            <svg width="18" height="18" viewBox="0 0 38 57" fill="none">
+              <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+              <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+              <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+              <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+              <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+            </svg>
+          </div>
+          <div class="doc-content">
+            <h4 class="doc-name">Design References</h4>
+            <span class="doc-meta">Figma · 24 MB</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+</div>

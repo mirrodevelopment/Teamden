@@ -3,20 +3,74 @@
  * Path: fragments/sidebar/sidebar.js
  */
 const Sidebar = (() => {
-  function init(user) {
-    const closeBtn = document.getElementById('sidebar-close-btn');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        document.body.classList.remove('sidebar-mobile-open');
-      });
+  function toggle() {
+    const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+    localStorage.setItem('teamden-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+    return isCollapsed;
+  }
+
+  // Restore persisted collapsed state immediately to avoid layout flicker
+  if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+    document.body.classList.add('sidebar-collapsed');
+  }
+
+  // Resilient event delegation on document so dynamic fragment mounts always respond
+  document.addEventListener('click', (e) => {
+    // 1. Collapse / expand toggle button
+    const collapseBtn = e.target.closest('#sidebar-collapse-btn');
+    if (collapseBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle();
+      return;
     }
 
+    // 2. Mobile hamburger menu toggle
+    const mobileToggle = e.target.closest('#mobile-sidebar-toggle');
+    if (mobileToggle) {
+      e.preventDefault();
+      e.stopPropagation();
+      document.body.classList.toggle('sidebar-mobile-open');
+      return;
+    }
+
+    // 3. Close mobile sidebar when clicking backdrop / outside
+    if (document.body.classList.contains('sidebar-mobile-open')) {
+      const sidebar = document.getElementById('app-sidebar');
+      if (sidebar && !sidebar.contains(e.target)) {
+        document.body.classList.remove('sidebar-mobile-open');
+      }
+    }
+  });
+
+  function init(user) {
     const collapseBtn = document.getElementById('sidebar-collapse-btn');
     if (collapseBtn) {
-      collapseBtn.addEventListener('click', () => {
-        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
-        localStorage.setItem('teamden-sidebar-collapsed', isCollapsed ? 'true' : 'false');
-      });
+      collapseBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggle();
+      };
+    }
+
+    const mobileToggle = document.getElementById('mobile-sidebar-toggle');
+    if (mobileToggle) {
+      mobileToggle.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        document.body.classList.toggle('sidebar-mobile-open');
+      };
+    }
+
+    const brandLogo = document.querySelector('.sidebar-brand-logo');
+    if (brandLogo) {
+      brandLogo.onclick = (e) => {
+        if (document.body.classList.contains('sidebar-collapsed')) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggle();
+        }
+      };
     }
 
     if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
@@ -38,7 +92,6 @@ const Sidebar = (() => {
     const wsTrigger = document.getElementById('workspace-dropdown-trigger');
     if (wsTrigger) {
       wsTrigger.addEventListener('click', () => {
-        // Toggle or display switcher feedback
         console.log('Workspace switcher clicked');
       });
     }
@@ -52,6 +105,18 @@ const Sidebar = (() => {
         }
       });
     });
+
+    // Sync active nav item with current URL
+    const currentPath = window.location.pathname || '';
+    const todayNav = document.getElementById('nav-today');
+    const projectsNav = document.getElementById('nav-projects');
+    if (currentPath.includes('/pages/projects/') || currentPath.includes('/pages/project/')) {
+      if (todayNav) todayNav.classList.remove('active');
+      if (projectsNav) projectsNav.classList.add('active');
+    } else if (currentPath.includes('/pages/dashboard/')) {
+      if (todayNav) todayNav.classList.add('active');
+      if (projectsNav) projectsNav.classList.remove('active');
+    }
 
     // Pinned add button
     const pinnedAddBtn = document.getElementById('pinned-add-btn');
@@ -78,7 +143,8 @@ const Sidebar = (() => {
     }
   }
 
-  return { init };
+  return { init, toggle };
 })();
 
 window.Sidebar = Sidebar;
+window.toggleSidebar = () => Sidebar.toggle();

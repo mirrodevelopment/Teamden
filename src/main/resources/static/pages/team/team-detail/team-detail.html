@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — design team.</title>
+  <meta name="description" content="Teamden Team Details & Overview — Creating thoughtful digital experiences, together.">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=10">
+
+  <!-- Host Page, Overview & Work Styles -->
+  <link rel="stylesheet" href="team-detail.css?v=2">
+  <link rel="stylesheet" href="team-overview/team-overview.css?v=2">
+  <link rel="stylesheet" href="team-work/team-work.css?v=2">
+  <link rel="stylesheet" href="team-knowledge/team-knowledge.css?v=2">
+  <link rel="stylesheet" href="team-people/team-people.css?v=2">
+</head>
+<body class="tdet-body">
+
+  <div class="tdet-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Application Area -->
+    <div class="tdet-main-area">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Master Split Container (Left ~73% Main, Right ~27% Rail) -->
+      <main class="tdet-split-container">
+
+        <!-- ── Left Column: Hero Header, Tabs & Panes ───────────────────── -->
+        <div class="tdet-center-col">
+
+          <!-- Team Header Section -->
+          <header class="tdet-header" id="tdet-header">
+            <div class="tdet-header-top-meta">
+              <div class="tdet-breadcrumb">
+                <a href="/pages/team/team.html" class="tdet-bc-link">TEAM</a>
+                <span class="tdet-bc-sep">/</span>
+                <span class="tdet-bc-current" id="tdet-bc-name">DESIGN TEAM</span>
+                <span class="tdet-bc-sep">/</span>
+                <span class="tdet-bc-num" id="tdet-bc-num">01</span>
+              </div>
+              <button class="tdet-header-more-btn" id="tdet-more-btn" title="More options" aria-label="More options">•••</button>
+            </div>
+
+            <div class="tdet-headline-group">
+              <h1 class="tdet-title" id="tdet-title-display">design team<span class="tdet-title-dot">.</span></h1>
+              <p class="tdet-subtitle" id="tdet-subtitle-display">Creating thoughtful digital experiences, together.</p>
+            </div>
+
+            <div class="tdet-members-row">
+              <div class="tdet-members-left">
+                <div class="tdet-avatars-group" id="tdet-header-avatars" aria-label="Team members">
+                  <div class="tdet-avatar-bubble avatar--pk" title="Priya Kapoor (PK)">PK</div>
+                  <div class="tdet-avatar-bubble avatar--ar" title="Alex Rivera (AR)">AR</div>
+                  <div class="tdet-avatar-bubble avatar--sk" title="Samir Khan (SK)">SK</div>
+                  <div class="tdet-avatar-bubble avatar--mj" title="Maya Jones (MJ)">MJ</div>
+                </div>
+                <span class="tdet-members-count" id="tdet-header-count">4 members</span>
+                <div class="tdet-members-pipe"></div>
+                <span class="tdet-members-team-tag" id="tdet-header-team-tag" style="font-size:0.75rem; font-weight:700; color:var(--dash-text-muted);">Design Team</span>
+              </div>
+
+              <button class="tdet-workspace-btn" id="tdet-workspace-btn" title="Open team workspace">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Team workspace</span>
+              </button>
+            </div>
+
+            <!-- Team Tabs Bar -->
+            <nav class="tdet-tabs-bar" role="tablist" aria-label="Team Navigation Tabs">
+              <button class="tdet-tab-btn active" id="tab-btn-overview" data-tab="overview" role="tab" aria-selected="true">
+                Overview
+              </button>
+              <button class="tdet-tab-btn" id="tab-btn-work" data-tab="work" role="tab" aria-selected="false">
+                Work
+              </button>
+              <button class="tdet-tab-btn" id="tab-btn-knowledge" data-tab="knowledge" role="tab" aria-selected="false">
+                Knowledge
+              </button>
+              <button class="tdet-tab-btn" id="tab-btn-people" data-tab="people" role="tab" aria-selected="false">
+                People
+              </button>
+            </nav>
+          </header>
+
+          <!-- Tab Panes Container -->
+          <div class="tdet-tab-panes">
+
+            <!-- ── TAB PANE: OVERVIEW (Default Active) ────────────────────────── -->
+            <div class="tdet-tab-pane active" id="pane-overview" role="tabpanel" aria-labelledby="tab-btn-overview">
+              <!-- Mount container for team-overview/team-overview.html -->
+              <div id="overview-component-mount"></div>
+            </div>
+
+            <!-- ── TAB PANE: WORK ────────────────────────────────────────────── -->
+            <div class="tdet-tab-pane" id="pane-work" role="tabpanel" aria-labelledby="tab-btn-work">
+              <!-- Mount container for team-work/team-work.html -->
+              <div id="work-component-mount"></div>
+            </div>
+
+            <!-- ── TAB PANE: KNOWLEDGE ───────────────────────────────────────── -->
+            <div class="tdet-tab-pane" id="pane-knowledge" role="tabpanel" aria-labelledby="tab-btn-knowledge">
+              <div id="knowledge-component-mount"></div>
+            </div>
+
+            <!-- ── TAB PANE: PEOPLE ─────────────────────────────────────────── -->
+            <div class="tdet-tab-pane" id="pane-people" role="tabpanel" aria-labelledby="tab-btn-people">
+              <div id="people-component-mount"></div>
+            </div>
+
+          </div><!-- /.tdet-tab-panes -->
+        </div><!-- /.tdet-center-col -->
+
+        <!-- ── Right Information Rail (Starts directly below Topbar alongside Header) ── -->
+        <aside class="tdet-right-rail" id="tdet-right-rail" aria-label="Team Context Sidebar">
+          <div id="tdet-rail-overview" class="tdet-rail-pane active"></div>
+          <div id="tdet-rail-work" class="tdet-rail-pane" style="display:none;"></div>
+          <div id="tdet-rail-knowledge" class="tdet-rail-pane" style="display:none;"></div>
+          <div id="tdet-rail-people" class="tdet-rail-pane" style="display:none;"></div>
+        </aside>
+
+      </main><!-- /.tdet-split-container -->
+    </div><!-- /.tdet-main-area -->
+  </div><!-- /.tdet-master-wrapper -->
+
+  <!-- Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+  <script src="team-overview/team-overview.js?v=2"></script>
+  <script src="team-work/team-work.js?v=2"></script>
+  <script src="team-knowledge/team-knowledge.js?v=2"></script>
+  <script src="team-people/team-people.js?v=2"></script>
+  <script src="team-detail.js?v=2"></script>
+</body>
+</html>

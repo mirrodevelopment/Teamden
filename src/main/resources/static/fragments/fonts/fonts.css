@@ -1,11 +1,16 @@
 /* ==========================================================================
-   Teamden by shed — Central Font Definition (fonts.css)
+   BRICK Font Architecture — Central Font Definition (fonts.css)
    Path: fragments/fonts/fonts.css
    Single source of truth for ALL typography and fonts across the platform.
-   Font: Montserrat only.
+   - Mostarct: Primary font for all text, labels, inputs, dates, descriptions
+   - Inter: Dedicated to H2 section headings only
+   - Monument Extended: Display numbers (25, 01, 02, etc.)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap');
+@import url('mostarct.css');
+@import url('inter.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@800;900&display=swap');
 
 /* Local Monument Extended (Ultra-Wide Brutalist Numbers) */
 @font-face {
@@ -13,8 +18,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('./MonumentExtended-Regular.woff') format('woff'),
-       url('/fragments/fonts/MonumentExtended-Regular.woff') format('woff');
+  src: url('/fragments/fonts/MonumentExtended-Regular.woff') format('woff'),
+       url('./MonumentExtended-Regular.woff') format('woff');
 }
 
 @font-face {
@@ -22,8 +27,8 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('./MonumentExtended-Ultrabold.woff') format('woff'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
+  src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
+       url('./MonumentExtended-Ultrabold.woff') format('woff');
 }
 
 @font-face {
@@ -31,8 +36,8 @@
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: url('./MonumentExtended-Ultrabold.woff') format('woff'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
+  src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
+       url('./MonumentExtended-Ultrabold.woff') format('woff');
 }
 
 @font-face {
@@ -40,15 +45,17 @@
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url('./MonumentExtended-Ultrabold.woff') format('woff'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff');
+  src: url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
+       url('./MonumentExtended-Ultrabold.woff') format('woff');
 }
 
 :root {
-  --font-family: 'Montserrat';
-  --font-family-base: 'Montserrat';
-  --font-mono: 'Montserrat';
-  --font-family-mono: 'Montserrat';
+  --font-family: 'Mostarct', 'Montserrat';
+  --font-family-base: 'Mostarct', 'Montserrat';
+  --font-mono: 'Mostarct', 'Montserrat';
+  --font-family-mono: 'Mostarct', 'Montserrat';
   --font-family-display: 'Inter';
-  --font-family-number: 'Monument Extended', 'Unbounded', 'Montserrat';
+  --font-family-h2: 'Inter';
+  --font-family-today: 'Inter Tight', 'Inter', sans-serif;
+  --font-family-number: 'Monument Extended', 'Unbounded', 'Mostarct', 'Montserrat';
 }

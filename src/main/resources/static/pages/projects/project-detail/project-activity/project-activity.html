@@ -1,0 +1,572 @@
+<!-- ==========================================================================
+     Teamden / Brick — Project Activity Tab Fragment (project-activity.html)
+     Path: pages/project/project-activity/project-activity.html
+     Renders inside the Activity tab (#pane-activity) of the Project section
+     ========================================================================== -->
+<div class="activity-workspace-split" id="activity-workspace-split">
+
+  <!-- =======================================================================
+       MAIN COLUMN: PROJECT CHRONICLE & TIMELINE (~72-74% width)
+       ======================================================================= -->
+  <main class="activity-journal-card" id="activity-journal-card" aria-label="Project Chronicle Activity Journal">
+
+    <!-- Card Header Top Label & Title Row -->
+    <div class="activity-journal-top">
+      <div class="activity-section-tag">01 / PROJECT CHRONICLE</div>
+
+      <div class="activity-header-toolbar-row">
+        <h2 class="activity-main-heading">The activity journal.</h2>
+
+        <!-- Search & Filter Controls -->
+        <div class="activity-toolbar-controls">
+          <div class="activity-search-box">
+            <svg class="search-svg-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="activity-search-input" id="activity-search-input" placeholder="Search activity..." autocomplete="off">
+            <button class="activity-search-clear-btn" id="activity-search-clear-btn" title="Clear search" style="display: none;">×</button>
+          </div>
+
+          <button class="btn-activity-filter-toggle" id="btn-activity-filter-toggle" title="Filter activity">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span>Filters</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills & Sort Row -->
+      <div class="activity-filter-pills-row">
+        <div class="activity-pills-group" role="tablist" aria-label="Activity Categories">
+          <button class="activity-pill-btn active" data-pill="important" role="tab" aria-selected="true">Important</button>
+          <button class="activity-pill-btn" data-pill="all" role="tab" aria-selected="false">All activity</button>
+          <button class="activity-pill-btn" data-pill="mentions" role="tab" aria-selected="false">Mentions</button>
+        </div>
+
+        <div class="activity-sort-dropdown-wrap">
+          <button class="activity-sort-btn" id="activity-sort-btn" title="Change sort order">
+            <span id="activity-sort-label">Latest first</span>
+            <span class="sort-chevron">⌄</span>
+          </button>
+          <div class="activity-sort-menu" id="activity-sort-menu" style="display: none;">
+            <button class="sort-option active" data-sort="latest">Latest first</button>
+            <button class="sort-option" data-sort="oldest">Oldest first</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filter Banner (Shown when secondary filter is active) -->
+    <div class="active-filter-banner" id="active-filter-banner" style="display: none;">
+      <span class="filter-banner-text">Filtered by: <strong id="filter-banner-label">Milestones</strong></span>
+      <button class="filter-banner-clear-btn" id="filter-banner-clear-btn">Clear filter ×</button>
+    </div>
+
+    <!-- =====================================================================
+         MAIN VERTICALLY GROUPED CHRONOLOGICAL TIMELINE
+         ===================================================================== -->
+    <div class="activity-timeline-container" id="activity-timeline-container">
+
+      <!-- ===================================================================
+           DATE GROUP 1: 26 OCT 2026 MONDAY
+           =================================================================== -->
+      <div class="timeline-date-group" data-date="2026-10-26" id="group-2026-10-26">
+        <!-- Date Column -->
+        <div class="timeline-date-col">
+          <span class="timeline-day-num">26</span>
+          <span class="timeline-month-year">OCT 2026</span>
+          <span class="timeline-weekday">MONDAY</span>
+        </div>
+
+        <!-- Vertical Timeline Spine & Events Column -->
+        <div class="timeline-events-stack">
+
+          <!-- Event 1: Milestone Completed -->
+          <div class="timeline-event-row" data-category="milestones" data-important="true" data-mention="false" data-id="act-01">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-lime"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-lime" title="Milestone Completed">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                  <line x1="4" y1="22" x2="4" y2="15"></line>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">09:42</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">MILESTONE COMPLETED</span>
+                </div>
+
+                <h3 class="event-title">Design approved.</h3>
+                <p class="event-desc">Milestone 05 / Design has been completed and work can proceed to the next stage.</p>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-mj">MJ</span>
+                  <span class="user-name-bold">Maria J.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Design Team</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="milestone" data-target="ms-05" title="View milestone">
+                  <span>View milestone</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 2: Comment -->
+          <div class="timeline-event-row" data-category="comments" data-important="true" data-mention="true" data-id="act-02">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-amber"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-amber" title="Comment">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">08:15</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">COMMENT</span>
+                </div>
+
+                <h3 class="event-title">Alex R. commented on Design Review Notes.</h3>
+                <p class="event-desc event-quote">“The navigation direction looks good. Please refine the mobile interaction.”</p>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-ar">AR</span>
+                  <span class="user-name-bold">Alex R.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Design Team</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="comment" data-target="doc-01" title="Open discussion">
+                  <span>Open discussion</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 3: Task Updated -->
+          <div class="timeline-event-row" data-category="tasks" data-important="true" data-mention="false" data-id="act-03">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-blue"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-blue" title="Task Updated">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">07:28</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">TASK UPDATED</span>
+                </div>
+
+                <h3 class="event-title">Homepage development moved to In Progress.</h3>
+                <div class="event-desc event-status-flow">
+                  <span>Status changed from</span>
+                  <span class="status-badge badge-todo">To Do</span>
+                  <span class="status-arrow">→</span>
+                  <span class="status-badge badge-inprogress">In Progress</span>
+                </div>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-pk">PK</span>
+                  <span class="user-name-bold">Peter K.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Development</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="task" data-target="T-014" title="View task">
+                  <span>View task</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           DATE GROUP 2: 25 OCT 2026 SUNDAY
+           =================================================================== -->
+      <div class="timeline-date-group" data-date="2026-10-25" id="group-2026-10-25">
+        <!-- Date Column -->
+        <div class="timeline-date-col">
+          <span class="timeline-day-num">25</span>
+          <span class="timeline-month-year">OCT 2026</span>
+          <span class="timeline-weekday">SUNDAY</span>
+        </div>
+
+        <!-- Vertical Timeline Spine & Events Column -->
+        <div class="timeline-events-stack">
+
+          <!-- Event 4: Document Updated -->
+          <div class="timeline-event-row" data-category="documents" data-important="true" data-mention="false" data-id="act-04">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-purple"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-purple" title="Document Updated">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">15:30</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">DOCUMENT UPDATED</span>
+                </div>
+
+                <h3 class="event-title">Design Review Notes updated.</h3>
+                <p class="event-desc">Version 2.3 · 5 changes</p>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-pk">PK</span>
+                  <span class="user-name-bold">Peter K.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Design Team</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="document" data-target="doc-01" title="View changes">
+                  <span>View changes</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 5: Decision Recorded -->
+          <div class="timeline-event-row" data-category="decisions" data-important="true" data-mention="false" data-id="act-05">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-amber"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-amber" title="Decision Recorded">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">11:14</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">DECISION RECORDED</span>
+                </div>
+
+                <h3 class="event-title">Homepage layout approved (pending client confirmation).</h3>
+                <p class="event-desc">Awaiting final client sign-off.</p>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-mj">MJ</span>
+                  <span class="user-name-bold">Maria J.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Design Team</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="decision" data-target="dec-01" title="View decision">
+                  <span>View decision</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 6: File Added -->
+          <div class="timeline-event-row" data-category="files" data-important="false" data-mention="false" data-id="act-06">
+            <div class="timeline-spine-col">
+              <span class="timeline-dot dot-gray"></span>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-event-card">
+              <div class="event-icon-box icon-bg-gray" title="File Added">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+              </div>
+
+              <div class="event-body-col">
+                <div class="event-meta-top">
+                  <span class="event-time">09:02</span>
+                  <span class="meta-separator">·</span>
+                  <span class="event-category-tag">FILE ADDED</span>
+                </div>
+
+                <h3 class="event-title">Added file to Project Brief.</h3>
+                <p class="event-desc">homepage-wireframes-v2.fig · 12 MB</p>
+
+                <div class="event-author-row">
+                  <span class="user-avatar-circle avatar-sk">SK</span>
+                  <span class="user-name-bold">Sarah K.</span>
+                  <span class="meta-separator">·</span>
+                  <span class="user-team-muted">Design Team</span>
+                </div>
+              </div>
+
+              <div class="event-action-col">
+                <button class="btn-event-action" data-action="file" data-target="doc-02" title="Open document">
+                  <span>Open document</span>
+                  <span class="action-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State Container (Displayed when filtered/searched results are 0) -->
+    <div class="activity-empty-state" id="activity-empty-state" style="display: none;">
+      <svg class="empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <h4 class="empty-title" id="empty-state-title">No activity recorded</h4>
+      <p class="empty-desc" id="empty-state-desc">No events match the selected criteria.</p>
+      <button class="btn-reset-filters" id="btn-reset-filters">Reset filters</button>
+    </div>
+
+  </main>
+
+  <!-- =======================================================================
+       RIGHT COLUMN: INFORMATION & QUICK ACTIONS PANEL (~26-28% width)
+       ======================================================================= -->
+  <aside class="activity-right-rail" id="activity-right-rail" aria-label="Activity Insights and Navigation">
+
+    <!-- Card 1: Since Your Last Visit (Dark Charcoal / Matte Black) -->
+    <div class="rail-card card-last-visit" id="card-last-visit">
+      <div class="last-visit-tag">SINCE YOUR LAST VISIT</div>
+      <div class="last-visit-number" id="last-visit-count">06</div>
+      <h4 class="last-visit-title" id="last-visit-title">Relevant updates</h4>
+      <p class="last-visit-desc" id="last-visit-desc">Including one decision requiring your review.</p>
+      <div class="last-visit-divider"></div>
+      <button class="btn-review-new-activity" id="btn-review-new-activity">
+        <span>Review new activity</span>
+        <span class="action-arrow">↗</span>
+      </button>
+    </div>
+
+    <!-- Card 2: Jump To -->
+    <div class="rail-card card-jump-to" id="card-jump-to">
+      <div class="rail-card-tag">JUMP TO</div>
+      <div class="jump-to-list">
+        <button class="jump-to-row" data-jump="today">
+          <div class="jump-left">
+            <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="jump-label">Today</span>
+          </div>
+          <span class="jump-arrow">↗</span>
+        </button>
+
+        <button class="jump-to-row" data-jump="week">
+          <div class="jump-left">
+            <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="jump-label">Previous week</span>
+          </div>
+          <span class="jump-arrow">↗</span>
+        </button>
+
+        <button class="jump-to-row" data-jump="month">
+          <div class="jump-left">
+            <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="jump-label">Previous month</span>
+          </div>
+          <span class="jump-arrow">↗</span>
+        </button>
+
+        <button class="jump-to-row row-choose-date" id="btn-choose-date" data-jump="choose">
+          <div class="jump-left">
+            <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="jump-label">Choose date</span>
+          </div>
+          <svg class="picker-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3: Activity Filters -->
+    <div class="rail-card card-activity-filters" id="card-activity-filters">
+      <div class="rail-card-tag">ACTIVITY FILTERS</div>
+      <div class="activity-filters-list">
+        <!-- Filter 1: Milestones -->
+        <button class="filter-item-row" data-cat="milestones">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+              <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            <span class="filter-name">Milestones</span>
+          </div>
+          <span class="filter-count" id="count-milestones">6</span>
+        </button>
+
+        <!-- Filter 2: Decisions -->
+        <button class="filter-item-row" data-cat="decisions">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="filter-name">Decisions</span>
+          </div>
+          <span class="filter-count" id="count-decisions">4</span>
+        </button>
+
+        <!-- Filter 3: Task updates -->
+        <button class="filter-item-row" data-cat="tasks">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            <span class="filter-name">Task updates</span>
+          </div>
+          <span class="filter-count" id="count-tasks">18</span>
+        </button>
+
+        <!-- Filter 4: Document activity -->
+        <button class="filter-item-row" data-cat="documents">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span class="filter-name">Document activity</span>
+          </div>
+          <span class="filter-count" id="count-documents">12</span>
+        </button>
+
+        <!-- Filter 5: Comments -->
+        <button class="filter-item-row" data-cat="comments">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="filter-name">Comments</span>
+          </div>
+          <span class="filter-count" id="count-comments">9</span>
+        </button>
+
+        <!-- Filter 6: Files & attachments -->
+        <button class="filter-item-row" data-cat="files">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+            <span class="filter-name">Files & attachments</span>
+          </div>
+          <span class="filter-count" id="count-files">5</span>
+        </button>
+
+        <!-- Filter 7: Mentions -->
+        <button class="filter-item-row" data-cat="mentions">
+          <div class="filter-item-left">
+            <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="filter-name">Mentions</span>
+          </div>
+          <span class="filter-count" id="count-mentions">7</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 4: Following Project -->
+    <div class="rail-card card-following-project" id="card-following-project">
+      <div class="rail-card-tag">FOLLOWING PROJECT</div>
+      <div class="following-body">
+        <svg class="following-bell-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <p class="following-desc">Manage which project events generate notifications.</p>
+      </div>
+      <button class="btn-notification-prefs" id="btn-notification-prefs">
+        <span>Notification preferences</span>
+        <span class="action-arrow">↗</span>
+      </button>
+    </div>
+
+  </aside>
+
+</div>

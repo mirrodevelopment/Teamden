@@ -1,0 +1,357 @@
+<!-- =======================================================================
+     Teamden — Team Work Tab Component (team-work.html)
+     Path: pages/team/team-detail/team-work/team-work.html
+     Pixel-accurate match to Brick Team Work execution register screenshot.
+     ======================================================================= -->
+<div class="tw-split-layout" id="team-work-root">
+
+  <!-- =====================================================================
+       MAIN WORK REGISTER COLUMN (Left ~73%)
+       ===================================================================== -->
+  <div class="tw-main-col">
+
+    <!-- Section 01: Team Execution Header Row -->
+    <div class="tw-exec-header-row">
+      <div class="tw-exec-left">
+        <div class="tw-exec-eyebrow">
+          <span class="tw-eyebrow-num">01</span>
+          <span class="tw-eyebrow-sep">/</span>
+          <span class="tw-eyebrow-label">TEAM EXECUTION</span>
+        </div>
+        <h2 class="tw-exec-title">Work in motion<span class="tw-title-dot">.</span></h2>
+      </div>
+
+      <button class="tw-new-task-btn" id="tw-new-task-btn" title="Create a new task">
+        <span class="tw-plus-icon">+</span>
+        <span>New task</span>
+      </button>
+    </div>
+
+    <!-- Toolbar & Filters Row -->
+    <div class="tw-toolbar-row">
+      <div class="tw-toolbar-left">
+        <!-- Primary View Pills -->
+        <div class="tw-view-pills" role="radiogroup" aria-label="Task scope">
+          <button class="tw-view-pill active" id="tw-pill-all" data-scope="all" role="radio" aria-checked="true">
+            All team work
+          </button>
+          <button class="tw-view-pill" id="tw-pill-my" data-scope="my" role="radio" aria-checked="false">
+            My work
+          </button>
+        </div>
+
+        <!-- Filter Dropdowns -->
+        <div class="tw-filter-dropdown-wrap">
+          <button class="tw-dropdown-btn" id="tw-filter-project-btn" aria-haspopup="true" aria-expanded="false">
+            <span id="tw-filter-project-label">By project</span>
+            <span class="tw-chevron">&#8964;</span>
+          </button>
+          <div class="tw-dropdown-menu" id="tw-menu-project" role="menu">
+            <button class="tw-dropdown-item active" data-val="all">All Projects</button>
+            <button class="tw-dropdown-item" data-val="Website Redesign">Website Redesign</button>
+            <button class="tw-dropdown-item" data-val="Client Application">Client Application</button>
+            <button class="tw-dropdown-item" data-val="Brand Development">Brand Development</button>
+          </div>
+        </div>
+
+        <div class="tw-filter-dropdown-wrap">
+          <button class="tw-dropdown-btn" id="tw-filter-status-btn" aria-haspopup="true" aria-expanded="false">
+            <span id="tw-filter-status-label">By status</span>
+            <span class="tw-chevron">&#8964;</span>
+          </button>
+          <div class="tw-dropdown-menu" id="tw-menu-status" role="menu">
+            <button class="tw-dropdown-item active" data-val="all">All Statuses</button>
+            <button class="tw-dropdown-item" data-val="IN_PROGRESS">In Progress</button>
+            <button class="tw-dropdown-item" data-val="IN_REVIEW">In Review</button>
+            <button class="tw-dropdown-item" data-val="TODO">To Do</button>
+            <button class="tw-dropdown-item" data-val="COMPLETED">Completed</button>
+          </div>
+        </div>
+
+        <div class="tw-filter-dropdown-wrap">
+          <button class="tw-dropdown-btn" id="tw-filter-owner-btn" aria-haspopup="true" aria-expanded="false">
+            <span id="tw-filter-owner-label">By owner</span>
+            <span class="tw-chevron">&#8964;</span>
+          </button>
+          <div class="tw-dropdown-menu" id="tw-menu-owner" role="menu">
+            <button class="tw-dropdown-item active" data-val="all">All Owners</button>
+            <button class="tw-dropdown-item" data-val="PK">Peter K. (PK)</button>
+            <button class="tw-dropdown-item" data-val="AR">Alex R. (AR)</button>
+            <button class="tw-dropdown-item" data-val="SK">Sarah K. (SK)</button>
+            <button class="tw-dropdown-item" data-val="MJ">Maria J. (MJ)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Icons (Search, Filter, Sort) -->
+      <div class="tw-toolbar-right">
+        <!-- Search Input & Button -->
+        <div class="tw-search-wrap" id="tw-search-wrap">
+          <input type="text" class="tw-search-input" id="tw-search-input" placeholder="Search tasks..." aria-label="Search tasks">
+          <button class="tw-tool-icon-btn" id="tw-search-toggle-btn" title="Search tasks" aria-label="Search tasks">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <button class="tw-tool-icon-btn" id="tw-sliders-btn" title="Advanced filters" aria-label="Advanced filters">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
+        </button>
+
+        <button class="tw-tool-icon-btn" id="tw-sort-btn" title="Sort order" aria-label="Sort order">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Team Task Register Card -->
+    <div class="tw-register-card" id="tw-register-card">
+
+      <!-- Group 1: IN PROGRESS (Expanded by default) -->
+      <div class="tw-group tw-group--expanded" id="group-in-progress" data-group="IN_PROGRESS">
+        <div class="tw-group-header" role="button" tabindex="0" aria-expanded="true">
+          <div class="tw-group-header-left">
+            <span class="tw-group-dot tw-group-dot--blue"></span>
+            <span class="tw-group-title">IN PROGRESS</span>
+            <span class="tw-group-count" id="count-in-progress">05</span>
+          </div>
+          <span class="tw-group-chevron">&#8963;</span>
+        </div>
+
+        <div class="tw-group-body tw-group-body--blue" id="body-in-progress">
+          <!-- Tasks injected dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Group 2: IN REVIEW (Collapsed by default) -->
+      <div class="tw-group" id="group-in-review" data-group="IN_REVIEW">
+        <div class="tw-group-header" role="button" tabindex="0" aria-expanded="false">
+          <div class="tw-group-header-left">
+            <span class="tw-group-dot tw-group-dot--amber"></span>
+            <span class="tw-group-title">IN REVIEW</span>
+            <span class="tw-group-count" id="count-in-review">02</span>
+          </div>
+          <span class="tw-group-chevron">&#8964;</span>
+        </div>
+
+        <div class="tw-group-body" id="body-in-review" style="display:none;">
+          <!-- Tasks injected dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Group 3: TO DO (Collapsed by default) -->
+      <div class="tw-group" id="group-todo" data-group="TODO">
+        <div class="tw-group-header" role="button" tabindex="0" aria-expanded="false">
+          <div class="tw-group-header-left">
+            <span class="tw-group-dot tw-group-dot--gray"></span>
+            <span class="tw-group-title">TO DO</span>
+            <span class="tw-group-count" id="count-todo">08</span>
+          </div>
+          <span class="tw-group-chevron">&#8964;</span>
+        </div>
+
+        <div class="tw-group-body" id="body-todo" style="display:none;">
+          <!-- Tasks injected dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Group 4: COMPLETED (Collapsed by default) -->
+      <div class="tw-group" id="group-completed" data-group="COMPLETED">
+        <div class="tw-group-header" role="button" tabindex="0" aria-expanded="false">
+          <div class="tw-group-header-left">
+            <span class="tw-group-dot tw-group-dot--green"></span>
+            <span class="tw-group-title">COMPLETED</span>
+            <span class="tw-group-count" id="count-completed">12</span>
+          </div>
+          <span class="tw-group-chevron">&#8964;</span>
+        </div>
+
+        <div class="tw-group-body" id="body-completed" style="display:none;">
+          <!-- Tasks injected dynamically via JS -->
+        </div>
+      </div>
+
+    </div><!-- /.tw-register-card -->
+
+  </div><!-- /.tw-main-col -->
+
+  <!-- =====================================================================
+       RIGHT INFORMATION SIDEBAR (~27%)
+       ===================================================================== -->
+  <aside class="tw-right-rail" aria-label="Review Desk, Handoff Queue, and Work by Owner">
+
+    <!-- Card 1: Review Desk (Pale Beige Card #FBF3E8) -->
+    <div class="tw-rail-card--beige" id="tw-review-desk-card">
+      <div class="tw-rail-head">
+        <span class="tw-rail-label">03 / REVIEW DESK</span>
+        <span class="tw-rail-badge">02 PENDING</span>
+      </div>
+      <h3 class="tw-rail-title">Needs review<span class="tw-title-dot">.</span></h3>
+
+      <div class="tw-reviews-list" id="tw-reviews-list">
+        <!-- Review Item 1 -->
+        <div class="tw-review-item" data-review-id="r1" role="button" tabindex="0">
+          <div class="tw-review-icon-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <div class="tw-review-info">
+            <span class="tw-review-name">Mobile navigation</span>
+            <span class="tw-review-meta">Website Redesign · Awaiting Design Lead</span>
+            <span class="tw-review-time">2 days ago</span>
+          </div>
+          <span class="tw-review-arrow">&#8594;</span>
+        </div>
+
+        <!-- Review Item 2 -->
+        <div class="tw-review-item" data-review-id="r2" role="button" tabindex="0">
+          <div class="tw-review-icon-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+          <div class="tw-review-info">
+            <span class="tw-review-name">Component spacing</span>
+            <span class="tw-review-meta">Client Application · Review requested</span>
+            <span class="tw-review-time">5 days ago</span>
+          </div>
+          <span class="tw-review-arrow">&#8594;</span>
+        </div>
+      </div>
+
+      <div class="tw-rail-bottom-link-wrap">
+        <button class="tw-rail-link-btn" id="tw-view-all-reviews-btn">
+          <span>View all reviews</span>
+          <span class="tw-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 2: Handoff Queue (Pale Green Card #EFF1E2) -->
+    <div class="tw-rail-card--green" id="tw-handoff-queue-card">
+      <div class="tw-rail-head">
+        <span class="tw-rail-label">04 / HANDOFF QUEUE</span>
+        <span class="tw-rail-badge">01 READY</span>
+      </div>
+      <h3 class="tw-rail-title">Ready to move<span class="tw-title-dot">.</span></h3>
+
+      <!-- Team Transition Flow Badges -->
+      <div class="tw-handoff-flow-row">
+        <span class="tw-flow-badge tw-flow-badge--lavender">DESIGN</span>
+        <span class="tw-flow-arrow">&#8594;</span>
+        <span class="tw-flow-badge tw-flow-badge--blue">ENGINEERING</span>
+      </div>
+
+      <div class="tw-handoff-body">
+        <div class="tw-handoff-item-row">
+          <div class="tw-handoff-icon-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.29 7 12 12.01 20.71 7"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div class="tw-handoff-info">
+            <span class="tw-handoff-name">Design tokens &amp; component specifications</span>
+            <span class="tw-handoff-meta">Website Redesign · Approved for development</span>
+            <span class="tw-handoff-meta2">Supporting files and brief linked · 3 days ago</span>
+          </div>
+        </div>
+
+        <button class="tw-handoff-action-btn" id="tw-open-handoff-btn">
+          <span>Open handoff</span>
+          <span class="tw-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3: Work by Owner (Bordered Card) -->
+    <div class="tw-rail-card" id="tw-work-owner-card">
+      <div class="tw-rail-head">
+        <span class="tw-rail-label">02 / WORK BY OWNER</span>
+        <button class="tw-rail-head-link" id="tw-owner-view-all">View all &#8594;</button>
+      </div>
+
+      <div class="tw-owners-list" id="tw-owners-list">
+        <!-- Owner 1: Peter K. -->
+        <div class="tw-owner-row" data-owner="PK" role="button" tabindex="0">
+          <div class="tw-owner-avatar avatar--pk">PK</div>
+          <div class="tw-owner-info">
+            <strong class="tw-owner-name">Peter K.</strong>
+            <span class="tw-owner-meta">5 tasks · Website Redesign, Brand Development</span>
+          </div>
+          <span class="tw-owner-arrow">&#8594;</span>
+        </div>
+
+        <!-- Owner 2: Alex R. -->
+        <div class="tw-owner-row" data-owner="AR" role="button" tabindex="0">
+          <div class="tw-owner-avatar avatar--ar">AR</div>
+          <div class="tw-owner-info">
+            <strong class="tw-owner-name">Alex R.</strong>
+            <span class="tw-owner-meta">4 tasks · Design reviews, Client Application</span>
+          </div>
+          <span class="tw-owner-arrow">&#8594;</span>
+        </div>
+
+        <!-- Owner 3: Sarah K. -->
+        <div class="tw-owner-row" data-owner="SK" role="button" tabindex="0">
+          <div class="tw-owner-avatar avatar--sk">SK</div>
+          <div class="tw-owner-info">
+            <strong class="tw-owner-name">Sarah K.</strong>
+            <span class="tw-owner-meta">3 tasks · Research, Documentation</span>
+          </div>
+          <span class="tw-owner-arrow">&#8594;</span>
+        </div>
+
+        <!-- Owner 4: Maria J. -->
+        <div class="tw-owner-row" data-owner="MJ" role="button" tabindex="0">
+          <div class="tw-owner-avatar avatar--mj">MJ</div>
+          <div class="tw-owner-info">
+            <strong class="tw-owner-name">Maria J.</strong>
+            <span class="tw-owner-meta">6 tasks · Interface development, Responsive layouts</span>
+          </div>
+          <span class="tw-owner-arrow">&#8594;</span>
+        </div>
+      </div>
+    </div>
+
+  </aside><!-- /.tw-right-rail -->
+
+</div><!-- /.tw-split-layout -->
+
+<!-- Slide-out Task Details Drawer -->
+<div class="tw-drawer-backdrop" id="tw-drawer-backdrop" aria-hidden="true">
+  <div class="tw-drawer" id="tw-drawer" role="dialog" aria-modal="true" aria-labelledby="tw-drawer-title">
+    <div class="tw-drawer-head">
+      <div class="tw-drawer-head-meta">
+        <span class="tw-drawer-project" id="tw-drawer-project">Website Redesign</span>
+        <span class="tw-drawer-id" id="tw-drawer-id">TASK 014</span>
+      </div>
+      <button class="tw-drawer-close-btn" id="tw-drawer-close" aria-label="Close drawer">&times;</button>
+    </div>
+
+    <div class="tw-drawer-content" id="tw-drawer-content">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+</div>

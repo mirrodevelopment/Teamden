@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — website redesign.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+
+  <!-- Typography & Central Design Tokens -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+
+  <!-- Shared Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=12">
+
+  <!-- Project & Overview Styles -->
+  <link rel="stylesheet" href="project-detail.css?v=3">
+  <link rel="stylesheet" href="project-tasks/project-tasks.css?v=2">
+  <link rel="stylesheet" href="project-documents/project-documents.css?v=2">
+  <link rel="stylesheet" href="project-activity/project-activity.css?v=2">
+</head>
+<body class="dashboard-body project-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount (Loaded dynamically from /fragments/sidebar/sidebar.html) -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Workspace Container -->
+    <div class="dash-main-area dash-app-main">
+      <!-- Modular Topbar Mount (Loaded dynamically from /fragments/navbar/navbar.html) -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Project Container with Master Split Layout -->
+      <main class="project-content-container project-content-split tab-activity-mode">
+
+        <!-- ===================================================================
+             LEFT/CENTER COLUMN (Hero Header + Tabs + Tab Panes)
+             =================================================================== -->
+        <div class="project-center-column">
+
+          <!-- PROJECT HERO HEADER & METADATA -->
+          <header class="project-hero-header">
+            <!-- Top Breadcrumb & Status Actions Row -->
+            <div class="project-breadcrumb-row">
+              <span class="project-breadcrumb" id="project-breadcrumb">PROJECTS / 02 / WEBSITE REDESIGN</span>
+
+              <div class="project-header-actions-right">
+                <button class="project-status-pill-btn" id="project-status-btn" title="Change Status">
+                  <span class="project-status-dot"></span>
+                  <span id="project-status-label">ACTIVE</span>
+                  <span class="project-status-chevron">⌄</span>
+                </button>
+
+                <button class="project-more-btn" id="btn-project-more" title="More project options" aria-label="More options">•••</button>
+              </div>
+            </div>
+
+            <!-- Two-line Oversized Headline + Single-column Metadata Stack -->
+            <div class="project-title-meta-split">
+              <div class="project-title-desc-block">
+                <h1 class="project-title-huge" id="project-title-display">website<br>redesign.</h1>
+                <p class="project-desc-hero" id="project-desc-display">
+                  Redesign the website into a responsive, modern experience with clearer navigation, stronger visual identity and an intuitive customer journey.
+                </p>
+                <div class="project-meta-inline" id="project-meta-inline" style="display: none;">
+                  <span>Design Team</span>
+                  <span class="meta-inline-dot">·</span>
+                  <span>Due 15 Nov 2026</span>
+                  <span class="meta-inline-dot">·</span>
+                  <span class="meta-inline-status">
+                    <span class="project-status-dot"></span>
+                    <span>Active</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Project Metadata Strip (Single vertical column aligned to right) -->
+              <div class="project-meta-strip">
+                <div class="meta-field-block">
+                  <span class="meta-field-label">OWNER</span>
+                  <span class="meta-field-val" id="meta-owner-val">Design Team</span>
+                </div>
+
+                <div class="meta-field-block">
+                  <span class="meta-field-label">DUE DATE</span>
+                  <span class="meta-field-val" id="meta-due-val">15 Nov 2026</span>
+                </div>
+
+                <div class="meta-field-block">
+                  <span class="meta-field-label">PROJECT TYPE</span>
+                  <span class="meta-field-val" id="meta-type-val">Design / Development</span>
+                </div>
+
+                <div class="meta-field-block">
+                  <span class="meta-field-label">HEALTH</span>
+                  <span class="meta-field-val" id="meta-health-val">
+                    <span class="health-val-dot"></span>
+                    <span>At Risk</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <!-- PROJECT TAB NAVIGATION -->
+          <nav class="project-tabs-bar" role="tablist" aria-label="Project Tabs">
+            <button class="project-tab-btn" id="tab-btn-overview" role="tab" aria-selected="false" data-tab="overview">
+              Overview
+            </button>
+            <button class="project-tab-btn" id="tab-btn-tasks" role="tab" aria-selected="false" data-tab="tasks">
+              Tasks
+            </button>
+            <button class="project-tab-btn" id="tab-btn-documents" role="tab" aria-selected="false" data-tab="documents">
+              Documents
+            </button>
+            <button class="project-tab-btn active" id="tab-btn-activity" role="tab" aria-selected="true" data-tab="activity">
+              Activity
+            </button>
+          </nav>
+
+          <!-- PROJECT TAB PANES CONTAINER -->
+          <div class="project-tab-view-container" id="project-tab-content-area">
+
+            <!-- TAB 1: OVERVIEW PANE (Mounts project-overview component) -->
+            <div class="tab-view-pane" id="pane-overview" role="tabpanel" aria-labelledby="tab-btn-overview">
+              <div id="project-overview-mount">
+                <!-- Dynamically populated from project-overview/ -->
+              </div>
+            </div>
+
+            <!-- TAB 2: TASKS PANE (Mounts project-tasks component) -->
+            <div class="tab-view-pane" id="pane-tasks" role="tabpanel" aria-labelledby="tab-btn-tasks">
+              <div id="project-tasks-mount">
+                <!-- Dynamically populated from project-tasks/ -->
+              </div>
+            </div>
+
+            <!-- TAB 3: DOCUMENTS PANE (Mounts project-documents component) -->
+            <div class="tab-view-pane" id="pane-documents" role="tabpanel" aria-labelledby="tab-btn-documents">
+              <div id="project-documents-mount">
+                <!-- Dynamically populated from project-documents/ -->
+              </div>
+            </div>
+
+            <!-- TAB 4: ACTIVITY PANE (Mounts project-activity component) -->
+            <div class="tab-view-pane active" id="pane-activity" role="tabpanel" aria-labelledby="tab-btn-activity">
+              <div id="project-activity-mount">
+                <!-- Dynamically populated from project-activity/ -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ===================================================================
+             RIGHT COLUMN (PROJECT HEALTH, DECISION REGISTER, PROJECT TEAM)
+             Starts at the top directly alongside the hero header
+             =================================================================== -->
+        <aside class="project-right-rail" id="project-right-rail" aria-label="Project Status and Governance" style="display: none;">
+
+          <!-- 1. PROJECT HEALTH CARD (Matte Obsidian) -->
+          <div class="health-dark-card" id="health-widget">
+            <div class="health-card-top">
+              <div class="health-tag-wrap">
+                <span class="health-label">PROJECT HEALTH</span>
+              </div>
+              <svg class="health-pulse-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+
+            <div class="health-metric-huge" id="health-blockers-count">02</div>
+            <h4 class="health-main-heading" id="health-heading">Unresolved blockers</h4>
+            <p class="health-desc-text" id="health-description">Two issues need attention before the next milestone.</p>
+
+            <a href="#tasks?filter=blocked" class="btn-review-blockers" id="btn-review-blockers">
+              <span>Review blockers</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <!-- 2. DECISION REGISTER CARD -->
+          <div class="decision-register-card" id="decision-register-widget">
+            <div class="overview-section-header">
+              <span class="overview-section-label">DECISION REGISTER</span>
+              <a href="#decisions" class="overview-section-action" id="action-view-all-decisions">View all →</a>
+            </div>
+
+            <div class="pending-decision-box">
+              <div class="decision-meta-row">
+                <span class="decision-review-pill">
+                  <span class="decision-dot-amber"></span>
+                  <span id="decision-status-label">Awaiting Your Review</span>
+                </span>
+                <span class="decision-due-str" id="decision-due-str">DUE 30 OCT</span>
+              </div>
+
+              <h4 class="decision-title-text" id="decision-title">Homepage design approval</h4>
+              <p class="decision-desc-text" id="decision-desc">
+                Final design requires your review before development continues.
+              </p>
+
+              <div class="decision-owner-row">
+                <div class="decision-owner-info">
+                  <span class="decision-owner-label">Owner</span>
+                  <span class="work-avatar avatar-ar" id="decision-owner-avatar">AR</span>
+                  <span class="decision-owner-name" id="decision-owner-name">Alex R.</span>
+                </div>
+
+                <button class="btn-review-pill" id="btn-review-decision">Review decision →</button>
+              </div>
+            </div>
+
+            <a href="#decisions" class="decision-more-link" id="decision-more-link">
+              <span>+ 2 more decisions</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <!-- 3. PROJECT TEAM CARD -->
+          <div class="project-team-card" id="project-team-widget">
+            <div class="overview-section-header">
+              <span class="overview-section-label">PROJECT TEAM</span>
+              <a href="/pages/team/team.html" class="overview-section-action" id="action-view-all-team">View all →</a>
+            </div>
+
+            <div class="team-avatars-row" id="team-avatars-row">
+              <span class="team-avatar-circle avatar-pk" title="PK">PK</span>
+              <span class="team-avatar-circle avatar-ar" title="AR">AR</span>
+              <span class="team-avatar-circle avatar-sk" title="SK">SK</span>
+              <span class="team-avatar-circle avatar-mj" title="MJ">MJ</span>
+              <button class="team-add-btn" id="btn-add-team-member" title="Add project member" aria-label="Add project member">+</button>
+            </div>
+
+            <p class="team-members-footer" id="team-count-footer">4 project members</p>
+          </div>
+
+        </aside>
+
+        <!-- RIGHT COLUMN FOR TASKS TAB (TASK DETAILS DRAWER) -->
+        <aside class="project-tasks-drawer-rail" id="project-tasks-drawer-rail" aria-label="Task Details Drawer" style="display: none;">
+          <!-- Dynamically populated with tasks details drawer -->
+        </aside>
+
+        <!-- RIGHT COLUMN FOR ACTIVITY TAB (ACTIVITY INSIGHTS & QUICK ACTIONS) -->
+        <aside class="project-activity-rail" id="project-activity-rail" aria-label="Activity Insights and Navigation" style="display: flex;">
+          <!-- Card 1: Since Your Last Visit (Dark Charcoal / Matte Black) -->
+          <div class="rail-card card-last-visit" id="card-last-visit">
+            <div class="last-visit-tag">SINCE YOUR LAST VISIT</div>
+            <div class="last-visit-number" id="last-visit-count">06</div>
+            <h4 class="last-visit-title" id="last-visit-title">Relevant updates</h4>
+            <p class="last-visit-desc" id="last-visit-desc">Including one decision requiring your review.</p>
+            <div class="last-visit-divider"></div>
+            <button class="btn-review-new-activity" id="btn-review-new-activity">
+              <span>Review new activity</span>
+              <span class="action-arrow">↗</span>
+            </button>
+          </div>
+
+          <!-- Card 2: Jump To -->
+          <div class="rail-card card-jump-to" id="card-jump-to">
+            <div class="rail-card-tag">JUMP TO</div>
+            <div class="jump-to-list">
+              <button class="jump-to-row" data-jump="today">
+                <div class="jump-left">
+                  <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span class="jump-label">Today</span>
+                </div>
+                <span class="jump-arrow">↗</span>
+              </button>
+
+              <button class="jump-to-row" data-jump="week">
+                <div class="jump-left">
+                  <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span class="jump-label">Previous week</span>
+                </div>
+                <span class="jump-arrow">↗</span>
+              </button>
+
+              <button class="jump-to-row" data-jump="month">
+                <div class="jump-left">
+                  <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span class="jump-label">Previous month</span>
+                </div>
+                <span class="jump-arrow">↗</span>
+              </button>
+
+              <button class="jump-to-row row-choose-date" id="btn-choose-date" data-jump="choose">
+                <div class="jump-left">
+                  <svg class="jump-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span class="jump-label">Choose date</span>
+                </div>
+                <svg class="picker-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Activity Filters -->
+          <div class="rail-card card-activity-filters" id="card-activity-filters">
+            <div class="rail-card-tag">ACTIVITY FILTERS</div>
+            <div class="activity-filters-list">
+              <button class="filter-item-row" data-cat="milestones">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                  </svg>
+                  <span class="filter-name">Milestones</span>
+                </div>
+                <span class="filter-count" id="count-milestones">6</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="decisions">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span class="filter-name">Decisions</span>
+                </div>
+                <span class="filter-count" id="count-decisions">4</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="tasks">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                  <span class="filter-name">Task updates</span>
+                </div>
+                <span class="filter-count" id="count-tasks">18</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="documents">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  <span class="filter-name">Document activity</span>
+                </div>
+                <span class="filter-count" id="count-documents">12</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="comments">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  <span class="filter-name">Comments</span>
+                </div>
+                <span class="filter-count" id="count-comments">9</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="files">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                  <span class="filter-name">Files & attachments</span>
+                </div>
+                <span class="filter-count" id="count-files">5</span>
+              </button>
+
+              <button class="filter-item-row" data-cat="mentions">
+                <div class="filter-item-left">
+                  <svg class="filter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span class="filter-name">Mentions</span>
+                </div>
+                <span class="filter-count" id="count-mentions">7</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Following Project -->
+          <div class="rail-card card-following-project" id="card-following-project">
+            <div class="rail-card-tag">FOLLOWING PROJECT</div>
+            <div class="following-body">
+              <svg class="following-bell-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <p class="following-desc">Manage which project events generate notifications.</p>
+            </div>
+            <button class="btn-notification-prefs" id="btn-notification-prefs">
+              <span>Notification preferences</span>
+              <span class="action-arrow">↗</span>
+            </button>
+          </div>
+        </aside>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared Fragment & Utility Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+
+  <!-- Project Overview Component Script -->
+  <script src="project-overview/project-overview.js?v=2"></script>
+
+  <!-- Project Tasks Component Script -->
+  <script src="project-tasks/project-tasks.js?v=2"></script>
+
+  <!-- Project Documents Component Script -->
+  <script src="project-documents/project-documents.js?v=2"></script>
+
+  <!-- Project Activity Component Script -->
+  <script src="project-activity/project-activity.js?v=2"></script>
+
+  <!-- Project Page Controller -->
+  <script src="project-detail.js?v=3"></script>
+</body>
+</html>

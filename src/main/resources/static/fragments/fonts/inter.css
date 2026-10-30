@@ -1,0 +1,28 @@
+/* ==========================================================================
+   BRICK Font Architecture — Inter Section Headings Font Definition
+   Path: fragments/fonts/inter.css
+   Applied strictly to H2 headings as specified in Prompt Section 5:
+   - Your Priorities
+   - Recent Activity
+   - Your Day
+   - Needs Attention
+   - Daily Update
+   Do not apply Inter globally.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --font-family-h2: 'Inter';
+}
+
+/* Explicit scoping for H2 headings only */
+h2.dash-section-title,
+.dash-section-head h2,
+.activity-head h2,
+.rail-section-head h3,
+.rail-title {
+  font-family: 'Inter' !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em;
+}

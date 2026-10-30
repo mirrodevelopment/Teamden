@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Company — Teamden</title>
+  <link rel="icon" type="image/png" href="/assets/teamden-minimalist-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- Typography & Fonts: Plus Jakarta Sans, Outfit, Inter & Inter Tight for Brick Neo-Editorial Design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css">
+  <link rel="stylesheet" href="/fragments/theme/theme.css">
+  <link rel="stylesheet" href="/shared/css/variables.css">
+  <link rel="stylesheet" href="/shared/css/reset.css">
+  <link rel="stylesheet" href="/shared/css/components.css">
+  <link rel="stylesheet" href="/shared/css/utilities.css">
+  <link rel="stylesheet" href="/pages/register/register.css?v=2">
+  <script src="/fragments/company-data/company-data.js"></script>
+</head>
+<body class="brick-register-body">
+
+  <main class="register-split-container">
+    <!-- ========================================================
+         LEFT PANEL: Brand, Editorial Pitch & Workspace Preview
+         Occupies ~38–40% on Desktop
+         ======================================================== -->
+    <aside class="register-brand-panel">
+      <div class="brand-panel-inner">
+        <!-- Brand Wordmark / Logo -->
+        <header class="panel-brand-header">
+          <a href="/" class="brand-link" title="Brick Workspace">
+            <span class="brick-brand-wordmark">brick</span>
+          </a>
+        </header>
+
+        <!-- Main Editorial Pitch -->
+        <div class="panel-editorial-content">
+          <div class="panel-eyebrow">CREATE YOUR COMPANY</div>
+          <h1 class="panel-headline">
+            Build<br>
+            a stronger<br>
+            workspace<span class="lime-period">.</span>
+          </h1>
+          <p class="panel-description">
+            Set up your company and bring your people, projects and processes together.
+          </p>
+
+          <!-- Three Value Proposition Highlights -->
+          <div class="panel-feature-list">
+            <div class="panel-feature-row">
+              <div class="feature-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="feature-text-block">
+                <div class="feature-title">Get your team on board</div>
+                <div class="feature-subtitle">Invite people and manage access in minutes.</div>
+              </div>
+            </div>
+
+            <div class="panel-feature-row">
+              <div class="feature-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <div class="feature-text-block">
+                <div class="feature-title">Organize your work</div>
+                <div class="feature-subtitle">Projects, tasks, docs and more in one workspace.</div>
+              </div>
+            </div>
+
+            <div class="panel-feature-row">
+              <div class="feature-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </div>
+              <div class="feature-text-block">
+                <div class="feature-title">Scale with confidence</div>
+                <div class="feature-subtitle">A flexible platform that grows with your business.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backdrop Card peeking behind preview -->
+      <div class="preview-backdrop-card" aria-hidden="true"></div>
+
+      <!-- Floating Miniature Dashboard Preview Card (Direct Visual Inspiration) -->
+      <aside class="dashboard-preview-card" aria-hidden="true">
+        <div class="preview-header">
+          <span class="preview-logo">brick</span>
+          <div class="preview-search">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Search for anything...</span>
+          </div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="preview-nav-item active">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              <span>Projects</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <span>Workspace</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              <span>Team</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              <span>Calendar</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline></svg>
+              <span>Overview</span>
+            </div>
+          </div>
+          <div class="preview-content">
+            <div class="preview-workspace-eyebrow">YOUR WORKSPACE</div>
+            <div class="preview-workspace-title" id="preview-stage-heading">projects</div>
+            <div class="preview-workspace-desc" id="preview-stage-desc">Everything we're building, in one place.</div>
+
+            <div class="preview-stats-row" id="preview-stats-row">
+              <div class="preview-stat">
+                <span class="preview-stat-label">TOTAL PROJECTS</span>
+                <span class="preview-stat-num">12</span>
+              </div>
+              <div class="preview-stat">
+                <span class="preview-stat-label">ACTIVE <span class="lime-dot"></span></span>
+                <span class="preview-stat-num">08</span>
+              </div>
+            </div>
+
+            <!-- Mini Project Card 1 -->
+            <div class="mini-project-card card-focus">
+              <div class="mini-card-badge-row">
+                <span class="mini-tag">01 / PROJECT IN FOCUS</span>
+                <span class="mini-pill-lime">● ACTIVE</span>
+              </div>
+              <div class="mini-card-title">Website Redesign</div>
+              <div class="mini-card-desc">Deliver a responsive, approved website ready fo...</div>
+              <div class="mini-card-footer">
+                <span>📁 Design Team</span>
+                <span>📅 Due 15 Nov 2026</span>
+              </div>
+            </div>
+
+            <!-- Mini Project Card 2 -->
+            <div class="mini-project-card">
+              <div class="mini-card-badge-row">
+                <span class="mini-tag">02</span>
+                <span class="mini-pill-lime">● ACTIVE</span>
+                <span class="mini-pill-lime">● ON TRACK</span>
+              </div>
+              <div class="mini-card-title">Client Application</div>
+              <div class="mini-card-desc">Develop and launch the patient application with core tracking features.</div>
+              <div class="mini-card-footer">
+                <span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="15" y2="12"></line>
+                    <line x1="3" y1="18" x2="9" y2="18"></line>
+                  </svg>
+                  3 / 5 milestones
+                </span>
+                <span>📅 Due 18 Oct 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </aside>
+
+    <!-- ========================================================
+         RIGHT PANEL: 4-Step Registration Form Flow
+         Occupies ~60–62% on Desktop
+         ======================================================== -->
+    <section class="register-form-panel">
+      <!-- Top-Right Sign In Prompt -->
+      <header class="panel-top-nav">
+        <div class="sign-in-prompt-group">
+          <span class="sign-in-text">Already have an account?</span>
+          <a href="/pages/login/login.html" class="btn-sign-in" id="top-sign-in-link">Sign in</a>
+        </div>
+        <button id="register-theme-btn" type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Main Form Stage Container -->
+      <div class="form-flow-container">
+        <!-- 4-Step Horizontal Progress Indicator -->
+        <nav class="stepper-track" aria-label="Registration Progress">
+          <div class="step-node active" id="step-node-1" data-step="1">
+            <div class="step-circle">
+              <span class="step-num">1</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Company Details</span>
+          </div>
+
+          <div class="step-connector" id="connector-1"></div>
+
+          <div class="step-node" id="step-node-2" data-step="2">
+            <div class="step-circle">
+              <span class="step-num">2</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Address &amp; Legal</span>
+          </div>
+
+          <div class="step-connector" id="connector-2"></div>
+
+          <div class="step-node" id="step-node-3" data-step="3">
+            <div class="step-circle">
+              <span class="step-num">3</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Administrator Account</span>
+          </div>
+
+          <div class="step-connector" id="connector-3"></div>
+
+          <div class="step-node" id="step-node-4" data-step="4">
+            <div class="step-circle">
+              <span class="step-num">4</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Review &amp; Create</span>
+          </div>
+        </nav>
+
+        <!-- Dynamic Step Heading Area -->
+        <div class="step-header-area">
+          <div class="step-eyebrow" id="current-step-eyebrow">STEP 1 OF 4</div>
+          <h2 class="step-main-title" id="current-step-title">Company Details</h2>
+          <p class="step-description" id="current-step-desc">Let’s start with some basic information about your company.</p>
+        </div>
+
+        <!-- Global Alert Notification -->
+        <div id="register-alert" class="alert alert-danger d-none" role="alert">
+          <span id="register-alert-text"></span>
+        </div>
+
+        <!-- Multi-Step Registration Form Wrapper -->
+        <form id="multi-step-form" novalidate>
+
+          <!-- ====================================================
+               STEP 1: Company Details
+               ==================================================== -->
+          <div class="form-step-section active" id="section-step-1" data-step="1">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18"></path>
+                    <path d="M9 8h1"></path>
+                    <path d="M9 12h1"></path>
+                    <path d="M9 16h1"></path>
+                    <path d="M14 8h1"></path>
+                    <path d="M14 12h1"></path>
+                    <path d="M14 16h1"></path>
+                    <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Basic Information</h3>
+                  <p class="card-subheading">Core information used to identify your company.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <!-- Field 1: Company Name -->
+                <div class="field-cell">
+                  <label for="company-name" class="input-label">Company name <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="company-name"
+                    name="organizationName"
+                    class="brick-control"
+                    placeholder="e.g. Acme Co."
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-company-name">Please enter your company name.</div>
+                </div>
+
+                <!-- Field 2: Legal Company Name -->
+                <div class="field-cell">
+                  <label for="legal-company-name" class="input-label">Legal company name (if different)</label>
+                  <input
+                    type="text"
+                    id="legal-company-name"
+                    name="legalName"
+                    class="brick-control"
+                    placeholder="e.g. Acme Private Limited"
+                  >
+                </div>
+
+                <!-- Field 3: Company Logo Upload -->
+                <div class="field-cell">
+                  <label class="input-label">Company logo</label>
+                  <div class="logo-upload-dropzone" id="logo-dropzone">
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none">
+                    <div class="upload-idle-state" id="upload-idle-state">
+                      <div class="upload-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                          <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                      </div>
+                      <div class="upload-copy">
+                        <span class="upload-link-text">Upload logo</span>
+                        <span class="upload-hint">PNG, JPG up to 5MB</span>
+                      </div>
+                    </div>
+                    <div class="upload-preview-state d-none" id="upload-preview-state">
+                      <img id="logo-preview-img" src="" alt="Company Logo Preview" class="logo-preview-thumb">
+                      <div class="preview-meta">
+                        <span id="logo-file-name" class="file-name-label">logo.png</span>
+                        <button type="button" id="remove-logo-btn" class="btn-remove-logo">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-logo-file"></div>
+                </div>
+
+                <!-- Field 4: Company Type -->
+                <div class="field-cell">
+                  <label for="company-type" class="input-label">Company type <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="company-type" name="companyType" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select company type</option>
+                      <option value="Private Limited Company">Private Limited Company</option>
+                      <option value="Public Limited Company">Public Limited Company</option>
+                      <option value="Partnership">Partnership</option>
+                      <option value="Limited Liability Partnership (LLP)">Limited Liability Partnership (LLP)</option>
+                      <option value="Sole Proprietorship">Sole Proprietorship</option>
+                      <option value="Non-profit Organization">Non-profit Organization</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-type">Please select a company type.</div>
+                </div>
+
+                <!-- Field 5: Industry -->
+                <div class="field-cell">
+                  <label for="company-industry" class="input-label">Industry <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="company-industry" name="industry" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select industry</option>
+                      <option value="Technology / Software">Technology / Software</option>
+                      <option value="Finance / Banking">Finance / Banking</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Education">Education</option>
+                      <option value="Retail / E-commerce">Retail / E-commerce</option>
+                      <option value="Manufacturing">Manufacturing</option>
+                      <option value="Consulting / Professional Services">Consulting / Professional Services</option>
+                      <option value="Construction / Real Estate">Construction / Real Estate</option>
+                      <option value="Media / Marketing">Media / Marketing</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-industry">Please select an industry.</div>
+                </div>
+
+                <!-- Field 6: Company Size -->
+                <div class="field-cell">
+                  <label for="company-size" class="input-label">Company size <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="company-size" name="companySize" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select company size</option>
+                      <option value="Just me">Just me (1 person)</option>
+                      <option value="2–10 employees">2–10 employees</option>
+                      <option value="11–50 employees">11–50 employees</option>
+                      <option value="51–200 employees">51–200 employees</option>
+                      <option value="201–500 employees">201–500 employees</option>
+                      <option value="501–1,000 employees">501–1,000 employees</option>
+                      <option value="1,000+ employees">1,000+ employees</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-size">Please select company size.</div>
+                </div>
+
+                <!-- Field 7: Website URL -->
+                <div class="field-cell">
+                  <label for="company-website" class="input-label">Website URL</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <input
+                      type="url"
+                      id="company-website"
+                      name="websiteUrl"
+                      class="brick-control with-icon"
+                      placeholder="https://yourcompany.com"
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-website">Please enter a valid website URL (e.g. https://example.com).</div>
+                </div>
+
+                <!-- Field 8: Year Established -->
+                <div class="field-cell">
+                  <label for="company-year" class="input-label">Year established</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <input
+                      type="number"
+                      id="company-year"
+                      name="yearEstablished"
+                      class="brick-control with-icon"
+                      placeholder="e.g. 2020"
+                      min="1800"
+                      max="2026"
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-year">Please enter a reasonable 4-digit year not in the future.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               STEP 2: Address & Legal
+               ==================================================== -->
+          <div class="form-step-section d-none" id="section-step-2" data-step="2">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Registered Location &amp; Legal Info</h3>
+                  <p class="card-subheading">Official address and business registration information.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <!-- Country -->
+                <div class="field-cell full-width">
+                  <label for="address-country" class="input-label">Country or region <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="address-country" name="country" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select country</option>
+                      <option value="United States">United States</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="France">France</option>
+                      <option value="India">India</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="United Arab Emirates">United Arab Emirates</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-address-country">Please select a country.</div>
+                </div>
+
+                <!-- Street Address 1 -->
+                <div class="field-cell full-width">
+                  <label for="address-street" class="input-label">Registered address <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="address-street"
+                    name="streetAddress"
+                    class="brick-control"
+                    placeholder="Street address or P.O. Box"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-address-street">Please enter the registered street address.</div>
+                </div>
+
+                <!-- Address Line 2 -->
+                <div class="field-cell full-width">
+                  <label for="address-line2" class="input-label">Address line 2 (optional)</label>
+                  <input
+                    type="text"
+                    id="address-line2"
+                    name="addressLine2"
+                    class="brick-control"
+                    placeholder="Suite, unit, building, floor (optional)"
+                  >
+                </div>
+
+                <!-- City -->
+                <div class="field-cell">
+                  <label for="address-city" class="input-label">City / Town <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="address-city"
+                    name="city"
+                    class="brick-control"
+                    placeholder="e.g. San Francisco"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-address-city">Please enter the city.</div>
+                </div>
+
+                <!-- State / Region -->
+                <div class="field-cell">
+                  <label for="address-state" class="input-label">State / Province / Region <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="address-state"
+                    name="state"
+                    class="brick-control"
+                    placeholder="e.g. California"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-address-state">Please enter the state or province.</div>
+                </div>
+
+                <!-- Postal / ZIP -->
+                <div class="field-cell">
+                  <label for="address-zip" class="input-label">Postal / ZIP code <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="address-zip"
+                    name="zipCode"
+                    class="brick-control"
+                    placeholder="e.g. 94103"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-address-zip">Please enter the postal or ZIP code.</div>
+                </div>
+
+                <!-- Currency -->
+                <div class="field-cell">
+                  <label for="currency-preference" class="input-label">Workspace currency</label>
+                  <div class="select-wrapper">
+                    <select id="currency-preference" name="currency" class="brick-control brick-select">
+                      <option value="USD" selected>USD ($) — US Dollar</option>
+                      <option value="EUR">EUR (€) — Euro</option>
+                      <option value="GBP">GBP (£) — British Pound</option>
+                      <option value="CAD">CAD ($) — Canadian Dollar</option>
+                      <option value="AUD">AUD ($) — Australian Dollar</option>
+                      <option value="INR">INR (₹) — Indian Rupee</option>
+                      <option value="SGD">SGD ($) — Singapore Dollar</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+
+                <!-- Business Registration Number -->
+                <div class="field-cell">
+                  <label for="legal-reg-number" class="input-label">Business registration number (optional)</label>
+                  <input
+                    type="text"
+                    id="legal-reg-number"
+                    name="regNumber"
+                    class="brick-control"
+                    placeholder="e.g. CIN / CRN / Registration #"
+                  >
+                </div>
+
+                <!-- Tax ID -->
+                <div class="field-cell">
+                  <label for="legal-tax-id" class="input-label">Tax identification number (optional)</label>
+                  <input
+                    type="text"
+                    id="legal-tax-id"
+                    name="taxId"
+                    class="brick-control"
+                    placeholder="e.g. EIN / VAT / GST #"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               STEP 3: Administrator Account
+               ==================================================== -->
+          <div class="form-step-section d-none" id="section-step-3" data-step="3">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Owner &amp; Administrator Account</h3>
+                  <p class="card-subheading">This person will manage the company workspace and have full access.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <!-- Admin Name -->
+                <div class="field-cell full-width">
+                  <label for="admin-name" class="input-label">Administrator full name <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input
+                      type="text"
+                      id="admin-name"
+                      name="adminName"
+                      class="brick-control with-icon"
+                      placeholder="e.g. Jane Doe"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-admin-name">Please enter the administrator's full name.</div>
+                </div>
+
+                <!-- Admin Email -->
+                <div class="field-cell full-width">
+                  <label for="admin-email" class="input-label">Work email address <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <input
+                      type="email"
+                      id="admin-email"
+                      name="adminEmail"
+                      class="brick-control with-icon"
+                      placeholder="jane@company.com"
+                      autocomplete="email"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-admin-email">Please enter a valid work email address.</div>
+                </div>
+
+                <!-- Admin Password -->
+                <div class="field-cell">
+                  <label for="admin-password" class="input-label">Password <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input
+                      type="password"
+                      id="admin-password"
+                      name="adminPassword"
+                      class="brick-control with-icon with-trailing"
+                      placeholder="Create secure password (min 8 chars)"
+                      minlength="8"
+                      required
+                    >
+                    <button type="button" id="toggle-admin-pw" class="input-trailing-action" aria-label="Toggle password visibility">
+                      <svg id="eye-icon-admin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-admin-password">Password must be at least 8 characters long.</div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="field-cell">
+                  <label for="admin-confirm-password" class="input-label">Confirm password <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input
+                      type="password"
+                      id="admin-confirm-password"
+                      class="brick-control with-icon"
+                      placeholder="Re-enter your password"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-admin-confirm-password">Passwords do not match.</div>
+                </div>
+
+                <!-- Job Title -->
+                <div class="field-cell">
+                  <label for="admin-job-title" class="input-label">Job title (optional)</label>
+                  <input
+                    type="text"
+                    id="admin-job-title"
+                    name="jobTitle"
+                    class="brick-control"
+                    placeholder="e.g. Chief Executive Officer / Founder"
+                  >
+                </div>
+
+                <!-- Phone -->
+                <div class="field-cell">
+                  <label for="admin-phone" class="input-label">Phone number (optional)</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <input
+                      type="tel"
+                      id="admin-phone"
+                      name="phoneNumber"
+                      class="brick-control with-icon"
+                      placeholder="+1 (555) 000-0000"
+                    >
+                  </div>
+                </div>
+
+                <!-- Terms Consent Checkbox -->
+                <div class="field-cell full-width pt-1">
+                  <label class="consent-checkbox-row">
+                    <input type="checkbox" id="consent-terms" required>
+                    <span class="consent-label">
+                      I agree to the <a href="#" class="inline-legal-link">Terms of Service</a> and <a href="#" class="inline-legal-link">Privacy Policy</a>, and confirm I am authorized to register on behalf of the company. <span class="required-asterisk">*</span>
+                    </span>
+                  </label>
+                  <div class="field-error-msg d-none" id="error-consent-terms">You must agree to the terms to proceed.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               STEP 4: Review & Create
+               ==================================================== -->
+          <div class="form-step-section d-none" id="section-step-4" data-step="4">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Review Company Summary</h3>
+                  <p class="card-subheading">Verify all details before creating your organization workspace.</p>
+                </div>
+              </div>
+
+              <!-- Summary Section 1: Company Details -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">1. Company Details</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="1">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="review-key">Company Name</span>
+                    <span class="review-val" id="summary-company-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Legal Name</span>
+                    <span class="review-val" id="summary-legal-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Company Type</span>
+                    <span class="review-val" id="summary-company-type">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Industry</span>
+                    <span class="review-val" id="summary-industry">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Company Size</span>
+                    <span class="review-val" id="summary-company-size">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Website</span>
+                    <span class="review-val" id="summary-website">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Established</span>
+                    <span class="review-val" id="summary-year">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Summary Section 2: Address & Legal -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">2. Address &amp; Legal</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="2">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item full">
+                    <span class="review-key">Registered Address</span>
+                    <span class="review-val" id="summary-address">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">City / State</span>
+                    <span class="review-val" id="summary-city-state">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Country</span>
+                    <span class="review-val" id="summary-country">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Postal / ZIP</span>
+                    <span class="review-val" id="summary-zip">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Registration #</span>
+                    <span class="review-val" id="summary-reg-num">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Tax ID / VAT</span>
+                    <span class="review-val" id="summary-tax-id">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Summary Section 3: Administrator Account -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">3. Administrator Account</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="3">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="review-key">Full Name</span>
+                    <span class="review-val" id="summary-admin-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Work Email</span>
+                    <span class="review-val" id="summary-admin-email">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Job Title</span>
+                    <span class="review-val" id="summary-job-title">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Phone</span>
+                    <span class="review-val" id="summary-phone">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Actions -->
+          <footer class="form-navigation-bar">
+            <div class="nav-actions-right">
+              <button type="button" id="btn-nav-cancel" class="btn-brick-secondary">
+                Cancel
+              </button>
+              <button type="button" id="btn-nav-back" class="btn-brick-secondary d-none">
+                Back
+              </button>
+              <button type="button" id="btn-nav-continue" class="btn-brick-primary">
+                <span id="btn-continue-text">Continue</span>
+                <svg class="btn-right-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+              <button type="submit" id="btn-nav-submit" class="btn-brick-primary d-none">
+                <span id="btn-submit-text">Create Company</span>
+                <svg class="btn-right-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Scripts -->
+  <script src="/shared/js/api.js"></script>
+  <script src="/shared/js/auth.js"></script>
+  <script src="/pages/register/register.js"></script>
+</body>
+</html>

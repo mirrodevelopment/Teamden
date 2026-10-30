@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — Teamden by shed</title>
+  <title>Log in — Brick Workspace</title>
   <link rel="icon" type="image/png" href="/assets/teamden-minimalist-icon.png" data-company="icon">
   <script>
     (function () {
@@ -12,266 +12,1086 @@
     })();
   </script>
 
-  <!-- Design System CSS -->
+  <!-- Typography & Fonts: Plus Jakarta Sans, Outfit, Inter & Inter Tight for Brick Neo-Editorial Design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap">
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
   <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/shared/css/variables.css">
   <link rel="stylesheet" href="/shared/css/reset.css">
   <link rel="stylesheet" href="/shared/css/components.css">
   <link rel="stylesheet" href="/shared/css/utilities.css">
-  <link rel="stylesheet" href="/pages/login/login.css">
+  <link rel="stylesheet" href="/pages/login/login.css?v=12">
   <script src="/fragments/company-data/company-data.js"></script>
 </head>
-<body>
+<body class="brick-auth-body">
 
-  <main class="login-container">
-    <div class="login-card">
-      <!-- Theme Toggle Button -->
-      <button id="login-theme-btn" type="button" aria-label="Toggle Theme" title="Toggle Theme" style="position: absolute; top: 1rem; right: 1rem; background: transparent; border: 1px solid var(--color-border); border-radius: var(--radius-full); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-text-muted); transition: all var(--transition-fast);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
-        </svg>
-      </button>
+  <main class="brick-auth-split mode-signin" id="auth-split-container">
+    <!-- ========================================================
+         LEFT COLUMN: Brand, Editorial Headline & Floating Preview
+         ======================================================== -->
+    <section class="auth-brand-pane">
+      <div class="brand-pane-inner">
+        <!-- Brand Wordmark -->
+        <header class="brand-nav">
+          <a href="/" class="brand-wordmark-link">
+            <span class="brick-brand-wordmark">brick</span>
+          </a>
+        </header>
 
-      <!-- Header & Branding -->
-      <header class="login-header">
-        <a href="/" class="login-brand-link" data-company-url data-company="url" title="Teamden by shed">
-          <img src="/assets/teamden-minimalist-logo.png" alt="Teamden Logo" class="login-logo" data-company="logo">
+        <!-- Dynamic Editorial Headline & Copy -->
+        <div class="brand-editorial">
+          <!-- Sign In Mode Editorial Pitch -->
+          <div id="left-signin-content">
+            <div class="brand-eyebrow">WORKSPACE FOR MODERN TEAMS</div>
+            <h1 class="brand-headline">
+              projects<br>
+              move<br>
+              faster.
+            </h1>
+            <p class="brand-tagline">
+              Plan, collaborate, and ship great work in one place.
+            </p>
+
+            <!-- 3 Features for Sign In -->
+            <div class="brand-features">
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Organize</div>
+                  <div class="feature-desc">Keep all your projects, tasks and files together.</div>
+                </div>
+              </div>
+
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Collaborate</div>
+                  <div class="feature-desc">Bring your team, tools and ideas into one workspace.</div>
+                </div>
+              </div>
+
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Get results</div>
+                  <div class="feature-desc">Turn plans into progress with clarity and focus.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Proof Avatar Stack -->
+            <footer class="brand-social-proof">
+              <div class="avatar-stack">
+                <span class="avatar-circle av-1">👩🏻</span>
+                <span class="avatar-circle av-2">👨🏽</span>
+                <span class="avatar-circle av-3">👱🏼‍♀️</span>
+                <span class="avatar-circle av-4">👨🏾</span>
+                <span class="avatar-circle av-5">🧔🏻</span>
+              </div>
+              <span class="social-proof-text">Join thousands of teams building with Brick.</span>
+            </footer>
+          </div>
+
+          <!-- Register Mode Editorial Pitch (Prompt Specification) -->
+          <div id="left-register-content" class="d-none">
+            <div class="brand-eyebrow">CREATE YOUR COMPANY</div>
+            <h1 class="brand-headline register-headline">
+              Build<br>
+              a stronger<br>
+              workspace<span class="lime-period">.</span>
+            </h1>
+            <p class="brand-tagline">
+              Set up your company and bring your people, projects and processes together.
+            </p>
+
+            <!-- 3 Features for Company Registration -->
+            <div class="brand-features">
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Get your team on board</div>
+                  <div class="feature-desc">Invite people and manage access in minutes.</div>
+                </div>
+              </div>
+
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Organize your work</div>
+                  <div class="feature-desc">Projects, tasks, docs and more in one workspace.</div>
+                </div>
+              </div>
+
+              <div class="feature-item">
+                <div class="feature-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                  </svg>
+                </div>
+                <div class="feature-copy">
+                  <div class="feature-title">Scale with confidence</div>
+                  <div class="feature-desc">A flexible platform that grows with your business.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backdrop Card peeking behind preview -->
+      <div class="preview-backdrop-card" aria-hidden="true"></div>
+
+      <!-- Floating Miniature Dashboard Preview Card (Direct Visual Inspiration) -->
+      <aside class="dashboard-preview-card" aria-hidden="true">
+        <div class="preview-header">
+          <span class="preview-logo">brick</span>
+          <div class="preview-search">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Search for anything...</span>
+          </div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="preview-nav-item active">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              <span>Projects</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <span>Workspace</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              <span>Team</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              <span>Calendar</span>
+            </div>
+            <div class="preview-nav-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline></svg>
+              <span>Overview</span>
+            </div>
+          </div>
+          <div class="preview-content">
+            <div class="preview-workspace-eyebrow">YOUR WORKSPACE</div>
+            <div class="preview-workspace-title" id="preview-stage-heading">projects</div>
+            <div class="preview-workspace-desc" id="preview-stage-desc">Everything we're building, in one place.</div>
+
+            <div class="preview-stats-row" id="preview-stats-row">
+              <div class="preview-stat">
+                <span class="preview-stat-label">TOTAL PROJECTS</span>
+                <span class="preview-stat-num">12</span>
+              </div>
+              <div class="preview-stat">
+                <span class="preview-stat-label">ACTIVE <span class="lime-dot"></span></span>
+                <span class="preview-stat-num">08</span>
+              </div>
+            </div>
+
+            <!-- Mini Project Card 1 -->
+            <div class="mini-project-card card-focus">
+              <div class="mini-card-badge-row">
+                <span class="mini-tag">01 / PROJECT IN FOCUS</span>
+                <span class="mini-pill-lime">● ACTIVE</span>
+              </div>
+              <div class="mini-card-title">Website Redesign</div>
+              <div class="mini-card-desc">Deliver a responsive, approved website ready fo...</div>
+              <div class="mini-card-footer">
+                <span>📁 Design Team</span>
+                <span>📅 Due 15 Nov 2026</span>
+              </div>
+            </div>
+
+            <!-- Mini Project Card 2 -->
+            <div class="mini-project-card">
+              <div class="mini-card-badge-row">
+                <span class="mini-tag">02</span>
+                <span class="mini-pill-lime">● ACTIVE</span>
+                <span class="mini-pill-lime">● ON TRACK</span>
+              </div>
+              <div class="mini-card-title">Client Application</div>
+              <div class="mini-card-desc">Develop and launch the patient application with core tracking features.</div>
+              <div class="mini-card-footer">
+                <span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="15" y2="12"></line>
+                    <line x1="3" y1="18" x2="9" y2="18"></line>
+                  </svg>
+                  3 / 5 milestones
+                </span>
+                <span>📅 Due 18 Oct 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ========================================================
+         RIGHT COLUMN: Authentication & 4-Step Registration Form Pane
+         ======================================================== -->
+    <section class="auth-form-pane">
+      <!-- Top Action Bar -->
+      <header class="form-top-bar">
+        <a href="/" class="form-top-brand-link" id="form-top-brand-logo">
+          <span class="brick-brand-wordmark">brick</span>
         </a>
-        <h1 class="login-title" id="auth-main-title">Sign in to <span data-company="displayName">Teamden</span></h1>
-        <p class="login-subtitle" id="auth-main-subtitle" data-company="tagline">All-in-one team and work management workspace</p>
+        <div class="top-switch-group">
+          <div class="top-switch-wrapper">
+            <span id="top-switch-prompt" class="top-switch-prompt">New to Brick?</span>
+            <button type="button" id="top-switch-btn" class="top-switch-btn">Create account</button>
+          </div>
+          <button id="login-theme-btn" type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+            </svg>
+          </button>
+        </div>
       </header>
 
-      <!-- Segmented Auth Mode Switcher -->
-      <div class="auth-mode-tabs" role="tablist">
-        <button type="button" class="auth-mode-tab active" id="tab-sign-in" role="tab" aria-selected="true">
-          Sign In
-        </button>
-        <button type="button" class="auth-mode-tab" id="tab-register-company" role="tab" aria-selected="false">
-          🏢 Register as New Company
-        </button>
-      </div>
-
-      <!-- Feedback / Alert Banner -->
-      <div id="login-alert" class="alert alert-danger d-none" role="alert">
-        <span id="login-alert-text"></span>
-      </div>
-
-      <!-- One-time Setup Banner (if database has 0 companies) -->
-      <div id="setup-banner" class="setup-notice d-none">
-        <div class="setup-notice-content">
-          <strong>Workspace Setup Required</strong>
-          <p>No workspace or administrator account has been created yet.</p>
-        </div>
-        <button type="button" id="open-setup-modal-btn" class="btn btn-sm btn-outline">Initialize Workspace</button>
-      </div>
-
-      <!-- Sign In Form -->
-      <form id="login-form" novalidate>
-        <div class="form-group">
-          <label for="email" class="form-label">Work Email <span class="required" aria-hidden="true">*</span></label>
-          <div class="input-wrapper">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-input"
-              placeholder="you@company.com"
-              autocomplete="email"
-              required
-              autofocus
-            >
-          </div>
-          <div id="email-error" class="form-error d-none"></div>
+      <!-- Center Container for Sign-In Mode -->
+      <div class="form-center-container" id="signin-view-wrapper">
+        <!-- Eyebrow & Big Bold Heading -->
+        <div class="form-header-block">
+          <div class="form-eyebrow" id="form-eyebrow">WELCOME BACK</div>
+          <h2 class="form-main-heading" id="auth-main-title">Log in</h2>
+          <p class="form-main-subtitle" id="auth-main-subtitle">Continue to your workspace.</p>
         </div>
 
-        <div class="form-group">
-          <div class="d-flex justify-between align-center mb-1">
-            <label for="password" class="form-label">Password <span class="required" aria-hidden="true">*</span></label>
-            <a href="#" id="forgot-password-link" class="text-xs text-primary">Forgot password?</a>
-          </div>
-          <div class="input-wrapper">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="form-input"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            >
-            <button
-              type="button"
-              id="toggle-password-btn"
-              class="password-toggle-btn"
-              aria-label="Show password"
-            >
-              <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
+        <!-- Alert Notification Banner -->
+        <div id="login-alert" class="alert alert-danger d-none" role="alert">
+          <span id="login-alert-text"></span>
+        </div>
+
+        <!-- Hidden Auth Tabs for JS compatibility -->
+        <div class="d-none" role="tablist">
+          <button type="button" id="tab-sign-in" role="tab" aria-selected="true">Sign In</button>
+          <button type="button" id="tab-register-company" role="tab" aria-selected="false">Register</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="login-form" novalidate>
+          <div class="brick-form-group">
+            <label for="email" class="brick-field-label">Email address</label>
+            <div class="brick-input-wrapper">
+              <svg class="input-leading-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </svg>
-            </button>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="brick-input with-leading-icon"
+                placeholder="you@company.com"
+                autocomplete="email"
+                required
+              >
+            </div>
+            <div id="email-error" class="form-error d-none"></div>
           </div>
-          <div id="password-error" class="form-error d-none"></div>
-        </div>
 
-        <div class="form-group d-flex justify-between align-center mb-4">
-          <label class="d-flex align-center gap-2 cursor-pointer">
-            <input type="checkbox" id="remember-me" name="remember-me">
-            <span class="text-xs text-muted">Remember this device</span>
-          </label>
-        </div>
-
-        <button type="submit" id="submit-btn" class="btn btn-primary btn-block">
-          <span id="btn-text">Sign In</span>
-        </button>
-
-        <div class="auth-switch-prompt">
-          <span class="text-xs text-muted">Need a workspace for your team? </span>
-          <a href="#" id="switch-to-register-link" class="auth-switch-link text-xs">Register as New Company</a>
-        </div>
-      </form>
-
-      <!-- Register as New Company Form -->
-      <form id="register-company-form" class="d-none" novalidate>
-        <div class="form-group">
-          <label for="reg-org-name" class="form-label">Company / Organization Name <span class="required" aria-hidden="true">*</span></label>
-          <div class="input-wrapper">
-            <input
-              type="text"
-              id="reg-org-name"
-              name="organizationName"
-              class="form-input"
-              placeholder="e.g. Acme Services Ltd"
-              required
-            >
-          </div>
-          <div id="reg-org-error" class="form-error d-none"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-admin-name" class="form-label">Owner Full Name <span class="required" aria-hidden="true">*</span></label>
-          <div class="input-wrapper">
-            <input
-              type="text"
-              id="reg-admin-name"
-              name="adminName"
-              class="form-input"
-              placeholder="e.g. Jane Doe"
-              required
-            >
-          </div>
-          <div id="reg-name-error" class="form-error d-none"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-admin-email" class="form-label">Owner Work Email <span class="required" aria-hidden="true">*</span></label>
-          <div class="input-wrapper">
-            <input
-              type="email"
-              id="reg-admin-email"
-              name="adminEmail"
-              class="form-input"
-              placeholder="you@company.com"
-              autocomplete="email"
-              required
-            >
-          </div>
-          <div id="reg-email-error" class="form-error d-none"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-admin-password" class="form-label">Owner Password (min 8 chars) <span class="required" aria-hidden="true">*</span></label>
-          <div class="input-wrapper">
-            <input
-              type="password"
-              id="reg-admin-password"
-              name="adminPassword"
-              class="form-input"
-              placeholder="Create a secure password"
-              minlength="8"
-              required
-            >
-            <button
-              type="button"
-              id="reg-toggle-password-btn"
-              class="password-toggle-btn"
-              aria-label="Show password"
-            >
-              <svg id="reg-eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
+          <div class="brick-form-group">
+            <div class="password-label-row">
+              <label for="password" class="brick-field-label">Password</label>
+              <a href="#" id="forgot-password-link" class="brick-forgot-link">Forgot password?</a>
+            </div>
+            <div class="brick-input-wrapper">
+              <svg class="input-leading-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-            </button>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="brick-input with-leading-icon with-trailing-btn"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              >
+              <button
+                type="button"
+                id="toggle-password-btn"
+                class="brick-trailing-btn"
+                aria-label="Show password"
+              >
+                <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div id="password-error" class="form-error d-none"></div>
           </div>
-          <div id="reg-password-error" class="form-error d-none"></div>
-        </div>
 
-        <button type="submit" id="reg-submit-btn" class="btn btn-primary btn-block mt-3">
-          <span id="reg-btn-text">Register Company & Start Workspace</span>
-        </button>
-
-        <div class="auth-switch-prompt">
-          <span class="text-xs text-muted">Already registered your company? </span>
-          <a href="#" id="switch-to-login-link" class="auth-switch-link text-xs">Sign in to your account</a>
-        </div>
-      </form>
-
-      <footer class="login-footer">
-        <p class="text-xs text-muted">
-          <span data-company="copyright">© 2026 Teamden. All rights reserved.</span> ·
-          Need help? <a href="#" data-company="mail" class="text-primary">teamden@gmil.com</a>
-        </p>
-      </footer>
-    </div>
-  </main>
-
-  <!-- One-Time Workspace Provisioning Modal -->
-  <div id="setup-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="setup-modal-title">
-    <div class="modal-card">
-      <div class="card-header">
-        <h2 id="setup-modal-title" class="card-title">Initial Workspace Setup</h2>
-        <button type="button" id="close-setup-modal-btn" class="text-muted cursor-pointer" aria-label="Close modal">&times;</button>
-      </div>
-      <div class="card-body">
-        <p class="text-sm text-muted mb-4">
-          Create the initial workspace and primary Owner account. This one-time provisioning permanently secures the platform.
-        </p>
-
-        <div id="setup-modal-alert" class="alert alert-danger d-none">
-          <span id="setup-modal-alert-text"></span>
-        </div>
-
-        <form id="setup-form">
-          <div class="form-group">
-            <label for="setup-org-name" class="form-label">Organization / Business Name <span class="required">*</span></label>
-            <input type="text" id="setup-org-name" class="form-input" placeholder="e.g. Acme Services Ltd" required>
+          <!-- Hidden / Accessible Remember Me Checkbox -->
+          <div class="brick-form-group remember-group" style="display: none;">
+            <label class="remember-label">
+              <input type="checkbox" id="remember-me" name="remember-me">
+              <span>Remember this device</span>
+            </label>
           </div>
-          <div class="form-group">
-            <label for="setup-admin-name" class="form-label">Owner Full Name <span class="required">*</span></label>
-            <input type="text" id="setup-admin-name" class="form-input" placeholder="e.g. Jane Doe" required>
-          </div>
-          <div class="form-group">
-            <label for="setup-admin-email" class="form-label">Owner Work Email <span class="required">*</span></label>
-            <input type="email" id="setup-admin-email" class="form-input" placeholder="admin@example.com" required>
-          </div>
-          <div class="form-group">
-            <label for="setup-admin-password" class="form-label">Owner Password (min 8 characters) <span class="required">*</span></label>
-            <input type="password" id="setup-admin-password" class="form-input" placeholder="Create a secure password" minlength="8" required>
-          </div>
-          <button type="submit" id="setup-submit-btn" class="btn btn-primary btn-block mt-4">
-            <span id="setup-btn-text">Create Workspace & Owner Account</span>
+
+          <!-- Primary Sign-In Action Button (Solid Black with Arrow) -->
+          <button type="submit" id="submit-btn" class="brick-btn-primary">
+            <span id="btn-text">Log in</span>
+            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
           </button>
+
+          <!-- Divider -->
+          <div class="brick-divider">
+            <span>OR</span>
+          </div>
+
+          <!-- Social Single Sign-On Buttons -->
+          <div class="social-login-stack">
+            <button type="button" class="brick-btn-social" id="btn-auth-google" title="Continue with Google">
+              <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+              <span>Google</span>
+            </button>
+
+            <button type="button" class="brick-btn-social" id="btn-auth-microsoft" title="Continue with Microsoft">
+              <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
+                <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+                <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+                <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+                <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+              </svg>
+              <span>Microsoft</span>
+            </button>
+
+            <button type="button" class="brick-btn-social" id="btn-auth-apple" title="Continue with Apple">
+              <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.87c.66-.82 1.1-1.95.98-3.09-1 .04-2.16.66-2.83 1.45-.58.67-1.1 1.83-.96 2.94 1.11.08 2.15-.48 2.81-1.3z"/>
+              </svg>
+              <span>Apple</span>
+            </button>
+          </div>
+
+          <a href="#" id="switch-to-register-link" class="d-none">Register as New Company</a>
+        </form>
+
+        <!-- Terms of Service & Privacy Policy Notice -->
+        <footer class="form-legal-footer">
+          By continuing, you agree to our <a href="#" class="legal-link">Terms of Service</a> and <a href="#" class="legal-link">Privacy Policy</a>.
+        </footer>
+      </div>
+
+      <!-- Center Container for 4-Step Company Registration Mode -->
+      <div class="register-flow-wrapper d-none" id="register-flow-wrapper">
+        <!-- 4-Step Progress Indicator -->
+        <nav class="stepper-track" aria-label="Registration Progress">
+          <div class="step-node active" id="step-node-1" data-step="1">
+            <div class="step-circle">
+              <span class="step-num">1</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Company Details</span>
+          </div>
+
+          <div class="step-connector" id="connector-1"></div>
+
+          <div class="step-node" id="step-node-2" data-step="2">
+            <div class="step-circle">
+              <span class="step-num">2</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Address &amp; Legal</span>
+          </div>
+
+          <div class="step-connector" id="connector-2"></div>
+
+          <div class="step-node" id="step-node-3" data-step="3">
+            <div class="step-circle">
+              <span class="step-num">3</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Administrator Account</span>
+          </div>
+
+          <div class="step-connector" id="connector-3"></div>
+
+          <div class="step-node" id="step-node-4" data-step="4">
+            <div class="step-circle">
+              <span class="step-num">4</span>
+              <svg class="step-check d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="step-label">Review &amp; Create</span>
+          </div>
+        </nav>
+
+        <!-- Dynamic Step Heading Area -->
+        <div class="step-header-area">
+          <div class="step-eyebrow" id="current-step-eyebrow">STEP 1 OF 4</div>
+          <h2 class="step-main-title" id="current-step-title">Company Details</h2>
+          <p class="step-description" id="current-step-desc">Let’s start with some basic information about your company.</p>
+        </div>
+
+        <!-- Multi-Step Registration Form Wrapper -->
+        <form id="register-company-form" novalidate>
+
+          <!-- ==================== STEP 1: Company Details ==================== -->
+          <div class="form-step-section active" id="section-step-1" data-step="1">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18"></path><path d="M9 8h1"></path><path d="M9 12h1"></path><path d="M9 16h1"></path><path d="M14 8h1"></path><path d="M14 12h1"></path><path d="M14 16h1"></path><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Basic Information</h3>
+                  <p class="card-subheading">Core information used to identify your company.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <!-- Field 1: Company Name (Preserves reg-org-name) -->
+                <div class="field-cell">
+                  <label for="reg-org-name" class="input-label">Company name <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="reg-org-name"
+                    name="organizationName"
+                    class="brick-control"
+                    placeholder="e.g. Acme Co."
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="reg-org-error">Please enter your company name.</div>
+                </div>
+
+                <!-- Field 2: Legal Company Name -->
+                <div class="field-cell">
+                  <label for="reg-legal-name" class="input-label">Legal company name (if different)</label>
+                  <input
+                    type="text"
+                    id="reg-legal-name"
+                    name="legalName"
+                    class="brick-control"
+                    placeholder="e.g. Acme Private Limited"
+                  >
+                </div>
+
+                <!-- Field 3: Company Logo Upload -->
+                <div class="field-cell">
+                  <label class="input-label">Company logo</label>
+                  <div class="logo-upload-dropzone" id="logo-dropzone">
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none">
+                    <div class="upload-idle-state" id="upload-idle-state">
+                      <div class="upload-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                          <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                      </div>
+                      <div class="upload-copy">
+                        <span class="upload-link-text">Upload logo</span>
+                        <span class="upload-hint">PNG, JPG up to 5MB</span>
+                      </div>
+                    </div>
+                    <div class="upload-preview-state d-none" id="upload-preview-state">
+                      <img id="logo-preview-img" src="" alt="Company Logo Preview" class="logo-preview-thumb">
+                      <div class="preview-meta">
+                        <span id="logo-file-name" class="file-name-label">logo.png</span>
+                        <button type="button" id="remove-logo-btn" class="btn-remove-logo">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-logo-file"></div>
+                </div>
+
+                <!-- Field 4: Company Type -->
+                <div class="field-cell">
+                  <label for="reg-company-type" class="input-label">Company type <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="reg-company-type" name="companyType" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select company type</option>
+                      <option value="Private Limited Company">Private Limited Company</option>
+                      <option value="Public Limited Company">Public Limited Company</option>
+                      <option value="Partnership">Partnership</option>
+                      <option value="Limited Liability Partnership (LLP)">Limited Liability Partnership (LLP)</option>
+                      <option value="Sole Proprietorship">Sole Proprietorship</option>
+                      <option value="Non-profit Organization">Non-profit Organization</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-type">Please select a company type.</div>
+                </div>
+
+                <!-- Field 5: Industry -->
+                <div class="field-cell">
+                  <label for="reg-industry" class="input-label">Industry <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="reg-industry" name="industry" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select industry</option>
+                      <option value="Technology / Software">Technology / Software</option>
+                      <option value="Finance / Banking">Finance / Banking</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Education">Education</option>
+                      <option value="Retail / E-commerce">Retail / E-commerce</option>
+                      <option value="Manufacturing">Manufacturing</option>
+                      <option value="Consulting / Professional Services">Consulting / Professional Services</option>
+                      <option value="Construction / Real Estate">Construction / Real Estate</option>
+                      <option value="Media / Marketing">Media / Marketing</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-industry">Please select an industry.</div>
+                </div>
+
+                <!-- Field 6: Company Size -->
+                <div class="field-cell">
+                  <label for="reg-company-size" class="input-label">Company size <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="reg-company-size" name="companySize" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select company size</option>
+                      <option value="Just me">Just me (1 person)</option>
+                      <option value="2–10 employees">2–10 employees</option>
+                      <option value="11–50 employees">11–50 employees</option>
+                      <option value="51–200 employees">51–200 employees</option>
+                      <option value="201–500 employees">201–500 employees</option>
+                      <option value="501–1,000 employees">501–1,000 employees</option>
+                      <option value="1,000+ employees">1,000+ employees</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-company-size">Please select company size.</div>
+                </div>
+
+                <!-- Field 7: Website URL -->
+                <div class="field-cell">
+                  <label for="reg-website" class="input-label">Website URL</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <input
+                      type="url"
+                      id="reg-website"
+                      name="websiteUrl"
+                      class="brick-control with-icon"
+                      placeholder="https://yourcompany.com"
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-website">Please enter a valid website URL.</div>
+                </div>
+
+                <!-- Field 8: Year Established -->
+                <div class="field-cell">
+                  <label for="reg-year" class="input-label">Year established</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <input
+                      type="number"
+                      id="reg-year"
+                      name="yearEstablished"
+                      class="brick-control with-icon"
+                      placeholder="e.g. 2020"
+                      min="1800"
+                      max="2026"
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-year">Please enter a valid established year.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== STEP 2: Address & Legal ==================== -->
+          <div class="form-step-section d-none" id="section-step-2" data-step="2">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Registered Location &amp; Legal Info</h3>
+                  <p class="card-subheading">Official address and business registration information.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <div class="field-cell full-width">
+                  <label for="reg-country" class="input-label">Country or region <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="reg-country" name="country" class="brick-control brick-select" required>
+                      <option value="" disabled selected>Select country</option>
+                      <option value="United States">United States</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="France">France</option>
+                      <option value="India">India</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="United Arab Emirates">United Arab Emirates</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-country">Please select a country.</div>
+                </div>
+
+                <div class="field-cell full-width">
+                  <label for="reg-street" class="input-label">Registered address <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="reg-street"
+                    name="streetAddress"
+                    class="brick-control"
+                    placeholder="Street address or P.O. Box"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-street">Please enter the registered street address.</div>
+                </div>
+
+                <div class="field-cell full-width">
+                  <label for="reg-line2" class="input-label">Address line 2 (optional)</label>
+                  <input
+                    type="text"
+                    id="reg-line2"
+                    name="addressLine2"
+                    class="brick-control"
+                    placeholder="Suite, unit, building, floor (optional)"
+                  >
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-city" class="input-label">City / Town <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="reg-city"
+                    name="city"
+                    class="brick-control"
+                    placeholder="e.g. San Francisco"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-city">Please enter the city.</div>
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-state" class="input-label">State / Province / Region <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="reg-state"
+                    name="state"
+                    class="brick-control"
+                    placeholder="e.g. California"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-state">Please enter the state or province.</div>
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-zip" class="input-label">Postal / ZIP code <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="reg-zip"
+                    name="zipCode"
+                    class="brick-control"
+                    placeholder="e.g. 94103"
+                    required
+                  >
+                  <div class="field-error-msg d-none" id="error-zip">Please enter the postal or ZIP code.</div>
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-currency" class="input-label">Workspace currency</label>
+                  <div class="select-wrapper">
+                    <select id="reg-currency" name="currency" class="brick-control brick-select">
+                      <option value="USD" selected>USD ($) — US Dollar</option>
+                      <option value="EUR">EUR (€) — Euro</option>
+                      <option value="GBP">GBP (£) — British Pound</option>
+                      <option value="CAD">CAD ($) — Canadian Dollar</option>
+                      <option value="AUD">AUD ($) — Australian Dollar</option>
+                      <option value="INR">INR (₹) — Indian Rupee</option>
+                      <option value="SGD">SGD ($) — Singapore Dollar</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-business-num" class="input-label">Business registration number (optional)</label>
+                  <input
+                    type="text"
+                    id="reg-business-num"
+                    name="regNumber"
+                    class="brick-control"
+                    placeholder="e.g. CIN / CRN / Registration #"
+                  >
+                </div>
+
+                <div class="field-cell">
+                  <label for="reg-tax-id" class="input-label">Tax identification number (optional)</label>
+                  <input
+                    type="text"
+                    id="reg-tax-id"
+                    name="taxId"
+                    class="brick-control"
+                    placeholder="e.g. EIN / VAT / GST #"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== STEP 3: Administrator Account ==================== -->
+          <div class="form-step-section d-none" id="section-step-3" data-step="3">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Owner &amp; Administrator Account</h3>
+                  <p class="card-subheading">This person will manage the company workspace and have full access.</p>
+                </div>
+              </div>
+
+              <div class="form-two-column-grid">
+                <!-- Field 1: Admin Name (Preserves reg-admin-name) -->
+                <div class="field-cell full-width">
+                  <label for="reg-admin-name" class="input-label">Administrator full name <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input
+                      type="text"
+                      id="reg-admin-name"
+                      name="adminName"
+                      class="brick-control with-icon"
+                      placeholder="e.g. Jane Doe"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="reg-name-error">Please enter the administrator's full name.</div>
+                </div>
+
+                <!-- Field 2: Admin Email (Preserves reg-admin-email) -->
+                <div class="field-cell full-width">
+                  <label for="reg-admin-email" class="input-label">Work email address <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <input
+                      type="email"
+                      id="reg-admin-email"
+                      name="adminEmail"
+                      class="brick-control with-icon"
+                      placeholder="jane@company.com"
+                      autocomplete="email"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="reg-email-error">Please enter a valid work email address.</div>
+                </div>
+
+                <!-- Field 3: Admin Password (Preserves reg-admin-password) -->
+                <div class="field-cell">
+                  <label for="reg-admin-password" class="input-label">Password <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input
+                      type="password"
+                      id="reg-admin-password"
+                      name="adminPassword"
+                      class="brick-control with-icon with-trailing"
+                      placeholder="Create secure password (min 8 chars)"
+                      minlength="8"
+                      required
+                    >
+                    <button type="button" id="reg-toggle-password-btn" class="input-trailing-action" aria-label="Toggle password visibility">
+                      <svg id="reg-eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="field-error-msg d-none" id="reg-password-error">Password must be at least 8 characters long.</div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="field-cell">
+                  <label for="reg-confirm-password" class="input-label">Confirm password <span class="required-asterisk">*</span></label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input
+                      type="password"
+                      id="reg-confirm-password"
+                      class="brick-control with-icon"
+                      placeholder="Re-enter your password"
+                      required
+                    >
+                  </div>
+                  <div class="field-error-msg d-none" id="error-confirm-password">Passwords do not match.</div>
+                </div>
+
+                <!-- Job Title -->
+                <div class="field-cell">
+                  <label for="reg-job-title" class="input-label">Job title (optional)</label>
+                  <input
+                    type="text"
+                    id="reg-job-title"
+                    name="jobTitle"
+                    class="brick-control"
+                    placeholder="e.g. Chief Executive Officer / Founder"
+                  >
+                </div>
+
+                <!-- Phone -->
+                <div class="field-cell">
+                  <label for="reg-phone" class="input-label">Phone number (optional)</label>
+                  <div class="icon-input-wrapper">
+                    <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <input
+                      type="tel"
+                      id="reg-phone"
+                      name="phoneNumber"
+                      class="brick-control with-icon"
+                      placeholder="+1 (555) 000-0000"
+                    >
+                  </div>
+                </div>
+
+                <!-- Terms Consent Checkbox -->
+                <div class="field-cell full-width pt-1">
+                  <label class="consent-checkbox-row">
+                    <input type="checkbox" id="reg-consent-terms" required>
+                    <span class="consent-label">
+                      I agree to the <a href="#" class="inline-legal-link">Terms of Service</a> and <a href="#" class="inline-legal-link">Privacy Policy</a>, and confirm I am authorized to register on behalf of the company. <span class="required-asterisk">*</span>
+                    </span>
+                  </label>
+                  <div class="field-error-msg d-none" id="error-consent-terms">You must agree to the terms to proceed.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== STEP 4: Review & Create ==================== -->
+          <div class="form-step-section d-none" id="section-step-4" data-step="4">
+            <div class="bordered-form-card">
+              <div class="card-inner-header">
+                <div class="card-icon-pill">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <div class="card-header-copy">
+                  <h3 class="card-heading">Review Company Summary</h3>
+                  <p class="card-subheading">Verify all details before creating your organization workspace.</p>
+                </div>
+              </div>
+
+              <!-- Summary Section 1: Company Details -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">1. Company Details</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="1">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="review-key">Company Name</span>
+                    <span class="review-val" id="summary-company-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Legal Name</span>
+                    <span class="review-val" id="summary-legal-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Company Type</span>
+                    <span class="review-val" id="summary-company-type">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Industry</span>
+                    <span class="review-val" id="summary-industry">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Company Size</span>
+                    <span class="review-val" id="summary-company-size">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Website</span>
+                    <span class="review-val" id="summary-website">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Established</span>
+                    <span class="review-val" id="summary-year">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Summary Section 2: Address & Legal -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">2. Address &amp; Legal</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="2">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item full">
+                    <span class="review-key">Registered Address</span>
+                    <span class="review-val" id="summary-address">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">City / State</span>
+                    <span class="review-val" id="summary-city-state">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Country</span>
+                    <span class="review-val" id="summary-country">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Postal / ZIP</span>
+                    <span class="review-val" id="summary-zip">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Registration #</span>
+                    <span class="review-val" id="summary-reg-num">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Tax ID / VAT</span>
+                    <span class="review-val" id="summary-tax-id">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Summary Section 3: Administrator Account -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">3. Administrator Account</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="3">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="review-key">Full Name</span>
+                    <span class="review-val" id="summary-admin-name">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Work Email</span>
+                    <span class="review-val" id="summary-admin-email">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Job Title</span>
+                    <span class="review-val" id="summary-job-title">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Phone</span>
+                    <span class="review-val" id="summary-phone">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Actions -->
+          <footer class="form-navigation-bar">
+            <div class="nav-actions-right">
+              <button type="button" id="btn-reg-cancel" class="btn-brick-secondary">
+                Cancel
+              </button>
+              <button type="button" id="btn-reg-back" class="btn-brick-secondary d-none">
+                Back
+              </button>
+              <button type="button" id="btn-reg-continue" class="btn-brick-primary">
+                <span id="btn-continue-text">Continue</span>
+                <svg class="btn-right-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+              <button type="submit" id="reg-submit-btn" class="btn-brick-primary d-none">
+                <span id="reg-btn-text">Create Company</span>
+                <svg class="btn-right-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </footer>
         </form>
       </div>
-    </div>
-  </div>
+
+      <!-- Footer spacer/copyright -->
+      <div class="form-bottom-meta">
+        <span data-company="copyright">© 2026 Brick. All rights reserved.</span>
+      </div>
+    </section>
+  </main>
+
+
 
   <!-- Shared Scripts -->
   <script src="/shared/js/api.js"></script>
   <script src="/shared/js/auth.js"></script>
-  <script src="/shared/js/ui.js"></script>
-  <script src="/pages/login/login.js"></script>
+  <script src="/pages/login/login.js?v=4"></script>
 </body>
 </html>

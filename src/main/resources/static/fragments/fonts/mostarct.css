@@ -1,0 +1,71 @@
+/* ==========================================================================
+   BRICK Font Architecture — Mostarct Primary Font Definition
+   Path: fragments/fonts/mostarct.css
+   Mostarct is the default font for body text, labels, navigation, buttons,
+   inputs, dates, task descriptions, metadata, and dashboard content.
+   Temporary fallback stack: 'Mostarct', 'Montserrat' without generic sans-serif.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap');
+
+/* @font-face aliases for Mostarct pointing to local Montserrat / web font */
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('Mostarct Light'), local('Montserrat Light'), local('Montserrat-Light');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Mostarct Regular'), local('Montserrat Regular'), local('Montserrat-Regular');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Mostarct Medium'), local('Montserrat Medium'), local('Montserrat-Medium');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Mostarct SemiBold'), local('Montserrat SemiBold'), local('Montserrat-SemiBold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Mostarct Bold'), local('Montserrat Bold'), local('Montserrat-Bold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Mostarct ExtraBold'), local('Montserrat ExtraBold'), local('Montserrat-ExtraBold');
+}
+
+@font-face {
+  font-family: 'Mostarct';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Mostarct Black'), local('Montserrat Black'), local('Montserrat-Black');
+}
+
+:root {
+  --font-family-primary: 'Mostarct', 'Montserrat';
+  --font-family-body: 'Mostarct', 'Montserrat';
+}

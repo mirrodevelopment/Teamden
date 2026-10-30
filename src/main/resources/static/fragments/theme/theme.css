@@ -2,13 +2,13 @@
    Teamden by shed — Central Design Token & Theme System
    Path: fragments/theme/theme.css
    Single source of truth for ALL colors, theme surfaces, typography, and tokens.
-   Supports: Light Theme (default) & Black and White Theme.
+   Exact reference palette sampled directly from reference image.
    ========================================================================== */
 
 @import url('../fonts/fonts.css');
 
 /* ==========================================================================
-   GLOBAL CONSTANTS (Shared across all themes: typography, layout, radii)
+   GLOBAL CONSTANTS (Typography, layout, radii, transitions)
    ========================================================================== */
 :root {
   /* Typography (Inherited exclusively from fragments/fonts/fonts.css) */
@@ -16,6 +16,7 @@
   --font-family-base: var(--font-family);
   --font-mono: var(--font-family-mono, 'Montserrat');
   --font-family-mono: var(--font-mono);
+  --font-family-today: 'Inter Tight', 'Inter', sans-serif;
 
   --font-xs: 0.75rem;     /* 12px */
   --font-sm: 0.875rem;    /* 14px */
@@ -50,8 +51,8 @@
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Layout Constants */
-  --sidebar-width: 260px;
-  --sidebar-collapsed-width: 72px;
+  --sidebar-width: 210px;
+  --sidebar-collapsed-width: 64px;
   --topbar-height: 64px;
   --header-height: 64px;
   --content-max-width: 1440px;
@@ -63,53 +64,91 @@
   --z-modal: 1000;
   --z-toast: 1100;
 
+  /* Fluid Proportional Scaling Tokens (Compact vs Grand Workspace) */
+  --dash-right-rail-width: 295px;
+  --dash-center-padding-x: 1.5rem;
+  --dash-center-padding-top: 1.25rem;
+  --dash-center-gap: 1.75rem;
+  --dash-today-title-size: clamp(5.75rem, 7.8vw, 8.5rem);
+  --dash-subtitle-size: 0.9375rem;
+  --dash-hero-padding: 0.95rem 1.35rem;
+  --dash-hero-gap: 1.25rem;
+  --dash-hero-title-size: 1.25rem;
+  --dash-hero-due-size: 2.25rem;
+  --dash-hero-btn-padding: 0.52rem 0.95rem;
+  --dash-hero-btn-font-size: 0.75rem;
+  --dash-kanban-col-padding: 0.65rem;
+  --dash-kanban-col-gap: 0.55rem;
+  --dash-kanban-card-padding: 0.85rem;
+  --dash-kanban-card-title-size: 0.875rem;
+  --dash-kanban-card-text-size: 0.8125rem;
+
   /* ==========================================================================
-     DASHBOARD & NEO-EDITORIAL COLOR TOKENS (fragments/theme/theme.css)
-     Used by dashboard, sidebar, and navbar fragments for pixel-accurate design.
+     EXACT NEO-EDITORIAL PALETTE TOKENS (Sampled from Reference Image)
      ========================================================================== */
-  /* Surfaces & Canvas */
-  --dash-bg-canvas: #F4F1EA;
-  --dash-bg-sidebar: #EDE8DF;
-  --dash-bg-card: #FAF8F4;
-  --dash-bg-card-pure: #FFFFFF;
-  --dash-bg-card-subtle: #EFECE5;
-  --dash-bg-card-column: #EAE6DC;
-  --dash-bg-card-column-header: #E2DDD2;
 
-  /* Hero Priority Card (Matte Black) */
-  --dash-hero-bg: #191A1B;
-  --dash-hero-text: #FFFFFF;
-  --dash-hero-text-muted: #B3B3B3;
-  --dash-hero-border: rgba(255, 255, 255, 0.15);
-  --dash-hero-cta-bg: #F5F2EB;
-  --dash-hero-cta-text: #111111;
+  /* Surfaces & Canvas — Sampled directly from Brick Reference */
+  --dash-bg-canvas: #F8F4EE;            /* Warm Luminous Linen Canvas Background */
+  --dash-bg-sidebar: #F9F6EF;           /* Warm Sand/Linen Sidebar */
+  --dash-bg-card: #FAF7F1;              /* Warm Editorial Card Surface */
+  --dash-bg-card-pure: #FAF7F1;         /* Warm Off-White (No cold stark pure white) */
+  --dash-bg-search: #F3EFE7;            /* Inset Search Input */
+  --dash-bg-search-focus: #EDE8DE;      /* Inset Search Focused */
+  --dash-bg-kbd: #E2DDD3;               /* Keyboard Shortcut Badge */
+  --dash-border: #EAE5DB;               /* Warm Taupe Subtle Border */
 
-  /* Neon Chartreuse / Electric Lime High-Contrast Accent */
-  --dash-accent-lime: #E3FF37;
-  --dash-accent-lime-hover: #D4F72C;
-  --dash-accent-lime-text: #111111;
+  /* High-Contrast Lime / Electric Chartreuse Accents */
+  --dash-accent-lime: #D4F443;          /* Active Nav Item Electric Chartreuse */
+  --dash-accent-lime-hover: #C5DC45;    /* Active Nav Hover */
+  --dash-accent-lime-text: #111111;     /* High Contrast Near-Black Text on Lime */
+  --dash-btn-create-bg: #D4F443;        /* "+ Create" Topbar Button Lime */
+  --dash-btn-create-hover: #C5DC45;     /* "+ Create" Hover */
+  --dash-btn-create-text: #111111;
 
-  /* Peach / Warm Tan Alert Accent */
-  --dash-accent-peach: #E8DAC8;
-  --dash-accent-peach-hover: #E0CFC0;
-  --dash-accent-peach-text: #1E1B18;
+  /* Hero Priority Card (Matte Charcoal Black) */
+  --dash-hero-bg: #1F1F1D;              /* Deep Warm Matte Charcoal Black */
+  --dash-hero-border: rgba(255, 255, 255, 0.12);
+  --dash-hero-text: #FFFFFF;            /* Hero Title & Due Number */
+  --dash-hero-text-muted: #A8A6A1;      /* Hero Subtitle & Description */
+  --dash-hero-chip-bg: #292927;         /* Hero Attachment Pills */
+  --dash-hero-chip-text: #D5D3CE;
+  --dash-hero-cta-bg: #E9DED0;          /* "Continue task ->" Bone/Linen Button */
+  --dash-hero-cta-hover: #DFD2C2;       /* "Continue task ->" Hover */
+  --dash-hero-cta-text: #171717;        /* "Continue task ->" Dark Text */
 
-  /* Neutral Alert & Action Cards */
-  --dash-card-neutral: #EAE5DB;
-  --dash-card-neutral-hover: #E3DDCF;
+  /* Priority Columns & Kanban Task Cards */
+  --dash-col-now-bg: #E9DDCF;           /* NOW Column Container (Warm Sand) */
+  --dash-col-now-card: #E8DCCE;         /* NOW Task Card Surface */
+  --dash-col-next-bg: #ECE7EB;          /* NEXT Column Container (Soft Lilac) */
+  --dash-col-next-card: #ECE7EB;        /* NEXT Task Card Surface */
+  --dash-col-later-bg: #EAEADE;         /* LATER Column Container (Pale Sage) */
+  --dash-col-later-card: #EAEADE;       /* LATER Task Card Surface */
+  --dash-task-card-hover: rgba(0, 0, 0, 0.03);
+  --dash-task-checkbox-border: #8A8884;
+  --dash-task-checkbox-checked: #171717;
 
-  /* Typography / Text */
-  --dash-text-primary: #111111;
-  --dash-text-body: #333333;
-  --dash-text-muted: #666666;
-  --dash-text-light: #8E8E93;
-  --dash-text-white: #FFFFFF;
+  /* Needs Attention Cards (Right Rail) */
+  --dash-attention-peach: #D8CBB5;      /* "Blocked tasks" Warm Peach Card */
+  --dash-attention-peach-hover: #CFBFAB;
+  --dash-attention-neutral-1: #E9E6E1;  /* "Tasks waiting for others" Soft Neutral Card */
+  --dash-attention-neutral-1-hover: #DDD8D1;
+  --dash-attention-neutral-2: #E7E2DC;  /* "Unread mention" Soft Neutral Card */
+  --dash-attention-neutral-2-hover: #DCD5CD;
 
-  /* Borders & Dividers */
-  --dash-border: rgba(0, 0, 0, 0.08);
-  --dash-border-subtle: rgba(0, 0, 0, 0.05);
-  --dash-border-strong: rgba(0, 0, 0, 0.14);
-  --dash-border-dark: rgba(255, 255, 255, 0.12);
+  /* Daily Update Card */
+  --dash-daily-update-bg: #EBEBE3;      /* Daily Update Card Surface */
+  --dash-daily-update-btn: #171717;     /* Daily Update Arrow Black Button */
+  --dash-daily-update-btn-text: #FFFFFF;
+
+  /* Activity Timeline Type Badges */
+  --dash-badge-comment-bg: #E3DEE2;     /* Muted Lilac Tint */
+  --dash-badge-comment-text: #5C4A5A;
+  --dash-badge-completed-bg: #E3E9C8;   /* Pale Lime Tint */
+  --dash-badge-completed-text: #475427;
+  --dash-badge-document-bg: #EBE1D2;    /* Warm Amber/Tan Tint */
+  --dash-badge-document-text: #635338;
+  --dash-badge-assigned-bg: #D3E2EA;    /* Soft Slate Tint */
+  --dash-badge-assigned-text: #365369;
 
   /* Status Dots */
   --dash-dot-red: #E53935;
@@ -119,272 +158,73 @@
   --dash-dot-purple: #8B5CF6;
   --dash-dot-gray: #9E9E9E;
 
-  /* Activity Timeline Type Badges */
-  --dash-badge-comment-bg: #EDE9FE;
-  --dash-badge-comment-text: #6D28D9;
-  --dash-badge-completed-bg: #D1FAE5;
-  --dash-badge-completed-text: #065F46;
-  --dash-badge-document-bg: #FEF3C7;
-  --dash-badge-document-text: #92400E;
-  --dash-badge-assigned-bg: #E0F2FE;
-  --dash-badge-assigned-text: #0369A1;
-}
+  /* Typography / Text Tokens */
+  --dash-text-primary: #171717;         /* Main Heading 'today.', Titles, Numbers */
+  --dash-text-body: #333333;            /* Standard Content */
+  --dash-text-muted: #63625F;           /* Subtitles, Secondary Tags, Labels */
+  --dash-text-light: #8E8A84;           /* Section Eyebrows, Timestamps */
+  --dash-text-white: #FFFFFF;
 
-/* ==========================================================================
-   THEME 1: LIGHT THEME (Default)
-   Clean, vibrant modern SaaS theme with crisp surfaces and high readability.
-   ========================================================================== */
-:root,
-[data-theme="light"],
-.theme-light {
-  /* Brand & Primary Accent */
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-primary-active: #1E40AF;
-  --color-primary-light: #EFF6FF;
-  --color-primary-subtle: rgba(37, 99, 235, 0.12);
-  --color-primary-glow: rgba(37, 99, 235, 0.25);
-  --color-primary-gradient: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-  --color-primary-gradient-subtle: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(30, 64, 175, 0.04) 100%);
-  --color-btn-primary-text: #FFFFFF;
-
-  /* Executive Brand Accents */
-  --color-brand-dark: #0F172A;
-  --color-brand-navy: #1E293B;
-  --color-brand-slate: #334155;
-  --color-brand-cyan: #06B6D4;
-  --color-brand-indigo: #6366F1;
-  --color-brand-purple: #8B5CF6;
-  --color-brand-amber: #F59E0B;
-
-  /* Surfaces & Backgrounds */
-  --color-bg-body: #F8FAFC;
-  --color-bg-surface: #FFFFFF;
-  --color-bg-subtle: #F1F5F9;
-  --color-bg-muted: #E2E8F0;
-  --color-bg-card: #FFFFFF;
-  --color-bg-card-hover: #F8FAFC;
-  --color-bg-sidebar: #0F172A;
-  --color-bg-sidebar-alt: #1E293B;
-  --color-bg-header: #FFFFFF;
-  --color-bg-input: #FFFFFF;
-  --color-bg-input-focus: #FFFFFF;
-  --color-bg-overlay: rgba(15, 23, 42, 0.65);
-  --bg-login-gradient: radial-gradient(circle at 50% 0%, #EFF6FF 0%, #F8FAFC 60%, #F1F5F9 100%);
-  --card-top-accent: linear-gradient(90deg, #2563EB, #06B6D4, #3B82F6);
-
-  /* Typography / Text */
-  --color-text-main: #0F172A;
-  --color-text-body: #334155;
-  --color-text-muted: #64748B;
-  --color-text-light: #94A3B8;
-  --color-text-white: #FFFFFF;
-  --color-text-on-dark: #F8FAFC;
-  --color-text-on-dark-muted: #94A3B8;
-  --color-text-primary: #2563EB;
-
-  /* Borders & Glass */
-  --color-border: #E2E8F0;
-  --color-border-hover: #CBD5E1;
-  --color-border-focus: #2563EB;
-  --color-border-subtle: #F1F5F9;
-  --color-border-glass: rgba(255, 255, 255, 0.12);
-  --color-border-glass-dark: rgba(255, 255, 255, 0.08);
-
-  /* Status Colors */
-  --color-success: #10B981;
-  --color-success-bg: #ECFDF5;
-  --color-success-border: #A7F3D0;
-  --color-success-text: #065F46;
-
-  --color-warning: #F59E0B;
-  --color-warning-bg: #FFFBEB;
-  --color-warning-border: #FDE68A;
-  --color-warning-text: #92400E;
-
-  --color-danger: #EF4444;
-  --color-danger-bg: #FEF2F2;
-  --color-danger-border: #FECACA;
-  --color-danger-text: #991B1B;
-
-  --color-info: #3B82F6;
-  --color-info-bg: #EFF6FF;
-  --color-info-border: #BFDBFE;
-  --color-info-text: #1E40AF;
-
-  --color-neutral: #64748B;
-  --color-neutral-bg: #F1F5F9;
-  --color-neutral-border: #CBD5E1;
-  --color-neutral-text: #475569;
+  /* Borders & Dividers — Exact warm taupe/sand from reference */
+  --dash-border: #EAE5DB;
+  --dash-border-subtle: #F2EEE6;
+  --dash-border-strong: #DFDACF;
+  --dash-border-dark: rgba(255, 255, 255, 0.12);
 
   /* Elevation & Shadows */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.18);
-  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
 
-  /* Component & Fragment Aliases */
-  --primary: var(--color-primary);
-  --primary-hover: var(--color-primary-hover);
-  --primary-light: var(--color-primary-light);
-  --primary-active: var(--color-primary-active);
+  /* Universal Semantic Aliases (Replaces legacy #2563EB theme) */
+  --color-primary: var(--dash-accent-lime);
+  --color-primary-hover: var(--dash-accent-lime-hover);
+  --color-primary-active: var(--dash-accent-lime-hover);
+  --color-btn-primary-text: var(--dash-accent-lime-text);
+  --color-bg-body: var(--dash-bg-canvas);
+  --color-bg-surface: var(--dash-bg-card);
+  --color-bg-subtle: var(--dash-bg-sidebar);
+  --color-bg-sidebar: var(--dash-bg-sidebar);
+  --color-bg-header: var(--dash-bg-canvas);
+  --color-bg-input: var(--dash-bg-search);
+  --color-bg-input-focus: var(--dash-bg-search-focus);
+  --color-text-main: var(--dash-text-primary);
+  --color-text-body: var(--dash-text-body);
+  --color-text-muted: var(--dash-text-muted);
+  --color-text-light: var(--dash-text-light);
+  --color-border: var(--dash-border);
+  --color-border-hover: var(--dash-border-strong);
+  --color-border-focus: var(--dash-accent-lime);
 
-  --bg-primary: var(--color-bg-body);
-  --bg-surface: var(--color-bg-surface);
-  --bg-secondary: var(--color-bg-subtle);
-  --bg-hover: var(--color-bg-card-hover);
-  --bg-muted: var(--color-bg-muted);
-  --bg-body: var(--color-bg-body);
-
-  --border-color: var(--color-border);
-  --border-color-hover: var(--color-border-hover);
-  --border-color-focus: var(--color-border-focus);
-
-  --text-primary: var(--color-text-main);
-  --text-secondary: var(--color-text-body);
-  --text-tertiary: var(--color-text-muted);
-  --text-light: var(--color-text-light);
-
-  --danger: var(--color-danger);
-  --danger-light: var(--color-danger-bg);
-  --success: var(--color-success);
-  --success-light: var(--color-success-bg);
-  --warning: var(--color-warning);
-  --warning-light: var(--color-warning-bg);
-  --info: var(--color-info);
-  --info-light: var(--color-info-bg);
+  --primary: var(--dash-accent-lime);
+  --primary-hover: var(--dash-accent-lime-hover);
+  --bg-primary: var(--dash-bg-canvas);
+  --bg-surface: var(--dash-bg-card);
+  --bg-body: var(--dash-bg-canvas);
+  --text-primary: var(--dash-text-primary);
+  --text-secondary: var(--dash-text-body);
+  --text-tertiary: var(--dash-text-muted);
 }
 
-/* ==========================================================================
-   THEME 2: BLACK AND WHITE THEME
-   High-contrast, modern monochrome aesthetic with deep obsidian blacks,
-   graphite surface borders, and pure white typography.
-   ========================================================================== */
-[data-theme="black-and-white"],
-[data-theme="bw"],
-[data-theme="dark"],
-.theme-black-and-white,
-.theme-dark {
-  /* Brand & Primary Accent (High Contrast Monochrome) */
-  --color-primary: #FFFFFF;
-  --color-primary-hover: #E4E4E7;
-  --color-primary-active: #D4D4D8;
-  --color-primary-light: #18181B;
-  --color-primary-subtle: rgba(255, 255, 255, 0.12);
-  --color-primary-glow: rgba(255, 255, 255, 0.20);
-  --color-primary-gradient: linear-gradient(135deg, #FFFFFF 0%, #A1A1AA 100%);
-  --color-primary-gradient-subtle: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  --color-btn-primary-text: #000000;
-
-  /* Executive Brand Accents (Monochrome Grayscale) */
-  --color-brand-dark: #000000;
-  --color-brand-navy: #18181B;
-  --color-brand-slate: #27272A;
-  --color-brand-cyan: #FAFAFA;
-  --color-brand-indigo: #E4E4E7;
-  --color-brand-purple: #D4D4D8;
-  --color-brand-amber: #F4F4F5;
-
-  /* Surfaces & Backgrounds */
-  --color-bg-body: #000000;
-  --color-bg-surface: #0C0C0E;
-  --color-bg-subtle: #141417;
-  --color-bg-muted: #1F1F24;
-  --color-bg-card: #0C0C0E;
-  --color-bg-card-hover: #16161A;
-  --color-bg-sidebar: #050506;
-  --color-bg-sidebar-alt: #0D0D0F;
-  --color-bg-header: rgba(12, 12, 14, 0.90);
-  --color-bg-input: #121215;
-  --color-bg-input-focus: #18181D;
-  --color-bg-overlay: rgba(0, 0, 0, 0.88);
-  --bg-login-gradient: radial-gradient(circle at 50% 0%, #18181B 0%, #09090B 60%, #000000 100%);
-  --card-top-accent: linear-gradient(90deg, #FFFFFF 0%, #71717A 50%, #27272A 100%);
-
-  /* Typography / Text (Pure White & Grayscale) */
-  --color-text-main: #FFFFFF;
-  --color-text-body: #E4E4E7;
-  --color-text-muted: #A1A1AA;
-  --color-text-light: #71717A;
-  --color-text-white: #FFFFFF;
-  --color-text-on-dark: #FFFFFF;
-  --color-text-on-dark-muted: #A1A1AA;
-  --color-text-primary: #FFFFFF;
-
-  /* Borders & Glass */
-  --color-border: #27272A;
-  --color-border-hover: #3F3F46;
-  --color-border-focus: #FFFFFF;
-  --color-border-subtle: #18181B;
-  --color-border-glass: rgba(255, 255, 255, 0.15);
-  --color-border-glass-dark: rgba(255, 255, 255, 0.08);
-
-  /* Status Colors (High Contrast Black & White with subtle tints) */
-  --color-success: #FFFFFF;
-  --color-success-bg: rgba(255, 255, 255, 0.08);
-  --color-success-border: rgba(255, 255, 255, 0.25);
-  --color-success-text: #FFFFFF;
-
-  --color-warning: #E4E4E7;
-  --color-warning-bg: rgba(255, 255, 255, 0.06);
-  --color-warning-border: rgba(255, 255, 255, 0.20);
-  --color-warning-text: #F4F4F5;
-
-  --color-danger: #FFFFFF;
-  --color-danger-bg: rgba(255, 255, 255, 0.10);
-  --color-danger-border: rgba(255, 255, 255, 0.30);
-  --color-danger-text: #FFFFFF;
-
-  --color-info: #FFFFFF;
-  --color-info-bg: rgba(255, 255, 255, 0.08);
-  --color-info-border: rgba(255, 255, 255, 0.20);
-  --color-info-text: #FFFFFF;
-
-  --color-neutral: #A1A1AA;
-  --color-neutral-bg: #18181B;
-  --color-neutral-border: #27272A;
-  --color-neutral-text: #D4D4D8;
-
-  /* Elevation & Shadows (Pitch black shadows with crisp edge definition) */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.85);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.90), 0 1px 2px -1px rgba(0, 0, 0, 0.90);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.95), 0 2px 4px -2px rgba(0, 0, 0, 0.95);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.98), 0 4px 6px -4px rgba(0, 0, 0, 0.98);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.99), 0 8px 10px -6px rgba(0, 0, 0, 0.99);
-  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.18);
-  --shadow-card: 0 0 0 1px #27272A, 0 4px 12px rgba(0, 0, 0, 0.65);
-
-  /* Component & Fragment Aliases */
-  --primary: var(--color-primary);
-  --primary-hover: var(--color-primary-hover);
-  --primary-light: var(--color-primary-light);
-  --primary-active: var(--color-primary-active);
-
-  --bg-primary: var(--color-bg-body);
-  --bg-surface: var(--color-bg-surface);
-  --bg-secondary: var(--color-bg-subtle);
-  --bg-hover: var(--color-bg-card-hover);
-  --bg-muted: var(--color-bg-muted);
-  --bg-body: var(--color-bg-body);
-
-  --border-color: var(--color-border);
-  --border-color-hover: var(--color-border-hover);
-  --border-color-focus: var(--color-border-focus);
-
-  --text-primary: var(--color-text-main);
-  --text-secondary: var(--color-text-body);
-  --text-tertiary: var(--color-text-muted);
-  --text-light: var(--color-text-light);
-
-  --danger: var(--color-danger);
-  --danger-light: var(--color-danger-bg);
-  --success: var(--color-success);
-  --success-light: var(--color-success-bg);
-  --warning: var(--color-warning);
-  --warning-light: var(--color-warning-bg);
-  --info: var(--color-info);
-  --info-light: var(--color-info-bg);
+/* Fluid Sizing Overrides for Collapsed Sidebar Mode */
+body.sidebar-collapsed {
+  --sidebar-width: 64px;
+  --dash-right-rail-width: 350px;
+  --dash-center-padding-x: 2.5rem;
+  --dash-center-padding-top: 1.5rem;
+  --dash-center-gap: 2.15rem;
+  --dash-today-title-size: clamp(6.75rem, 9.2vw, 10rem);
+  --dash-subtitle-size: 1.0625rem;
+  --dash-hero-padding: 1.05rem 1.45rem;
+  --dash-hero-gap: 1.4rem;
+  --dash-hero-title-size: 1.35rem;
+  --dash-hero-due-size: 2.45rem;
+  --dash-hero-btn-padding: 0.55rem 1rem;
+  --dash-hero-btn-font-size: 0.78rem;
+  --dash-kanban-col-padding: 0.85rem;
+  --dash-kanban-col-gap: 0.75rem;
+  --dash-kanban-card-padding: 1rem;
+  --dash-kanban-card-title-size: 0.9375rem;
+  --dash-kanban-card-text-size: 0.875rem;
 }

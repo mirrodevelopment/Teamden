@@ -1,0 +1,796 @@
+/* ==========================================================================
+   Teamden by shed — Project Detail & Tab Host Styles (project.css)
+   Path: pages/project/project.css
+   Single source of truth: fragments/theme/theme.css
+   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
+@import url('project-overview/project-overview.css');
+@import url('project-tasks/project-tasks.css');
+@import url('project-documents/project-documents.css');
+@import url('project-activity/project-activity.css');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body.project-body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--dash-bg-canvas, #F8F4EE);
+  color: var(--dash-text-primary, #111111);
+  font-family: var(--font-family, 'Mostarct', 'Montserrat', sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Master Layout */
+.dash-master-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--dash-bg-canvas, #F8F4EE);
+  overflow-x: hidden;
+}
+
+.sidebar-mount-area {
+  width: 0;
+  flex-shrink: 0;
+}
+
+.dash-main-area,
+.dash-app-main {
+  flex: 1;
+  margin-left: var(--sidebar-width, 210px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  background-color: var(--dash-bg-canvas, #F8F4EE);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.sidebar-collapsed .dash-main-area,
+body.sidebar-collapsed .dash-app-main {
+  margin-left: var(--sidebar-collapsed-width, 64px);
+}
+
+/* Project Workspace Content Column */
+.project-content-container {
+  padding: 1.25rem 2rem 3.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.45rem;
+  min-width: 0;
+}
+
+.project-content-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width, 295px);
+  gap: 1.85rem;
+  align-items: start;
+}
+
+.project-content-split.full-width {
+  grid-template-columns: 1fr;
+}
+
+.project-center-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-width: 0;
+}
+
+.project-right-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  width: var(--dash-right-rail-width, 295px);
+  min-width: var(--dash-right-rail-width, 295px);
+}
+
+/* ==========================================================================
+   PROJECT HERO HEADER & METADATA
+   ========================================================================== */
+.project-hero-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.project-breadcrumb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project-breadcrumb {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #747474;
+}
+
+.project-header-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.project-status-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: #EAF7EE;
+  color: #1B873F;
+  border: 1px solid rgba(27, 135, 63, 0.18);
+  border-radius: 9999px;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.project-status-pill-btn:hover {
+  background-color: #DCF2E2;
+}
+
+.project-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #22C55E;
+}
+
+.project-status-chevron {
+  font-size: 0.65rem;
+  color: #1B873F;
+}
+
+.project-more-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #666666;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  line-height: 1;
+}
+
+.project-more-btn:hover {
+  color: #111111;
+}
+
+/* Title & Meta Row */
+.project-title-meta-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.project-title-desc-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 620px;
+}
+
+.project-title-huge {
+  margin: 0;
+  font-family: var(--font-family-today, 'Inter Tight', 'Inter', sans-serif);
+  font-size: clamp(4.5rem, 6.5vw, 5.85rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  color: #111111;
+  text-transform: lowercase;
+  word-break: keep-all;
+}
+
+.project-desc-hero {
+  margin: 0.35rem 0 0 0;
+  font-size: 0.84375rem;
+  line-height: 1.5;
+  color: #555555;
+  max-width: 520px;
+}
+
+/* Metadata Stack on the right of title (Single vertical column) */
+.project-meta-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  min-width: 145px;
+}
+
+.meta-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.meta-field-label {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #777777;
+}
+
+.meta-field-val {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.health-val-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #F59E0B;
+}
+
+/* Tasks Tab Specific Header Layout & Two-Column Split */
+.project-content-container.tab-tasks-mode {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.85rem;
+  padding: 1.25rem 2rem 3.5rem 2rem;
+  align-items: start;
+}
+
+.project-content-container.tab-tasks-mode.drawer-active {
+  grid-template-columns: minmax(0, 1fr) 385px;
+  padding-right: 0;
+  gap: 1.5rem;
+}
+
+.project-tasks-drawer-rail {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  min-width: 300px;
+  max-width: 340px;
+  align-self: stretch;
+}
+
+/* Activity Tab Specific Layout & Two-Column Split */
+.project-content-container.tab-activity-mode {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 285px;
+  gap: 1.85rem;
+  padding: 1.25rem 2rem 3.5rem 2rem;
+  align-items: start;
+}
+
+.project-activity-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  width: 285px;
+  min-width: 285px;
+  align-self: start;
+}
+
+.project-content-container.tab-tasks-mode.drawer-active .project-tasks-drawer-rail {
+  width: 385px;
+  min-width: 360px;
+  max-width: 395px;
+  margin-top: -1.25rem;
+  position: sticky;
+  top: 0;
+}
+
+.project-tasks-drawer-rail .tasks-details-drawer {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  background-color: #FAF8F4;
+  border-left: 1px solid #E5E1D9;
+  padding: 1.25rem 1.4rem;
+  min-height: calc(100vh - 65px);
+  box-sizing: border-box;
+}
+
+.project-tasks-drawer-rail .tasks-overview-widgets {
+  width: 100%;
+}
+
+.project-content-container.tab-tasks-mode .project-title-huge,
+.project-content-container.tab-documents-mode .project-title-huge,
+.project-content-container.tab-activity-mode .project-title-huge {
+  font-size: clamp(3.2rem, 5.2vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.project-content-container.tab-tasks-mode .project-desc-hero,
+.project-content-container.tab-tasks-mode .project-meta-strip,
+.project-content-container.tab-tasks-mode .project-header-actions-right,
+.project-content-container.tab-documents-mode .project-desc-hero,
+.project-content-container.tab-documents-mode .project-meta-strip,
+.project-content-container.tab-documents-mode .project-header-actions-right,
+.project-content-container.tab-activity-mode .project-desc-hero,
+.project-content-container.tab-activity-mode .project-meta-strip,
+.project-content-container.tab-activity-mode .project-header-actions-right {
+  display: none !important;
+}
+
+.project-content-container.tab-tasks-mode .project-meta-inline,
+.project-content-container.tab-documents-mode .project-meta-inline,
+.project-content-container.tab-activity-mode .project-meta-inline {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #555555;
+  margin-top: 0.25rem;
+}
+
+.project-content-container.tab-tasks-mode .meta-inline-dot,
+.project-content-container.tab-documents-mode .meta-inline-dot,
+.project-content-container.tab-activity-mode .meta-inline-dot {
+  color: #888888;
+}
+
+.project-content-container.tab-tasks-mode .meta-inline-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #111111;
+  font-weight: 700;
+}
+
+.project-content-container.tab-documents-mode .meta-inline-status,
+.project-content-container.tab-documents-mode .meta-inline-dot:last-of-type,
+.project-content-container.tab-activity-mode .meta-inline-status,
+.project-content-container.tab-activity-mode .meta-inline-dot:last-of-type {
+  display: none !important;
+}
+
+.title-inline-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111111;
+  vertical-align: middle;
+  margin-left: 0.85rem;
+  letter-spacing: normal;
+  font-family: var(--font-family, 'Montserrat', sans-serif);
+}
+
+.title-inline-status .project-status-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #22C55E;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   PROJECT TABS NAVIGATION
+   ========================================================================== */
+.project-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-top: 0.25rem;
+}
+
+.project-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: #FAF7F1;
+  color: #444444;
+  border: 1px solid #EAE5DB;
+  border-radius: 9999px;
+  padding: 0.32rem 1.05rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.project-tab-btn:hover:not(.active) {
+  background-color: #F3EFE7;
+  color: #111111;
+  border-color: #DFDACF;
+}
+
+.project-tab-btn.active {
+  background-color: #141414;
+  border-color: #141414;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   RIGHT RAIL WIDGETS (PROJECT HEALTH, DECISION REGISTER, PROJECT TEAM)
+   ========================================================================== */
+.health-dark-card,
+.card-last-visit,
+#card-last-visit {
+  background-color: #141414 !important;
+  border: 1px solid #222222 !important;
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem;
+  color: #FFFFFF !important;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.health-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.health-label {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888888;
+}
+
+.health-pulse-svg {
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.health-metric-huge {
+  font-family: var(--font-family-number, 'Monument Extended', sans-serif);
+  font-size: 3.35rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #FFFFFF;
+  margin: 0.5rem 0 0.25rem 0;
+}
+
+.health-main-heading {
+  margin: 0.35rem 0 0.15rem 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.health-desc-text {
+  margin: 0;
+  font-size: 0.78125rem;
+  color: #999999;
+  line-height: 1.4;
+}
+
+.btn-review-blockers {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78125rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: opacity 0.15s ease;
+}
+
+.btn-review-blockers:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+/* Decision Register Widget */
+.decision-register-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pending-decision-box {
+  background-color: #FAF9F5;
+  border: 1px solid #DFD9CE;
+  border-radius: 10px;
+  padding: 0.95rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.decision-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.decision-review-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: #FEF3C7;
+  border: 1px solid #FDE68A;
+  border-radius: 9999px;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.59375rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #92400E;
+}
+
+.decision-dot-amber {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #F59E0B;
+}
+
+.decision-due-str {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #777777;
+}
+
+.decision-title-text {
+  margin: 0.45rem 0 0.15rem 0;
+  font-size: 0.90625rem;
+  font-weight: 800;
+  color: #111111;
+  line-height: 1.25;
+}
+
+.decision-desc-text {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #555555;
+  line-height: 1.38;
+}
+
+.decision-owner-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.65rem;
+}
+
+.decision-owner-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.decision-owner-label {
+  font-size: 0.625rem;
+  color: #777777;
+  font-weight: 600;
+}
+
+.decision-owner-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.btn-review-pill {
+  background-color: #111111;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.32rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-review-pill:hover {
+  opacity: 0.85;
+}
+
+.decision-more-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111111;
+  text-decoration: none;
+  padding-top: 0.25rem;
+}
+
+.decision-more-link:hover {
+  text-decoration: underline;
+}
+
+/* Project Team Widget */
+.project-team-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.team-avatars-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.team-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.71875rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.team-avatar-circle.avatar-pk {
+  background-color: #FDE8E8;
+  color: #9B1C1C;
+}
+
+.team-avatar-circle.avatar-ar {
+  background-color: #EEF2FF;
+  color: #4338CA;
+}
+
+.team-avatar-circle.avatar-sk {
+  background-color: #ECFCCB;
+  color: #3F6212;
+}
+
+.team-avatar-circle.avatar-mj {
+  background-color: #E0F2FE;
+  color: #0369A1;
+}
+
+.team-add-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px dashed #BFB9AC;
+  background: transparent;
+  color: #555555;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.team-add-btn:hover {
+  border-color: #111111;
+  color: #111111;
+}
+
+.team-members-footer {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #666666;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   TAB VIEW HOST CONTAINER
+   ========================================================================== */
+.project-tab-view-container {
+  width: 100%;
+}
+
+.tab-view-pane {
+  display: none;
+  animation: fadeInPane 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-view-pane.active {
+  display: block;
+}
+
+@keyframes fadeInPane {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Secondary Tab Panes Placeholder Styling */
+.tab-pane-content-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E2DC;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.tab-pane-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111111;
+}
+
+.tab-pane-desc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+/* ==========================================================================
+   RESPONSIVE ADAPTATIONS
+   ========================================================================== */
+@media (max-width: 992px) {
+  .project-content-split {
+    grid-template-columns: 1fr;
+  }
+  .project-right-rail {
+    width: 100%;
+    min-width: 100%;
+  }
+  .project-title-meta-split {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .project-meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    border-top: 1px solid #E5E2DC;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dash-main-area,
+  .dash-app-main {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-content-container {
+    padding: 1.25rem 1rem 3rem 1rem;
+  }
+  .project-meta-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem 1rem;
+  }
+  .project-tabs-bar {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .project-tabs-bar::-webkit-scrollbar {
+    display: none;
+  }
+}

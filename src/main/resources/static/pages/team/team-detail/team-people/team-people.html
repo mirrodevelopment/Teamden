@@ -1,0 +1,481 @@
+<!-- =======================================================================
+     Teamden — Team People Tab Component (team-people.html)
+     Path: pages/team/team-detail/team-people/team-people.html
+     Updated design matching the latest Brick Team People screenshot.
+     ======================================================================= -->
+<div class="tp-split-layout" id="team-people-root">
+
+  <!-- =====================================================================
+       MAIN PEOPLE COLUMN (Left ~73%)
+       ===================================================================== -->
+  <div class="tp-main-col">
+
+    <!-- ── Section 01: The People ─────────────────────────────────────── -->
+    <section class="tp-section" aria-labelledby="tp-members-heading">
+      <div class="tp-members-card" id="tp-members-card">
+
+        <!-- Top row: Eyebrow + Search & Role Filter Toolbar -->
+        <div class="tp-section-head-row">
+          <div class="tp-section-eyebrow">
+            <span class="tp-eyebrow-num">01</span>
+            <span class="tp-eyebrow-sep">/</span>
+            <span class="tp-eyebrow-label">THE PEOPLE</span>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="tp-filter-toolbar">
+            <div class="tp-search-wrap">
+              <button class="tp-search-toggle-btn" id="tp-search-toggle" aria-label="Toggle search">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
+              <input type="text" id="tp-member-search" class="tp-search-input" placeholder="Search team members..." aria-label="Search team members">
+              <button id="tp-search-clear" class="tp-search-clear" style="display:none;" title="Clear search">×</button>
+            </div>
+
+            <div class="tp-role-select-wrap">
+              <select id="tp-role-filter" class="tp-role-select" aria-label="Filter by role">
+                <option value="all">All roles</option>
+                <option value="Design Lead">Design Lead</option>
+                <option value="Product Designer">Product Designer</option>
+                <option value="Research & Content">Research &amp; Content</option>
+                <option value="Interface Developer">Interface Developer</option>
+              </select>
+              <svg class="tp-select-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="tp-section-title" id="tp-members-heading">Meet the team<span class="tp-title-dot">.</span></h2>
+
+        <!-- 2x2 Member Cards Grid (Updated: Two-column metadata, no skill tags) -->
+        <div class="tp-members-grid" id="tp-members-grid">
+
+          <!-- Member 01: Peter K. (Pale Beige) -->
+          <div class="tp-member-card tp-card--beige" data-member-id="m-peter" data-role="Design Lead" role="button" tabindex="0">
+            <div class="tp-card-top">
+              <div class="tp-card-top-left">
+                <div class="tp-avatar-bubble tp-avatar--beige">PK</div>
+                <div class="tp-member-id-meta">
+                  <span class="tp-member-name">Peter K.</span>
+                  <span class="tp-member-role">Design Lead</span>
+                </div>
+              </div>
+              <button class="tp-card-arrow-btn" aria-label="View Peter K. profile">&#8594;</button>
+            </div>
+
+            <div class="tp-card-divider"></div>
+
+            <div class="tp-card-meta-grid">
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">AREA OF RESPONSIBILITY</span>
+                <span class="tp-meta-val">Creative direction &amp; approvals</span>
+              </div>
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">CURRENT FOCUS</span>
+                <span class="tp-meta-val">Website Redesign</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 02: Alex R. (Pale Lavender) -->
+          <div class="tp-member-card tp-card--lavender" data-member-id="m-alex" data-role="Product Designer" role="button" tabindex="0">
+            <div class="tp-card-top">
+              <div class="tp-card-top-left">
+                <div class="tp-avatar-bubble tp-avatar--lavender">AR</div>
+                <div class="tp-member-id-meta">
+                  <span class="tp-member-name">Alex R.</span>
+                  <span class="tp-member-role">Product Designer</span>
+                </div>
+              </div>
+              <button class="tp-card-arrow-btn" aria-label="View Alex R. profile">&#8594;</button>
+            </div>
+
+            <div class="tp-card-divider"></div>
+
+            <div class="tp-card-meta-grid">
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">AREA OF RESPONSIBILITY</span>
+                <span class="tp-meta-val">Interface design &amp; reviews</span>
+              </div>
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">CURRENT FOCUS</span>
+                <span class="tp-meta-val">Client Application</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 03: Sarah K. (Pale Green) -->
+          <div class="tp-member-card tp-card--green" data-member-id="m-sarah" data-role="Research & Content" role="button" tabindex="0">
+            <div class="tp-card-top">
+              <div class="tp-card-top-left">
+                <div class="tp-avatar-bubble tp-avatar--green">SK</div>
+                <div class="tp-member-id-meta">
+                  <span class="tp-member-name">Sarah K.</span>
+                  <span class="tp-member-role">Research &amp; Content</span>
+                </div>
+              </div>
+              <button class="tp-card-arrow-btn" aria-label="View Sarah K. profile">&#8594;</button>
+            </div>
+
+            <div class="tp-card-divider"></div>
+
+            <div class="tp-card-meta-grid">
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">AREA OF RESPONSIBILITY</span>
+                <span class="tp-meta-val">Research, content &amp; clarity</span>
+              </div>
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">CURRENT FOCUS</span>
+                <span class="tp-meta-val">Design Guidelines</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 04: Maria J. (Pale Blue) -->
+          <div class="tp-member-card tp-card--blue" data-member-id="m-maria" data-role="Interface Developer" role="button" tabindex="0">
+            <div class="tp-card-top">
+              <div class="tp-card-top-left">
+                <div class="tp-avatar-bubble tp-avatar--blue">MJ</div>
+                <div class="tp-member-id-meta">
+                  <span class="tp-member-name">Maria J.</span>
+                  <span class="tp-member-role">Interface Developer</span>
+                </div>
+              </div>
+              <button class="tp-card-arrow-btn" aria-label="View Maria J. profile">&#8594;</button>
+            </div>
+
+            <div class="tp-card-divider"></div>
+
+            <div class="tp-card-meta-grid">
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">AREA OF RESPONSIBILITY</span>
+                <span class="tp-meta-val">Implementation &amp; handoffs</span>
+              </div>
+              <div class="tp-meta-col">
+                <span class="tp-meta-label">CURRENT FOCUS</span>
+                <span class="tp-meta-val">Website Redesign</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.tp-members-grid -->
+
+        <div id="tp-no-members-msg" class="tp-empty-msg" style="display:none;">
+          <p>No team members match your search.</p>
+        </div>
+
+      </div><!-- /.tp-members-card -->
+    </section>
+
+    <!-- ── Lower Two-Column Section: Responsibility Map + Collaboration & Access ── -->
+    <div class="tp-lower-split-grid">
+
+      <!-- Section 02: Responsibility Map (Left Column) -->
+      <section class="tp-subcard" aria-labelledby="tp-resp-heading">
+        <div class="tp-section-head-row">
+          <div class="tp-section-eyebrow">
+            <span class="tp-eyebrow-num">02</span>
+            <span class="tp-eyebrow-sep">/</span>
+            <span class="tp-eyebrow-label">RESPONSIBILITY MAP</span>
+          </div>
+          <button class="tp-action-link" id="tp-view-all-resp" title="View all team responsibilities">
+            <span>VIEW ALL</span>
+            <span class="tp-link-arrow">&#8594;</span>
+          </button>
+        </div>
+
+        <h3 class="tp-section-title tp-title--sm" id="tp-resp-heading">Who does what<span class="tp-title-dot">.</span></h3>
+
+        <div class="tp-resp-list" id="tp-resp-list">
+
+          <!-- Row 1: Design direction (PK) -->
+          <div class="tp-resp-row" data-resp-id="resp-direction" role="button" tabindex="0">
+            <div class="tp-resp-left">
+              <div class="tp-resp-icon-wrap tp-icon--beige">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                  <path d="M2 2l7.586 7.586"></path>
+                  <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+              </div>
+              <span class="tp-resp-title">Design direction</span>
+            </div>
+            <div class="tp-resp-right">
+              <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--beige">PK</div>
+              <span class="tp-resp-owner">Peter K.</span>
+              <span class="tp-row-chevron">&#8250;</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Interface reviews (AR) -->
+          <div class="tp-resp-row" data-resp-id="resp-interface" role="button" tabindex="0">
+            <div class="tp-resp-left">
+              <div class="tp-resp-icon-wrap tp-icon--lavender">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <span class="tp-resp-title">Interface reviews</span>
+            </div>
+            <div class="tp-resp-right">
+              <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--lavender">AR</div>
+              <span class="tp-resp-owner">Alex R.</span>
+              <span class="tp-row-chevron">&#8250;</span>
+            </div>
+          </div>
+
+          <!-- Row 3: Research & content (SK) -->
+          <div class="tp-resp-row" data-resp-id="resp-research" role="button" tabindex="0">
+            <div class="tp-resp-left">
+              <div class="tp-resp-icon-wrap tp-icon--green">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+              </div>
+              <span class="tp-resp-title">Research &amp; content</span>
+            </div>
+            <div class="tp-resp-right">
+              <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--green">SK</div>
+              <span class="tp-resp-owner">Sarah K.</span>
+              <span class="tp-row-chevron">&#8250;</span>
+            </div>
+          </div>
+
+          <!-- Row 4: Implementation handoffs (MJ) -->
+          <div class="tp-resp-row" data-resp-id="resp-handoffs" role="button" tabindex="0">
+            <div class="tp-resp-left">
+              <div class="tp-resp-icon-wrap tp-icon--blue">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <span class="tp-resp-title">Implementation handoffs</span>
+            </div>
+            <div class="tp-resp-right">
+              <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--blue">MJ</div>
+              <span class="tp-resp-owner">Maria J.</span>
+              <span class="tp-row-chevron">&#8250;</span>
+            </div>
+          </div>
+
+        </div><!-- /.tp-resp-list -->
+      </section>
+
+      <!-- Right Column: Working Together (03) + Team Access (04) Stacked -->
+      <div class="tp-lower-right-col">
+
+        <!-- Section 03: Working Together -->
+        <section class="tp-subcard" aria-labelledby="tp-collab-heading">
+          <div class="tp-section-head-row">
+            <div class="tp-section-eyebrow">
+              <span class="tp-eyebrow-num">03</span>
+              <span class="tp-eyebrow-sep">/</span>
+              <span class="tp-eyebrow-label">WORKING TOGETHER</span>
+            </div>
+            <button class="tp-action-link" id="tp-view-all-collab" title="View all collaboration history">
+              <span>VIEW ALL</span>
+              <span class="tp-link-arrow">&#8594;</span>
+            </button>
+          </div>
+
+          <h3 class="tp-section-title tp-title--sm" id="tp-collab-heading">Collaboration<span class="tp-title-dot">.</span></h3>
+
+          <div class="tp-collab-list" id="tp-collab-list">
+
+            <!-- Collab 1: PK + AR -->
+            <div class="tp-collab-row" data-collab-id="collab-1" role="button" tabindex="0">
+              <div class="tp-collab-left">
+                <div class="tp-dual-avatars">
+                  <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--beige">PK</div>
+                  <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--lavender tp-avatar-overlap">AR</div>
+                </div>
+                <div class="tp-collab-info">
+                  <span class="tp-collab-title">Website design review</span>
+                  <span class="tp-collab-meta">Peter K. &amp; Alex R. · Approval pending</span>
+                </div>
+              </div>
+              <span class="tp-row-arrow">&#8594;</span>
+            </div>
+
+            <!-- Collab 2: SK + MJ -->
+            <div class="tp-collab-row" data-collab-id="collab-2" role="button" tabindex="0">
+              <div class="tp-collab-left">
+                <div class="tp-dual-avatars">
+                  <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--green">SK</div>
+                  <div class="tp-avatar-bubble tp-avatar--mini tp-avatar--blue tp-avatar-overlap">MJ</div>
+                </div>
+                <div class="tp-collab-info">
+                  <span class="tp-collab-title">Content implementation</span>
+                  <span class="tp-collab-meta">Sarah K. &amp; Maria J. · In progress</span>
+                </div>
+              </div>
+              <span class="tp-row-arrow">&#8594;</span>
+            </div>
+
+          </div><!-- /.tp-collab-list -->
+        </section>
+
+        <!-- Section 04: Team Access (Immediately below Working Together) -->
+        <section class="tp-subcard" aria-labelledby="tp-access-heading">
+          <div class="tp-section-eyebrow" style="margin-bottom:0.25rem;">
+            <span class="tp-eyebrow-num">04</span>
+            <span class="tp-eyebrow-sep">/</span>
+            <span class="tp-eyebrow-label">TEAM ACCESS</span>
+          </div>
+
+          <h3 class="tp-section-title tp-title--sm" id="tp-access-heading" style="margin-bottom:0.6rem;">Permissions &amp; invitations<span class="tp-title-dot">.</span></h3>
+
+          <div class="tp-access-banner" id="tp-access-manage-btn" role="button" tabindex="0">
+            <div class="tp-access-banner-left">
+              <div class="tp-access-icon-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <span class="tp-access-banner-text">Manage access to team resources and invite new members.</span>
+            </div>
+            <span class="tp-row-arrow">&#8594;</span>
+          </div>
+        </section>
+
+      </div><!-- /.tp-lower-right-col -->
+
+    </div><!-- /.tp-lower-split-grid -->
+
+  </div><!-- /.tp-main-col -->
+
+  <!-- =====================================================================
+       RIGHT PEOPLE SIDEBAR (5 Cards)
+       ===================================================================== -->
+  <aside class="tp-right-rail" aria-label="Team People Sidebar">
+
+    <!-- Card 1: Team Connections (Dark Charcoal Card) -->
+    <div class="tp-dark-card" id="tp-connections-card">
+      <span class="tp-dark-eyebrow">TEAM CONNECTIONS / 01</span>
+      <h3 class="tp-dark-title">Find the right person<span style="color:#C9F34A;">.</span></h3>
+      <p class="tp-dark-sub">Search by responsibility, expertise or project involvement.</p>
+      <div class="tp-dark-divider"></div>
+      <button class="tp-dark-btn" id="tp-browse-members-btn">
+        <span>Browse team members</span>
+        <span class="tp-link-arrow">&#8594;</span>
+      </button>
+    </div>
+
+    <!-- Card 2: Needs an Owner (Pale Beige Card) -->
+    <div class="tp-rail-card--beige" id="tp-needs-owner-card">
+      <div class="tp-rail-card-head">
+        <span class="tp-rail-card-label">NEEDS AN OWNER</span>
+        <span class="tp-rail-count-badge" id="tp-needs-owner-count">01</span>
+      </div>
+      <div class="tp-needs-owner-row">
+        <div class="tp-needs-owner-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="tp-needs-owner-copy">
+          <span class="tp-needs-owner-title" id="tp-unassigned-title">Mobile navigation review</span>
+          <span class="tp-needs-owner-sub" id="tp-unassigned-sub">Website Redesign · Unassigned reviewer</span>
+        </div>
+      </div>
+      <div>
+        <button class="tp-needs-owner-action-btn" id="tp-assign-reviewer-btn">
+          <span>Assign reviewer</span>
+          <span class="tp-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3: Team Playbook (White Bordered Card) -->
+    <div class="tp-rail-card" id="tp-playbook-rail-card">
+      <div class="tp-rail-resource-row">
+        <div class="tp-playbook-icon-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="tp-rail-resource-info">
+          <span class="tp-rail-card-label" style="font-size:0.625rem;">TEAM PLAYBOOK</span>
+          <h4 class="tp-rail-resource-title">Design Principles &amp; Standards<span style="color:#111;">.</span></h4>
+          <span class="tp-rail-resource-meta">Version 2.1 · Approved</span>
+        </div>
+      </div>
+      <div style="margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid #F0ECE4;">
+        <button class="tp-rail-action-btn" id="tp-open-playbook-btn">
+          <span>Open playbook</span>
+          <span class="tp-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 4: Quick Links (Pale Lavender Card) -->
+    <div class="tp-rail-card--lavender" id="tp-quick-links-card">
+      <div class="tp-quick-links-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </svg>
+        <span class="tp-rail-card-label">QUICK LINKS</span>
+      </div>
+      <div class="tp-quick-links-list">
+        <!-- Link 01: Design guidelines -->
+        <div class="tp-quick-link-row" data-href="/pages/workspace/team-libraries/team-libraries.html" role="button" tabindex="0">
+          <span class="tp-quick-link-title">Design guidelines</span>
+          <span class="tp-row-arrow">&#8594;</span>
+        </div>
+        <!-- Link 02: Component library -->
+        <div class="tp-quick-link-row" data-href="/pages/workspace/team-libraries/team-libraries.html" role="button" tabindex="0">
+          <span class="tp-quick-link-title">Component library</span>
+          <span class="tp-row-arrow">&#8594;</span>
+        </div>
+        <!-- Link 03: Project templates -->
+        <div class="tp-quick-link-row" data-href="/pages/workspace/team-libraries/team-libraries.html" role="button" tabindex="0">
+          <span class="tp-quick-link-title">Project templates</span>
+          <span class="tp-row-arrow">&#8594;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Team Standards (Pale Green Card) -->
+    <div class="tp-rail-card--green" id="tp-standards-rail-card">
+      <div class="tp-rail-resource-row">
+        <div class="tp-standards-icon-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div class="tp-rail-resource-info">
+          <span class="tp-rail-card-label" style="font-size:0.625rem;">TEAM STANDARDS</span>
+          <h4 class="tp-rail-resource-title" style="font-size:0.8rem; line-height:1.35; margin-top:0.25rem;">Shared references and patterns across all projects.</h4>
+        </div>
+      </div>
+      <div style="margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid rgba(0, 0, 0, 0.06);">
+        <button class="tp-rail-action-btn" id="tp-view-standards-btn">
+          <span>View standards</span>
+          <span class="tp-link-arrow">&#8594;</span>
+        </button>
+      </div>
+    </div>
+
+  </aside><!-- /.tp-right-rail -->
+
+</div><!-- /.tp-split-layout -->
