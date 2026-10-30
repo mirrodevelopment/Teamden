@@ -137,6 +137,7 @@ body.sidebar-collapsed .tl-main-area {
 }
 
 .tl-bc-current {
+  font-family: var(--number-font);
   color: var(--dash-text-muted);
 }
 
@@ -256,6 +257,7 @@ body.sidebar-collapsed .tl-main-area {
 }
 
 .tl-eyebrow-num {
+  font-family: var(--number-font);
   color: var(--dash-text-primary);
 }
 
@@ -442,7 +444,7 @@ body.sidebar-collapsed .tl-main-area {
 }
 
 .tl-coll-num {
-  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-family: var(--number-font);
   font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.03em;

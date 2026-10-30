@@ -71,6 +71,7 @@ body.sidebar-collapsed .team-main-area {
 }
 
 .team-breadcrumb-text {
+  font-family: var(--number-font);
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -250,6 +251,7 @@ body.sidebar-collapsed .team-main-area {
 }
 
 .team-eyebrow-num {
+  font-family: var(--number-font);
   color: var(--dash-text-primary, #111111);
 }
 
@@ -474,7 +476,7 @@ body.sidebar-collapsed .team-main-area {
 .team-card--beige    { background: #F2E9DC; border-color: #E6DCCF; }
 
 .team-card-num {
-  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-family: var(--number-font);
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -774,6 +776,7 @@ body.sidebar-collapsed .team-main-area {
 }
 
 .team-dark-eyebrow {
+  font-family: var(--number-font);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;

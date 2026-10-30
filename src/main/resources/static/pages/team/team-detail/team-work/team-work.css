@@ -48,6 +48,7 @@
 }
 
 .tw-eyebrow-num {
+  font-family: var(--number-font);
   color: var(--dash-text-primary, #111111);
 }
 
@@ -334,6 +335,7 @@
 }
 
 .tw-group-count {
+  font-family: var(--number-font);
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--dash-text-muted, #77736C);
@@ -502,6 +504,7 @@
 }
 
 .tw-rail-label {
+  font-family: var(--number-font);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -510,6 +513,7 @@
 }
 
 .tw-rail-badge {
+  font-family: var(--number-font);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.08em;

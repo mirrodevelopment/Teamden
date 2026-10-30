@@ -292,6 +292,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .attachment-count-pill {
+  font-family: var(--number-font);
   background-color: var(--dash-hero-chip-bg);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
@@ -369,7 +370,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .due-number {
-  font-family: 'Unbounded', 'Monument Extended', 'Montserrat', sans-serif !important;
+  font-family: var(--number-font) !important;
   font-size: var(--dash-hero-due-size);
   font-weight: 800 !important;
   line-height: 0.92;
@@ -523,6 +524,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .col-badge {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 700;
   color: var(--dash-text-muted);
@@ -615,6 +617,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .task-num {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 800;
   color: var(--dash-text-primary);
@@ -749,6 +752,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .activity-time {
+  font-family: var(--number-font);
   font-size: 0.75rem;
   font-weight: 800;
   color: var(--dash-text-primary);
@@ -973,7 +977,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .date-huge-number {
-  font-family: 'Monument Extended', 'Unbounded', 'Montserrat' !important;
+  font-family: var(--number-font) !important;
   font-size: 5.25rem;
   font-weight: 800 !important;
   line-height: 0.85;
@@ -1053,6 +1057,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .schedule-time {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 700;
   color: var(--dash-text-muted);
@@ -1151,7 +1156,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .attention-count {
-  font-family: 'Monument Extended', 'Unbounded', 'Montserrat', sans-serif !important;
+  font-family: var(--number-font) !important;
   font-size: 2.2rem;
   font-weight: 900 !important;
   line-height: 1;

@@ -61,7 +61,7 @@
 .status-card-total-badge strong {
   color: #111111;
   font-weight: 800;
-  font-family: var(--font-family-number, 'Monument Extended', sans-serif);
+  font-family: var(--number-font);
 }
 
 /* 5 Metrics Grid */
@@ -137,7 +137,7 @@
 }
 
 .metric-count {
-  font-family: var(--font-family-number, 'Monument Extended', sans-serif);
+  font-family: var(--number-font);
   font-size: 1.85rem;
   font-weight: 900;
   line-height: 1;
@@ -1316,7 +1316,7 @@
 }
 
 .blocked-tasks-huge-count {
-  font-family: var(--font-family-number, 'Monument Extended', sans-serif);
+  font-family: var(--number-font);
   font-size: 1.65rem;
   font-weight: 900;
   line-height: 1;

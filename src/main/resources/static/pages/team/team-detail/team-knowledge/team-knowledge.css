@@ -48,6 +48,7 @@
 }
 
 .tk-eyebrow-num {
+  font-family: var(--number-font);
   color: var(--dash-text-primary, #111111);
 }
 
@@ -482,6 +483,7 @@
 }
 
 .tk-dark-eyebrow {
+  font-family: var(--number-font);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -564,6 +566,7 @@
 }
 
 .tk-rail-count-badge {
+  font-family: var(--number-font);
   font-size: 0.65rem;
   font-weight: 700;
   color: #7A5520;

@@ -7,6 +7,7 @@
    - Monument Extended: Display numbers (25, 01, 02, etc.)
    ========================================================================== */
 
+@import url('../font.css');
 @import url('mostarct.css');
 @import url('inter.css');
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap');
@@ -57,5 +58,8 @@
   --font-family-display: 'Inter';
   --font-family-h2: 'Inter';
   --font-family-today: 'Inter Tight', 'Inter', sans-serif;
-  --font-family-number: 'Monument Extended', 'Unbounded', 'Mostarct', 'Montserrat';
+  --number-font: 'Jx Tabe Black', 'Jx Tabe', 'Monument Extended', 'Unbounded', sans-serif;
+  --font-number: var(--number-font);
+  --font-family-number: var(--number-font);
 }
+

@@ -48,6 +48,7 @@
 }
 
 .tov-eyebrow-num {
+  font-family: var(--number-font);
   color: var(--dash-text-primary, #111111);
 }
 
@@ -220,7 +221,7 @@
 }
 
 .tov-motion-count {
-  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-family: var(--number-font);
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -311,7 +312,7 @@
 }
 
 .tov-row-num {
-  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-family: var(--number-font);
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--dash-text-muted, #77736C);
@@ -471,6 +472,7 @@
 }
 
 .tov-dark-eyebrow {
+  font-family: var(--number-font);
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;

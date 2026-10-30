@@ -71,6 +71,7 @@
 }
 
 .tp-eyebrow-num {
+  font-family: var(--number-font);
   font-weight: 800;
 }
 
@@ -685,7 +686,7 @@
 }
 
 .tp-dark-eyebrow {
-  font-family: var(--font-family, 'Montserrat', sans-serif);
+  font-family: var(--number-font);
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.08em;

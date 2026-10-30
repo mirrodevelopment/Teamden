@@ -191,6 +191,7 @@
 }
 
 .nav-num {
+  font-family: var(--number-font) !important;
   font-size: 0.6875rem;
   font-weight: 700;
   color: var(--dash-text-light);

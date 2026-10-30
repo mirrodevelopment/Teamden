@@ -461,7 +461,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .health-metric-huge {
-  font-family: var(--font-family-number, 'Monument Extended', sans-serif);
+  font-family: var(--number-font);
   font-size: 3.35rem;
   font-weight: 900;
   letter-spacing: -0.04em;

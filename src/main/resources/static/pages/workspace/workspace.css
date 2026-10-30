@@ -101,6 +101,7 @@ body.sidebar-collapsed .ws-main-area {
 /* ── Breadcrumb ─────────────────────────────────────────────────────────── */
 .ws-breadcrumb { display: flex; align-items: center; }
 .ws-breadcrumb-text {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -237,6 +238,7 @@ body.sidebar-collapsed .ws-main-area {
   color: rgba(255,255,255,0.35);
 }
 .ws-progress-num {
+  font-family: var(--number-font);
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--dash-accent-lime, #D4F443);
@@ -347,6 +349,7 @@ body.sidebar-collapsed .ws-main-area {
   flex-shrink: 0;
 }
 .ws-ki-count {
+  font-family: var(--number-font);
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--dash-text-primary);
@@ -426,6 +429,7 @@ body.sidebar-collapsed .ws-main-area {
   flex-shrink: 0;
 }
 .ws-recent-time {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 700;
   color: var(--dash-text-primary);
@@ -636,6 +640,7 @@ body.sidebar-collapsed .ws-main-area {
   border-radius: var(--radius-sm);
 }
 .ws-stat-num {
+  font-family: var(--number-font);
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--dash-text-primary);
