@@ -131,7 +131,7 @@ body.sidebar-collapsed .insights-app-main {
    ========================================================================== */
 .insights-content-canvas {
   flex: 1;
-  padding: 24px 32px 64px 32px;
+  padding: 16px 28px 48px 28px;
   width: 100%;
   max-width: 1540px;
   margin: 0 auto;
@@ -140,7 +140,7 @@ body.sidebar-collapsed .insights-app-main {
 .insights-layout-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 24px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -151,7 +151,7 @@ body.sidebar-collapsed .insights-app-main {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 
 .header-left-meta {
@@ -321,9 +321,9 @@ body.sidebar-collapsed .insights-app-main {
   background-color: var(--in-card-bg);
   border: 1px solid var(--in-border);
   border-radius: var(--in-radius-lg);
-  padding: 24px 28px;
+  padding: 20px 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .card-top-row {

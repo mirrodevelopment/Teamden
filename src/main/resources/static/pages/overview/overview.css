@@ -154,7 +154,7 @@ body.sidebar-collapsed .overview-app-main {
    ========================================================================== */
 .overview-content-canvas {
   flex: 1;
-  padding: 24px 32px 64px 32px;
+  padding: 16px 28px 48px 28px;
   width: 100%;
   max-width: 1540px;
   margin: 0 auto;
@@ -163,7 +163,7 @@ body.sidebar-collapsed .overview-app-main {
 .overview-layout-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 276px;
-  gap: 24px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -174,13 +174,13 @@ body.sidebar-collapsed .overview-app-main {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 
 .header-left-meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .header-breadcrumbs {
@@ -205,12 +205,12 @@ body.sidebar-collapsed .overview-app-main {
 
 .overview-main-heading {
   font-family: 'Inter Tight', 'Inter', sans-serif;
-  font-size: 56px;
+  font-size: 50px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.045em;
   color: #000000;
-  margin: 6px 0 6px 0;
+  margin: 2px 0 4px 0;
   display: inline-flex;
   align-items: baseline;
 }
@@ -220,7 +220,7 @@ body.sidebar-collapsed .overview-app-main {
 }
 
 .overview-subheading {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: var(--ov-text-secondary);
   margin: 0;
@@ -335,10 +335,10 @@ body.sidebar-collapsed .overview-app-main {
 .org-pulse-banner {
   background-color: var(--ov-black-card);
   border-radius: var(--ov-radius-lg);
-  padding: 24px 28px;
+  padding: 16px 22px;
   color: var(--ov-text-white);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   border: 1px solid var(--ov-black-border);
 }
 
@@ -346,7 +346,7 @@ body.sidebar-collapsed .overview-app-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .pulse-eyebrow {
@@ -364,26 +364,26 @@ body.sidebar-collapsed .overview-app-main {
 
 .pulse-main-heading {
   font-family: 'Inter Tight', 'Inter', sans-serif;
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.025em;
   color: #FFFFFF;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
 }
 
 .pulse-subtext {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: #9E9E9E;
-  margin: 0 0 18px 0;
+  margin: 0 0 12px 0;
 }
 
 .pulse-divider {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.12);
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .pulse-bottom-action {
