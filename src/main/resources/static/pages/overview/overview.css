@@ -154,7 +154,7 @@ body.sidebar-collapsed .overview-app-main {
 
 .overview-layout-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 276px;
+  grid-template-columns: minmax(0, 1fr) 280px;
   gap: 20px;
   align-items: start;
 }
@@ -1557,7 +1557,7 @@ body.sidebar-collapsed .overview-app-main {
    ========================================================================== */
 @media (max-width: 1280px) {
   .overview-layout-grid {
-    grid-template-columns: minmax(0, 1fr) 250px;
+    grid-template-columns: minmax(0, 1fr) 260px;
     gap: 18px;
   }
 
