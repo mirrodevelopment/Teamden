@@ -146,17 +146,21 @@ body.sidebar-collapsed .overview-app-main {
    ========================================================================== */
 .overview-content-canvas {
   flex: 1;
-  padding: 16px 28px 48px 28px;
+  padding: 0;
   width: 100%;
-  max-width: 1540px;
-  margin: 0 auto;
 }
 
 .overview-layout-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width, 295px);
+  width: 100%;
+  min-height: calc(100vh - 52px);
   align-items: start;
+}
+
+.overview-center-column {
+  padding: 16px 28px 48px 28px;
+  min-width: 0;
 }
 
 /* ==========================================================================
@@ -871,6 +875,11 @@ body.sidebar-collapsed .overview-app-main {
    RIGHT EXECUTIVE INFORMATION RAIL (~276px)
    ========================================================================== */
 .overview-right-rail {
+  border-left: 1px solid var(--dash-border);
+  padding: 16px 16px 48px 16px;
+  width: var(--dash-right-rail-width, 295px);
+  min-width: var(--dash-right-rail-width, 295px);
+  max-width: var(--dash-right-rail-width, 295px);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1557,8 +1566,7 @@ body.sidebar-collapsed .overview-app-main {
    ========================================================================== */
 @media (max-width: 1280px) {
   .overview-layout-grid {
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width, 295px);
   }
 
   .org-kpi-grid {
@@ -1586,6 +1594,12 @@ body.sidebar-collapsed .overview-app-main {
   }
 
   .overview-right-rail {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border-left: none;
+    border-top: 1px solid var(--dash-border);
+    padding: 24px 28px 48px 28px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -1597,8 +1611,13 @@ body.sidebar-collapsed .overview-app-main {
 }
 
 @media (max-width: 860px) {
-  .overview-content-canvas {
+  .overview-center-column {
     padding: 18px 18px 48px 18px;
+  }
+
+  .overview-right-rail {
+    padding: 18px 18px 48px 18px;
+    grid-template-columns: 1fr;
   }
 
   .overview-page-header {

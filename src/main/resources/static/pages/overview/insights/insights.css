@@ -123,17 +123,21 @@ body.sidebar-collapsed .insights-app-main {
    ========================================================================== */
 .insights-content-canvas {
   flex: 1;
-  padding: 16px 28px 48px 28px;
+  padding: 0;
   width: 100%;
-  max-width: 1540px;
-  margin: 0 auto;
 }
 
 .insights-layout-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width, 295px);
+  width: 100%;
+  min-height: calc(100vh - 52px);
   align-items: start;
+}
+
+.insights-center-column {
+  padding: 16px 28px 48px 28px;
+  min-width: 0;
 }
 
 /* ==========================================================================
@@ -919,6 +923,11 @@ body.sidebar-collapsed .insights-app-main {
    RIGHT REPORTING STUDIO & INSIGHTS RAIL (~280px)
    ========================================================================== */
 .insights-right-rail {
+  border-left: 1px solid var(--dash-border);
+  padding: 16px 16px 48px 16px;
+  width: var(--dash-right-rail-width, 295px);
+  min-width: var(--dash-right-rail-width, 295px);
+  max-width: var(--dash-right-rail-width, 295px);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1550,8 +1559,7 @@ body.sidebar-collapsed .insights-app-main {
    ========================================================================== */
 @media (max-width: 1280px) {
   .insights-layout-grid {
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width, 295px);
   }
 
   .intelligence-body-grid {
@@ -1570,6 +1578,12 @@ body.sidebar-collapsed .insights-app-main {
   }
 
   .insights-right-rail {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border-left: none;
+    border-top: 1px solid var(--dash-border);
+    padding: 24px 28px 48px 28px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -1581,8 +1595,13 @@ body.sidebar-collapsed .insights-app-main {
 }
 
 @media (max-width: 860px) {
-  .insights-content-canvas {
+  .insights-center-column {
     padding: 18px 18px 48px 18px;
+  }
+
+  .insights-right-rail {
+    padding: 18px 18px 48px 18px;
+    grid-template-columns: 1fr;
   }
 
   .insights-page-header {
