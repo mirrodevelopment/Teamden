@@ -847,13 +847,40 @@
    * Main Initialization
    */
   async function init() {
-    // 1. Mount fragments
+    // 1. Session verification & load user data
+    if (typeof Auth !== 'undefined' && typeof Auth.checkSession === 'function') {
+      try {
+        currentUser = await Auth.checkSession();
+      } catch (err) {
+        console.warn('Session check skipped:', err);
+      }
+    } else if (window.Auth && typeof window.Auth.getCurrentUser === 'function') {
+      try {
+        currentUser = await window.Auth.getCurrentUser();
+      } catch (err) {}
+    } else {
+      try {
+        const userRes = await fetch('/api/auth/me');
+        if (userRes.ok) currentUser = await userRes.json();
+      } catch (err) {}
+    }
+    if (!currentUser) {
+      currentUser = {
+        name: 'Alex Rivera',
+        fullName: 'Alex Rivera',
+        initials: 'AR',
+        role: 'Executive Member',
+        activeOrganizationName: 'Acme Co.'
+      };
+    }
+
+    // 2. Mount standard fragments
     await Promise.all([
       loadFragment('/fragments/sidebar/sidebar.html', 'sidebar-mount'),
       loadFragment('/fragments/navbar/navbar.html', 'navbar-mount')
     ]);
 
-    // 2. Initialize Fragment scripts
+    // 3. Initialize standard Fragment scripts
     if (window.Sidebar && typeof window.Sidebar.init === 'function') {
       window.Sidebar.init(currentUser);
     }
@@ -861,10 +888,17 @@
       window.Navbar.init(currentUser);
     }
 
-    // 3. Setup event listeners
+    // Ensure 06 Overview is actively highlighted in sidebar
+    const overviewNav = document.getElementById('nav-overview');
+    if (overviewNav) {
+      document.querySelectorAll('.app-sidebar .nav-item').forEach(el => el.classList.remove('active'));
+      overviewNav.classList.add('active');
+    }
+
+    // 4. Setup event listeners
     setupEventListeners();
 
-    // 4. Fetch initial data and render
+    // 5. Fetch initial data and render
     await fetchInitialData();
   }
 

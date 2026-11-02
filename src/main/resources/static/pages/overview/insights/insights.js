@@ -412,11 +412,78 @@
   };
 
   /* ==========================================================================
+  /**
+   * Helper to load external HTML fragments (Sidebar & Navbar)
+   */
+  async function loadFragment(url, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    try {
+      const cacheBustUrl = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      const res = await fetch(cacheBustUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
+      const html = await res.text();
+      container.innerHTML = html;
+    } catch (err) {
+      console.warn(`Could not load fragment from ${url}:`, err);
+    }
+  }
+
+  /* ==========================================================================
      INITIALIZATION & LIFECYCLE
      ========================================================================== */
   document.addEventListener('DOMContentLoaded', initInsights);
 
   async function initInsights() {
+    // 1. Session verification & load user data
+    if (typeof Auth !== 'undefined' && typeof Auth.checkSession === 'function') {
+      try {
+        currentUser = await Auth.checkSession();
+      } catch (err) {
+        console.warn('Session check skipped:', err);
+      }
+    } else if (window.Auth && typeof window.Auth.getCurrentUser === 'function') {
+      try {
+        currentUser = await window.Auth.getCurrentUser();
+      } catch (err) {}
+    } else {
+      try {
+        const userRes = await fetch('/api/auth/me');
+        if (userRes.ok) currentUser = await userRes.json();
+      } catch (err) {}
+    }
+    if (!currentUser) {
+      currentUser = {
+        name: 'Alex Rivera',
+        fullName: 'Alex Rivera',
+        initials: 'AR',
+        role: 'Executive Member',
+        activeOrganizationName: 'Acme Co.'
+      };
+    }
+
+    // 2. Mount standard fragments
+    await Promise.all([
+      loadFragment('/fragments/sidebar/sidebar.html', 'sidebar-mount'),
+      loadFragment('/fragments/navbar/navbar.html', 'navbar-mount')
+    ]);
+
+    // 3. Initialize standard Fragment scripts
+    if (window.Sidebar && typeof window.Sidebar.init === 'function') {
+      window.Sidebar.init(currentUser);
+    }
+    if (window.Navbar && typeof window.Navbar.init === 'function') {
+      window.Navbar.init(currentUser);
+    }
+
+    // Ensure 06 Overview is actively highlighted in sidebar
+    const overviewNav = document.getElementById('nav-overview');
+    if (overviewNav) {
+      document.querySelectorAll('.app-sidebar .nav-item').forEach(el => el.classList.remove('active'));
+      overviewNav.classList.add('active');
+    }
+
+    // 4. Initialize page controllers
     initShellComponents();
     initFilters();
     initMetricSwitcher();
@@ -438,74 +505,10 @@
   }
 
   /* ==========================================================================
-     SHELL INTEGRATION (SIDEBAR & TOPBAR)
+     SHELL INTEGRATION (GLOBAL SHORTCUTS & NOTIFICATIONS)
      ========================================================================== */
   function initShellComponents() {
-    // Initialize external fragments if loaded
-    if (window.Sidebar && typeof window.Sidebar.init === 'function') {
-      window.Sidebar.init();
-    }
-    if (window.Navbar && typeof window.Navbar.init === 'function') {
-      window.Navbar.init();
-    }
-
-    // Ensure 06 Overview is highlighted in sidebar
-    const navOverview = document.getElementById('nav-overview');
-    if (navOverview) {
-      document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => item.classList.remove('active'));
-      navOverview.classList.add('active');
-    }
-
-    // Sidebar collapse toggle
-    const collapseBtn = document.getElementById('sidebar-collapse-btn');
-    const sidebar = document.getElementById('app-sidebar');
-    if (collapseBtn && sidebar) {
-      collapseBtn.addEventListener('click', () => {
-        const isCollapsed = sidebar.classList.toggle('collapsed');
-        document.body.classList.toggle('sidebar-is-collapsed', isCollapsed);
-      });
-    }
-
-    // Mobile sidebar toggle
-    const mobileToggle = document.getElementById('mobile-sidebar-toggle');
-    if (mobileToggle && sidebar) {
-      mobileToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        sidebar.classList.toggle('mobile-open');
-      });
-      document.addEventListener('click', (e) => {
-        if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
-          sidebar.classList.remove('mobile-open');
-        }
-      });
-    }
-
-    // Topbar Create Dropdown
-    const createBtn = document.getElementById('btn-create-pill');
-    const createMenu = document.getElementById('create-menu');
-    if (createBtn && createMenu) {
-      createBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = createMenu.classList.toggle('open');
-        createBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-      document.addEventListener('click', () => {
-        createMenu.classList.remove('open');
-        createBtn.setAttribute('aria-expanded', 'false');
-      });
-    }
-
-    // Notifications toggle
-    const notifBtn = document.getElementById('notification-btn');
-    if (notifBtn) {
-      notifBtn.addEventListener('click', () => {
-        showToast('You have 2 pending approval alerts for Review.');
-        const redDot = notifBtn.querySelector('.bell-red-dot');
-        if (redDot) redDot.style.display = 'none';
-      });
-    }
-
-    // Keyboard shortcut Cmd+K / Ctrl+K
+    // Keyboard shortcut Cmd+K / Ctrl+K and Escape
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
