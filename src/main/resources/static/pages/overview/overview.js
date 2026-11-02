@@ -644,8 +644,7 @@
    * Insights Modal Controller
    */
   function openInsightsModal() {
-    const modal = document.getElementById('modal-insights-backdrop');
-    if (modal) modal.classList.add('open');
+    window.location.href = '/pages/overview/insights/insights.html';
   }
 
   function closeInsightsModal() {

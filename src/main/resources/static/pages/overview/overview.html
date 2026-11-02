@@ -562,17 +562,19 @@
             <!-- D. REPORTING & INSIGHTS CARD -->
             <div class="exec-card exec-content-card" id="reporting-insights-card">
               <div class="exec-card-header">
-                <h4 class="exec-card-title">REPORTING & INSIGHTS</h4>
-                <button class="exec-header-arrow" id="btn-view-all-reports-rail" title="View Reporting Suite">
+                <a href="/pages/overview/insights/insights.html" class="exec-card-title-link" title="Open Insights Dashboard" style="text-decoration: none; color: inherit;">
+                  <h4 class="exec-card-title">REPORTING & INSIGHTS</h4>
+                </a>
+                <a href="/pages/overview/insights/insights.html" class="exec-header-arrow" id="btn-view-all-reports-rail" title="View Insights Dashboard" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; justify-content: center;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
-                </button>
+                </a>
               </div>
 
               <div class="exec-reporting-actions">
-                <div class="exec-report-row" id="btn-open-insights-modal" role="button" tabindex="0">
+                <a href="/pages/overview/insights/insights.html" class="exec-report-row" id="btn-open-insights-modal" role="button" tabindex="0" style="text-decoration: none; color: inherit;">
                   <div class="report-row-left">
                     <span class="report-icon-box">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -586,7 +588,7 @@
                   <svg class="report-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
-                </div>
+                </a>
 
                 <div class="exec-report-row" id="btn-export-summary" role="button" tabindex="0">
                   <div class="report-row-left">
@@ -604,6 +606,15 @@
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </div>
+
+                <!-- Prominent Action Button to Open INSIGHTS -->
+                <a href="/pages/overview/insights/insights.html" class="btn-insights-card-action" id="btn-goto-insights-action">
+                  <span>Open Insights Dashboard</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
               </div>
             </div>
 
