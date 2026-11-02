@@ -126,27 +126,34 @@
     }
 
     listEl.innerHTML = tasks.map(task => `
-      <div class="task-card ${task.completed ? 'task-completed' : ''}" id="card-${task.id}" data-task-id="${task.id}">
+      <div class="task-card ${task.completed ? 'task-completed' : ''}" id="card-${task.id}" data-task-id="${task.id}" onclick="window.openTaskDetails('${task.id}')">
+        <button class="task-card-menu-btn" 
+                onclick="event.stopPropagation(); window.openTaskMenu('${task.id}')" 
+                title="Options" 
+                aria-label="Task options">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="5" cy="12" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="19" cy="12" r="2"/>
+          </svg>
+        </button>
         <div class="task-top-row">
           <button class="task-checkbox-custom" 
                   aria-label="Toggle task completion" 
                   onclick="event.stopPropagation(); window.toggleTaskCompletion('${task.id}')"
                   title="${task.completed ? 'Mark incomplete' : 'Mark complete'}">
           </button>
-          <div class="task-content-block" onclick="window.openTaskDetails('${task.id}')" style="cursor: pointer;">
-            <div class="task-title-wrap">
-              <span class="task-num">${task.indexNum || '01'}</span>
-              <span class="task-text">${escapeHtml(task.title)}</span>
-            </div>
-            <div class="task-meta-row">
-              <span class="task-tag-badge">${escapeHtml(task.tag || 'General')}</span>
-              <span class="task-due-status">
-                <span class="pill-dot dot-${task.dotColor || 'gray'}"></span>
-                <span>${escapeHtml(task.dueDateLabel || 'Today')}</span>
-              </span>
-            </div>
+          <div class="task-title-wrap">
+            <span class="task-num">${task.indexNum || '01'}</span>
+            <span class="task-text">${escapeHtml(task.title)}</span>
           </div>
-          <button class="task-card-menu-btn" onclick="event.stopPropagation(); window.openTaskMenu('${task.id}')" title="Options">•••</button>
+        </div>
+        <div class="task-meta-row">
+          <span class="task-tag-badge" title="${escapeHtml(task.tag || 'General')}">${escapeHtml(task.tag || 'General')}</span>
+          <span class="task-due-status">
+            <span class="pill-dot dot-${task.dotColor || 'gray'}"></span>
+            <span>${escapeHtml(task.dueDateLabel || 'Today')}</span>
+          </span>
         </div>
       </div>
     `).join('');
@@ -189,10 +196,10 @@
         time: '07:30',
         dayLabel: 'TODAY',
         badgeType: 'DOCUMENT',
-        dotColor: 'amber',
+        dotColor: 'silver',
         author: '',
-        actionText: '',
-        targetTitle: 'Product brief was updated',
+        actionText: 'was updated',
+        targetTitle: 'Product brief',
         subMeta: 'Product / Workspace',
         infoText: 'Version 1.2 · 3 pages'
       },
@@ -206,32 +213,37 @@
         actionText: 'assigned a task to',
         targetTitle: 'Priya',
         subMeta: 'Website Redesign / Design Team',
-        infoText: 'Client feedback session · Tomorrow, 2:00 PM'
+        infoText: 'Client feedback session\nTomorrow, 2:00 PM'
       }
     ];
 
     const displayList = showAllActivities ? allActivities : allActivities.slice(0, 4);
 
-    container.innerHTML = displayList.map(item => {
+    container.innerHTML = displayList.map((item, idx) => {
       const badgeType = (item.badgeType || 'COMMENT').toUpperCase();
       const badgeClass = 'badge-' + badgeType.toLowerCase();
 
       let badgeIcon = '';
       if (badgeType === 'COMMENT') {
-        badgeIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+        badgeIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
       } else if (badgeType === 'COMPLETED') {
-        badgeIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        badgeIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
       } else if (badgeType === 'DOCUMENT') {
-        badgeIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`;
+        badgeIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`;
       } else {
-        badgeIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
+        badgeIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
       }
 
       let sentenceHtml = '';
       if (item.author) {
         sentenceHtml = `<strong>${escapeHtml(item.author)}</strong> ${escapeHtml(item.actionText)} <strong>${escapeHtml(item.targetTitle)}</strong>`;
       } else {
-        sentenceHtml = `<strong>${escapeHtml(item.targetTitle)}</strong>`;
+        sentenceHtml = `<strong>${escapeHtml(item.targetTitle)}</strong> ${item.actionText ? escapeHtml(item.actionText) : ''}`;
+      }
+
+      let infoHtml = '';
+      if (item.infoText) {
+        infoHtml = item.infoText.split('\n').map(escapeHtml).join('<br>');
       }
 
       return `
@@ -257,7 +269,7 @@
 
             <div class="activity-context-col">
               ${item.quotePreview ? `<div class="activity-quote-preview">"${escapeHtml(item.quotePreview)}"</div>` : ''}
-              ${item.infoText ? `<div class="activity-info-text">${escapeHtml(item.infoText)}</div>` : ''}
+              ${infoHtml ? `<div class="activity-info-text">${infoHtml}</div>` : ''}
             </div>
 
             <div class="activity-actions-right">
@@ -948,6 +960,42 @@
   };
 
   /**
+   * Aligns the day-of-week label width to exactly match ONLY the first digit width
+   */
+  function alignDayToDateWidth() {
+    const railDayD1 = document.getElementById('rail-day-d1');
+    const railDow = document.getElementById('rail-dow');
+    if (!railDow) return;
+
+    // Ensure individual spans exist for flex letter distribution
+    const fullText = (railDow.getAttribute('aria-label') || railDow.textContent || '').trim();
+    if (fullText && railDow.children.length === 0) {
+      railDow.setAttribute('aria-label', fullText);
+      railDow.innerHTML = fullText.split('').map(ch => `<span>${ch}</span>`).join('');
+    }
+
+    // Measure rendered width of ONLY the first digit
+    let firstDigitWidth = 0;
+    if (railDayD1) {
+      firstDigitWidth = railDayD1.getBoundingClientRect().width || railDayD1.offsetWidth;
+    } else {
+      const railDay = document.getElementById('rail-day');
+      if (railDay) {
+        firstDigitWidth = (railDay.getBoundingClientRect().width || railDay.offsetWidth) / 2;
+      }
+    }
+
+    if (firstDigitWidth > 0) {
+      railDow.style.width = `${firstDigitWidth}px`;
+      railDow.style.maxWidth = `${firstDigitWidth}px`;
+      // Ensure font size scales so long day names like WEDNESDAY fit comfortably within the first digit
+      const charCount = fullText.length || 7;
+      const targetFontSize = Math.min(9.5, Math.max(7, Math.floor((firstDigitWidth / charCount) * 1.15)));
+      railDow.style.fontSize = `${targetFontSize}px`;
+    }
+  }
+
+  /**
    * Real-time dynamic live clock and date updater
    */
   function startLiveDateTimeClock() {
@@ -965,10 +1013,14 @@
 
       const dateStr = `${dow}, ${dayNum} ${month} ${year}`;
 
-      // Update Top-Right Header Date
+      // Update Topbar Live Date & Header Date
       const dashHeaderDate = document.getElementById('dash-header-date');
       if (dashHeaderDate) {
         dashHeaderDate.textContent = dateStr;
+      }
+      const topbarDate = document.getElementById('topbar-date-display');
+      if (topbarDate) {
+        topbarDate.textContent = dateStr;
       }
 
       // Update Right rail date card
@@ -981,10 +1033,18 @@
         const railYear = document.getElementById('rail-year');
         const railDow = document.getElementById('rail-dow');
 
-        if (railDay) railDay.textContent = dayNum;
+        if (railDay) {
+          const d1 = dayNum.charAt(0);
+          const d2 = dayNum.charAt(1) || '';
+          railDay.innerHTML = `<span class="date-digit-first" id="rail-day-d1">${d1}</span><span class="date-digit-second" id="rail-day-d2">${d2}</span>`;
+        }
         if (railMonth) railMonth.textContent = month;
         if (railYear) railYear.textContent = String(year);
-        if (railDow) railDow.textContent = fullDow;
+        if (railDow) {
+          railDow.setAttribute('aria-label', fullDow);
+          railDow.innerHTML = fullDow.split('').map(ch => `<span>${ch}</span>`).join('');
+        }
+        alignDayToDateWidth();
       }
 
       // Update movements subtitle
@@ -993,11 +1053,7 @@
         actLabel.textContent = `LATEST MOVEMENTS / ${dateStr}`;
       }
 
-      // Update hero due date
-      const heroDueDay = document.getElementById('hero-due-day');
-      const heroDueMy = document.getElementById('hero-due-my');
-      if (heroDueDay) heroDueDay.textContent = dayNum;
-      if (heroDueMy) heroDueMy.innerHTML = `${month}<br>${year}`;
+      // Hero card due date is the task's due date (fixed to 25 OCT 2026)
     }
 
     updateClock();
@@ -1093,10 +1149,10 @@
           time: '07:30',
           dayLabel: 'TODAY',
           badgeType: 'DOCUMENT',
-          dotColor: 'amber',
+          dotColor: 'silver',
           author: '',
-          actionText: '',
-          targetTitle: 'Product brief was updated',
+          actionText: 'was updated',
+          targetTitle: 'Product brief',
           subMeta: 'Product / Workspace',
           infoText: 'Version 1.2 · 3 pages'
         },
@@ -1110,7 +1166,7 @@
           actionText: 'assigned a task to',
           targetTitle: 'Priya',
           subMeta: 'Website Redesign / Design Team',
-          infoText: 'Client feedback session · Tomorrow, 2:00 PM'
+          infoText: 'Client feedback session\nTomorrow, 2:00 PM'
         }
       ],
       schedule: [
@@ -1164,8 +1220,13 @@
         if (heroTeam) heroTeam.textContent = hero.teamTag;
         if (heroPriority) heroPriority.textContent = hero.priorityLabel;
         if (heroDesc) heroDesc.textContent = hero.description;
-        if (dueDay && hero.dueDayNum) dueDay.textContent = hero.dueDayNum;
-        if (dueMy && hero.dueMonthYear) dueMy.innerHTML = hero.dueMonthYear.replace(' ', '<br>');
+        if (dueDay) dueDay.textContent = String(hero.dueDayNum || '25').padStart(2, '0');
+        if (dueMy) {
+          const parts = (hero.dueMonthYear || 'OCT 2026').trim().split(/\s+/);
+          const m = parts[0] || 'OCT';
+          const y = parts[1] || '2026';
+          dueMy.innerHTML = `<span class="due-month">${m}</span><span class="due-year">${y}</span>`;
+        }
       }
 
       // Kanban Columns
@@ -1186,6 +1247,20 @@
 
     // 7. Start Real Time and Date Live Clock
     startLiveDateTimeClock();
+
+    // 8. Align Day-of-Week Width to First Date Digit
+    alignDayToDateWidth();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(alignDayToDateWidth);
+    }
+    window.addEventListener('resize', alignDayToDateWidth);
+    if (window.ResizeObserver) {
+      const railDay = document.getElementById('rail-day');
+      const railDayD1 = document.getElementById('rail-day-d1');
+      const ro = new ResizeObserver(alignDayToDateWidth);
+      if (railDay) ro.observe(railDay);
+      if (railDayD1) ro.observe(railDayD1);
+    }
   }
 
   // Run on DOM ready

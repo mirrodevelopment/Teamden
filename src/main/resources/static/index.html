@@ -14,10 +14,9 @@
   
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
   <link rel="stylesheet" href="/fragments/theme/theme.css">
-  <link rel="stylesheet" href="/shared/css/reset.css">
-  <link rel="stylesheet" href="/shared/css/variables.css">
-  <link rel="stylesheet" href="/shared/css/components.css">
-  <link rel="stylesheet" href="/shared/css/utilities.css">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+  <link rel="stylesheet" href="/fragments/components/components.css">
+  <link rel="stylesheet" href="/fragments/utilities/utilities.css">
   <script src="/fragments/company-data/company-data.js"></script>
   
   <style>
@@ -26,8 +25,8 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%);
-      color: #f8fafc;
+      background: radial-gradient(circle at 50% 20%, #292927 0%, var(--dash-hero-bg) 100%);
+      color: var(--dash-text-white);
       font-family: var(--font-family-base);
       padding: 1.5rem;
       margin: 0;
@@ -37,13 +36,13 @@
     .bootstrapper-card {
       width: 100%;
       max-width: 440px;
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(31, 31, 29, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--dash-hero-border);
       border-radius: var(--radius-xl);
       padding: 2.5rem 2rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 50px -10px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 50px -10px rgba(212, 244, 67, 0.15);
       display: flex;
       flex-direction: column;
       align-items: center;

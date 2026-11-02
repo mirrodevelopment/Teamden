@@ -16,8 +16,8 @@
   --font-family-base: var(--font-family);
   --font-mono: var(--font-family-mono, 'Montserrat');
   --font-family-mono: var(--font-mono);
-  --font-family-today: 'Inter Tight', 'Inter', sans-serif;
-  --number-font: var(--number-font, 'Jx Tabe Black', 'Jx Tabe', 'Monument Extended', 'Unbounded', sans-serif);
+  --font-family-today: 'Inter', sans-serif;
+  --number-font: var(--number-font, 'Sport Break Extra Bold', 'Sport Break');
   --font-number: var(--number-font);
   --font-family-number: var(--number-font);
 
@@ -77,7 +77,8 @@
   --dash-hero-padding: 0.95rem 1.35rem;
   --dash-hero-gap: 1.25rem;
   --dash-hero-title-size: 1.25rem;
-  --dash-hero-due-size: 2.25rem;
+  --dash-hero-due-size: 4.4rem;
+  --dash-date-huge-size: 6.5rem;
   --dash-hero-btn-padding: 0.52rem 0.95rem;
   --dash-hero-btn-font-size: 0.75rem;
   --dash-kanban-col-padding: 0.65rem;
@@ -95,14 +96,17 @@
   --dash-bg-sidebar: #F9F6EF;           /* Warm Sand/Linen Sidebar */
   --dash-bg-card: #FAF7F1;              /* Warm Editorial Card Surface */
   --dash-bg-card-pure: #FAF7F1;         /* Warm Off-White (No cold stark pure white) */
+  --dash-bg-white: #FFFFFF;             /* Explicit Pure White for Form Cards & Drawers */
   --dash-bg-search: #F3EFE7;            /* Inset Search Input */
   --dash-bg-search-focus: #EDE8DE;      /* Inset Search Focused */
+  --dash-bg-input: #FAF9F6;             /* Clean Input Background */
   --dash-bg-kbd: #E2DDD3;               /* Keyboard Shortcut Badge */
   --dash-border: #EAE5DB;               /* Warm Taupe Subtle Border */
 
   /* High-Contrast Lime / Electric Chartreuse Accents */
   --dash-accent-lime: #D4F443;          /* Active Nav Item Electric Chartreuse */
   --dash-accent-lime-hover: #C5DC45;    /* Active Nav Hover */
+  --dash-accent-lime-light: rgba(212, 244, 67, 0.18); /* Translucent Lime Glow / Tint */
   --dash-accent-lime-text: #111111;     /* High Contrast Near-Black Text on Lime */
   --dash-btn-create-bg: #D4F443;        /* "+ Create" Topbar Button Lime */
   --dash-btn-create-hover: #C5DC45;     /* "+ Create" Hover */
@@ -144,14 +148,26 @@
   --dash-daily-update-btn-text: #FFFFFF;
 
   /* Activity Timeline Type Badges */
-  --dash-badge-comment-bg: #E3DEE2;     /* Muted Lilac Tint */
-  --dash-badge-comment-text: #5C4A5A;
-  --dash-badge-completed-bg: #E3E9C8;   /* Pale Lime Tint */
-  --dash-badge-completed-text: #475427;
-  --dash-badge-document-bg: #EBE1D2;    /* Warm Amber/Tan Tint */
-  --dash-badge-document-text: #635338;
-  --dash-badge-assigned-bg: #D3E2EA;    /* Soft Slate Tint */
+  --dash-badge-comment-bg: #EDEAF5;     /* Muted Lilac Tint */
+  --dash-badge-comment-text: #4E446B;
+  --dash-badge-completed-bg: #EFF1E2;   /* Pale Lime Tint */
+  --dash-badge-completed-text: #3E5224;
+  --dash-badge-document-bg: #FBF3E8;    /* Warm Amber/Tan Tint */
+  --dash-badge-document-text: #7A5520;
+  --dash-badge-assigned-bg: #E5EDF7;    /* Soft Slate Tint */
   --dash-badge-assigned-text: #365369;
+  --dash-activity-highlight-bg: #F7EEE4; /* Warm Beige Highlight Card */
+
+  /* Task Priority Badges */
+  --dash-priority-high-bg: #FEE2E2;     /* High Priority Pale Red Tint */
+  --dash-priority-high-text: #DC2626;
+  --dash-priority-high-border: #FCA5A5;
+  --dash-priority-medium-bg: #FBF3E8;   /* Medium Priority Warm Amber Tint */
+  --dash-priority-medium-text: #7A5520;
+  --dash-priority-medium-border: #FDE68A;
+  --dash-priority-low-bg: #E5EDF7;      /* Low Priority Soft Slate Tint */
+  --dash-priority-low-text: #365369;
+  --dash-priority-low-border: #BFDBFE;
 
   /* Status Dots */
   --dash-dot-red: #E53935;
@@ -159,12 +175,12 @@
   --dash-dot-blue: #3B82F6;
   --dash-dot-green: #10B981;
   --dash-dot-purple: #8B5CF6;
-  --dash-dot-gray: #9E9E9E;
+  --dash-dot-gray: #9CA3AF;
 
   /* Typography / Text Tokens */
   --dash-text-primary: #171717;         /* Main Heading 'today.', Titles, Numbers */
   --dash-text-body: #333333;            /* Standard Content */
-  --dash-text-muted: #63625F;           /* Subtitles, Secondary Tags, Labels */
+  --dash-text-muted: #77736C;           /* Subtitles, Secondary Tags, Labels */
   --dash-text-light: #8E8A84;           /* Section Eyebrows, Timestamps */
   --dash-text-white: #FFFFFF;
 
@@ -183,6 +199,7 @@
   /* Universal Semantic Aliases (Replaces legacy #2563EB theme) */
   --color-primary: var(--dash-accent-lime);
   --color-primary-hover: var(--dash-accent-lime-hover);
+  --color-primary-light: var(--dash-accent-lime-light);
   --color-primary-active: var(--dash-accent-lime-hover);
   --color-btn-primary-text: var(--dash-accent-lime-text);
   --color-bg-body: var(--dash-bg-canvas);
@@ -190,15 +207,56 @@
   --color-bg-subtle: var(--dash-bg-sidebar);
   --color-bg-sidebar: var(--dash-bg-sidebar);
   --color-bg-header: var(--dash-bg-canvas);
-  --color-bg-input: var(--dash-bg-search);
+  --color-bg-input: var(--dash-bg-input);
   --color-bg-input-focus: var(--dash-bg-search-focus);
   --color-text-main: var(--dash-text-primary);
   --color-text-body: var(--dash-text-body);
   --color-text-muted: var(--dash-text-muted);
   --color-text-light: var(--dash-text-light);
+  --color-text-white: var(--dash-text-white);
   --color-border: var(--dash-border);
   --color-border-hover: var(--dash-border-strong);
   --color-border-focus: var(--dash-accent-lime);
+
+  --color-success: var(--dash-dot-green);
+  --color-success-bg: var(--dash-badge-completed-bg);
+  --color-success-border: rgba(16, 185, 129, 0.2);
+  --color-success-text: var(--dash-badge-completed-text);
+
+  --color-warning: var(--dash-dot-orange);
+  --color-warning-bg: var(--dash-badge-document-bg);
+  --color-warning-border: rgba(245, 158, 11, 0.2);
+  --color-warning-text: var(--dash-badge-document-text);
+
+  --color-danger: var(--dash-dot-red);
+  --color-danger-bg: rgba(229, 57, 53, 0.1);
+  --color-danger-border: rgba(229, 57, 53, 0.2);
+  --color-danger-text: var(--dash-dot-red);
+
+  --color-info: var(--dash-dot-blue);
+  --color-info-bg: var(--dash-badge-assigned-bg);
+  --color-info-border: rgba(59, 130, 246, 0.2);
+  /* Secondary / Brand Accents */
+  --color-brand-dark: var(--dash-hero-bg);
+  --color-brand-navy: var(--dash-hero-bg);
+  --color-brand-cyan: var(--dash-accent-lime);
+
+  --color-bg-muted: var(--dash-col-now-bg);
+  --color-bg-search: var(--dash-bg-search);
+  --color-border-subtle: var(--dash-border-subtle);
+
+  /* Priority Badges */
+  --priority-high-bg: var(--dash-priority-high-bg);
+  --priority-high-text: var(--dash-priority-high-text);
+  --priority-high-border: var(--dash-priority-high-border);
+  --priority-medium-bg: var(--dash-priority-medium-bg);
+  --priority-medium-text: var(--dash-priority-medium-text);
+  --priority-medium-border: var(--dash-priority-medium-border);
+  --priority-low-bg: var(--dash-priority-low-bg);
+  --priority-low-text: var(--dash-priority-low-text);
+  --priority-low-border: var(--dash-priority-low-border);
+
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 
   --primary: var(--dash-accent-lime);
   --primary-hover: var(--dash-accent-lime-hover);
@@ -208,6 +266,22 @@
   --text-primary: var(--dash-text-primary);
   --text-secondary: var(--dash-text-body);
   --text-tertiary: var(--dash-text-muted);
+
+  /* Brick Brand Aliases (Guarantees 100% inheritance from theme.css) */
+  --brick-canvas: var(--dash-bg-canvas);
+  --brick-surface: var(--dash-bg-white);
+  --brick-text-primary: var(--dash-text-primary);
+  --brick-text-secondary: var(--dash-text-muted);
+  --brick-text-body: var(--dash-text-body);
+  --brick-accent-lime: var(--dash-accent-lime);
+  --brick-accent-lime-hover: var(--dash-accent-lime-hover);
+  --brick-border: var(--dash-border);
+  --brick-border-subtle: var(--dash-border-subtle);
+  --brick-card-sand: var(--dash-col-now-bg);
+  --brick-card-sand-dark: var(--dash-border-strong);
+  --brick-input-bg: var(--dash-bg-input);
+  --brick-error: var(--dash-dot-red);
+  --brick-success: var(--dash-dot-green);
 }
 
 /* Fluid Sizing Overrides for Collapsed Sidebar Mode */
@@ -222,7 +296,8 @@ body.sidebar-collapsed {
   --dash-hero-padding: 1.05rem 1.45rem;
   --dash-hero-gap: 1.4rem;
   --dash-hero-title-size: 1.35rem;
-  --dash-hero-due-size: 2.45rem;
+  --dash-hero-due-size: 4.75rem;
+  --dash-date-huge-size: 7.25rem;
   --dash-hero-btn-padding: 0.55rem 1rem;
   --dash-hero-btn-font-size: 0.78rem;
   --dash-kanban-col-padding: 0.85rem;
@@ -230,4 +305,117 @@ body.sidebar-collapsed {
   --dash-kanban-card-padding: 1rem;
   --dash-kanban-card-title-size: 0.9375rem;
   --dash-kanban-card-text-size: 0.875rem;
+}
+
+/* ==========================================================================
+   DARK THEME SYSTEM (Rich Brutalist Dark Palette)
+   ========================================================================== */
+[data-theme="dark"],
+body.dark-theme {
+  /* Surfaces & Canvases */
+  --dash-bg-canvas: #141413;            /* Deep warm obsidian canvas */
+  --dash-bg-sidebar: #1A1A18;           /* Warm dark sidebar */
+  --dash-bg-card: #20201D;              /* Dark editorial card surface */
+  --dash-bg-card-pure: #20201D;         /* Pure dark card */
+  --dash-bg-white: #242421;             /* Pure white replacement */
+  --dash-bg-search: #242421;            /* Inset search */
+  --dash-bg-search-focus: #2C2C28;
+  --dash-bg-input: #1B1B19;
+  --dash-bg-kbd: #353531;
+  --dash-border: #2D2D29;
+  --dash-border-strong: #42423C;
+  --dash-border-subtle: #242421;
+
+  /* High-Contrast Accents */
+  --dash-accent-lime: #D4F443;
+  --dash-accent-lime-hover: #C5DC45;
+  --dash-accent-lime-light: rgba(212, 244, 67, 0.2);
+  --dash-accent-lime-text: #111111;
+  --dash-btn-create-bg: #D4F443;
+  --dash-btn-create-hover: #C5DC45;
+  --dash-btn-create-text: #111111;
+
+  /* Typography */
+  --dash-text-primary: #F5F3ED;         /* Warm luminous white text */
+  --dash-text-body: #C8C6BF;            /* Clear body text */
+  --dash-text-muted: #8F8D86;           /* Subdued text */
+  --dash-text-light: #6E6C65;           /* Very muted labels */
+  --dash-text-white: #FFFFFF;
+
+  /* Hero Priority Card (Matte Charcoal with Crisp Contrast in Dark Mode) */
+  --dash-hero-bg: #0D0D0C;
+  --dash-hero-border: rgba(255, 255, 255, 0.1);
+  --dash-hero-text: #FFFFFF;
+  --dash-hero-text-muted: #9E9C96;
+  --dash-hero-chip-bg: #1F1F1D;
+  --dash-hero-chip-text: #D5D3CE;
+  --dash-hero-cta-bg: #E9DED0;
+  --dash-hero-cta-hover: #DFD2C2;
+  --dash-hero-cta-text: #171717;
+
+  /* Priority Columns & Kanban Task Cards */
+  --dash-col-now-bg: #272118;           /* Darkened warm sand container */
+  --dash-col-now-card: #20201D;
+  --dash-col-next-bg: #232029;          /* Darkened soft lilac container */
+  --dash-col-next-card: #20201D;
+  --dash-col-later-bg: #21251D;         /* Darkened sage container */
+  --dash-col-later-card: #20201D;
+  --dash-task-card-hover: rgba(255, 255, 255, 0.04);
+  --dash-task-checkbox-border: #6B6862;
+  --dash-task-checkbox-checked: #D4F443;
+
+  /* Needs Attention Cards (Right Rail) */
+  --dash-attention-peach: #2B2319;
+  --dash-attention-peach-hover: #362C1E;
+  --dash-attention-neutral-1: #22221F;
+  --dash-attention-neutral-1-hover: #2B2B27;
+  --dash-attention-neutral-2: #242320;
+  --dash-attention-neutral-2-hover: #2D2C29;
+
+  /* Daily Update Card */
+  --dash-daily-update-bg: #22221E;
+  --dash-daily-update-btn: #D4F443;
+  --dash-daily-update-btn-text: #111111;
+
+  /* Activity Badges in Dark Mode */
+  --dash-badge-comment-bg: #2A2436;
+  --dash-badge-comment-text: #D3CBEC;
+  --dash-badge-completed-bg: #222E1A;
+  --dash-badge-completed-text: #C7E29F;
+  --dash-badge-document-bg: #332616;
+  --dash-badge-document-text: #F1D4A0;
+  --dash-badge-assigned-bg: #1B2936;
+  --dash-badge-assigned-text: #B2D1EC;
+  --dash-activity-highlight-bg: rgba(255, 255, 255, 0.05);
+
+  /* Common Aliases */
+  --color-bg-body: var(--dash-bg-canvas);
+  --color-bg-surface: var(--dash-bg-card);
+  --color-bg-subtle: var(--dash-bg-sidebar);
+  --color-bg-sidebar: var(--dash-bg-sidebar);
+  --color-bg-header: var(--dash-bg-canvas);
+  --color-bg-input: var(--dash-bg-input);
+  --color-bg-input-focus: var(--dash-bg-search-focus);
+  --color-text-main: var(--dash-text-primary);
+  --color-text-body: var(--dash-text-body);
+  --color-text-muted: var(--dash-text-muted);
+  --color-text-light: var(--dash-text-light);
+  --color-border: var(--dash-border);
+  --color-border-hover: var(--dash-border-strong);
+  --bg-primary: var(--dash-bg-canvas);
+  --bg-surface: var(--dash-bg-card);
+  --bg-body: var(--dash-bg-canvas);
+  --text-primary: var(--dash-text-primary);
+  --text-secondary: var(--dash-text-body);
+  --text-tertiary: var(--dash-text-muted);
+  --brick-canvas: var(--dash-bg-canvas);
+  --brick-surface: var(--dash-bg-card-pure);
+  --brick-text-primary: var(--dash-text-primary);
+  --brick-text-secondary: var(--dash-text-muted);
+  --brick-text-body: var(--dash-text-body);
+  --brick-border: var(--dash-border);
+  --brick-border-subtle: var(--dash-border-subtle);
+  --brick-card-sand: var(--dash-col-now-bg);
+  --brick-card-sand-dark: var(--dash-border-strong);
+  --brick-input-bg: var(--dash-bg-input);
 }

@@ -1,6 +1,8 @@
 /* ==========================================================
    Teamden by shed — Reusable UI Components (components.css)
+   Path: fragments/components/components.css
    ========================================================== */
+@import url('../theme/theme.css');
 
 /* --- Buttons --- */
 .btn {
@@ -245,16 +247,32 @@
 }
 
 .kpi-value {
+  font-family: var(--number-font, 'Sport Break Extra Bold', 'Sport Break');
   font-size: var(--font-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-main);
   line-height: 1.1;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .kpi-label {
   font-size: var(--font-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
+}
+
+.badge-count,
+.number-badge,
+.badge-number,
+.count-badge,
+.counter,
+.stat-number,
+.stat-value,
+.metric-value,
+.task-count,
+.item-count {
+  font-family: var(--number-font, 'Sport Break Extra Bold', 'Sport Break') !important;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 /* --- Badges --- */

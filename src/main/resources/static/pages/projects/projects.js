@@ -131,12 +131,12 @@
       if (el) el.textContent = val;
     };
 
-    setBadge('count-all', counts.all || 12);
-    setBadge('count-active', counts.active || 8);
-    setBadge('count-in-review', counts.in_review || 2);
-    setBadge('count-planning', counts.planning || 1);
-    setBadge('count-completed', counts.completed || 1);
-    setBadge('count-on-hold', counts.on_hold || 0);
+    setBadge('count-all', counts.all !== undefined ? counts.all : 12);
+    setBadge('count-active', counts.active !== undefined ? counts.active : 8);
+    setBadge('count-in-review', counts.in_review !== undefined ? counts.in_review : 2);
+    setBadge('count-planning', counts.planning !== undefined ? counts.planning : 1);
+    setBadge('count-completed', counts.completed !== undefined ? counts.completed : 0);
+    setBadge('count-on-hold', counts.on_hold !== undefined ? counts.on_hold : 0);
   }
 
   /**
@@ -169,10 +169,12 @@
 
     if (filtered.length === 0) {
       container.innerHTML = '';
+      container.classList.add('d-none');
       if (emptyState) emptyState.classList.remove('d-none');
       return;
     }
 
+    container.classList.remove('d-none');
     if (emptyState) emptyState.classList.add('d-none');
 
     container.innerHTML = filtered.map(p => {
@@ -224,6 +226,9 @@
                 </svg>
                 <span>${escapeHtml(p.milestonesLabel || '3/5 milestones')}</span>
               </span>
+
+              <span class="card-meta-divider" aria-hidden="true"></span>
+
               <span class="card-due-meta">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -235,9 +240,12 @@
               </span>
             </div>
 
-            <div class="card-avatar-stack">
-              ${avatarsHtml}
-              ${overflowHtml}
+            <div class="card-avatar-wrap">
+              <span class="card-meta-divider" aria-hidden="true"></span>
+              <div class="card-avatar-stack">
+                ${avatarsHtml}
+                ${overflowHtml}
+              </div>
             </div>
           </div>
         </article>
@@ -311,6 +319,7 @@
         currentFilter = 'all';
         searchQuery = '';
         if (searchInput) searchInput.value = '';
+        if (searchWrap) searchWrap.classList.remove('active');
         chipBtns.forEach(b => {
           if (b.getAttribute('data-filter') === 'all') b.classList.add('active');
           else b.classList.remove('active');

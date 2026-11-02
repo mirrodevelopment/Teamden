@@ -92,6 +92,73 @@ const Navbar = (() => {
       }
     }
 
+    // --- Theme Switcher Logic ---
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (document.body) document.body.classList.toggle('dark-theme', theme === 'dark');
+      localStorage.setItem('teamden-theme', theme);
+
+      const themeBtn = document.getElementById('topbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.setAttribute('title', theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme');
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme');
+      }
+
+      const dropdownLabel = document.getElementById('dropdown-theme-label');
+      if (dropdownLabel) {
+        dropdownLabel.textContent = theme === 'dark' ? '☀️ Switch to Light Theme' : '🌙 Switch to Dark Theme';
+      }
+
+      window.dispatchEvent(new CustomEvent('teamden:themechange', { detail: { theme } }));
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
+      const next = isDark ? 'light' : 'dark';
+      applyTheme(next);
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Theme switched to ${next === 'dark' ? 'Dark' : 'Light'}`);
+      }
+    }
+
+    const themeToggleBtn = document.getElementById('topbar-theme-toggle');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleTheme();
+      });
+    }
+
+    const dropdownThemeBtn = document.getElementById('dropdown-theme-toggle');
+    if (dropdownThemeBtn) {
+      dropdownThemeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleTheme();
+        if (userMenu) userMenu.classList.remove('show');
+      });
+    }
+
+    // Live Topbar Date Updater
+    function updateNavbarDate() {
+      const topbarDateEl = document.getElementById('topbar-date-display');
+      if (!topbarDateEl) return;
+      const now = new Date();
+      const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+      const dow = days[now.getDay()];
+      const dayNum = String(now.getDate()).padStart(2, '0');
+      const month = months[now.getMonth()];
+      const year = now.getFullYear();
+      topbarDateEl.textContent = `${dow}, ${dayNum} ${month} ${year}`;
+    }
+    updateNavbarDate();
+    setInterval(updateNavbarDate, 30000);
+
+    // Apply stored theme on init
+    const currentStoredTheme = localStorage.getItem('teamden-theme') || 'light';
+    applyTheme(currentStoredTheme);
+
     // Logout button handler
     const logoutBtn = document.getElementById('topbar-logout-btn');
     if (logoutBtn) {
@@ -107,6 +174,13 @@ const Navbar = (() => {
   }
 
   return { init };
+})();
+
+// Immediate theme initialization on script load
+(function () {
+  const t = localStorage.getItem('teamden-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  if (document.body) document.body.classList.toggle('dark-theme', t === 'dark');
 })();
 
 window.Navbar = Navbar;

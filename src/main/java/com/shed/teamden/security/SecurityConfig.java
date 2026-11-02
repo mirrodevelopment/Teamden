@@ -96,6 +96,8 @@ public class SecurityConfig {
                     "/pages/login/**",
                     "/pages/register/**",
                     "/pages/dashboard/**",
+                    "/pages/calendar/**",
+                    "/pages/overview/**",
                     "/pages/projects/**",
                     "/pages/project/**",
                     "/shared/**",

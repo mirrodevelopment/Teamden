@@ -4,7 +4,8 @@
    Single consolidated source of truth for ALL typography and fonts across Teamden:
    - Mostarct: Primary font for all text, labels, inputs, dates, descriptions
    - Inter: Dedicated to H2 section headings only
-   - Jx Tabe Black & Monument Extended: Universal display and number fonts
+   - Sport Break Extra Bold: Universal display and number fonts
+   - Monument Extended: Brutalist display numbers
    ========================================================================== */
 
 /* ── 1. Google Web Font Imports (Must precede all rules) ─────────────────── */
@@ -13,37 +14,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@800;900&display=swap');
 
-/* ── 2. Universal Number Font: Jx Tabe Black (@font-face) ───────────────── */
+/* ── 2. Universal Number Font: Sport Break Extra Bold (@font-face) ────────── */
 @font-face {
-  font-family: 'Jx Tabe Black';
+  font-family: 'Sport Break Extra Bold';
   font-style: normal;
-  font-weight: 900;
+  font-weight: 800;
   font-display: swap;
-  src: local('Jx Tabe Black'),
-       local('JxTabe-Black'),
-       local('Jx Tabe'),
-       local('JxTabe'),
-       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
-       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
-       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
-       url('./MonumentExtended-Ultrabold.woff') format('woff');
+  src: local('Sport Break Extra Bold'),
+       local('SportBreak-ExtraBold'),
+       local('Sport Break'),
+       local('SportBreak'),
+       url('/fragments/fonts/SportBreak-ExtraBold.woff2') format('woff2'),
+       url('/fragments/fonts/SportBreak-ExtraBold.woff') format('woff'),
+       url('/fragments/fonts/SportBreak-ExtraBold.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Jx Tabe';
+  font-family: 'Sport Break';
   font-style: normal;
-  font-weight: 900;
+  font-weight: 800;
   font-display: swap;
-  src: local('Jx Tabe Black'),
-       local('JxTabe-Black'),
-       local('Jx Tabe'),
-       local('JxTabe'),
-       url('/fragments/fonts/JxTabe-Black.woff2') format('woff2'),
-       url('/fragments/fonts/JxTabe-Black.woff') format('woff'),
-       url('/fragments/fonts/JxTabe-Black.ttf') format('truetype'),
-       url('/fragments/fonts/MonumentExtended-Ultrabold.woff') format('woff'),
-       url('./MonumentExtended-Ultrabold.woff') format('woff');
+  src: local('Sport Break Extra Bold'),
+       local('SportBreak-ExtraBold'),
+       local('Sport Break'),
+       local('SportBreak'),
+       url('/fragments/fonts/SportBreak-ExtraBold.woff2') format('woff2'),
+       url('/fragments/fonts/SportBreak-ExtraBold.woff') format('woff'),
+       url('/fragments/fonts/SportBreak-ExtraBold.ttf') format('truetype');
 }
 
 /* ── 3. Brutalist Display Numbers: Monument Extended (@font-face) ────────── */
@@ -164,10 +161,10 @@ h2.dash-section-title,
   /* Inter Display Typography */
   --font-family-display: 'Inter', sans-serif;
   --font-family-h2: 'Inter', sans-serif;
-  --font-family-today: 'Inter Tight', 'Inter', sans-serif;
+  --font-family-today: 'Inter', sans-serif;
 
-  /* Universal Number Font Tokens (Jx Tabe Black) */
-  --number-font: 'Jx Tabe Black', 'Jx Tabe', 'Monument Extended', 'Unbounded', sans-serif;
+  /* Universal Number Font Tokens (Sport Break Extra Bold) */
+  --number-font: 'Sport Break Extra Bold', 'Sport Break';
   --font-number: var(--number-font);
   --font-family-number: var(--number-font);
 }

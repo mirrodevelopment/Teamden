@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — insights.</title>
+  <link rel="icon" type="image/png" href="../../../assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="../../../fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="../../../fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="../../../fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="../../../fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="../../../fragments/navbar/navbar.css?v=12">
+
+  <!-- Insights Page Styles -->
+  <link rel="stylesheet" href="insights.css?v=1">
+</head>
+<body class="dashboard-body insights-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount (with 06 Overview highlighted in lime green) -->
+    <div id="sidebar-mount" class="sidebar-mount-area">
+      <aside class="app-sidebar" id="app-sidebar">
+        <!-- Brand Wordmark Header -->
+        <div class="sidebar-header">
+          <a href="/pages/dashboard/dashboard.html" class="sidebar-brand-logo" title="brick">
+            <img src="../../../assets/bric-typography.png" alt="brick" class="brand-typography-img">
+            <img src="../../../assets/bric-icon.png" alt="brick" class="brand-icon-img">
+          </a>
+          <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" type="button" title="Toggle sidebar" aria-label="Toggle sidebar">
+            <svg class="collapse-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+
+        <!-- Workspace Selector Dropdown -->
+        <div class="sidebar-workspace-select">
+          <div class="workspace-eyebrow">WORKSPACE</div>
+          <button class="workspace-dropdown-trigger" id="workspace-dropdown-trigger" aria-haspopup="true" aria-expanded="false" title="Switch Workspace">
+            <span class="workspace-name" id="sidebar-workspace-name">Acme Co.</span>
+            <svg class="workspace-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+
+        <!-- Main Navigation Items -->
+        <div class="sidebar-nav-container">
+          <nav class="sidebar-nav" aria-label="Main Navigation">
+            <a href="/pages/dashboard/dashboard.html" class="nav-item" id="nav-today" data-tooltip="Today">
+              <span class="nav-num">01</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span class="nav-label">Today</span>
+            </a>
+
+            <a href="/pages/projects/projects.html" class="nav-item" id="nav-projects" data-tooltip="Projects">
+              <span class="nav-num">02</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="nav-label">Projects</span>
+            </a>
+
+            <a href="/pages/workspace/workspace.html" class="nav-item" id="nav-workspace" data-tooltip="Workspace">
+              <span class="nav-num">03</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+              <span class="nav-label">Workspace</span>
+            </a>
+
+            <a href="/pages/team/team.html" class="nav-item" id="nav-team" data-tooltip="Team">
+              <span class="nav-num">04</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="nav-label">Team</span>
+            </a>
+
+            <a href="/pages/calendar/calendar.html" class="nav-item" id="nav-calendar" data-tooltip="Calendar">
+              <span class="nav-num">05</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span class="nav-label">Calendar</span>
+            </a>
+
+            <a href="/pages/overview/overview.html" class="nav-item active" id="nav-overview" data-tooltip="Overview">
+              <span class="nav-num">06</span>
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+              <span class="nav-label">Overview</span>
+            </a>
+          </nav>
+
+          <div class="sidebar-divider"></div>
+
+          <!-- Pinned Items -->
+          <div class="sidebar-pinned-section">
+            <div class="pinned-header">
+              <span class="pinned-title">PINNED</span>
+              <button class="pinned-add-btn" id="pinned-add-btn" title="Add pinned item" aria-label="Add pinned item">+</button>
+            </div>
+            <div class="pinned-list">
+              <a href="/pages/projects/project-detail/project-detail.html?id=featured-01" class="pinned-item" data-tooltip="Website Redesign">
+                <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span class="pinned-label">Website Redesign</span>
+              </a>
+              <a href="#brand-guidelines" class="pinned-item" data-tooltip="Brand Guidelines">
+                <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                <span class="pinned-label">Brand Guidelines</span>
+              </a>
+              <a href="#client-application" class="pinned-item" data-tooltip="Client Application">
+                <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span class="pinned-label">Client Application</span>
+              </a>
+              <a href="#marketing" class="pinned-item" data-tooltip="Marketing">
+                <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span class="pinned-label">Marketing</span>
+              </a>
+              <a href="#product-roadmap" class="pinned-item" data-tooltip="Product Roadmap">
+                <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span class="pinned-label">Product Roadmap</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <a href="#settings" class="sidebar-footer-link" id="nav-settings" title="Settings" data-tooltip="Settings">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span class="footer-label">Settings</span>
+          </a>
+          <a href="#help" class="sidebar-footer-link" id="nav-help" title="Help & Support" data-tooltip="Help & Support">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span class="footer-label">Help & Support</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Main Workspace Area -->
+    <div class="dash-main-area insights-app-main">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area">
+        <header class="app-topbar" id="app-topbar">
+          <div class="topbar-center-section">
+            <button class="topbar-mobile-toggle" id="mobile-sidebar-toggle" aria-label="Toggle navigation menu" title="Open navigation">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="topbar-search-box" id="topbar-search-box">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" placeholder="Search for projects, tasks, people or documents..." id="global-search-input" aria-label="Search" autocomplete="off">
+              <kbd class="search-kbd" id="search-kbd-shortcut">⌘ K</kbd>
+            </div>
+          </div>
+
+          <div class="topbar-right-section">
+            <div class="create-dropdown-wrapper">
+              <button class="btn-create-pill" id="btn-create-pill" aria-haspopup="true" aria-expanded="false" title="Quick Create">
+                <span class="create-plus">+</span>
+                <span class="create-text">Create</span>
+                <svg class="create-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="create-menu" id="create-menu" role="menu">
+                <a href="/pages/projects/projects.html" class="create-menu-item"><span>📁 New Project</span></a>
+                <a href="/pages/dashboard/dashboard.html" class="create-menu-item"><span>✓ New Task</span></a>
+              </div>
+            </div>
+
+            <div class="topbar-right-actions-col">
+              <div class="topbar-icons-row">
+                <button class="topbar-bell-btn" id="notification-btn" aria-label="Notifications" title="Notifications">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  <span class="bell-red-dot"></span>
+                </button>
+
+                <div class="user-menu-wrapper">
+                  <button class="user-profile-trigger" id="user-profile-btn" aria-haspopup="true" aria-expanded="false" title="User Menu">
+                    <div class="user-avatar-circle" id="topbar-user-avatar" style="font-weight:700; font-size:12px; background:#ECEAE4; color:#111;">PB</div>
+                    <svg class="user-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <!-- Main Insights Content Canvas -->
+      <main class="insights-content-canvas" id="insights-content-canvas">
+        <div class="insights-layout-grid">
+
+          <!-- ===================================================================
+               CENTER ANALYTICS COLUMN
+               =================================================================== -->
+          <div class="insights-center-column">
+
+            <!-- PAGE HEADER -->
+            <header class="insights-page-header">
+              <div class="header-left-meta">
+                <div class="header-breadcrumbs">
+                  <a href="/pages/overview/overview.html" class="crumb-link">ORGANISATION</a>
+                  <span class="crumb-separator">/</span>
+                  <a href="/pages/overview/overview.html" class="crumb-link">OVERVIEW</a>
+                  <span class="crumb-separator">/</span>
+                  <span class="crumb-part crumb-active">INSIGHTS</span>
+                </div>
+                <h1 class="insights-main-heading">insights<span class="insights-period">.</span></h1>
+                <p class="insights-subheading">See the patterns. Understand the decisions.</p>
+              </div>
+
+              <div class="header-right-controls">
+                <!-- Date Range Filter Dropdown -->
+                <div class="filter-dropdown-wrap" id="date-dropdown-wrap">
+                  <button class="filter-btn" id="date-filter-btn" type="button" aria-haspopup="true" aria-expanded="false">
+                    <svg class="filter-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span class="filter-btn-label" id="date-filter-label">Last 30 days</span>
+                    <svg class="filter-btn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="filter-menu" id="date-filter-menu" role="menu">
+                    <button class="filter-option" data-range="7" role="menuitem">Last 7 days</button>
+                    <button class="filter-option selected" data-range="30" role="menuitem">Last 30 days</button>
+                    <button class="filter-option" data-range="90" role="menuitem">Last 90 days</button>
+                    <button class="filter-option" data-range="custom" role="menuitem">Custom range</button>
+                  </div>
+                </div>
+
+                <!-- Team Filter Dropdown -->
+                <div class="filter-dropdown-wrap" id="team-dropdown-wrap">
+                  <button class="filter-btn" id="team-filter-btn" type="button" aria-haspopup="true" aria-expanded="false">
+                    <svg class="filter-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="filter-btn-label" id="team-filter-label">All teams</span>
+                    <svg class="filter-btn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="filter-menu" id="team-filter-menu" role="menu">
+                    <button class="filter-option selected" data-team="all" role="menuitem">All teams</button>
+                    <button class="filter-option" data-team="Design" role="menuitem">Design</button>
+                    <button class="filter-option" data-team="Engineering" role="menuitem">Engineering</button>
+                    <button class="filter-option" data-team="Marketing" role="menuitem">Marketing</button>
+                    <button class="filter-option" data-team="Operations" role="menuitem">Operations</button>
+                  </div>
+                </div>
+
+                <!-- Compare Periods Toggle Button -->
+                <button class="filter-btn btn-compare-periods" id="btn-compare-periods" type="button" aria-pressed="false" title="Compare with previous period">
+                  <svg class="filter-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                  </svg>
+                  <span>Compare periods</span>
+                </button>
+              </div>
+            </header>
+
+            <!-- 01 / DELIVERY INTELLIGENCE CARD -->
+            <section class="delivery-intelligence-card" id="delivery-intelligence-card" aria-label="Delivery Intelligence">
+              <div class="card-top-row">
+                <div class="card-eyebrow">01 / DELIVERY INTELLIGENCE</div>
+                <!-- Chart Series Filter Switcher -->
+                <div class="chart-selector-wrap" id="chart-selector-wrap">
+                  <button class="chart-selector-btn" id="chart-selector-btn" type="button" aria-haspopup="true" aria-expanded="false">
+                    <span id="chart-selector-label">MILESTONES</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="chart-selector-menu" id="chart-selector-menu" role="menu">
+                    <button class="chart-selector-option selected" data-metric="milestones" role="menuitem">MILESTONES</button>
+                    <button class="chart-selector-option" data-metric="tasks" role="menuitem">TASKS</button>
+                    <button class="chart-selector-option" data-metric="projects" role="menuitem">PROJECTS</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Card Body: Metric on Left, Interactive Chart on Right -->
+              <div class="intelligence-body-grid">
+                <!-- Left Metric Block -->
+                <div class="intel-metric-block">
+                  <h2 class="intel-heading">Delivery reliability.</h2>
+                  <div class="intel-rate-number" id="intel-rate-number">80%</div>
+                  <div class="intel-sub-row">
+                    <div class="intel-sub-divider"></div>
+                    <div class="intel-sub-text">
+                      <strong id="intel-completed-count">12 of 15 milestones</strong>
+                      <span id="intel-completed-label">Completed on time</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Interactive Line Chart -->
+                <div class="intel-chart-container" id="intel-chart-container">
+                  <svg class="intel-line-chart" id="intel-line-chart" viewBox="0 0 540 200" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chartGlowGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.16"></stop>
+                        <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"></stop>
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Horizontal Gridlines & Y-Axis Labels -->
+                    <g class="chart-gridlines">
+                      <line x1="45" y1="20" x2="520" y2="20" stroke="rgba(0,0,0,0.06)" stroke-dasharray="3 3"></line>
+                      <text x="36" y="24" text-anchor="end" class="chart-axis-lbl">100%</text>
+
+                      <line x1="45" y1="58" x2="520" y2="58" stroke="rgba(0,0,0,0.06)" stroke-dasharray="3 3"></line>
+                      <text x="36" y="62" text-anchor="end" class="chart-axis-lbl">75%</text>
+
+                      <line x1="45" y1="96" x2="520" y2="96" stroke="rgba(0,0,0,0.06)" stroke-dasharray="3 3"></line>
+                      <text x="36" y="100" text-anchor="end" class="chart-axis-lbl">50%</text>
+
+                      <line x1="45" y1="134" x2="520" y2="134" stroke="rgba(0,0,0,0.06)" stroke-dasharray="3 3"></line>
+                      <text x="36" y="138" text-anchor="end" class="chart-axis-lbl">25%</text>
+
+                      <line x1="45" y1="172" x2="520" y2="172" stroke="rgba(0,0,0,0.06)"></line>
+                      <text x="36" y="175" text-anchor="end" class="chart-axis-lbl">0%</text>
+                    </g>
+
+                    <!-- Gradient Area Fill Under Line -->
+                    <path id="chart-area-path" class="chart-area-fill" d="M 60 74 L 150 66 L 240 70 L 330 52 L 420 44 L 500 58 L 500 172 L 60 172 Z" fill="url(#chartGlowGradient)"></path>
+
+                    <!-- Smooth Trendline Path -->
+                    <path id="chart-line-path" class="chart-trend-line" d="M 60 74 L 150 66 L 240 70 L 330 52 L 420 44 L 500 58" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+
+                    <!-- Data Point Circles & Tooltip Triggers -->
+                    <g id="chart-points-group">
+                      <!-- May (72%) -->
+                      <circle cx="60" cy="74" r="4.5" class="chart-dot" data-month="May" data-val="72%"></circle>
+                      <text x="60" y="60" text-anchor="middle" class="chart-val-lbl">72%</text>
+                      <text x="60" y="190" text-anchor="middle" class="chart-axis-lbl">May</text>
+
+                      <!-- Jun (76%) -->
+                      <circle cx="150" cy="66" r="4.5" class="chart-dot" data-month="Jun" data-val="76%"></circle>
+                      <text x="150" y="52" text-anchor="middle" class="chart-val-lbl">76%</text>
+                      <text x="150" y="190" text-anchor="middle" class="chart-axis-lbl">Jun</text>
+
+                      <!-- Jul (74%) -->
+                      <circle cx="240" cy="70" r="4.5" class="chart-dot" data-month="Jul" data-val="74%"></circle>
+                      <text x="240" y="56" text-anchor="middle" class="chart-val-lbl">74%</text>
+                      <text x="240" y="190" text-anchor="middle" class="chart-axis-lbl">Jul</text>
+
+                      <!-- Aug (83%) -->
+                      <circle cx="330" cy="52" r="4.5" class="chart-dot" data-month="Aug" data-val="83%"></circle>
+                      <text x="330" y="38" text-anchor="middle" class="chart-val-lbl">83%</text>
+                      <text x="330" y="190" text-anchor="middle" class="chart-axis-lbl">Aug</text>
+
+                      <!-- Sep (86%) -->
+                      <circle cx="420" cy="44" r="4.5" class="chart-dot" data-month="Sep" data-val="86%"></circle>
+                      <text x="420" y="30" text-anchor="middle" class="chart-val-lbl">86%</text>
+                      <text x="420" y="190" text-anchor="middle" class="chart-axis-lbl">Sep</text>
+
+                      <!-- Oct (80% Active Badge Point) -->
+                      <circle cx="500" cy="58" r="5.5" class="chart-dot chart-dot-active" data-month="Oct" data-val="80%"></circle>
+                      <rect x="480" y="38" width="40" height="18" rx="9" fill="#7C3AED"></rect>
+                      <text x="500" y="51" text-anchor="middle" class="chart-badge-text">80%</text>
+                      <text x="500" y="190" text-anchor="middle" class="chart-axis-lbl chart-axis-active">Oct</text>
+                    </g>
+                  </svg>
+                  <!-- Floating Hover Tooltip -->
+                  <div class="chart-tooltip" id="chart-tooltip"></div>
+                </div>
+              </div>
+
+              <!-- Bottom Insight Strip (Sage Green Pill) -->
+              <div class="intel-insight-banner" id="intel-insight-banner">
+                <div class="banner-left-info">
+                  <span class="info-pill-icon">i</span>
+                  <span class="info-pill-text" id="intel-banner-message">Three milestones were not completed on time in this reporting period.</span>
+                </div>
+                <button class="banner-action-link" id="btn-view-milestone-details" type="button">
+                  <span>View details</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- PERFORMANCE METRICS (3 HORIZONTAL CARDS: BEIGE, BLUE, LAVENDER) -->
+            <section class="performance-metrics-grid" aria-label="Organisation Performance Metrics">
+              <!-- Metric Card 1: Decisions Turnaround (Warm Beige) -->
+              <div class="perf-metric-card perf-card-beige" id="perf-card-decisions" role="button" tabindex="0" title="Inspect Decision Turnaround">
+                <div class="perf-card-top">
+                  <span class="perf-eyebrow">02 / DECISIONS</span>
+                  <div class="perf-icon-circle">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="perf-metric-val" id="metric-turnaround-val">2.4d</div>
+                <div class="perf-metric-lbl">Median turnaround</div>
+                <div class="perf-metric-delta delta-positive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 13 12 18 17 13"></polyline><line x1="12" y1="6" x2="12" y2="18"></line></svg>
+                  <span id="metric-turnaround-delta">18% vs previous period</span>
+                </div>
+              </div>
+
+              <!-- Metric Card 2: Blocked Duration (Pale Blue) -->
+              <div class="perf-metric-card perf-card-blue" id="perf-card-blockers" role="button" tabindex="0" title="Inspect Blocked Duration">
+                <div class="perf-card-top">
+                  <span class="perf-eyebrow">03 / BLOCKERS</span>
+                  <div class="perf-icon-circle">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="perf-metric-val" id="metric-blocked-val">1.8d</div>
+                <div class="perf-metric-lbl">Median blocked duration</div>
+                <div class="perf-metric-delta delta-positive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 13 12 18 17 13"></polyline><line x1="12" y1="6" x2="12" y2="18"></line></svg>
+                  <span id="metric-blocked-delta">25% vs previous period</span>
+                </div>
+              </div>
+
+              <!-- Metric Card 3: Handoff Acceptance (Lavender) -->
+              <div class="perf-metric-card perf-card-lavender" id="perf-card-handoffs" role="button" tabindex="0" title="Inspect Handoff Acceptance">
+                <div class="perf-card-top">
+                  <span class="perf-eyebrow">04 / HANDOFFS</span>
+                  <div class="perf-icon-circle">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="17 8 21 12 17 16"></polyline>
+                      <line x1="3" y1="12" x2="21" y2="12"></line>
+                      <polyline points="7 16 3 12 7 8"></polyline>
+                      <line x1="21" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="perf-metric-val" id="metric-handoff-val">3.2d</div>
+                <div class="perf-metric-lbl">Median acceptance time</div>
+                <div class="perf-metric-delta delta-positive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 13 12 18 17 13"></polyline><line x1="12" y1="6" x2="12" y2="18"></line></svg>
+                  <span id="metric-handoff-delta">20% vs previous period</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUB-GRID: DECISION INTELLIGENCE (LEFT) & COLLABORATION ANALYSIS (RIGHT) -->
+            <div class="insights-subgrid">
+
+              <!-- 02 / DECISION INTELLIGENCE -->
+              <section class="intel-subcard" id="decisions-slowdown-section" aria-label="Decision Intelligence">
+                <div class="subcard-header">
+                  <span class="subcard-eyebrow">02 / DECISION INTELLIGENCE</span>
+                  <h3 class="subcard-title">Where decisions slow down.</h3>
+                </div>
+
+                <div class="decision-slowdown-list" id="decision-slowdown-list">
+                  <!-- Row 1: Overdue Decision -->
+                  <div class="slowdown-row-item" data-id="dec-homepage" role="button" tabindex="0">
+                    <div class="row-left-group">
+                      <div class="row-icon-circle circle-amber">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                      </div>
+                      <div class="row-text-meta">
+                        <span class="row-main-title">Homepage approval</span>
+                        <span class="row-sub-meta">Brand Development · 2 days overdue</span>
+                      </div>
+                    </div>
+                    <svg class="row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </div>
+
+                  <!-- Row 2: Resolved Decision -->
+                  <div class="slowdown-row-item" data-id="dec-pricing" role="button" tabindex="0">
+                    <div class="row-left-group">
+                      <div class="row-icon-circle circle-green">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div class="row-text-meta">
+                        <span class="row-main-title">Pricing update</span>
+                        <span class="row-sub-meta">Client Application · Resolved</span>
+                      </div>
+                    </div>
+                    <svg class="row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </div>
+                </div>
+
+                <div class="subcard-footer">
+                  <button class="subcard-footer-link" id="btn-view-all-decisions" type="button">
+                    <span>View all decisions</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </button>
+                </div>
+              </section>
+
+              <!-- 03 / COLLABORATION ANALYSIS -->
+              <section class="intel-subcard" id="collaboration-analysis-section" aria-label="Collaboration Analysis">
+                <div class="subcard-header">
+                  <span class="subcard-eyebrow">03 / COLLABORATION ANALYSIS</span>
+                  <h3 class="subcard-title">How work moves.</h3>
+                </div>
+
+                <!-- Visual Directional Flow -->
+                <div class="collab-flow-card" id="btn-open-collab-details" role="button" tabindex="0" title="Inspect Team Flow">
+                  <div class="collab-flow-pill-row">
+                    <div class="team-flow-pill pill-lavender">Design</div>
+                    <svg class="team-flow-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                    <div class="team-flow-pill pill-blue">Engineering</div>
+                  </div>
+
+                  <div class="collab-metric-footer">
+                    <div class="collab-footer-text">
+                      <span class="collab-title">Design handoffs</span>
+                      <span class="collab-desc">Average 1.6 days to acceptance</span>
+                    </div>
+                    <svg class="collab-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="subcard-footer">
+                  <button class="subcard-footer-link" id="btn-view-all-collab" type="button">
+                    <span>View collaboration breakdown</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </button>
+                </div>
+              </section>
+
+            </div>
+
+          </div>
+
+          <!-- ===================================================================
+               RIGHT REPORTING STUDIO & INSIGHTS RAIL (~280px)
+               =================================================================== -->
+          <aside class="insights-right-rail" aria-label="Reporting Studio Panel">
+
+            <!-- A. REPORTING STUDIO / 01 (MATTE BLACK CARD) -->
+            <div class="exec-card exec-black-studio" id="reporting-studio-card">
+              <span class="studio-eyebrow">REPORTING STUDIO / 01</span>
+              <h3 class="studio-title">Build your report.</h3>
+              <p class="studio-desc">Turn insights into a structured report you can share.</p>
+
+              <button class="studio-action-link" id="btn-open-create-report" type="button">
+                <span>Create report</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            <!-- B. SAVED REPORTS -->
+            <div class="exec-card exec-content-card" id="saved-reports-card">
+              <div class="exec-card-header">
+                <h4 class="exec-card-title">SAVED REPORTS</h4>
+              </div>
+
+              <div class="exec-items-list" id="saved-reports-list">
+                <!-- Item 1: Monthly Delivery Review -->
+                <div class="exec-rail-item" data-report="Monthly Delivery Review" role="button" tabindex="0">
+                  <div class="exec-item-icon-box icon-box-blue">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                  </div>
+                  <div class="exec-item-details">
+                    <span class="exec-item-title">Monthly Delivery Review</span>
+                    <span class="exec-item-desc">Organisation-wide</span>
+                  </div>
+                  <svg class="exec-item-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+
+                <!-- Item 2: Team Collaboration -->
+                <div class="exec-rail-item" data-report="Team Collaboration" role="button" tabindex="0">
+                  <div class="exec-item-icon-box icon-box-purple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                  </div>
+                  <div class="exec-item-details">
+                    <span class="exec-item-title">Team Collaboration</span>
+                    <span class="exec-item-desc">Cross-team analysis</span>
+                  </div>
+                  <svg class="exec-item-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+              </div>
+
+              <div class="exec-card-bottom-link">
+                <button class="desk-footer-link" id="btn-view-all-reports" type="button">
+                  <span>View all reports</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- C. QUICK EXPORT (PEACH / WARM BEIGE CARD) -->
+            <div class="exec-card exec-peach-card" id="quick-export-card">
+              <div class="exec-card-header">
+                <h4 class="exec-card-title">QUICK EXPORT</h4>
+              </div>
+
+              <div class="quick-export-row" id="btn-quick-export-summary" role="button" tabindex="0" title="Export Executive Summary">
+                <div class="export-icon-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </div>
+                <div class="export-details">
+                  <span class="export-title">Executive Summary</span>
+                  <span class="export-desc">Export key insights as PDF.</span>
+                </div>
+                <svg class="export-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+            </div>
+
+            <!-- D. 05 / KEY INSIGHTS ("What's changed?") -->
+            <div class="exec-card exec-content-card" id="key-insights-card">
+              <div class="exec-card-header">
+                <div class="insights-eyebrow-top">
+                  <span class="exec-eyebrow">05 / KEY INSIGHTS</span>
+                  <h4 class="insights-card-title">What's changed?</h4>
+                </div>
+              </div>
+
+              <div class="key-insights-list" id="key-insights-list">
+                <!-- Insight 1: Delivery Reliability -->
+                <div class="key-insight-bullet" role="button" tabindex="0">
+                  <span class="bullet-dot dot-green"></span>
+                  <div class="bullet-text">
+                    <strong>Delivery reliability improved</strong>
+                    <span>(+8% vs previous period)</span>
+                  </div>
+                </div>
+
+                <!-- Insight 2: Decision Turnaround -->
+                <div class="key-insight-bullet" role="button" tabindex="0">
+                  <span class="bullet-dot dot-purple"></span>
+                  <div class="bullet-text">
+                    <strong>Decision turnaround reduced</strong>
+                    <span>(-18% vs previous period)</span>
+                  </div>
+                </div>
+
+                <!-- Insight 3: Engineering Flow -->
+                <div class="key-insight-bullet" role="button" tabindex="0">
+                  <span class="bullet-dot dot-blue"></span>
+                  <div class="bullet-text">
+                    <strong>More work in Engineering</strong>
+                    <span>(+12% vs previous period)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="exec-card-bottom-link">
+                <button class="desk-footer-link" id="btn-view-detailed-analysis" type="button">
+                  <span>View detailed analysis</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </aside>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 1: REPORT BUILDER / STUDIO WORKFLOW
+       =================================================================== -->
+  <div class="insights-modal-backdrop" id="modal-report-backdrop" aria-hidden="true">
+    <div class="insights-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
+      <div class="modal-dialog-header">
+        <div class="modal-eyebrow">REPORTING STUDIO · GENERATE REPORT</div>
+        <button class="modal-close-btn" id="btn-close-report-modal" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <h2 class="modal-heading-large" id="modal-report-title">Build your executive report</h2>
+        <p class="modal-lead-text">Customize the reporting scope, team inclusions, and delivery velocity metrics for stakeholder presentation.</p>
+
+        <div class="form-group-block">
+          <label class="form-label" for="report-title-input">Report Title</label>
+          <input type="text" id="report-title-input" class="form-input" value="Q4 Executive Delivery & Decision Intelligence Report">
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group-block">
+            <label class="form-label" for="report-period-select">Reporting Period</label>
+            <select id="report-period-select" class="form-select">
+              <option value="30" selected>Last 30 days (Oct 2026)</option>
+              <option value="90">Last 90 days (Q3-Q4)</option>
+              <option value="ytd">Year to Date (2026)</option>
+            </select>
+          </div>
+          <div class="form-group-block">
+            <label class="form-label" for="report-format-select">Export Format</label>
+            <select id="report-format-select" class="form-select">
+              <option value="pdf" selected>PDF Document (Print Ready)</option>
+              <option value="csv">CSV Spreadsheet (Raw Metrics)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-checkbox-group">
+          <span class="form-label">Include Sections</span>
+          <label class="checkbox-row">
+            <input type="checkbox" checked id="chk-delivery">
+            <span>Delivery Reliability & Milestone Cadence (80% rate)</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" checked id="chk-decisions">
+            <span>Decision Bottlenecks & Overdue Direction</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" checked id="chk-collab">
+            <span>Cross-Team Collaboration & Handoff Latency</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" checked id="chk-changes">
+            <span>Automated Key Insights & Trend Shifts</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button class="btn-secondary" id="btn-cancel-report-modal" type="button">Cancel</button>
+        <button class="btn-primary-action" id="btn-generate-report-action" type="button">Generate & Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 2: DECISION DETAILS & RESOLUTION WORKFLOW
+       =================================================================== -->
+  <div class="insights-modal-backdrop" id="modal-decision-backdrop" aria-hidden="true">
+    <div class="insights-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-decision-heading">
+      <div class="modal-dialog-header">
+        <div class="modal-eyebrow">DECISION INTELLIGENCE · DETAILS</div>
+        <button class="modal-close-btn" id="btn-close-decision-modal" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-dialog-body" id="modal-decision-body">
+        <h2 class="modal-heading-large" id="modal-decision-heading">Homepage approval</h2>
+        <p class="modal-lead-text">Decision awaiting review in Brand Development. 2 days overdue.</p>
+
+        <div class="modal-meta-box">
+          <div class="meta-row"><span class="meta-lbl">Project</span><span class="meta-val">Brand Development</span></div>
+          <div class="meta-row"><span class="meta-lbl">Responsible Team</span><span class="meta-val">Creative & Design</span></div>
+          <div class="meta-row"><span class="meta-lbl">Time Waiting</span><span class="meta-val text-amber">4.8 days (Median is 2.4d)</span></div>
+          <div class="meta-row"><span class="meta-lbl">Decision Owner</span><span class="meta-val">Marcus Jones</span></div>
+          <div class="meta-row"><span class="meta-lbl">Impact</span><span class="meta-val">Blocks Client Presentation deck handoff</span></div>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button class="btn-secondary" id="btn-dismiss-decision-modal" type="button">Close</button>
+        <button class="btn-primary-action" id="btn-resolve-decision-action" type="button">Mark Resolved</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL 3: COLLABORATION & HANDOFF ANALYSIS MODAL
+       =================================================================== -->
+  <div class="insights-modal-backdrop" id="modal-collab-backdrop" aria-hidden="true">
+    <div class="insights-modal-dialog modal-collab-dialog" role="dialog" aria-modal="true">
+      <div class="modal-dialog-header">
+        <div class="modal-eyebrow">ORGANISATIONAL FLOW · COLLABORATION MATRIX</div>
+        <button class="modal-close-btn" id="btn-close-collab-modal" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <h2 class="modal-heading-large">How work moves across teams</h2>
+        <p class="modal-lead-text">Handoff velocity, volume, and median acceptance duration across departments in the last 30 days.</p>
+
+        <div class="collab-matrix-list">
+          <!-- Flow 1 -->
+          <div class="matrix-flow-row">
+            <div class="flow-pills-wrap">
+              <span class="team-flow-pill pill-lavender">Design</span>
+              <span class="flow-arrow-text">→</span>
+              <span class="team-flow-pill pill-blue">Engineering</span>
+            </div>
+            <div class="flow-stats-col">
+              <strong>18 Handoffs</strong>
+              <span>Avg 1.6 days acceptance</span>
+            </div>
+            <span class="flow-badge badge-good">Optimal</span>
+          </div>
+
+          <!-- Flow 2 -->
+          <div class="matrix-flow-row">
+            <div class="flow-pills-wrap">
+              <span class="team-flow-pill pill-blue">Engineering</span>
+              <span class="flow-arrow-text">→</span>
+              <span class="team-flow-pill pill-green">QA</span>
+            </div>
+            <div class="flow-stats-col">
+              <strong>24 Handoffs</strong>
+              <span>Avg 2.1 days acceptance</span>
+            </div>
+            <span class="flow-badge badge-warning">Delayed</span>
+          </div>
+
+          <!-- Flow 3 -->
+          <div class="matrix-flow-row">
+            <div class="flow-pills-wrap">
+              <span class="team-flow-pill pill-peach">Content</span>
+              <span class="flow-arrow-text">→</span>
+              <span class="team-flow-pill pill-lavender">Design</span>
+            </div>
+            <div class="flow-stats-col">
+              <strong>11 Handoffs</strong>
+              <span>Avg 1.2 days acceptance</span>
+            </div>
+            <span class="flow-badge badge-good">Optimal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button class="btn-secondary" id="btn-close-collab-footer" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="insights-toast-container" id="insights-toast-container" aria-live="polite"></div>
+
+  <!-- Shared Framework Scripts -->
+  <script src="../../../fragments/company-data/company-data.js?v=2"></script>
+  <script src="../../../shared/js/api.js?v=2"></script>
+  <script src="../../../shared/js/auth.js?v=2"></script>
+  <script src="../../../fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="../../../fragments/navbar/navbar.js?v=2"></script>
+
+  <!-- Insights Page Script -->
+  <script src="insights.js?v=1"></script>
+</body>
+</html>

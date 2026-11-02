@@ -1,8 +1,4 @@
-/* ==========================================================================
-   Teamden / Brick — Project Documents Tab Styles (project-documents.css)
-   Path: pages/project/project-documents/project-documents.css
-   Authentic Brick SaaS styling adhering strictly to the visual reference.
-   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
 
 /* Main Split: Left Library Panel (~295px) + Right Document Viewer (flexible) */
 .documents-workspace-split {
@@ -324,11 +320,13 @@
 }
 
 .doc-ident-tag {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #77736C;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .doc-top-controls-right {
@@ -454,6 +452,12 @@
   gap: 0.35rem;
 }
 
+#doc-meta-date,
+.doc-meta-date {
+  font-family: var(--number-font);
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
 .doc-status-version-stack {
   display: flex;
   align-items: flex-end;
@@ -504,11 +508,13 @@
 }
 
 .doc-section-tag {
+  font-family: var(--number-font);
   font-size: 0.65625rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #77736C;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 /* ==========================================================================
@@ -739,11 +745,18 @@
   border-color: #D3CEC4;
 }
 
-.linked-assignee-name,
-.linked-due-date-str {
+.linked-assignee-name {
   font-size: 0.75rem;
   font-weight: 700;
   color: #111111;
+}
+
+.linked-due-date-str {
+  font-family: var(--number-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111111;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .calendar-icon-svg {
@@ -888,16 +901,18 @@
 }
 
 .decision-linked-task-pill {
+  font-family: var(--number-font);
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  background-color: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  background-color: var(--dash-bg-card-pure, #FFFFFF);
+  border: 1px solid var(--dash-border);
   border-radius: 4px;
   padding: 0.15rem 0.45rem;
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #2563EB;
+  color: var(--dash-text-primary);
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .decision-nav-arrow-btn {

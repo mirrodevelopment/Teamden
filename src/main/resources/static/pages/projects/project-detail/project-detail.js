@@ -117,10 +117,8 @@
         }
       }
       if (titleDisplay) {
-        if (tabName === 'documents' || tabName === 'activity') {
+        if (tabName === 'documents' || tabName === 'activity' || tabName === 'tasks') {
           titleDisplay.innerHTML = 'website redesign. <span class="title-inline-status"><span class="project-status-dot"></span><span class="title-status-text">Active</span></span>';
-        } else if (tabName === 'tasks') {
-          titleDisplay.textContent = 'website redesign.';
         } else {
           titleDisplay.innerHTML = 'website<br>redesign.';
         }

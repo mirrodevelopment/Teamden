@@ -1,8 +1,4 @@
-/* ==========================================================================
-   Teamden / Brick — Project Tasks Tab Component Styles (project-tasks.css)
-   Path: pages/project/project-tasks/project-tasks.css
-   Single source of truth: fragments/theme/theme.css
-   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
 
 /* Main Split Container: Left Workspace + Right Task Details Drawer */
 .tasks-workspace-split {
@@ -22,7 +18,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.45rem;
+  gap: 0.75rem;
   transition: width 0.25s ease;
 }
 
@@ -33,10 +29,10 @@
   background-color: #FAF9F6;
   border: 1px solid #E5E1D9;
   border-radius: 10px;
-  padding: 1.15rem 1.35rem;
+  padding: 0.65rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.45rem;
 }
 
 .work-status-top-row {
@@ -70,19 +66,23 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
   border-top: 1px solid #E5E1D9;
-  padding-top: 0.95rem;
+  padding-top: 0.45rem;
 }
 
 .status-metric-cell {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.25rem;
   position: relative;
-  padding: 0 1rem;
+  padding: 0 0.85rem;
 }
 
 .status-metric-cell:first-child {
   padding-left: 0;
+}
+
+.status-metric-cell:last-child {
+  padding-right: 0;
 }
 
 .status-metric-cell:not(:first-child)::before {
@@ -108,10 +108,10 @@
   flex-shrink: 0;
 }
 
-.metric-dot.dot-gray { background-color: #9CA3AF; }
-.metric-dot.dot-amber { background-color: #F59E0B; }
-.metric-dot.dot-blue { background-color: #3B82F6; }
-.metric-dot.dot-dark { background-color: #111111; }
+.metric-dot.dot-gray { background-color: var(--dash-dot-gray); }
+.metric-dot.dot-amber { background-color: var(--dash-dot-orange); }
+.metric-dot.dot-blue { background-color: var(--dash-dot-blue); }
+.metric-dot.dot-dark { background-color: var(--dash-text-primary); }
 
 .metric-triangle-icon {
   color: #EF4444;
@@ -164,7 +164,7 @@
 .tasks-register-section {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.35rem;
 }
 
 .register-header-top-row {
@@ -181,24 +181,11 @@
   color: #555555;
 }
 
-.btn-new-task-lime {
-  background-color: #D4F832;
-  color: #111111;
-  border: none;
-  border-radius: 9999px;
-  padding: 0.35rem 0.95rem;
-  font-size: 0.78125rem;
-  font-weight: 800;
-  display: inline-flex;
+.register-title-action-row {
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.btn-new-task-lime:hover {
-  transform: translateY(-1px);
-  filter: brightness(0.97);
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .register-main-title {
@@ -207,6 +194,29 @@
   font-weight: 800;
   color: #111111;
   letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.btn-new-task-lime {
+  background-color: #D4F832;
+  color: #111111;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.32rem 0.9rem;
+  font-size: 0.78125rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-new-task-lime:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.97);
 }
 
 /* Toolbar Row */
@@ -214,37 +224,48 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.45rem;
+  flex-wrap: nowrap;
   margin-top: 0.25rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .view-switcher-group {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.18rem;
+  flex-shrink: 0;
 }
 
 .view-label-prefix {
-  font-size: 0.75rem;
+  font-size: 0.71875rem;
   color: #777777;
   font-weight: 600;
-  margin-right: 0.25rem;
+  margin-right: 0.15rem;
+  white-space: nowrap;
 }
 
 .view-btn {
   background: transparent;
   border: none;
   border-radius: 9999px;
-  padding: 0.32rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.24rem 0.52rem;
+  font-size: 0.71875rem;
   font-weight: 600;
   color: #444444;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.28rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.view-btn .view-icon {
+  width: 13px;
+  height: 13px;
 }
 
 .view-btn:hover:not(.active) {
@@ -261,47 +282,57 @@
 .toolbar-actions-right {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.35rem;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-left: auto;
 }
 
 .toolbar-search-box {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   background: #FFFFFF;
   border: 1px solid #E5E1D9;
   border-radius: 9999px;
-  padding: 0.28rem 0.75rem;
-  width: 170px;
+  padding: 0.24rem 0.55rem;
+  width: 125px;
+  min-width: 75px;
+  flex-shrink: 1;
 }
 
 .search-icon {
   color: #888888;
   flex-shrink: 0;
+  width: 13px;
+  height: 13px;
 }
 
 .search-input {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 0.75rem;
+  font-size: 0.71875rem;
   color: #111111;
   width: 100%;
+  min-width: 0;
 }
 
 .toolbar-btn {
   background: #FFFFFF;
   border: 1px solid #E5E1D9;
   border-radius: 9999px;
-  padding: 0.28rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.24rem 0.55rem;
+  font-size: 0.71875rem;
   font-weight: 600;
   color: #444444;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.28rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .toolbar-btn:hover {
@@ -348,10 +379,10 @@
   justify-content: center;
 }
 
-.group-status-dot.dot-amber { background-color: #F59E0B; }
-.group-status-dot.dot-blue { background-color: #3B82F6; }
-.group-status-dot.dot-gray { background-color: #9CA3AF; }
-.group-status-dot.dot-dark { background-color: #111111; width: 14px; height: 14px; }
+.group-status-dot.dot-amber { background-color: var(--dash-dot-orange); }
+.group-status-dot.dot-blue { background-color: var(--dash-dot-blue); }
+.group-status-dot.dot-gray { background-color: var(--dash-dot-gray); }
+.group-status-dot.dot-dark { background-color: var(--dash-text-primary); width: 14px; height: 14px; }
 
 .group-title {
   font-size: 0.78125rem;
@@ -362,9 +393,11 @@
 }
 
 .group-count-pill {
+  font-family: var(--number-font);
   font-size: 0.6875rem;
   color: #777777;
   font-weight: 700;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .group-toggle-btn {
@@ -383,6 +416,10 @@
 }
 
 .task-group-card.collapsed .chevron-icon {
+  transform: rotate(0deg);
+}
+
+.task-group-card.expanded .chevron-icon {
   transform: rotate(180deg);
 }
 
@@ -519,9 +556,9 @@
   font-weight: 700;
 }
 
-.priority-pill.pill-high { background-color: #FEE2E2; color: #DC2626; }
-.priority-pill.pill-medium { background-color: #FEF3C7; color: #B45309; }
-.priority-pill.pill-low { background-color: #EFF6FF; color: #2563EB; }
+.priority-pill.pill-high { background-color: var(--dash-priority-high-bg); color: var(--dash-priority-high-text); }
+.priority-pill.pill-medium { background-color: var(--dash-priority-medium-bg); color: var(--dash-priority-medium-text); }
+.priority-pill.pill-low { background-color: var(--dash-priority-low-bg); color: var(--dash-priority-low-text); }
 
 .due-text {
   font-size: 0.75rem;
@@ -540,6 +577,8 @@
   gap: 0.25rem;
   font-size: 0.75rem;
   color: #666666;
+  font-family: var(--number-font);
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .paperclip-icon {
@@ -580,12 +619,12 @@
    TASK DETAILS DRAWER (~29-30% of total viewport width, persistent attached panel)
    ========================================================================== */
 .tasks-details-drawer {
-  width: 380px;
-  min-width: 360px;
-  max-width: 390px;
+  width: var(--dash-right-rail-width, 295px);
+  min-width: var(--dash-right-rail-width, 295px);
+  max-width: var(--dash-right-rail-width, 295px);
   background-color: #FAF8F4;
-  border-left: 1px solid #E5E1D9;
-  padding: 1.25rem 1.4rem;
+  border-left: 1px solid var(--dash-border, #E5E2DC);
+  padding: 0.85rem 0.75rem 3.5rem 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 1.05rem;
@@ -609,6 +648,7 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  min-width: 0;
 }
 
 .drawer-header-breadcrumb {
@@ -617,6 +657,10 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #666666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
 }
 
 .drawer-top-actions {
@@ -686,6 +730,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .drawer-pills-left {
@@ -721,9 +767,11 @@
 }
 
 .drawer-task-id-badge {
+  font-family: var(--number-font);
   font-size: 0.71875rem;
   color: #888888;
   font-weight: 700;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 /* Full-Width Mark Complete Button */
@@ -755,11 +803,15 @@
 .drawer-tabs-bar {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.2rem;
   border-bottom: 1px solid #E5E1D9;
-  padding-bottom: 0.55rem;
+  padding: 0.45rem 0.1rem 0.55rem 0.1rem;
   overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  min-height: 34px;
+  box-sizing: border-box;
 }
 
 .drawer-tabs-bar::-webkit-scrollbar {
@@ -769,13 +821,27 @@
 .drawer-tab-btn {
   background: transparent;
   border: none;
-  padding: 0.25rem 0.1rem;
-  font-size: 0.75rem;
+  padding: 0.22rem 0.28rem;
+  font-family: inherit;
+  font-size: 0.7rem;
   font-weight: 600;
+  line-height: 1.25;
   color: #777777;
   cursor: pointer;
   position: relative;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.drawer-tab-btn:hover {
+  color: #111111;
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 .drawer-tab-btn.active {
@@ -786,17 +852,20 @@
 .drawer-tab-btn.active::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 0.28rem;
+  right: 0.28rem;
   bottom: -0.55rem;
   height: 2px;
   background-color: #111111;
+  border-radius: 1px;
 }
 
 .tab-badge {
-  font-size: 0.6875rem;
-  opacity: 0.8;
-  font-weight: 500;
+  font-family: var(--number-font, inherit);
+  font-size: 0.625rem;
+  opacity: 0.75;
+  font-weight: 600;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 /* Drawer Panes Wrap */
@@ -899,6 +968,15 @@
   font-size: 0.75rem;
   font-weight: 700;
   color: #111111;
+  min-width: 0;
+}
+
+.prop-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .prop-avatar {
@@ -1172,60 +1250,53 @@
 .tasks-overview-widgets {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 0.8rem;
   width: 100%;
 }
 
 /* 1. Current Milestone Dark Card (Matte Obsidian) */
 .tasks-milestone-dark-card {
-  background-color: #161616;
+  background-color: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  padding: 1.25rem 1.35rem;
+  padding: 0.85rem 1rem 0.75rem 1rem;
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
 }
 
 .milestone-card-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 0.45rem;
 }
 
 .milestone-tag {
+  font-family: var(--font-family-mono, monospace);
   font-size: 0.625rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #888888;
+  color: #8E8E93;
 }
 
 .milestone-progress-ring-wrap {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-}
-
-.milestone-dots-row {
-  display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
 }
 
-.m-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: #444444;
+.progress-ring-svg {
+  display: block;
 }
 
-.m-dot.active {
-  background-color: #C9F34A;
-  width: 6px;
-  height: 6px;
+.milestone-middle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
 }
 
 .milestone-title {
@@ -1238,13 +1309,42 @@
   color: #FFFFFF;
 }
 
+.milestone-dots-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.m-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #383838;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.m-dot.active {
+  background-color: #D4F832;
+}
+
 .milestone-stats-row {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #888888;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #8E8E93;
+  margin-bottom: 0.75rem;
+}
+
+.milestone-active-tasks {
+  color: #8E8E93;
+}
+
+.milestone-sep {
+  color: #555555;
+  font-weight: 400;
 }
 
 .milestone-blocked-tasks {
@@ -1252,33 +1352,51 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.triangle-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
 .blocked-warn-triangle {
   font-size: 0.6875rem;
+  color: #EF4444;
 }
 
 .milestone-card-divider {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.12);
-  margin-top: 0.25rem;
+  margin-bottom: 0.65rem;
 }
 
 .milestone-action-link {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #FFFFFF;
+  color: #D1D5DB;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
-  padding-top: 0.2rem;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease, opacity 0.15s ease;
 }
 
 .milestone-action-link:hover {
-  opacity: 0.85;
+  color: #FFFFFF;
+  opacity: 0.95;
+}
+
+.arrow-glyph {
+  font-size: 0.85rem;
+  color: #9CA3AF;
+  transition: transform 0.15s ease;
+}
+
+.milestone-action-link:hover .arrow-glyph {
+  transform: translateX(2px);
+  color: #FFFFFF;
 }
 
 /* 2-5. Standard Tasks Rail Cards */
@@ -1286,10 +1404,26 @@
   background-color: #FAF9F6;
   border: 1px solid #E5E1D9;
   border-radius: 10px;
-  padding: 1.15rem 1.25rem;
+  padding: 0.65rem 0.85rem 0.55rem 0.85rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.45rem;
+}
+
+/* Blocked Tasks Attention Card (Warm Sand) */
+#widget-blocked-tasks {
+  background-color: #EEE4D8;
+  border-color: #DFD5C8;
+  padding: 0.65rem 0.85rem 0.55rem 0.85rem;
+  gap: 0.45rem;
+}
+
+#widget-blocked-tasks .rail-card-desc {
+  color: #8C877D;
+}
+
+#widget-blocked-tasks .rail-card-divider {
+  background-color: #DFD5C8;
 }
 
 .rail-card-title {
@@ -1302,22 +1436,22 @@
 }
 
 .rail-card-desc {
-  margin: 0.2rem 0 0 0;
-  font-size: 0.71875rem;
+  margin: 0.1rem 0 0 0;
+  font-size: 0.7rem;
   color: #777777;
-  line-height: 1.35;
+  line-height: 1.25;
 }
 
 .blocked-tasks-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .blocked-tasks-huge-count {
   font-family: var(--number-font);
-  font-size: 1.65rem;
+  font-size: 1.45rem;
   font-weight: 900;
   line-height: 1;
   color: #111111;
@@ -1326,25 +1460,30 @@
 .blocked-tasks-list {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0;
 }
 
 .blocked-task-item {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.5rem 0.55rem;
-  border-radius: 6px;
+  gap: 0.45rem;
+  padding: 0.32rem 0.15rem;
+  border-bottom: 1px solid #DFD5C8;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
+.blocked-task-item:last-child {
+  border-bottom: none;
+}
+
 .blocked-task-item:hover {
-  background-color: #F0ECE4;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
 }
 
 .blocked-doc-icon {
-  color: #777777;
+  color: #8C877D;
   flex-shrink: 0;
 }
 
@@ -1368,14 +1507,14 @@
 
 .blocked-item-sub {
   font-size: 0.65625rem;
-  color: #777777;
+  color: #8C877D;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .blocked-item-arrow {
-  color: #888888;
+  color: #8C877D;
   font-size: 0.8125rem;
   margin-left: auto;
 }
@@ -1393,7 +1532,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
-  padding-top: 0.15rem;
+  padding-top: 0.1rem;
   transition: opacity 0.15s ease;
 }
 
@@ -1424,28 +1563,80 @@
 .milestones-table-list {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0;
 }
 
 .milestone-table-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.35rem 0.45rem;
-  border-radius: 6px;
+  padding: 0.22rem 0.35rem 0.26rem 0.35rem;
+  border-radius: 5px;
   font-size: 0.75rem;
   color: #444444;
-  transition: background-color 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+  outline: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.milestone-table-row:focus,
+.milestone-table-row:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Partial underline divider starting after sequence number */
+.milestone-table-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 24px;
+  right: 0;
+  height: 1px;
+  background-color: #EAE5DC;
+  pointer-events: none;
 }
 
 .milestone-table-row:hover:not(.current-active) {
-  background-color: #F0ECE4;
+  background-color: rgba(212, 248, 50, 0.22);
+  color: #111111;
+}
+
+.milestone-table-row:active {
+  transform: scale(0.99);
 }
 
 .milestone-table-row.current-active {
-  background-color: #F4FCD9;
+  background-color: #D4F832;
   color: #111111;
-  font-weight: 700;
+  font-weight: 800;
+  box-shadow: 0 1px 4px rgba(212, 248, 50, 0.35);
+}
+
+.milestone-table-row.current-active::after {
+  display: none;
+}
+
+.milestone-table-row.current-active .m-seq {
+  color: #111111;
+  font-weight: 900;
+}
+
+.milestone-table-row.current-active .m-name {
+  color: #111111;
+  font-weight: 800;
+}
+
+.milestone-table-row.current-active .m-count {
+  color: #222222;
+  font-weight: 600;
+}
+
+.milestone-table-row.current-active .m-arrow {
+  color: #111111;
+  font-weight: 900;
 }
 
 .m-seq {
@@ -1461,13 +1652,15 @@
   border-radius: 50%;
   border: 1.5px solid #9CA3AF;
   flex-shrink: 0;
+  transition: all 0.15s ease;
 }
 
-.m-status-circle.active-lime {
-  border-color: #A3E635;
-  background-color: #C9F34A;
-  width: 10px;
-  height: 10px;
+.m-status-circle.active-lime,
+.milestone-table-row.current-active .m-status-circle {
+  border-color: #111111;
+  background-color: #111111;
+  width: 8px;
+  height: 8px;
 }
 
 .m-name {
@@ -1489,23 +1682,28 @@
 .knowledge-links-list {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0;
 }
 
 .knowledge-link-item {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.45rem 0.55rem;
-  border-radius: 6px;
+  padding: 0.35rem 0.25rem;
+  border-bottom: 1px solid #E5E1D9;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
+.knowledge-link-item:last-child {
+  border-bottom: none;
+}
+
 .knowledge-link-item:hover {
   background-color: #F0ECE4;
+  border-radius: 4px;
 }
 
 .knowledge-icon {
@@ -1516,7 +1714,7 @@
 .knowledge-item-info {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
   flex: 1;
 }
 
@@ -1541,17 +1739,18 @@
 .quick-actions-list {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0;
 }
 
 .quick-action-row-btn {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
   background: transparent;
   border: none;
-  padding: 0.45rem 0.55rem;
-  border-radius: 6px;
+  border-bottom: 1px solid #E5E1D9;
+  padding: 0.35rem 0.25rem;
+  border-radius: 0;
   font-size: 0.78125rem;
   font-weight: 600;
   color: #111111;
@@ -1561,8 +1760,13 @@
   width: 100%;
 }
 
+.quick-action-row-btn:last-child {
+  border-bottom: none;
+}
+
 .quick-action-row-btn:hover {
   background-color: #F0ECE4;
+  border-radius: 4px;
 }
 
 .qa-plus-glyph {
@@ -1594,9 +1798,10 @@
    ========================================================================== */
 @media (max-width: 1200px) {
   .tasks-details-drawer {
-    width: 340px;
-    min-width: 320px;
-    padding: 1rem 1.15rem;
+    width: var(--dash-right-rail-width, 295px);
+    min-width: var(--dash-right-rail-width, 295px);
+    max-width: var(--dash-right-rail-width, 295px);
+    padding: 0.85rem 1rem;
   }
 }
 

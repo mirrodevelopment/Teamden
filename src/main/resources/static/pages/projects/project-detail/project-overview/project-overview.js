@@ -144,6 +144,8 @@
     populate(root, data) {
       if (!root || !data) return;
 
+      const query = (sel) => root.querySelector(sel) || document.querySelector(sel);
+
       // --- 01. Specification Card ---
       const specTitle = root.querySelector('#spec-title');
       if (specTitle && data.specification && data.specification.title) {
@@ -251,7 +253,7 @@
       }
 
       // --- 04. Knowledge Documents ---
-      const docsGrid = root.querySelector('#knowledge-cards-grid');
+      const docsGrid = query('#knowledge-cards-grid');
       if (docsGrid && Array.isArray(data.knowledgeDocuments) && data.knowledgeDocuments.length > 0) {
         docsGrid.innerHTML = data.knowledgeDocuments.map(doc => {
           const iconType = (doc.iconType || 'pdf').toLowerCase();
@@ -292,8 +294,6 @@
       }
 
       // --- Right Column: Health ---
-      const query = (sel) => root.querySelector(sel) || document.querySelector(sel);
-
       const blockersCount = query('#health-blockers-count');
       if (blockersCount) {
         blockersCount.textContent = String(data.unresolvedBlockersCount ?? 2).padStart(2, '0');

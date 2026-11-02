@@ -110,12 +110,28 @@ const Sidebar = (() => {
     const currentPath = window.location.pathname || '';
     const todayNav = document.getElementById('nav-today');
     const projectsNav = document.getElementById('nav-projects');
-    if (currentPath.includes('/pages/projects/') || currentPath.includes('/pages/project/')) {
-      if (todayNav) todayNav.classList.remove('active');
+    const workspaceNav = document.getElementById('nav-workspace');
+    const teamNav = document.getElementById('nav-team');
+    const calendarNav = document.getElementById('nav-calendar');
+    const overviewNav = document.getElementById('nav-overview');
+
+    // Remove active from all first
+    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav].forEach(el => {
+      if (el) el.classList.remove('active');
+    });
+
+    if (currentPath.includes('/pages/overview/')) {
+      if (overviewNav) overviewNav.classList.add('active');
+    } else if (currentPath.includes('/pages/calendar/')) {
+      if (calendarNav) calendarNav.classList.add('active');
+    } else if (currentPath.includes('/pages/projects/') || currentPath.includes('/pages/project/')) {
       if (projectsNav) projectsNav.classList.add('active');
+    } else if (currentPath.includes('/pages/workspace/')) {
+      if (workspaceNav) workspaceNav.classList.add('active');
+    } else if (currentPath.includes('/pages/team/')) {
+      if (teamNav) teamNav.classList.add('active');
     } else if (currentPath.includes('/pages/dashboard/')) {
       if (todayNav) todayNav.classList.add('active');
-      if (projectsNav) projectsNav.classList.remove('active');
     }
 
     // Pinned add button

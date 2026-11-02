@@ -4,27 +4,29 @@
    ========================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
+@import url('../../fragments/theme/theme.css');
 
 :root {
-  /* Brick Color Palette */
-  --brick-canvas: #F5F3EE;
-  --brick-surface: #FFFFFF;
-  --brick-text-primary: #111111;
-  --brick-text-secondary: #77766F;
-  --brick-text-body: #4A4944;
-  --brick-accent-lime: #C8F34A;
-  --brick-accent-lime-hover: #B8E438;
-  --brick-border: #E5E3DC;
-  --brick-border-subtle: #ECE8E0;
-  --brick-card-sand: #EAE6DD;
-  --brick-card-sand-dark: #E4DFD5;
-  --brick-input-bg: #FAF9F6;
-  --brick-error: #E94B4B;
-  --brick-success: #2ED573;
+  /* Brick Color Palette (Inherited directly from fragments/theme/theme.css) */
+  --brick-canvas: var(--dash-bg-canvas);
+  --brick-surface: var(--dash-bg-white);
+  --brick-text-primary: var(--dash-text-primary);
+  --brick-text-secondary: var(--dash-text-muted);
+  --brick-text-body: var(--dash-text-body);
+  --brick-accent-lime: var(--dash-accent-lime);
+  --brick-accent-lime-hover: var(--dash-accent-lime-hover);
+  --brick-border: var(--dash-border);
+  --brick-border-subtle: var(--dash-border-subtle);
+  --brick-card-sand: var(--dash-col-now-bg);
+  --brick-card-sand-dark: var(--dash-border-strong);
+  --brick-input-bg: var(--dash-bg-input);
+  --brick-error: var(--dash-dot-red);
+  --brick-success: var(--dash-dot-green);
 
   /* Typography */
   --brick-font-brand: 'Plus Jakarta Sans', 'Inter Tight', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --brick-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --number-font: var(--font-family-number, 'Sport Break Extra Bold', 'Sport Break');
 }
 
 /* Base resets & smooth rendering */
@@ -364,11 +366,12 @@ body.brick-register-body {
 }
 
 .preview-stat-num {
-  font-family: var(--brick-font-brand);
+  font-family: var(--number-font) !important;
   font-size: 22px;
   font-weight: 900;
   color: #111111;
   line-height: 1.1;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 .mini-project-card {
@@ -395,6 +398,7 @@ body.brick-register-body {
 }
 
 .mini-tag {
+  font-family: var(--number-font) !important;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -519,6 +523,7 @@ body.brick-register-body {
 }
 
 .step-circle {
+  font-family: var(--number-font) !important;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -530,6 +535,11 @@ body.brick-register-body {
   font-size: 11px;
   font-weight: 800;
   transition: all 0.2s ease;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+.step-num {
+  font-family: var(--number-font) !important;
 }
 
 .step-node.active .step-circle {

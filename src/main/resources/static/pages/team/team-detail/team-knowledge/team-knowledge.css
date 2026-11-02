@@ -1,8 +1,4 @@
-/* ==========================================================================
-   Teamden — Team Knowledge Tab Stylesheet (team-knowledge.css)
-   Path: pages/team/team-detail/team-knowledge/team-knowledge.css
-   Pixel-accurate match to Brick Team Knowledge screenshot.
-   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
 
 /* ── Split Layout (~73% Main, ~27% Right Rail) ─────────────────────────── */
 .tk-split-layout {

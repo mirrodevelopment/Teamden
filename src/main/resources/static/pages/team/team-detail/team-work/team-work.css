@@ -1,8 +1,4 @@
-/* ==========================================================================
-   Teamden — Team Work Tab Stylesheet (team-work.css)
-   Path: pages/team/team-detail/team-work/team-work.css
-   Pixel-accurate match to Brick Team Work execution register screenshot.
-   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
 
 /* ── Split Layout (~73% Main Register, ~27% Right Rail) ─────────────────── */
 .tw-split-layout {
@@ -20,7 +16,7 @@
   flex-direction: column;
   gap: 1.25rem;
   min-width: 0;
-  border-right: 1px solid var(--dash-border, #E5E1D9);
+  border-right: 1px solid var(--dash-border);
 }
 
 /* ── Section 01: Team Execution Header ──────────────────────────────────── */
@@ -320,10 +316,10 @@
   flex-shrink: 0;
 }
 
-.tw-group-dot--blue  { background: #3B82F6; }
-.tw-group-dot--amber { background: #F59E0B; }
-.tw-group-dot--gray  { background: #9CA3AF; }
-.tw-group-dot--green { background: #10B981; }
+.tw-group-dot--blue  { background: var(--dash-dot-blue); }
+.tw-group-dot--amber { background: var(--dash-dot-orange); }
+.tw-group-dot--gray  { background: var(--dash-dot-gray); }
+.tw-group-dot--green { background: var(--dash-dot-green); }
 
 .tw-group-title {
   font-family: 'Inter Tight', 'Inter', sans-serif;

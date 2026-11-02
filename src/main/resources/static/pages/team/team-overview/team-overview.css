@@ -1,8 +1,4 @@
-/* ==========================================================================
-   Teamden — Team Overview Tab Stylesheet (team-overview.css)
-   Path: pages/team/team-overview/team-overview.css
-   Pixel-accurate match to Brick Team Overview screenshot.
-   ========================================================================== */
+@import url('../../../fragments/theme/theme.css');
 
 /* ── Overview Host Split Layout (~73% Main, ~27% Right Sidebar) ────────── */
 .tov-split-layout {

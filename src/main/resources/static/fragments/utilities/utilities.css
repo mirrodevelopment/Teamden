@@ -1,6 +1,8 @@
 /* ==========================================================
    Teamden by shed — Utility Classes (utilities.css)
+   Path: fragments/utilities/utilities.css
    ========================================================== */
+@import url('../theme/theme.css');
 
 /* Display */
 .d-none { display: none !important; }
@@ -47,6 +49,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Number Font Typography Utilities */
+.number-font,
+.font-number,
+[data-font="number"] {
+  font-family: var(--number-font, 'Sport Break Extra Bold', 'Sport Break') !important;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 }
 
 /* Margin & Padding helpers */

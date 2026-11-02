@@ -85,17 +85,19 @@
 
     <!-- 02 / WORK REGISTER -->
     <section class="tasks-register-section" aria-label="Work Register">
-      <!-- Section Tag & New Task Button Row -->
+      <!-- Section Tag Row -->
       <div class="register-header-top-row">
         <span class="register-section-tag">02 / WORK REGISTER</span>
+      </div>
+
+      <!-- Main Headline & New Task Button Inline Row -->
+      <div class="register-title-action-row">
+        <h2 class="register-main-title">Tasks in motion.</h2>
         <button class="btn-new-task-lime" id="btn-new-task" title="Create a new task">
           <span>+ New task</span>
           <span class="btn-chevron">⌄</span>
         </button>
       </div>
-
-      <!-- Main Headline -->
-      <h2 class="register-main-title">Tasks in motion.</h2>
 
       <!-- Toolbar: Views, Search, Filters, More Options -->
       <div class="register-toolbar-row">
@@ -455,25 +457,27 @@
       <div class="milestone-card-top">
         <span class="milestone-tag">CURRENT MILESTONE / 06</span>
         <div class="milestone-progress-ring-wrap">
-          <svg class="progress-ring-svg" width="36" height="36" viewBox="0 0 36 36">
-            <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2A2A2A" stroke-width="3.5" />
-            <path class="ring-fg" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#C9F34A" stroke-width="3.5" stroke-linecap="round" />
+          <svg class="progress-ring-svg" width="34" height="34" viewBox="0 0 36 36" aria-label="Milestone Progress Ring">
+            <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2D2D2D" stroke-width="3.6" />
+            <path class="ring-fg" stroke-dasharray="28, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#D4F832" stroke-width="3.6" stroke-linecap="round" />
           </svg>
-          <div class="milestone-dots-row">
-            <span class="m-dot active"></span>
-            <span class="m-dot"></span>
-            <span class="m-dot"></span>
-            <span class="m-dot"></span>
-          </div>
         </div>
       </div>
 
-      <h3 class="milestone-title" id="rail-milestone-title">Review.</h3>
+      <div class="milestone-middle-row">
+        <h3 class="milestone-title" id="rail-milestone-title">Review.</h3>
+        <div class="milestone-dots-row" aria-label="Milestone progress dots">
+          <span class="m-dot active"></span>
+          <span class="m-dot"></span>
+          <span class="m-dot"></span>
+          <span class="m-dot"></span>
+        </div>
+      </div>
 
       <div class="milestone-stats-row">
         <span class="milestone-active-tasks" id="rail-active-tasks-count">5 active tasks</span>
         <span class="milestone-sep">·</span>
-        <span class="milestone-blocked-tasks" id="rail-blocked-tasks-stat">2 blocked <span class="blocked-warn-triangle">▲</span></span>
+        <span class="milestone-blocked-tasks" id="rail-blocked-tasks-stat">2 blocked <svg class="triangle-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M7.134 2.5a1 1 0 0 1 1.732 0l6.062 10.5A1 1 0 0 1 14.062 14H1.938a1 1 0 0 1-.866-1.5L7.134 2.5z" fill="#EF4444"/><path d="M8 6v3.5M8 11.5v.5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/></svg></span>
       </div>
 
       <div class="milestone-card-divider"></div>
@@ -539,7 +543,7 @@
 
       <div class="milestones-table-list" id="rail-milestones-list">
         <!-- 03 Development -->
-        <div class="milestone-table-row">
+        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 03 Development" data-milestone-num="03" data-milestone-title="Development" data-milestone-count="5">
           <span class="m-seq">03</span>
           <span class="m-status-circle"></span>
           <span class="m-name">Development</span>
@@ -548,7 +552,7 @@
         </div>
 
         <!-- 04 Testing -->
-        <div class="milestone-table-row">
+        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 04 Testing" data-milestone-num="04" data-milestone-title="Testing" data-milestone-count="4">
           <span class="m-seq">04</span>
           <span class="m-status-circle"></span>
           <span class="m-name">Testing</span>
@@ -557,7 +561,7 @@
         </div>
 
         <!-- 05 Content -->
-        <div class="milestone-table-row">
+        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 05 Content" data-milestone-num="05" data-milestone-title="Content" data-milestone-count="3">
           <span class="m-seq">05</span>
           <span class="m-status-circle"></span>
           <span class="m-name">Content</span>
@@ -565,8 +569,8 @@
           <span class="m-arrow">→</span>
         </div>
 
-        <!-- 06 Review (ACTIVE CURRENT HIGHLIGHT - Soft lime background) -->
-        <div class="milestone-table-row current-active">
+        <!-- 06 Review (ACTIVE CURRENT HIGHLIGHT - Neon Green) -->
+        <div class="milestone-table-row current-active" tabindex="0" role="button" aria-label="Milestone 06 Review" data-milestone-num="06" data-milestone-title="Review" data-milestone-count="5">
           <span class="m-seq">06</span>
           <span class="m-status-circle active-lime"></span>
           <span class="m-name">Review</span>
@@ -575,7 +579,7 @@
         </div>
 
         <!-- 07 Launch Prep -->
-        <div class="milestone-table-row">
+        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 07 Launch Prep" data-milestone-num="07" data-milestone-title="Launch Prep" data-milestone-count="1">
           <span class="m-seq">07</span>
           <span class="m-status-circle"></span>
           <span class="m-name">Launch Prep</span>

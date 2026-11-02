@@ -11,7 +11,8 @@
 }
 
 .app-topbar {
-  height: 52px;
+  min-height: 52px;
+  height: auto;
   background-color: var(--dash-bg-canvas);
   border-bottom: 1px solid var(--dash-border);
   display: grid;
@@ -104,7 +105,7 @@
 /* Right Section (Spans across Right Rail) */
 .topbar-right-section {
   border-left: 1px solid var(--dash-border);
-  padding: 0.45rem 1rem;
+  padding: 0.35rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -116,6 +117,34 @@
               min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topbar-right-actions-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+}
+
+.topbar-icons-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.topbar-live-date {
+  font-family: var(--font-family, 'Mostarct', 'Montserrat', sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dash-text-primary);
+  opacity: 0.95;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
 }
 
 /* Lime + Create ⌵ Button */
@@ -215,6 +244,48 @@
   height: 6px;
   background-color: var(--dash-dot-red);
   border-radius: 50%;
+}
+
+/* Theme Switcher Button */
+.topbar-theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--dash-text-primary);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.topbar-theme-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--dash-text-primary);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .topbar-theme-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.theme-icon-sun {
+  display: none;
+}
+
+.theme-icon-moon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-icon-sun {
+  display: block;
+  color: #F8D847;
+}
+
+[data-theme="dark"] .theme-icon-moon {
+  display: none;
 }
 
 /* User Avatar & Chevron */

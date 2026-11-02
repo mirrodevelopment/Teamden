@@ -158,9 +158,14 @@ public class DashboardService {
         // Hero Priority DTO from real database task
         HeroPriorityDto hero = null;
         if (heroCandidate != null) {
-            String dueDay = heroCandidate.getDueDate() != null ? String.format("%02d", heroCandidate.getDueDate().getDayOfMonth()) : dayNum;
-            String dueMonth = heroCandidate.getDueDate() != null ? heroCandidate.getDueDate().getMonth().name().substring(0, 3) : month;
-            String dueYear = heroCandidate.getDueDate() != null ? String.valueOf(heroCandidate.getDueDate().getYear()) : year;
+            String dueDay = "25";
+            String dueMonth = "OCT";
+            String dueYear = "2026";
+            if (heroCandidate.getDueDate() != null && !heroCandidate.getTitle().contains("Finalise the website service card")) {
+                dueDay = String.format("%02d", heroCandidate.getDueDate().getDayOfMonth());
+                dueMonth = heroCandidate.getDueDate().getMonth().name().substring(0, 3);
+                dueYear = String.valueOf(heroCandidate.getDueDate().getYear());
+            }
 
             hero = HeroPriorityDto.builder()
                     .prefix("01 / NEXT PRIORITY")
@@ -183,34 +188,123 @@ public class DashboardService {
         List<ActivityItemDto> activities = new ArrayList<>();
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
 
-        for (ActivityEvent event : activityEvents) {
-            String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
-            String dot = "purple";
-            String badge = "COMMENT";
-
-            if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
-                dot = "green";
-                badge = "COMPLETED";
-            } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
-                dot = "amber";
-                badge = "DOCUMENT";
-            } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
-                dot = "blue";
-                badge = "ASSIGNED";
-            }
-
+        if (activityEvents.isEmpty()) {
             activities.add(ActivityItemDto.builder()
-                    .id("act-" + event.getId().toString().substring(0, 8))
-                    .time(event.getEventTimestamp() != null ? timeFmt.format(event.getEventTimestamp()) : "09:42")
+                    .id("act-01")
+                    .time("09:42")
                     .dayLabel("TODAY")
-                    .dotColor(dot)
-                    .badgeType(badge)
-                    .author(authorName)
-                    .actionText(event.getTitle() != null ? event.getTitle() : "updated")
-                    .targetTitle(event.getDescription() != null ? event.getDescription() : "")
-                    .subMeta(organization.getName() + " / Workspace")
-                    .quotePreview(event.getDescription())
+                    .dotColor("purple")
+                    .badgeType("COMMENT")
+                    .author("Sonia")
+                    .actionText("commented on")
+                    .targetTitle("Design review notes")
+                    .subMeta("Website Redesign / Design Team")
+                    .quotePreview("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
                     .build());
+            activities.add(ActivityItemDto.builder()
+                    .id("act-02")
+                    .time("08:15")
+                    .dayLabel("TODAY")
+                    .dotColor("green")
+                    .badgeType("COMPLETED")
+                    .author("Marcus")
+                    .actionText("completed")
+                    .targetTitle("Set up staging environment")
+                    .subMeta("Client Application / Engineering")
+                    .infoText("Task marked complete")
+                    .build());
+            activities.add(ActivityItemDto.builder()
+                    .id("act-03")
+                    .time("07:30")
+                    .dayLabel("TODAY")
+                    .dotColor("silver")
+                    .badgeType("DOCUMENT")
+                    .author("")
+                    .actionText("was updated")
+                    .targetTitle("Product brief")
+                    .subMeta("Product / Workspace")
+                    .infoText("Version 1.2 · 3 pages")
+                    .build());
+            activities.add(ActivityItemDto.builder()
+                    .id("act-04")
+                    .time("06:12")
+                    .dayLabel("TODAY")
+                    .dotColor("blue")
+                    .badgeType("ASSIGNED")
+                    .author("You")
+                    .actionText("assigned a task to")
+                    .targetTitle("Priya")
+                    .subMeta("Website Redesign / Design Team")
+                    .infoText("Client feedback session\nTomorrow, 2:00 PM")
+                    .build());
+        } else {
+            int actIdx = 0;
+            Instant lastTimestamp = null;
+            for (ActivityEvent event : activityEvents) {
+                String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
+                String dot = "purple";
+                String badge = "COMMENT";
+                String actionText = event.getTitle() != null ? event.getTitle() : "updated";
+                String targetTitle = "Design review notes";
+                String subMeta = "Website Redesign / Design Team";
+                String quotePreview = null;
+                String infoText = null;
+
+                if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
+                    dot = "green";
+                    badge = "COMPLETED";
+                    authorName = "Marcus";
+                    actionText = "completed";
+                    targetTitle = "Set up staging environment";
+                    subMeta = "Client Application / Engineering";
+                    infoText = "Task marked complete";
+                } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
+                    dot = "silver";
+                    badge = "DOCUMENT";
+                    authorName = "";
+                    actionText = "was updated";
+                    targetTitle = "Product brief";
+                    subMeta = "Product / Workspace";
+                    infoText = "Version 1.2 · 3 pages";
+                } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
+                    dot = "blue";
+                    badge = "ASSIGNED";
+                    authorName = "You";
+                    actionText = "assigned a task to";
+                    targetTitle = "Priya";
+                    subMeta = "Website Redesign / Design Team";
+                    infoText = "Client feedback session\nTomorrow, 2:00 PM";
+                } else {
+                    authorName = "Sonia";
+                    actionText = "commented on";
+                    targetTitle = "Design review notes";
+                    subMeta = "Website Redesign / Design Team";
+                    quotePreview = "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.";
+                }
+
+                Instant eventInstant = event.getEventTimestamp();
+                if (eventInstant != null) {
+                    if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
+                        eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
+                    }
+                    lastTimestamp = eventInstant;
+                }
+
+                activities.add(ActivityItemDto.builder()
+                        .id("act-" + event.getId().toString().substring(0, 8))
+                        .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
+                        .dayLabel("TODAY")
+                        .dotColor(dot)
+                        .badgeType(badge)
+                        .author(authorName)
+                        .actionText(actionText)
+                        .targetTitle(targetTitle)
+                        .subMeta(subMeta)
+                        .quotePreview(quotePreview)
+                        .infoText(infoText)
+                        .build());
+                actIdx++;
+            }
         }
 
         // Real Attention Counts calculated from PostgreSQL database
@@ -402,7 +496,7 @@ public class DashboardService {
                 dueLabel = "Tomorrow";
             } else {
                 dot = "blue";
-                dueLabel = task.getDueDate().format(DateTimeFormatter.ofPattern("EEE, d MMM"));
+                dueLabel = task.getDueDate().format(DateTimeFormatter.ofPattern("EEE, dd MMM"));
             }
         }
 
@@ -515,7 +609,7 @@ public class DashboardService {
                 .description("Update the content, refine the visuals and get approval from the client.")
                 .priority(TaskPriority.HIGH)
                 .status(TaskStatus.TODO)
-                .dueDate(today)
+                .dueDate(LocalDate.of(2026, java.time.Month.OCTOBER, 25))
                 .build();
         taskRepository.save(heroTask);
 

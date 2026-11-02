@@ -690,7 +690,10 @@
         const blockedEl = document.getElementById('rail-blocked-tasks-stat');
         if (titleEl) titleEl.textContent = cm.name || 'Review.';
         if (activeEl) activeEl.textContent = `${cm.activeTasksCount || 5} active tasks`;
-        if (blockedEl) blockedEl.innerHTML = `${cm.blockedTasksCount || 2} blocked <span class="blocked-warn-triangle">▲</span>`;
+        if (blockedEl) {
+          const bCount = cm.blockedTasksCount != null ? cm.blockedTasksCount : 2;
+          blockedEl.innerHTML = `${bCount} blocked <svg class="triangle-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M7.134 2.5a1 1 0 0 1 1.732 0l6.062 10.5A1 1 0 0 1 14.062 14H1.938a1 1 0 0 1-.866-1.5L7.134 2.5z" fill="#EF4444"/><path d="M8 6v3.5M8 11.5v.5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        }
       }
 
       // 2. Blocked Tasks Count
@@ -705,7 +708,7 @@
       const mListEl = document.getElementById('rail-milestones-list');
       if (mListEl && milestones && milestones.length > 0) {
         mListEl.innerHTML = milestones.map(m => `
-          <div class="milestone-table-row ${m.isActive ? 'current-active' : ''}">
+          <div class="milestone-table-row ${m.isActive ? 'current-active' : ''}" tabindex="0" role="button" aria-label="Milestone ${escapeHtml(m.num)} ${escapeHtml(m.title)}" data-milestone-num="${escapeHtml(m.num)}" data-milestone-title="${escapeHtml(m.title)}" data-milestone-count="${m.count}">
             <span class="m-seq">${escapeHtml(m.num)}</span>
             <span class="m-status-circle ${m.isActive ? 'active-lime' : ''}"></span>
             <span class="m-name">${escapeHtml(m.title)}</span>
@@ -754,6 +757,10 @@
         if (drawer) {
           drawer.style.display = 'flex';
           drawer.classList.remove('closed');
+          drawer.scrollTop = 0;
+        }
+        if (drawerRail) {
+          drawerRail.scrollTop = 0;
         }
         if (contentContainer) {
           contentContainer.classList.add('drawer-active');
@@ -885,8 +892,12 @@
         row.classList.toggle('selected', isTarget);
       });
 
-      // 2. Switch rail to drawer view
+      // 2. Switch rail to drawer view and scroll to top
       this.showRailView('drawer');
+      const drawer = document.getElementById('tasks-details-drawer');
+      if (drawer) drawer.scrollTop = 0;
+      const drawerRail = document.getElementById('project-tasks-drawer-rail');
+      if (drawerRail) drawerRail.scrollTop = 0;
 
       // 3. Hydrate drawer with task data
       const task = State.findTask(taskId);
@@ -1120,10 +1131,53 @@
         }
       });
 
-      // 3. Blocked Task Items Click in Right Rail -> opens drawer for that task
+      // 3. Right Rail Widgets Click & Keyboard Handling (Milestone Rows, Blocked Items, Quick Actions)
       const widgetsRail = document.getElementById('tasks-overview-widgets');
       if (widgetsRail) {
         widgetsRail.addEventListener('click', (e) => {
+          // A. Click on Milestone Row -> Select or Unclick active milestone
+          const mRow = e.target.closest('.milestone-table-row');
+          if (mRow) {
+            e.preventDefault();
+            const isAlreadyActive = mRow.classList.contains('current-active');
+
+            // Deselect all active rows
+            widgetsRail.querySelectorAll('.milestone-table-row').forEach(r => {
+              r.classList.remove('current-active');
+              const circle = r.querySelector('.m-status-circle');
+              if (circle) circle.classList.remove('active-lime');
+            });
+
+            const tagEl = document.querySelector('.milestone-tag');
+            const titleEl = document.getElementById('rail-milestone-title');
+            const activeEl = document.getElementById('rail-active-tasks-count');
+
+            if (isAlreadyActive) {
+              // Unclicked: reset top card back to default milestone state
+              if (tagEl) tagEl.textContent = 'CURRENT MILESTONE / 06';
+              if (titleEl) titleEl.textContent = 'Review.';
+              if (activeEl) activeEl.textContent = '5 active tasks';
+              return;
+            }
+
+            // Activate clicked row with neon green
+            mRow.classList.add('current-active');
+            const circle = mRow.querySelector('.m-status-circle');
+            if (circle) circle.classList.add('active-lime');
+
+            // Extract data
+            const num = mRow.getAttribute('data-milestone-num') || mRow.querySelector('.m-seq')?.textContent?.trim() || '06';
+            const title = mRow.getAttribute('data-milestone-title') || mRow.querySelector('.m-name')?.textContent?.trim() || 'Review';
+            const count = mRow.getAttribute('data-milestone-count') || mRow.querySelector('.m-count')?.textContent?.trim()?.split(' ')[0] || '5';
+
+            // Update Current Milestone top dark card
+            if (tagEl) tagEl.textContent = `CURRENT MILESTONE / ${num}`;
+            if (titleEl) titleEl.textContent = title.endsWith('.') ? title : `${title}.`;
+            if (activeEl) activeEl.textContent = `${count} active ${count === '1' ? 'task' : 'tasks'}`;
+            return;
+          }
+
+          // B. Click on Blocked Task Item -> open drawer
           const item = e.target.closest('.blocked-task-item');
           if (item) {
             e.preventDefault();
@@ -1131,19 +1185,34 @@
             if (taskId) {
               this.selectTask(taskId);
             }
+            return;
           }
 
+          // C. Quick Actions
           const createBtn = e.target.closest('#qa-create-task');
           if (createBtn) {
             e.preventDefault();
             const newBtn = document.getElementById('btn-new-task');
             if (newBtn) newBtn.click();
+            return;
           }
 
           const manageDepsBtn = e.target.closest('#qa-manage-deps');
           if (manageDepsBtn) {
             e.preventDefault();
             alert('Opening dependency management modal.');
+            return;
+          }
+        });
+
+        // Accessible Keyboard selection for milestone rows
+        widgetsRail.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            const mRow = e.target.closest('.milestone-table-row');
+            if (mRow) {
+              e.preventDefault();
+              mRow.click();
+            }
           }
         });
       }
@@ -1205,6 +1274,9 @@
           });
           const targetPane = document.getElementById(`dpane-${tab}`);
           if (targetPane) targetPane.classList.add('active');
+          if (typeof btn.scrollIntoView === 'function') {
+            btn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+          }
         };
       });
 

@@ -20,4 +20,5 @@ public class ActivityItemDto {
     private String targetTitle;
     private String subMeta;
     private String quotePreview;
+    private String infoText;
 }

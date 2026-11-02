@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>brick — today.</title>
   <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 
   <!-- Display & Typography Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
   <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
   <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
-  <link rel="stylesheet" href="/shared/css/reset.css">
-  <link rel="stylesheet" href="/shared/css/variables.css?v=10">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
 
   <!-- Modular Fragment Styles (Called from fragments folder) -->
   <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=10">
@@ -37,16 +42,19 @@
              CENTER WORKSPACE COLUMN
              =================================================================== -->
         <main class="dash-center-column">
-          <!-- Breadcrumb & Top-Right Live Date -->
-          <div class="dash-header-meta">
-            <span class="dash-breadcrumb-text" id="dash-breadcrumb-text">YOUR WORKSPACE / 01</span>
-            <span class="dash-header-date" id="dash-header-date">SUN, 25 OCT 2026</span>
-          </div>
+          <!-- Header Area (Breadcrumb + Headline) -->
+          <div class="dash-top-header">
+            <!-- Breadcrumb (Live Date moved to Navbar) -->
+            <div class="dash-header-meta">
+              <span class="dash-breadcrumb-text" id="dash-breadcrumb-text">YOUR WORKSPACE / 01</span>
+              <span class="dash-header-date" id="dash-header-date" style="display: none;"></span>
+            </div>
 
-          <!-- Headline: today. -->
-          <div class="dash-headline-group">
-            <h1 class="dash-title-today">today.</h1>
-            <p class="dash-subtitle">Everything that needs your attention.</p>
+            <!-- Headline: today. -->
+            <div class="dash-headline-group">
+              <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot" aria-hidden="true"></span></h1>
+              <p class="dash-subtitle">Everything that needs your attention.</p>
+            </div>
           </div>
 
           <!-- Next Priority Card (Matte Black Hero) -->
@@ -116,7 +124,10 @@
                 <span class="due-label">DUE TODAY</span>
                 <div class="due-date-split">
                   <span class="due-number" id="hero-due-day">25</span>
-                  <span class="due-my" id="hero-due-my">OCT<br>2026</span>
+                  <div class="due-my" id="hero-due-my">
+                    <span class="due-month">OCT</span>
+                    <span class="due-year">2026</span>
+                  </div>
                 </div>
               </div>
 
@@ -200,8 +211,8 @@
               <span class="date-year-text" id="rail-year">2026</span>
             </div>
             <div class="date-card-right">
-              <div class="date-huge-number" id="rail-day">25</div>
-              <div class="date-dow-label" id="rail-dow">SUNDAY</div>
+              <div class="date-huge-number" id="rail-day"><span class="date-digit-first" id="rail-day-d1">2</span><span class="date-digit-second" id="rail-day-d2">5</span></div>
+              <div class="date-dow-label" id="rail-dow" aria-label="SUNDAY"><span>S</span><span>U</span><span>N</span><span>D</span><span>A</span><span>Y</span></div>
             </div>
           </div>
 

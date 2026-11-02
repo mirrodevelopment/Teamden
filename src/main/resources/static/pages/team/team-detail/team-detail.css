@@ -15,8 +15,8 @@
 html, body {
   margin: 0; padding: 0;
   width: 100%; height: 100%;
-  background: var(--dash-bg-canvas, #F8F6F0);
-  color: var(--dash-text-primary, #111111);
+  background: var(--dash-bg-canvas);
+  color: var(--dash-text-primary);
   font-family: var(--font-family, 'Montserrat', sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,7 +27,7 @@ html, body {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  background: var(--dash-bg-canvas, #F8F6F0);
+  background: var(--dash-bg-canvas);
 }
 
 .sidebar-mount-area { width: 0; flex-shrink: 0; }
@@ -39,7 +39,7 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   min-width: 0;
-  background: var(--dash-bg-canvas, #F8F6F0);
+  background: var(--dash-bg-canvas);
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
