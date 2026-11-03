@@ -2,6 +2,7 @@ package com.shed.teamden.task.entity;
 
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.project.entity.Project;
+import com.shed.teamden.project.entity.ProjectMilestone;
 import com.shed.teamden.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,11 +34,29 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "milestone_id")
+    private ProjectMilestone milestone;
+
+    @Column(name = "task_code", length = 50)
+    private String taskCode;
+
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "is_blocked", nullable = false)
+    @Builder.Default
+    private boolean isBlocked = false;
+
+    @Column(name = "blocker_reason", length = 255)
+    private String blockerReason;
+
+    @Column(name = "subtasks_count", nullable = false)
+    @Builder.Default
+    private int subtasksCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id")

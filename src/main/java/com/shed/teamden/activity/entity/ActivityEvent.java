@@ -1,6 +1,7 @@
 package com.shed.teamden.activity.entity;
 
 import com.shed.teamden.organization.entity.Organization;
+import com.shed.teamden.project.entity.Project;
 import com.shed.teamden.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,10 @@ public class ActivityEvent {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "actor_id")
     private User actor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false, length = 50)

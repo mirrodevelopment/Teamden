@@ -133,7 +133,7 @@
             <div class="kv-item"><span class="kv-key">Spring Boot</span><span class="kv-val">4.1.2</span></div>
             <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly, Lax)</span></div>
             <div class="kv-item"><span class="kv-key">Password Encoder</span><span class="kv-val">BCrypt (12 rounds)</span></div>
-            <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql</span></div>
+            <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql, V2__project_flow_tables.sql</span></div>
             <div class="kv-item"><span class="kv-key">Global Font</span><span class="kv-val">Montserrat</span></div>
           </div>
 
@@ -281,6 +281,30 @@
               <td><code>/api/auth/csrf</code></td>
               <td>No</td>
               <td>Retrieves XSRF-TOKEN cookie</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/overview</code></td>
+              <td>No</td>
+              <td>Project flow overview: specs, milestones (01-09), work status, and decisions</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/tasks</code></td>
+              <td>No</td>
+              <td>Project flow task registry: milestone grouping, subtasks, and blocker tracking</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/documents</code></td>
+              <td>No</td>
+              <td>Project flow knowledge base: library categories, briefs, and notes viewer</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/activity</code></td>
+              <td>No</td>
+              <td>Project flow activity feed: milestone events, comments, and audit timeline</td>
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>

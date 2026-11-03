@@ -15,4 +15,7 @@ public interface ActivityEventRepository extends JpaRepository<ActivityEvent, UU
 
     @Query("SELECT e FROM ActivityEvent e LEFT JOIN FETCH e.actor WHERE e.organization.id = :orgId ORDER BY e.eventTimestamp DESC")
     List<ActivityEvent> findRecentByOrganizationId(@Param("orgId") UUID orgId, Pageable pageable);
+
+    @Query("SELECT e FROM ActivityEvent e LEFT JOIN FETCH e.actor WHERE e.project.id = :projectId ORDER BY e.eventTimestamp DESC")
+    List<ActivityEvent> findRecentByProjectId(@Param("projectId") UUID projectId, Pageable pageable);
 }

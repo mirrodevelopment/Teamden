@@ -39,6 +39,18 @@ public class Project {
     @Builder.Default
     private ProjectStatus status = ProjectStatus.ACTIVE;
 
+    @Column(name = "health", nullable = false, length = 30)
+    @Builder.Default
+    private String health = "ON_TRACK";
+
+    @Column(name = "priority", nullable = false, length = 30)
+    @Builder.Default
+    private String priority = "MEDIUM";
+
+    @Column(name = "project_type", length = 100)
+    @Builder.Default
+    private String projectType = "General";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
@@ -64,6 +76,15 @@ public class Project {
         }
         if (this.status == null) {
             this.status = ProjectStatus.ACTIVE;
+        }
+        if (this.health == null) {
+            this.health = "ON_TRACK";
+        }
+        if (this.priority == null) {
+            this.priority = "MEDIUM";
+        }
+        if (this.projectType == null) {
+            this.projectType = "General";
         }
     }
 }

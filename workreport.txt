@@ -470,6 +470,27 @@ DAY 5 - 2026-11-03 (TUESDAY - TODAY)
 - Live Server Hot-Reload Synchronization:
   * Synchronized all modified static CSS/HTML/JS files from `src/main/resources/static/`
     to `target/classes/static/` for active Tomcat delivery on `http://localhost:8080`.
+- Project Flow Relational Schema & Database Hydration (Flyway V2 Migration):
+  * Designed and authored `src/main/resources/db/migration/V2__project_flow_tables.sql`
+    introducing 8 new tables and enhancing 3 core tables to back the end-to-end
+    Project Flow dynamically rather than relying on static DTO fallbacks.
+  * Added 8 new relational tables:
+    1. `project_specifications`: Objectives, deliverables, criteria, and client context.
+    2. `project_milestones`: Numbered delivery stages (01 Discovery to 09 Post Launch).
+    3. `task_subtasks`: Subtasks checklist with completion tracking.
+    4. `project_decisions`: Decisions register tracking sign-offs, deciders, and status.
+    5. `project_documents`: Knowledge base repository (specs, briefs, notes, design assets).
+    6. `project_document_collaborators`: Collaborator and attendee rosters for documents.
+    7. `project_members`: Project-level contributor role assignments.
+    8. `task_linked_documents`: Cross-reference linkages between tasks and documents.
+  * Enhanced core tables:
+    * `projects`: Added `health` (ON_TRACK/AT_RISK/OFF_TRACK), `priority`, and `project_type`.
+    * `tasks`: Added `milestone_id`, `is_blocked`, `blocker_reason`, `task_code`, and `subtasks_count`.
+    * `activity_events`: Added `project_id` foreign key for high-performance project event feeds.
+  * Created JPA entities and repositories in `com.shed.teamden.project` and `com.shed.teamden.task`.
+  * Hydrated `ProjectService.java` to dynamically query and persist project flow records with automatic baseline seeding.
+  * Added `ProjectFlowIntegrationTest.java` verifying overview, task registry, documents, and milestone persistence.
+  * Achieved 100% green test suite across 18 integration tests.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
@@ -478,6 +499,35 @@ DAY 5 - 2026-11-03 (TUESDAY - TODAY)
   * workreport: Extensionless mirror for master repository report.
   * workfrom home.txt: Primary dedicated WFH daily activity and change log.
   * workfrom home: Extensionless mirror for cross-platform/script access.
+  * src/main/resources/db/migration/V2__project_flow_tables.sql: Flyway V2 Project Flow DDL migration.
+  * src/main/java/com/shed/teamden/project/entity/MilestoneStatus.java: Milestone status enum.
+  * src/main/java/com/shed/teamden/project/entity/ProjectMilestone.java: Project milestone entity.
+  * src/main/java/com/shed/teamden/project/entity/ProjectSpecification.java: Project specification entity.
+  * src/main/java/com/shed/teamden/project/entity/DecisionStatus.java: Decision status enum.
+  * src/main/java/com/shed/teamden/project/entity/ProjectDecision.java: Project decisions register entity.
+  * src/main/java/com/shed/teamden/project/entity/ProjectDocument.java: Project document entity.
+  * src/main/java/com/shed/teamden/project/entity/ProjectDocumentCollaborator.java: Document collaborator entity.
+  * src/main/java/com/shed/teamden/project/entity/ProjectMember.java: Project member entity.
+  * src/main/java/com/shed/teamden/task/entity/TaskSubtask.java: Task subtask entity.
+  * src/main/java/com/shed/teamden/task/entity/TaskLinkedDocument.java: Task-document link entity.
+  * src/main/java/com/shed/teamden/project/repository/ProjectMilestoneRepository.java: Milestone repository.
+  * src/main/java/com/shed/teamden/project/repository/ProjectSpecificationRepository.java: Specification repository.
+  * src/main/java/com/shed/teamden/project/repository/ProjectDecisionRepository.java: Decision repository.
+  * src/main/java/com/shed/teamden/project/repository/ProjectDocumentRepository.java: Document repository.
+  * src/main/java/com/shed/teamden/project/repository/ProjectDocumentCollaboratorRepository.java: Collaborator repository.
+  * src/main/java/com/shed/teamden/project/repository/ProjectMemberRepository.java: Project member repository.
+  * src/main/java/com/shed/teamden/task/repository/TaskSubtaskRepository.java: Subtask repository.
+  * src/main/java/com/shed/teamden/task/repository/TaskLinkedDocumentRepository.java: Task link repository.
+  * src/test/java/com/shed/teamden/project/ProjectFlowIntegrationTest.java: Project flow integration test suite.
+
+- Core Backend Components Enhanced:
+  * src/main/java/com/shed/teamden/project/entity/Project.java: Added health, priority, projectType.
+  * src/main/java/com/shed/teamden/task/entity/Task.java: Added milestone, isBlocked, blockerReason, taskCode, subtasksCount.
+  * src/main/java/com/shed/teamden/activity/entity/ActivityEvent.java: Added project relation.
+  * src/main/java/com/shed/teamden/task/repository/TaskRepository.java: Added project task query methods.
+  * src/main/java/com/shed/teamden/activity/repository/ActivityEventRepository.java: Added project activity query methods.
+  * src/main/java/com/shed/teamden/project/service/ProjectService.java: Dynamic database hydration & baseline seeding.
+  * dev use/dev use.md & dev use/dev use.html: Documented 8 new tables and REST API specifications.
 
 - Shared Fragments Standardized:
   * src/main/resources/static/fragments/sidebar/sidebar.css: Added standard `.dash-master-wrapper` and `.dash-main-area`.
@@ -696,6 +746,46 @@ Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
       <div class="dash-main-area team-main-area">
         <div id="navbar-mount" class="navbar-mount-area"></div>
 
+Example F: Transition from Static DTO Mocks to Flyway V2 Relational Schema
+
+  [BEFORE - Hardcoded Fallback DTOs in ProjectService]:
+  --------------------------------------------------
+  // ProjectService.java
+  public ProjectOverviewDto getProjectOverview(String projectId) {
+      ...
+      return ProjectOverviewDto.createDefault(projectId, projectName, projectDesc, projectOwner, dueDate, status);
+  }
+
+  [AFTER - Dynamic Relational Hydration from PostgreSQL / H2]:
+  --------------------------------------------------
+  // ProjectService.java
+  @Transactional
+  public ProjectOverviewDto getProjectOverview(String projectId) {
+      Project project = resolveProject(projectId);
+      User currentUser = resolveCurrentUser(project.getOrganization());
+      ensureProjectFlowBaseline(project, currentUser);
+
+      List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
+      Optional<ProjectSpecification> specOpt = projectSpecificationRepository.findByProjectId(project.getId());
+      List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
+      List<ProjectDecision> decisions = projectDecisionRepository.findByProjectIdWithDecider(project.getId());
+      List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
+      List<ProjectMember> members = projectMemberRepository.findByProjectIdWithUser(project.getId());
+
+      return ProjectOverviewDto.builder()
+              .id(project.getId().toString())
+              .title(project.getName())
+              .milestonesSummary(milestonesSummary)
+              .milestonesCompleted(milestonesCompleted)
+              .milestonesTotal(milestonesTotal)
+              .milestonesList(milestoneDtos)
+              .workInMotion(workCards)
+              .knowledgeDocuments(docDtos)
+              .pendingDecision(pendingDecisionDto)
+              .teamMemberInitials(memberInitials)
+              .build();
+  }
+
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
 - Platform-Wide Hex Scan: Ran recursive PowerShell verification across all 31
@@ -706,12 +796,15 @@ Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
   from `projects.css` and `team-libraries.css`, centralizing `.dash-app-main`
   in `fragments/sidebar/sidebar.css`.
 - Complete Test Suite Pass: Executed full test run (`./mvnw test`).
-  Results: 14 tests run, 0 failures, 0 errors, 0 skipped.
+  Results: 18 tests run, 0 failures, 0 errors, 0 skipped (100% PASS).
   * `AuthenticationIntegrationTest`: 6/6 passed (including 401 unauthenticated check).
   * `MultiOrganizationIsolationTest`: 3/3 passed (including cross-org task rejection).
   * `SetupIntegrationTest`: 3/3 passed.
   * `DevPortalIntegrationTest`: 1/1 passed.
   * `TeamdenApplicationTests`: 1/1 passed.
+  * `ProjectFlowIntegrationTest`: 4/4 passed (overview, tasks, documents, and milestone DB persistence).
+- Project Flow DDL Validation: Verified Flyway migration V2 schema and JPA
+  entity definitions (`ddl-auto: validate` compatible).
 - Endpoint Health Sweep: Queried all application routes on http://localhost:8080:
   All returned HTTP 200 OK.
 - Target Synchronization: Copied all updated assets to `target/classes/static/`

@@ -39,4 +39,16 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT COUNT(t) FROM Task t WHERE t.project.id = :projectId AND t.status = :completedStatus")
     long countCompletedTasksByProjectId(@Param("projectId") UUID projectId, @Param("completedStatus") TaskStatus completedStatus);
+
+    @Query("SELECT t FROM Task t LEFT JOIN FETCH t.assignee LEFT JOIN FETCH t.milestone WHERE t.project.id = :projectId ORDER BY t.createdAt DESC")
+    List<Task> findByProjectIdWithDetails(@Param("projectId") UUID projectId);
+
+    long countByProjectId(UUID projectId);
+
+    long countByProjectIdAndStatus(UUID projectId, TaskStatus status);
+
+    long countByProjectIdAndIsBlocked(UUID projectId, boolean isBlocked);
+
+    @Query("SELECT t FROM Task t LEFT JOIN FETCH t.assignee WHERE t.project.id = :projectId AND t.isBlocked = true")
+    List<Task> findByProjectIdAndIsBlockedTrueWithAssignee(@Param("projectId") UUID projectId);
 }
