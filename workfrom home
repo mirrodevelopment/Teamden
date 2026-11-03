@@ -2,552 +2,92 @@
            TEAMDEN WORK FROM HOME (WFH) DAILY REPORT & AUDIT LOG
 ================================================================================
 Project: Teamden Enterprise Workspace & Neo-Editorial Productivity Suite
-Repository: d:\Teamden
 File: workfrom home.txt (and workfrom home)
-Start Date: 2026-11-03 (Today)
 Tracking Standard: Every day entry strictly begins with "DAY X - [Date]"
-Format: Chronological daily log, work items, files changed, before/after examples,
-        and WFH implementation plan.
 ================================================================================
 
 ================================================================================
 DAY 1 - 2026-11-03 (TUESDAY - TODAY)
 ================================================================================
 
-1. WORK COMPLETED & OBJECTIVES (REMOTE WFH SESSION)
+1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Initialized Dedicated WFH Tracking System:
-  * Created the "workfrom home" tracking documentation starting today (2026-11-03).
-  * Established the standard protocol requiring every daily WFH update to start
-    with "DAY X - [Date]".
-  * Created both `workfrom home.txt` and extensionless `workfrom home` mirror.
-- Platform-Wide Standard Color Harmonization Across All Application Pages:
-  * Executed comprehensive audit across all 31 CSS files in the repository.
-  * Systematically replaced over 1,800+ hardcoded/raw hex color values with
-    standardized design tokens defined in `fragments/theme/theme.css` (`var(--dash-...)`).
-  * Achieved 100% token coverage across all pages: Calendar, Dashboard, Workspace,
-    Projects, Team, Login, Register, Overview, Insights, and shared UI fragments.
-  * Preserved 1:1 visual styling in Light mode while unlocking full, seamless
-    Dark Mode (`[data-theme="dark"]` and `body.dark-theme`) support platform-wide.
-  * Validated that `theme.css` is the sole source of truth for color definitions
-    (130 canonical tokens). All other 30 application CSS files now have ZERO raw hex codes.
-- Dead Code Identification & Elimination:
-  * Executed static analysis across Java, JS, CSS, and HTML assets to locate
-    unreferenced files, duplicate subtrees, and deprecated stubs.
-  * Eradicated 16 dead files / duplicate assets:
-    1. `src/main/resources/static/fragments/company-data.js` (1-line deprecated stub)
-    2. `src/main/resources/static/fragments/company-data/company-data.html` (1-line deprecated stub)
-    3. `src/main/resources/static/shared/js/ui.js` (178 lines unreferenced utility module)
-    4. `src/main/resources/static/assets/avatar.jpg` (unreferenced binary asset)
-    5-16. 12 duplicate files in `src/main/resources/static/pages/team/`
-          (`team-overview/`, `team-people/`, `team-work/`, `team-knowledge/`)
-          which were identical mirrors of the canonical components in `team-detail/`.
-  * Refactored `team-detail.js` to eliminate dead fallback try/catch chains.
-  * Linked missing `project-overview.css` in `project-detail.html`.
-- Standard Navbar & Sidebar Fragment Integration Across All Pages:
-  * Unified all 10 application views to inherit standard layout containers:
-    `dash-master-wrapper`, `sidebar-mount-area`, `dash-main-area`, and `navbar-mount-area`.
-  * Centralized master shell layout rules in `fragments/sidebar/sidebar.css` and
-    `fragments/navbar/navbar.css` with support for all legacy class aliases.
-  * Synchronized immediate `<script>` execution in `<head>` across all pages to restore
-    both `teamden-theme` and `teamden-sidebar-collapsed` states before rendering,
-    eliminating layout shift and theme flicker.
-  * Cleaned up `fragments/sidebar/sidebar.html` by removing hardcoded `.active` from `#nav-today`,
-    allowing dynamic active route resolution.
-  * Replaced hardcoded `#333333` avatar SVG fill in `fragments/navbar/navbar.html` with `currentColor`.
-- Live Server Hot-Reload Synchronization:
-  * Synchronized all modified static CSS/HTML/JS files from `src/main/resources/static/`
-    to `target/classes/static/` for active Tomcat delivery on `http://localhost:8080`.
-- Project Flow Relational Schema & Database Hydration (Flyway V2 Migration):
-  * Designed and authored `src/main/resources/db/migration/V2__project_flow_tables.sql`
-    introducing 8 new tables and enhancing 3 core tables to back the end-to-end
-    Project Flow dynamically rather than relying on static DTO fallbacks.
-  * Added 8 new relational tables:
-    1. `project_specifications`: Objectives, deliverables, criteria, and client context.
-    2. `project_milestones`: Numbered delivery stages (01 Discovery to 09 Post Launch).
-    3. `task_subtasks`: Subtasks checklist with completion tracking.
-    4. `project_decisions`: Decisions register tracking sign-offs, deciders, and status.
-    5. `project_documents`: Knowledge base repository (specs, briefs, notes, design assets).
-    6. `project_document_collaborators`: Collaborator and attendee rosters for documents.
-    7. `project_members`: Project-level contributor role assignments.
-    8. `task_linked_documents`: Cross-reference linkages between tasks and documents.
-  * Enhanced core tables:
-    * `projects`: Added `health` (ON_TRACK/AT_RISK/OFF_TRACK), `priority`, and `project_type`.
-    * `tasks`: Added `milestone_id`, `is_blocked`, `blocker_reason`, `task_code`, and `subtasks_count`.
-    * `activity_events`: Added `project_id` foreign key for high-performance project event feeds.
-  * Created JPA entities and repositories in `com.shed.teamden.project` and `com.shed.teamden.task`.
-  * Hydrated `ProjectService.java` to dynamically query and persist project flow records with automatic baseline seeding.
-  * Added `ProjectFlowIntegrationTest.java` verifying overview, task registry, documents, and milestone persistence.
-  * Achieved 100% green test suite across 18 integration tests.
-- Java Compiler & IDE Warning Remediation (Zero Warnings Standard):
-  * DashboardService.java: Eliminated unused local variable `int actIdx = 0;` and
-    its orphaned loop increment `actIdx++;`, removing dead code.
-  * ProjectService.java: Resolved null type safety unchecked conversion warning
-    on `tasks.stream().filter(Task::isBlocked)` by adopting explicit null-safe
-    lambda expressions (`t -> t != null && t.isBlocked()`).
-  * ProjectFlowIntegrationTest.java: Removed unread local variables `m1` and `m2`,
-    invoking repository save methods directly.
-  * Re-compiled and verified build: 0 compiler errors, 0 compiler warnings.
-- Master Audit Logging:
-  * Updated `workreport.txt` and `workfrom home.txt` with exhaustive changelogs,
-    before/after code examples, and implementation plan tracking.
+- Standard Color Harmonization:
+  * Replaced 1,800+ hardcoded hex colors with standardized CSS tokens from
+    `fragments/theme/theme.css` (`var(--dash-...)`) across all application views.
+  * Unlocked universal Light and Dark mode support with 0 raw hex in app styles.
+- Dead Code Elimination & Shell Standardization:
+  * Removed 16 obsolete/duplicate files (legacy stubs, redundant team mirrors).
+  * Standardized all 10 views to share the master shell layout and immediate
+    `<head>` script execution to eliminate theme/sidebar layout shift.
+- Project Flow Relational Schema (Flyway V2):
+  * Created `V2__project_flow_tables.sql` with 8 new relational tables:
+    `project_specifications`, `project_milestones`, `task_subtasks`, `project_decisions`,
+    `project_documents`, `project_document_collaborators`, `project_members`, `task_linked_documents`.
+  * Enhanced `projects`, `tasks`, and `activity_events` with flow tracking fields.
+  * Implemented JPA entities, repositories, and live hydration in `ProjectService.java`.
+- Compiler & Warning Remediation:
+  * Resolved unused variable warnings (`actIdx`, `m1`, `m2`).
+  * Fixed null-type safety warnings on stream filter method references.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Files Created:
-  * workfrom home.txt: Primary dedicated WFH daily activity and change log.
-  * workfrom home: Extensionless mirror for cross-platform/script access.
-  * workreport.txt: Master repository work audit report.
-  * workreport: Extensionless mirror for master repository report.
+- Database & Migrations:
+  * `src/main/resources/db/migration/V2__project_flow_tables.sql`
+- JPA Entities & Enums:
+  * `ProjectMilestone`, `ProjectSpecification`, `ProjectDecision`, `ProjectDocument`,
+    `ProjectDocumentCollaborator`, `ProjectMember`, `TaskSubtask`, `TaskLinkedDocument`,
+    `MilestoneStatus`, `DecisionStatus`.
+  * Updated: `Project`, `Task`, `ActivityEvent`.
+- Repositories & Services:
+  * 8 new repositories in `com.shed.teamden.project` and `com.shed.teamden.task`.
+  * Updated: `ProjectService.java`, `DashboardService.java`.
+- Integration Tests:
+  * Added `ProjectFlowIntegrationTest.java` (4 tests).
+- Developer Portal & Docs:
+  * `dev use/dev use.md`, `dev use/dev use.html`, `workreport.txt`.
 
-- Shared Fragments Standardized:
-  * src/main/resources/static/fragments/sidebar/sidebar.css: Added standard `.dash-master-wrapper` and `.dash-main-area`.
-  * src/main/resources/static/fragments/sidebar/sidebar.html: Removed hardcoded active class on `#nav-today`.
-  * src/main/resources/static/fragments/sidebar/sidebar.js: Synchronized html/body `sidebar-collapsed` class toggling.
-  * src/main/resources/static/fragments/navbar/navbar.css: Added standard `.navbar-mount-area` stickiness rules.
-  * src/main/resources/static/fragments/navbar/navbar.html: Updated fallback avatar SVG fill to `currentColor`.
-
-- Application Page Shells Standardized (Master Shell & Anti-Flicker Sync):
-  * src/main/resources/static/pages/team/team.html
-  * src/main/resources/static/pages/team/team-detail/team-detail.html
-  * src/main/resources/static/pages/workspace/workspace.html
-  * src/main/resources/static/pages/workspace/team-libraries/team-libraries.html
-  * src/main/resources/static/pages/projects/projects.html
-  * src/main/resources/static/pages/projects/project-detail/project-detail.html
-  * src/main/resources/static/pages/calendar/calendar.html
-  * src/main/resources/static/pages/dashboard/dashboard.html
-  * src/main/resources/static/pages/overview/overview.html
-  * src/main/resources/static/pages/overview/insights/insights.html
-
-- Dead Files & Duplicate Directories Removed (16 Files Deleted):
-  * src/main/resources/static/fragments/company-data.js (deleted)
-  * src/main/resources/static/fragments/company-data/company-data.html (deleted)
-  * src/main/resources/static/shared/js/ui.js (deleted)
-  * src/main/resources/static/assets/avatar.jpg (deleted)
-  * src/main/resources/static/pages/team/team-overview/ (3 files deleted)
-  * src/main/resources/static/pages/team/team-people/ (3 files deleted)
-  * src/main/resources/static/pages/team/team-work/ (3 files deleted)
-  * src/main/resources/static/pages/team/team-knowledge/ (3 files deleted)
-
-- Files Refactored & Repaired:
-  * src/main/resources/static/pages/team/team-detail/team-detail.js:
-    Removed dead fallback try/catch branches.
-  * src/main/resources/static/pages/projects/project-detail/project-detail.html:
-    Linked `project-overview/project-overview.css?v=2`.
-
-- Project Flow Relational Schema & Backend Components (Flyway V2 Migration):
-  * src/main/resources/db/migration/V2__project_flow_tables.sql (Flyway migration script)
-  * src/main/java/com/shed/teamden/project/entity/Project.java (enhanced with health, priority, projectType)
-  * src/main/java/com/shed/teamden/project/entity/MilestoneStatus.java (new enum)
-  * src/main/java/com/shed/teamden/project/entity/ProjectMilestone.java (new JPA entity)
-  * src/main/java/com/shed/teamden/project/entity/ProjectSpecification.java (new JPA entity)
-  * src/main/java/com/shed/teamden/project/entity/DecisionStatus.java (new enum)
-  * src/main/java/com/shed/teamden/project/entity/ProjectDecision.java (new JPA entity)
-  * src/main/java/com/shed/teamden/project/entity/ProjectDocument.java (new JPA entity)
-  * src/main/java/com/shed/teamden/project/entity/ProjectDocumentCollaborator.java (new JPA entity)
-  * src/main/java/com/shed/teamden/project/entity/ProjectMember.java (new JPA entity)
-  * src/main/java/com/shed/teamden/task/entity/Task.java (enhanced with milestone, isBlocked, blockerReason, taskCode, subtasksCount)
-  * src/main/java/com/shed/teamden/task/entity/TaskSubtask.java (new JPA entity)
-  * src/main/java/com/shed/teamden/task/entity/TaskLinkedDocument.java (new JPA entity)
-  * src/main/java/com/shed/teamden/activity/entity/ActivityEvent.java (enhanced with project relation)
-  * src/main/java/com/shed/teamden/project/repository/ProjectMilestoneRepository.java (new repository)
-  * src/main/java/com/shed/teamden/project/repository/ProjectSpecificationRepository.java (new repository)
-  * src/main/java/com/shed/teamden/project/repository/ProjectDecisionRepository.java (new repository)
-  * src/main/java/com/shed/teamden/project/repository/ProjectDocumentRepository.java (new repository)
-  * src/main/java/com/shed/teamden/project/repository/ProjectDocumentCollaboratorRepository.java (new repository)
-  * src/main/java/com/shed/teamden/project/repository/ProjectMemberRepository.java (new repository)
-  * src/main/java/com/shed/teamden/task/repository/TaskRepository.java (enhanced with project queries)
-  * src/main/java/com/shed/teamden/task/repository/TaskSubtaskRepository.java (new repository)
-  * src/main/java/com/shed/teamden/task/repository/TaskLinkedDocumentRepository.java (new repository)
-  * src/main/java/com/shed/teamden/activity/repository/ActivityEventRepository.java (enhanced with project queries)
-  * src/main/java/com/shed/teamden/project/service/ProjectService.java (live database hydration and auto baseline seeding)
-  * src/test/java/com/shed/teamden/project/ProjectFlowIntegrationTest.java (new integration test suite)
-  * dev use/dev use.md & dev use/dev use.html (updated developer reference guides and API docs)
-
-- Codebase Warning Elimination & Refactoring:
-  * src/main/java/com/shed/teamden/dashboard/service/DashboardService.java:
-    Removed unused local variable `actIdx` and its orphaned loop increment `actIdx++;`.
-  * src/main/java/com/shed/teamden/project/service/ProjectService.java:
-    Replaced `Task::isBlocked` and `Task::getTitle` method references with
-    explicit null-safe lambda expressions (`t -> t != null && t.isBlocked()`).
-  * src/test/java/com/shed/teamden/project/ProjectFlowIntegrationTest.java:
-    Removed unread local variable assignments `m1` and `m2`.
-
-- 27 Application CSS Files Standardized (Raw Hex -> var(--dash-...) Tokens):
-  * Shared UI Fragments:
-    - src/main/resources/static/fragments/navbar/navbar.css (0 hex remaining)
-    - src/main/resources/static/fragments/sidebar/sidebar.css (0 hex remaining)
-    - src/main/resources/static/fragments/components/components.css (0 hex remaining)
-  * Calendar & Dashboard Suite:
-    - src/main/resources/static/pages/calendar/calendar.css (320 hex replaced -> 0 hex)
-    - src/main/resources/static/pages/dashboard/dashboard.css (74 hex replaced -> 0 hex)
-  * Workspace Suite:
-    - src/main/resources/static/pages/workspace/workspace.css (0 hex remaining)
-    - src/main/resources/static/pages/workspace/team-libraries/team-libraries.css (0 hex remaining)
-  * Auth & Onboarding Suite:
-    - src/main/resources/static/pages/login/login.css (94 hex replaced -> 0 hex)
-    - src/main/resources/static/pages/register/register.css (71 hex replaced -> 0 hex)
-  * Projects Suite:
-    - src/main/resources/static/pages/projects/projects.css (0 hex remaining)
-    - src/main/resources/static/pages/projects/project-detail/project-detail.css (0 hex remaining)
-    - src/main/resources/static/pages/projects/project-detail/project-tasks/project-tasks.css (0 hex remaining)
-    - src/main/resources/static/pages/projects/project-detail/project-documents/project-documents.css (0 hex remaining)
-    - src/main/resources/static/pages/projects/project-detail/project-activity/project-activity.css (0 hex remaining)
-    - src/main/resources/static/pages/projects/project-detail/project-overview/project-overview.css (0 hex remaining)
-  * Team Suite:
-    - src/main/resources/static/pages/team/team.css (0 hex remaining)
-    - src/main/resources/static/pages/team/team-detail/team-detail.css (0 hex remaining)
-    - src/main/resources/static/pages/team/team-detail/team-overview/team-overview.css (0 hex remaining)
-    - src/main/resources/static/pages/team/team-detail/team-people/team-people.css (0 hex remaining)
-    - src/main/resources/static/pages/team/team-detail/team-work/team-work.css (0 hex remaining)
-    - src/main/resources/static/pages/team/team-detail/team-knowledge/team-knowledge.css (0 hex remaining)
-  * Executive Overview & Insights Suite:
-    - src/main/resources/static/pages/overview/overview.css (0 hex remaining)
-    - src/main/resources/static/pages/overview/insights/insights.css (0 hex remaining)
-
-3. CONCRETE BEFORE & AFTER EXAMPLES
+3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example A: Calendar Event Cards & Badges (pages/calendar/calendar.css)
+Example A: Hardcoded Colors -> Standardized CSS Design Tokens
+  [BEFORE]:
+  .project-card { background: #FFFFFF; border: 1px solid #E5DFD5; }
+  .tag-urgent   { background-color: #FEE2E2; color: #EF4444; }
 
-  [BEFORE - Hardcoded Hex Color Values]:
-  --------------------------------------------------
-  .calendar-event.design {
-    background-color: #E6E3EB;
-    border-left: 3px solid #8B5CF6;
-    color: #171717;
-  }
-  .calendar-view-btn.active {
-    background: #171717;
-    color: #FAF8F5;
-  }
+  [AFTER]:
+  .project-card { background: var(--dash-bg-card); border: 1px solid var(--dash-border); }
+  .tag-urgent   { background-color: var(--dash-badge-red-bg); color: var(--dash-badge-red-text); }
 
-  [AFTER - Standardized theme.css Design Tokens]:
-  --------------------------------------------------
-  .calendar-event.design {
-    background-color: var(--dash-col-next-bg);
-    border-left: 3px solid var(--dash-badge-purple-text);
-    color: var(--dash-text-primary);
-  }
-  .calendar-view-btn.active {
-    background: var(--dash-text-primary);
-    color: var(--dash-bg-canvas);
+Example B: Static DTO Mocks -> Live Relational Database Hydration
+  [BEFORE]:
+  public ProjectOverviewDto getProjectOverview(String id) {
+      return ProjectOverviewDto.createDefault(id, name, desc, owner, due, status);
   }
 
-Example B: Authentication Forms (pages/login/login.css & pages/register/register.css)
-
-  [BEFORE - Hardcoded Form Container & Input Borders]:
-  --------------------------------------------------
-  .auth-card {
-    background: #FFFFFF;
-    border: 1px solid #E5DFD5;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  }
-  .form-control {
-    background: #FAF8F5;
-    border: 1px solid #E5DFD5;
-    color: #171717;
-  }
-  .form-control:focus {
-    border-color: #171717;
-    background: #FFFFFF;
-  }
-
-  [AFTER - Standardized theme.css Tokens with Dark Mode Inheritance]:
-  --------------------------------------------------
-  .auth-card {
-    background: var(--dash-bg-card);
-    border: 1px solid var(--dash-border);
-    box-shadow: var(--dash-card-shadow);
-  }
-  .form-control {
-    background: var(--dash-bg-canvas);
-    border: 1px solid var(--dash-border);
-    color: var(--dash-text-primary);
-  }
-  .form-control:focus {
-    border-color: var(--dash-text-primary);
-    background: var(--dash-bg-card);
-  }
-
-Example C: Projects & Tasks Suite (pages/projects/projects.css)
-
-  [BEFORE - Hardcoded Grid & Status Colors]:
-  --------------------------------------------------
-  .project-card {
-    background: #FFFFFF;
-    border: 1px solid #E5DFD5;
-  }
-  .tag-urgent {
-    background-color: #FEE2E2;
-    color: #EF4444;
-  }
-  .tag-review {
-    background-color: #FEF3C7;
-    color: #D97706;
-  }
-
-  [AFTER - Standardized Semantic Tokens]:
-  --------------------------------------------------
-  .project-card {
-    background: var(--dash-bg-card);
-    border: 1px solid var(--dash-border);
-  }
-  .tag-urgent {
-    background-color: var(--dash-badge-red-bg);
-    color: var(--dash-badge-red-text);
-  }
-  .tag-review {
-    background-color: var(--dash-badge-amber-bg);
-    color: var(--dash-badge-amber-text);
-  }
-
-Example D: Dead Code & Redundant Fallback Elimination (team-detail.js)
-
-  [BEFORE - Redundant Nested Fallbacks Attempting to Load Duplicate Folders]:
-  --------------------------------------------------
-  try {
-    await loadFragment('team-overview/team-overview.html', 'overview-component-mount');
-  } catch (e1) {
-    try {
-      await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
-    } catch (e2) {
-      await loadFragment('/pages/team/team-overview/team-overview.html', 'overview-component-mount');
-    }
-  }
-
-  [AFTER - Cleaned Direct Loading with Canonical Path]:
-  --------------------------------------------------
-  try {
-    await loadFragment('team-overview/team-overview.html', 'overview-component-mount');
-  } catch (e) {
-    await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
-  }
-
-Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
-
-  [BEFORE - Disparate Wrapper Names & Missing Anti-Flicker Head Script]:
-  --------------------------------------------------
-  <!-- In team.html -->
-  <body class="team-body">
-    <div class="team-master-wrapper">
-      <div id="sidebar-mount" class="sidebar-mount-area"></div>
-      <div class="team-main-area">
-        <div id="navbar-mount" class="navbar-mount-area"></div>
-
-  [AFTER - Unified Standard Shell Layout with Immediate State Hydration]:
-  --------------------------------------------------
-  <!-- In all 10 application pages -->
-  <head>
-    <script>
-      (function () {
-        var t = localStorage.getItem('teamden-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-        if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
-          document.documentElement.classList.add('sidebar-collapsed');
-        }
-      })();
-    </script>
-    ...
-  </head>
-  <body class="dashboard-body team-body">
-    <div class="dash-master-wrapper team-master-wrapper">
-      <div id="sidebar-mount" class="sidebar-mount-area"></div>
-      <div class="dash-main-area team-main-area">
-        <div id="navbar-mount" class="navbar-mount-area"></div>
-
-Example F: Transition from Static DTO Mocks to Flyway V2 Relational Schema
-
-  [BEFORE - Hardcoded Fallback DTOs in ProjectService]:
-  --------------------------------------------------
-  // ProjectService.java
-  public ProjectOverviewDto getProjectOverview(String projectId) {
-      ...
-      return ProjectOverviewDto.createDefault(projectId, projectName, projectDesc, projectOwner, dueDate, status);
-  }
-
-  [AFTER - Dynamic Relational Hydration from PostgreSQL / H2]:
-  --------------------------------------------------
-  // ProjectService.java
+  [AFTER]:
   @Transactional
-  public ProjectOverviewDto getProjectOverview(String projectId) {
-      Project project = resolveProject(projectId);
-      User currentUser = resolveCurrentUser(project.getOrganization());
+  public ProjectOverviewDto getProjectOverview(String id) {
+      Project project = resolveProject(id);
       ensureProjectFlowBaseline(project, currentUser);
-
       List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
-      Optional<ProjectSpecification> specOpt = projectSpecificationRepository.findByProjectId(project.getId());
       List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
-      List<ProjectDecision> decisions = projectDecisionRepository.findByProjectIdWithDecider(project.getId());
-      List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
-      List<ProjectMember> members = projectMemberRepository.findByProjectIdWithUser(project.getId());
-
-      return ProjectOverviewDto.builder()
-              .id(project.getId().toString())
-              .title(project.getName())
-              .milestonesSummary(milestonesSummary)
-              .milestonesCompleted(milestonesCompleted)
-              .milestonesTotal(milestonesTotal)
-              .milestonesList(milestoneDtos)
-              .workInMotion(workCards)
-              .knowledgeDocuments(docDtos)
-              .pendingDecision(pendingDecisionDto)
-              .teamMemberInitials(memberInitials)
-              .build();
+      return ProjectOverviewDto.builder().id(project.getId().toString()).title(project.getName())...build();
   }
-
-Example G: Compiler Warning Elimination & Method Reference Null Safety
-
-  [BEFORE - Unused actIdx & Method Reference Null Type Warning]:
-  --------------------------------------------------
-  // DashboardService.java
-  int actIdx = 0;
-  for (ActivityEvent event : activityEvents) {
-      ...
-      actIdx++;
-  }
-
-  // ProjectService.java
-  long blockedCount = tasks.stream().filter(Task::isBlocked).count();
-
-  // ProjectFlowIntegrationTest.java
-  ProjectMilestone m1 = milestoneRepository.save(...);
-  ProjectMilestone m2 = milestoneRepository.save(...);
-
-  [AFTER - Cleaned Null-Safe Code Without Dead Variables]:
-  --------------------------------------------------
-  // DashboardService.java
-  for (ActivityEvent event : activityEvents) {
-      ...
-  }
-
-  // ProjectService.java
-  long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
-
-  // ProjectFlowIntegrationTest.java
-  milestoneRepository.save(...);
-  milestoneRepository.save(...);
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Platform-Wide Hex Scan: Ran recursive PowerShell verification across all 31
-  CSS files and all HTML files under `src/main/resources/static/`. Confirmed
-  0 hex occurrences across all application stylesheets and HTML templates.
-  `theme.css` remains the sole canonical definition source with 130 tokens.
-- Dead Code & Shell Cleanup: Removed redundant master wrapper definitions
-  from `projects.css` and `team-libraries.css`, centralizing `.dash-app-main`
-  in `fragments/sidebar/sidebar.css`.
-- Complete Test Suite Pass: Executed full test run (`./mvnw test`).
-  Results: 18 tests run, 0 failures, 0 errors, 0 skipped (100% PASS).
-  * `AuthenticationIntegrationTest`: 6/6 passed (including 401 unauthenticated check).
-  * `MultiOrganizationIsolationTest`: 3/3 passed (including cross-org task rejection).
-  * `SetupIntegrationTest`: 3/3 passed.
-  * `DevPortalIntegrationTest`: 1/1 passed.
-  * `TeamdenApplicationTests`: 1/1 passed.
-  * `ProjectFlowIntegrationTest`: 4/4 passed (overview, tasks, documents, and milestone DB persistence).
-- Project Flow DDL Validation: Verified Flyway migration V2 schema and JPA
-  entity definitions (`ddl-auto: validate` compatible).
-- Endpoint Health Sweep: Queried all application routes on http://localhost:8080:
-  All returned HTTP 200 OK.
-- Target Synchronization: Copied all updated assets to `target/classes/static/`
-  with exit code 0.
-- Dual Theme Validation: Verified that theme switcher (`theme.js`) applying
-  `[data-theme="dark"]` automatically updates all views because they reference
-  standard `--dash-*` tokens instead of hardcoded hex values.
+- Test Suite: 18/18 integration tests passing with 0 failures (`./mvnw test`).
+- Compile Check: Clean build with 0 compiler errors and 0 warnings.
+- Server Verification: Live endpoints on `http://localhost:8080` returning HTTP 200 OK.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 ================================================================================
-
-1. OBJECTIVES & OPERATING CADENCE
---------------------------------------------------------------------------------
-This plan defines the remote development workflow, accountability benchmarks,
-and deliverable milestones for all Work From Home sessions starting today.
-
-Cadence:
-  - Morning Check-In: Review active tasks, assign Day X entry header.
-  - Development Iteration: Code, test locally against port 8080, and capture diffs.
-  - Evening Check-Out: Log exact files changed, paste before/after code examples,
-    record verification steps, and sync to git remote.
-
-2. IMMEDIATE WFH TASK ROADMAP
---------------------------------------------------------------------------------
-
-TASK 1: Multi-Tenant Data & Relational Schema Verification   [STATUS: COMPLETED]
-  * Verified PostgreSQL schema migrations across new company registrations.
-  * Validated that MultiOrganizationIsolationTest passes cleanly (3/3 passed).
-  * Enforced cross-organization project isolation in DashboardService.addTask().
-  * Added tenant-isolated /api/dashboard/summary endpoint.
-  * Verified full test suite passes with 14/14 tests green.
-
-TASK 2: Today Kanban Board Interactive Features             [STATUS: NEXT]
-  * Verify drag-and-drop task card interactions across Now, Next, and Later columns.
-  * Verify optimistic UI updates and local persistence for card position changes.
-  * Validate live clock and date synchronization against Edge and Chrome browsers.
-
-TASK 3: Responsive & Tablet Viewport Audit (768px - 1024px) [STATUS: SCHEDULED]
-  * Audit collapsible sidebar behavior on medium-sized screens.
-  * Ensure 295px right rail gracefully collapses into a drawer or bottom sheet
-    when screen width drops below 1280px.
-
-TASK 4: Production Build & Asset Optimization               [STATUS: SCHEDULED]
-  * Run full Maven packaging build (`./mvnw clean package`).
-  * Verify standalone jar execution with embedded Tomcat.
-  * Audit CSS/JS bundle sizes and remove any unused legacy assets.
-
---------------------------------------------------------------------------------
-3. RULES FOR ONGOING DAILY WFH ENTRIES
---------------------------------------------------------------------------------
-Every subsequent day worked from home must follow this strict template:
-
-  ================================================================================
-  DAY [N] - YYYY-MM-DD ([DAY OF WEEK])
-  ================================================================================
-  1. WORK COMPLETED & OBJECTIVES (REMOTE WFH SESSION)
-     - [Item 1]
-     - [Item 2]
-
-  2. WHAT WAS CHANGED & FILES AFFECTED
-     - [File path 1]: [Description of change]
-     - [File path 2]: [Description of change]
-
-  3. CONCRETE BEFORE & AFTER EXAMPLE
-     [BEFORE]: [Code / config before]
-     [AFTER]:  [Code / config after]
-
-  Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
-
-  [BEFORE - Disparate Wrapper Names & Missing Anti-Flicker Head Script]:
-  --------------------------------------------------
-  <!-- In team.html -->
-  <body class="team-body">
-    <div class="team-master-wrapper">
-      <div id="sidebar-mount" class="sidebar-mount-area"></div>
-      <div class="team-main-area">
-        <div id="navbar-mount" class="navbar-mount-area"></div>
-
-  [AFTER - Unified Standard Shell Layout with Immediate State Hydration]:
-  --------------------------------------------------
-  <!-- In all 10 application pages -->
-  <head>
-    <script>
-      (function () {
-        var t = localStorage.getItem('teamden-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-        if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
-          document.documentElement.classList.add('sidebar-collapsed');
-        }
-      })();
-    </script>
-    ...
-  </head>
-  <body class="dashboard-body team-body">
-    <div class="dash-master-wrapper team-master-wrapper">
-      <div id="sidebar-mount" class="sidebar-mount-area"></div>
-      <div class="dash-main-area team-main-area">
-        <div id="navbar-mount" class="navbar-mount-area"></div>
-
-4. VERIFICATION PERFORMED
-     - [Tests run, URLs checked, UI screenshots verified]
+- Phase 1 [COMPLETED]: Color token harmonization, shell unification & zero hex audit.
+- Phase 2 [COMPLETED]: Project Flow relational schema, Flyway V2 & dynamic hydration.
+- Phase 3 [NEXT]: Kanban board interactive state drag-and-drop & task updates.
+- Phase 4 [SCHEDULED]: Responsive tablet (768px-1024px) layout verification.
+- Phase 5 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT
