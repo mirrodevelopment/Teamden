@@ -250,12 +250,8 @@
     // 6. Mount Team Overview Component
     try {
       await loadFragment('team-overview/team-overview.html', 'overview-component-mount');
-    } catch (e1) {
-      try {
-        await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
-      } catch (e2) {
-        await loadFragment('/pages/team/team-overview/team-overview.html', 'overview-component-mount');
-      }
+    } catch (e) {
+      await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
     }
     const tovRail = document.querySelector('#overview-component-mount .tov-right-rail');
     const mountRailOverview = document.getElementById('tdet-rail-overview');
@@ -270,12 +266,8 @@
     // 8. Mount Team Work Component
     try {
       await loadFragment('team-work/team-work.html', 'work-component-mount');
-    } catch (e1) {
-      try {
-        await loadFragment('/pages/team/team-detail/team-work/team-work.html', 'work-component-mount');
-      } catch (e2) {
-        await loadFragment('/pages/team/team-work/team-work.html', 'work-component-mount');
-      }
+    } catch (e) {
+      await loadFragment('/pages/team/team-detail/team-work/team-work.html', 'work-component-mount');
     }
     const twRail = document.querySelector('#work-component-mount .tw-right-rail');
     const mountRailWork = document.getElementById('tdet-rail-work');
@@ -290,12 +282,8 @@
     // 10. Mount Team Knowledge Component
     try {
       await loadFragment('team-knowledge/team-knowledge.html', 'knowledge-component-mount');
-    } catch (e1) {
-      try {
-        await loadFragment('/pages/team/team-detail/team-knowledge/team-knowledge.html', 'knowledge-component-mount');
-      } catch (e2) {
-        await loadFragment('/pages/team/team-knowledge/team-knowledge.html', 'knowledge-component-mount');
-      }
+    } catch (e) {
+      await loadFragment('/pages/team/team-detail/team-knowledge/team-knowledge.html', 'knowledge-component-mount');
     }
     const tkRail = document.querySelector('#knowledge-component-mount .tk-right-rail');
     const mountRailKnowledge = document.getElementById('tdet-rail-knowledge');
@@ -310,12 +298,8 @@
     // 12. Mount Team People Component
     try {
       await loadFragment('team-people/team-people.html', 'people-component-mount');
-    } catch (e1) {
-      try {
-        await loadFragment('/pages/team/team-detail/team-people/team-people.html', 'people-component-mount');
-      } catch (e2) {
-        await loadFragment('/pages/team/team-people/team-people.html', 'people-component-mount');
-      }
+    } catch (e) {
+      await loadFragment('/pages/team/team-detail/team-people/team-people.html', 'people-component-mount');
     }
     const tpRail = document.querySelector('#people-component-mount .tp-right-rail');
     const mountRailPeople = document.getElementById('tdet-rail-people');

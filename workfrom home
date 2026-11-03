@@ -31,6 +31,19 @@ DAY 1 - 2026-11-03 (TUESDAY - TODAY)
     Dark Mode (`[data-theme="dark"]` and `body.dark-theme`) support platform-wide.
   * Validated that `theme.css` is the sole source of truth for color definitions
     (130 canonical tokens). All other 30 application CSS files now have ZERO raw hex codes.
+- Dead Code Identification & Elimination:
+  * Executed static analysis across Java, JS, CSS, and HTML assets to locate
+    unreferenced files, duplicate subtrees, and deprecated stubs.
+  * Eradicated 16 dead files / duplicate assets:
+    1. `src/main/resources/static/fragments/company-data.js` (1-line deprecated stub)
+    2. `src/main/resources/static/fragments/company-data/company-data.html` (1-line deprecated stub)
+    3. `src/main/resources/static/shared/js/ui.js` (178 lines unreferenced utility module)
+    4. `src/main/resources/static/assets/avatar.jpg` (unreferenced binary asset)
+    5-16. 12 duplicate files in `src/main/resources/static/pages/team/`
+          (`team-overview/`, `team-people/`, `team-work/`, `team-knowledge/`)
+          which were identical mirrors of the canonical components in `team-detail/`.
+  * Refactored `team-detail.js` to eliminate dead fallback try/catch chains.
+  * Linked missing `project-overview.css` in `project-detail.html`.
 - Live Server Hot-Reload Synchronization:
   * Synchronized all modified static CSS files from `src/main/resources/static/`
     to `target/classes/static/` for active Tomcat delivery on `http://localhost:8080`.
@@ -45,6 +58,22 @@ DAY 1 - 2026-11-03 (TUESDAY - TODAY)
   * workfrom home: Extensionless mirror for cross-platform/script access.
   * workreport.txt: Master repository work audit report.
   * workreport: Extensionless mirror for master repository report.
+
+- Dead Files & Duplicate Directories Removed (16 Files Deleted):
+  * src/main/resources/static/fragments/company-data.js (deleted)
+  * src/main/resources/static/fragments/company-data/company-data.html (deleted)
+  * src/main/resources/static/shared/js/ui.js (deleted)
+  * src/main/resources/static/assets/avatar.jpg (deleted)
+  * src/main/resources/static/pages/team/team-overview/ (3 files deleted)
+  * src/main/resources/static/pages/team/team-people/ (3 files deleted)
+  * src/main/resources/static/pages/team/team-work/ (3 files deleted)
+  * src/main/resources/static/pages/team/team-knowledge/ (3 files deleted)
+
+- Files Refactored & Repaired:
+  * src/main/resources/static/pages/team/team-detail/team-detail.js:
+    Removed dead fallback try/catch branches.
+  * src/main/resources/static/pages/projects/project-detail/project-detail.html:
+    Linked `project-overview/project-overview.css?v=2`.
 
 - 27 Application CSS Files Standardized (Raw Hex -> var(--dash-...) Tokens):
   * Shared UI Fragments:
@@ -74,11 +103,6 @@ DAY 1 - 2026-11-03 (TUESDAY - TODAY)
     - src/main/resources/static/pages/team/team-detail/team-people/team-people.css (0 hex remaining)
     - src/main/resources/static/pages/team/team-detail/team-work/team-work.css (0 hex remaining)
     - src/main/resources/static/pages/team/team-detail/team-knowledge/team-knowledge.css (0 hex remaining)
-    - [Mirrored Fallback Views]:
-      * src/main/resources/static/pages/team/team-overview/team-overview.css (0 hex remaining)
-      * src/main/resources/static/pages/team/team-people/team-people.css (0 hex remaining)
-      * src/main/resources/static/pages/team/team-work/team-work.css (0 hex remaining)
-      * src/main/resources/static/pages/team/team-knowledge/team-knowledge.css (0 hex remaining)
   * Executive Overview & Insights Suite:
     - src/main/resources/static/pages/overview/overview.css (0 hex remaining)
     - src/main/resources/static/pages/overview/insights/insights.css (0 hex remaining)
@@ -179,15 +203,39 @@ Example C: Projects & Tasks Suite (pages/projects/projects.css)
     color: var(--dash-badge-amber-text);
   }
 
+Example D: Dead Code & Redundant Fallback Elimination (team-detail.js)
+
+  [BEFORE - Redundant Nested Fallbacks Attempting to Load Duplicate Folders]:
+  --------------------------------------------------
+  try {
+    await loadFragment('team-overview/team-overview.html', 'overview-component-mount');
+  } catch (e1) {
+    try {
+      await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
+    } catch (e2) {
+      await loadFragment('/pages/team/team-overview/team-overview.html', 'overview-component-mount');
+    }
+  }
+
+  [AFTER - Cleaned Direct Loading with Canonical Path]:
+  --------------------------------------------------
+  try {
+    await loadFragment('team-overview/team-overview.html', 'overview-component-mount');
+  } catch (e) {
+    await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
+  }
+
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
 - Platform-Wide Hex Scan: Ran recursive PowerShell verification across all 31
   CSS files under `src/main/resources/static/`. Confirmed 0 hex occurrences in
   all 30 application CSS files; `theme.css` remains the sole file with 130 tokens.
+- Dead Code Verification: Verified deletion of 16 unreferenced/duplicate files.
+  Audited zero broken imports or references remaining in JavaScript or HTML.
+- Endpoint Health Sweep: Queried all 13 application routes on http://localhost:8080:
+  All returned HTTP 200 OK.
 - Target Synchronization: Copied all updated assets to `target/classes/static/`
   with exit code 0.
-- Live Server Verification: Verified running server on port 8080 continues to
-  serve styling assets properly.
 - Dual Theme Validation: Verified that theme switcher (`theme.js`) applying
   `[data-theme="dark"]` automatically updates all views because they reference
   standard `--dash-*` tokens instead of hardcoded hex values.
