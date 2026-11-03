@@ -13,6 +13,70 @@
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   STANDARD APPLICATION SHELL LAYOUT
+   Standardized layout containers for all application pages:
+   - .dash-master-wrapper (outer flex container)
+   - .sidebar-mount-area (0-width flex mount container for fixed sidebar)
+   - .dash-main-area (flexible main workspace offset by sidebar width)
+   ========================================================================== */
+.dash-master-wrapper,
+.team-master-wrapper,
+.tdet-master-wrapper,
+.ws-master-wrapper,
+.tl-master-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--dash-bg-canvas);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.sidebar-mount-area {
+  width: 0;
+  flex-shrink: 0;
+}
+
+.dash-main-area,
+.team-main-area,
+.tdet-main-area,
+.ws-main-area,
+.tl-main-area {
+  flex: 1;
+  margin-left: var(--sidebar-width, 210px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  background-color: var(--dash-bg-canvas);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+body.sidebar-collapsed .dash-main-area,
+body.sidebar-collapsed .team-main-area,
+body.sidebar-collapsed .tdet-main-area,
+body.sidebar-collapsed .ws-main-area,
+body.sidebar-collapsed .tl-main-area,
+html.sidebar-collapsed .dash-main-area,
+html.sidebar-collapsed .team-main-area,
+html.sidebar-collapsed .tdet-main-area,
+html.sidebar-collapsed .ws-main-area,
+html.sidebar-collapsed .tl-main-area {
+  margin-left: var(--sidebar-collapsed-width, 64px);
+}
+
+@media (max-width: 768px) {
+  .dash-main-area,
+  .team-main-area,
+  .tdet-main-area,
+  .ws-main-area,
+  .tl-main-area {
+    margin-left: 0 !important;
+  }
+}
+
 .app-sidebar {
   width: var(--sidebar-width, 210px);
   height: 100vh;

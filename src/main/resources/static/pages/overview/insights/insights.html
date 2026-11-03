@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>brick — insights.</title>
-  <link rel="icon" type="image/png" href="../../../assets/bric-icon.png" data-company="icon">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
       document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
     })();
   </script>
 

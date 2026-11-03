@@ -456,8 +456,19 @@ DAY 5 - 2026-11-03 (TUESDAY - TODAY)
           which were identical mirrors of the canonical components in `team-detail/`.
   * Refactored `team-detail.js` to eliminate dead fallback try/catch branches.
   * Linked missing `project-overview.css` in `project-detail.html`.
+- Standard Navbar & Sidebar Fragment Integration Across All Pages:
+  * Unified all 10 application views to inherit standard layout containers:
+    `dash-master-wrapper`, `sidebar-mount-area`, `dash-main-area`, and `navbar-mount-area`.
+  * Centralized master shell layout rules in `fragments/sidebar/sidebar.css` and
+    `fragments/navbar/navbar.css` with support for all legacy class aliases.
+  * Synchronized immediate `<script>` execution in `<head>` across all pages to restore
+    both `teamden-theme` and `teamden-sidebar-collapsed` states before rendering,
+    eliminating layout shift and theme flicker.
+  * Cleaned up `fragments/sidebar/sidebar.html` by removing hardcoded `.active` from `#nav-today`,
+    allowing dynamic active route resolution.
+  * Replaced hardcoded `#333333` avatar SVG fill in `fragments/navbar/navbar.html` with `currentColor`.
 - Live Server Hot-Reload Synchronization:
-  * Synchronized all modified static CSS files from `src/main/resources/static/`
+  * Synchronized all modified static CSS/HTML/JS files from `src/main/resources/static/`
     to `target/classes/static/` for active Tomcat delivery on `http://localhost:8080`.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
@@ -467,6 +478,25 @@ DAY 5 - 2026-11-03 (TUESDAY - TODAY)
   * workreport: Extensionless mirror for master repository report.
   * workfrom home.txt: Primary dedicated WFH daily activity and change log.
   * workfrom home: Extensionless mirror for cross-platform/script access.
+
+- Shared Fragments Standardized:
+  * src/main/resources/static/fragments/sidebar/sidebar.css: Added standard `.dash-master-wrapper` and `.dash-main-area`.
+  * src/main/resources/static/fragments/sidebar/sidebar.html: Removed hardcoded active class on `#nav-today`.
+  * src/main/resources/static/fragments/sidebar/sidebar.js: Synchronized html/body `sidebar-collapsed` class toggling.
+  * src/main/resources/static/fragments/navbar/navbar.css: Added standard `.navbar-mount-area` stickiness rules.
+  * src/main/resources/static/fragments/navbar/navbar.html: Updated fallback avatar SVG fill to `currentColor`.
+
+- Application Page Shells Standardized (Master Shell & Anti-Flicker Sync):
+  * src/main/resources/static/pages/team/team.html
+  * src/main/resources/static/pages/team/team-detail/team-detail.html
+  * src/main/resources/static/pages/workspace/workspace.html
+  * src/main/resources/static/pages/workspace/team-libraries/team-libraries.html
+  * src/main/resources/static/pages/projects/projects.html
+  * src/main/resources/static/pages/projects/project-detail/project-detail.html
+  * src/main/resources/static/pages/calendar/calendar.html
+  * src/main/resources/static/pages/dashboard/dashboard.html
+  * src/main/resources/static/pages/overview/overview.html
+  * src/main/resources/static/pages/overview/insights/insights.html
 
 - Dead Files & Duplicate Directories Removed (16 Files Deleted):
   * src/main/resources/static/fragments/company-data.js (deleted)
@@ -633,6 +663,38 @@ Example D: Dead Code & Redundant Fallback Elimination (team-detail.js)
   } catch (e) {
     await loadFragment('/pages/team/team-detail/team-overview/team-overview.html', 'overview-component-mount');
   }
+
+Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
+
+  [BEFORE - Disparate Wrapper Names & Missing Anti-Flicker Head Script]:
+  --------------------------------------------------
+  <!-- In team.html -->
+  <body class="team-body">
+    <div class="team-master-wrapper">
+      <div id="sidebar-mount" class="sidebar-mount-area"></div>
+      <div class="team-main-area">
+        <div id="navbar-mount" class="navbar-mount-area"></div>
+
+  [AFTER - Unified Standard Shell Layout with Immediate State Hydration]:
+  --------------------------------------------------
+  <!-- In all 10 application pages -->
+  <head>
+    <script>
+      (function () {
+        var t = localStorage.getItem('teamden-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+          document.documentElement.classList.add('sidebar-collapsed');
+        }
+      })();
+    </script>
+    ...
+  </head>
+  <body class="dashboard-body team-body">
+    <div class="dash-master-wrapper team-master-wrapper">
+      <div id="sidebar-mount" class="sidebar-mount-area"></div>
+      <div class="dash-main-area team-main-area">
+        <div id="navbar-mount" class="navbar-mount-area"></div>
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------

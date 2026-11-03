@@ -10,6 +10,17 @@
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   STANDARD TOPBAR MOUNT CONTAINER
+   ========================================================================== */
+.navbar-mount-area {
+  width: 100%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar, 100);
+}
+
 .app-topbar {
   min-height: 52px;
   height: auto;

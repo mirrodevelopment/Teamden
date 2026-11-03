@@ -5,6 +5,7 @@
 const Sidebar = (() => {
   function toggle() {
     const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+    document.documentElement.classList.toggle('sidebar-collapsed', isCollapsed);
     localStorage.setItem('teamden-sidebar-collapsed', isCollapsed ? 'true' : 'false');
     return isCollapsed;
   }
@@ -12,6 +13,7 @@ const Sidebar = (() => {
   // Restore persisted collapsed state immediately to avoid layout flicker
   if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
     document.body.classList.add('sidebar-collapsed');
+    document.documentElement.classList.add('sidebar-collapsed');
   }
 
   // Resilient event delegation on document so dynamic fragment mounts always respond
