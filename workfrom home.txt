@@ -79,6 +79,15 @@ DAY 1 - 2026-11-03 (TUESDAY - TODAY)
   * Hydrated `ProjectService.java` to dynamically query and persist project flow records with automatic baseline seeding.
   * Added `ProjectFlowIntegrationTest.java` verifying overview, task registry, documents, and milestone persistence.
   * Achieved 100% green test suite across 18 integration tests.
+- Java Compiler & IDE Warning Remediation (Zero Warnings Standard):
+  * DashboardService.java: Eliminated unused local variable `int actIdx = 0;` and
+    its orphaned loop increment `actIdx++;`, removing dead code.
+  * ProjectService.java: Resolved null type safety unchecked conversion warning
+    on `tasks.stream().filter(Task::isBlocked)` by adopting explicit null-safe
+    lambda expressions (`t -> t != null && t.isBlocked()`).
+  * ProjectFlowIntegrationTest.java: Removed unread local variables `m1` and `m2`,
+    invoking repository save methods directly.
+  * Re-compiled and verified build: 0 compiler errors, 0 compiler warnings.
 - Master Audit Logging:
   * Updated `workreport.txt` and `workfrom home.txt` with exhaustive changelogs,
     before/after code examples, and implementation plan tracking.
@@ -154,6 +163,15 @@ DAY 1 - 2026-11-03 (TUESDAY - TODAY)
   * src/main/java/com/shed/teamden/project/service/ProjectService.java (live database hydration and auto baseline seeding)
   * src/test/java/com/shed/teamden/project/ProjectFlowIntegrationTest.java (new integration test suite)
   * dev use/dev use.md & dev use/dev use.html (updated developer reference guides and API docs)
+
+- Codebase Warning Elimination & Refactoring:
+  * src/main/java/com/shed/teamden/dashboard/service/DashboardService.java:
+    Removed unused local variable `actIdx` and its orphaned loop increment `actIdx++;`.
+  * src/main/java/com/shed/teamden/project/service/ProjectService.java:
+    Replaced `Task::isBlocked` and `Task::getTitle` method references with
+    explicit null-safe lambda expressions (`t -> t != null && t.isBlocked()`).
+  * src/test/java/com/shed/teamden/project/ProjectFlowIntegrationTest.java:
+    Removed unread local variable assignments `m1` and `m2`.
 
 - 27 Application CSS Files Standardized (Raw Hex -> var(--dash-...) Tokens):
   * Shared UI Fragments:
@@ -376,6 +394,38 @@ Example F: Transition from Static DTO Mocks to Flyway V2 Relational Schema
               .teamMemberInitials(memberInitials)
               .build();
   }
+
+Example G: Compiler Warning Elimination & Method Reference Null Safety
+
+  [BEFORE - Unused actIdx & Method Reference Null Type Warning]:
+  --------------------------------------------------
+  // DashboardService.java
+  int actIdx = 0;
+  for (ActivityEvent event : activityEvents) {
+      ...
+      actIdx++;
+  }
+
+  // ProjectService.java
+  long blockedCount = tasks.stream().filter(Task::isBlocked).count();
+
+  // ProjectFlowIntegrationTest.java
+  ProjectMilestone m1 = milestoneRepository.save(...);
+  ProjectMilestone m2 = milestoneRepository.save(...);
+
+  [AFTER - Cleaned Null-Safe Code Without Dead Variables]:
+  --------------------------------------------------
+  // DashboardService.java
+  for (ActivityEvent event : activityEvents) {
+      ...
+  }
+
+  // ProjectService.java
+  long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
+
+  // ProjectFlowIntegrationTest.java
+  milestoneRepository.save(...);
+  milestoneRepository.save(...);
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
