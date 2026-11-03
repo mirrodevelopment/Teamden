@@ -306,7 +306,6 @@ public class DashboardService {
                         .quotePreview(quotePreview)
                         .infoText(infoText)
                         .build());
-                actIdx++;
             }
         }
 
