@@ -17,6 +17,9 @@ import com.shed.teamden.task.entity.TaskPriority;
 import com.shed.teamden.task.entity.TaskStatus;
 import com.shed.teamden.task.repository.TaskRepository;
 import com.shed.teamden.user.entity.User;
+import com.shed.teamden.common.exception.BadRequestException;
+import com.shed.teamden.common.exception.ResourceNotFoundException;
+import com.shed.teamden.common.exception.UnauthorizedException;
 import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -405,6 +409,11 @@ public class DashboardService {
 
     @Transactional
     public PriorityTaskDto addTask(String column, String title, String tag) {
+        return addTask(column, title, tag, null);
+    }
+
+    @Transactional
+    public PriorityTaskDto addTask(String column, String title, String tag, String projectId) {
         Organization organization = resolveCurrentOrganization();
         User currentUser = resolveCurrentUser(organization);
 
@@ -420,9 +429,20 @@ public class DashboardService {
             dueDate = LocalDate.now().plusDays(7);
         }
 
-        // Find or create project by tag name if present
+        // Validate or resolve project
         Project project = null;
-        if (tag != null && !tag.isBlank() && !"General".equalsIgnoreCase(tag)) {
+        if (projectId != null && !projectId.isBlank()) {
+            try {
+                UUID projUuid = UUID.fromString(projectId.trim());
+                Optional<Project> projOpt = projectRepository.findById(projUuid);
+                if (projOpt.isEmpty() || !projOpt.get().getOrganization().getId().equals(organization.getId())) {
+                    throw new BadRequestException("Project not found in this organization");
+                }
+                project = projOpt.get();
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Invalid project ID format");
+            }
+        } else if (tag != null && !tag.isBlank() && !"General".equalsIgnoreCase(tag)) {
             List<Project> projects = projectRepository.findByOrganizationIdWithDetails(organization.getId());
             project = projects.stream()
                     .filter(p -> p.getName().equalsIgnoreCase(tag.trim()))
@@ -510,6 +530,63 @@ public class DashboardService {
                 .dotColor(dot)
                 .completed(task.getStatus() == TaskStatus.COMPLETED)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getDashboardSummary() {
+        Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
+        if (userOpt.isEmpty() || userOpt.get().getActiveOrganizationId() == null) {
+            throw new UnauthorizedException("Authentication required to access this resource");
+        }
+        UUID orgId = userOpt.get().getActiveOrganizationId();
+        Organization organization = organizationRepository.findById(orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+        User currentUser = userRepository.findById(userOpt.get().getId())
+                .orElse(null);
+
+        List<Project> orgProjects = projectRepository.findByOrganizationIdWithDetails(orgId);
+        List<Task> orgTasks = taskRepository.findByOrganizationId(orgId, PageRequest.of(0, 500));
+
+        long activeProjectsCount = orgProjects.stream()
+                .filter(p -> p.getStatus() == ProjectStatus.ACTIVE)
+                .count();
+
+        long openTasksCount = orgTasks.stream()
+                .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getStatus() != TaskStatus.CANCELLED)
+                .count();
+
+        List<Map<String, Object>> projectList = orgProjects.stream()
+                .map(p -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", p.getId().toString());
+                    map.put("name", p.getName());
+                    map.put("status", p.getStatus() != null ? p.getStatus().name() : "ACTIVE");
+                    return map;
+                })
+                .collect(Collectors.toList());
+
+        List<Map<String, Object>> taskList = orgTasks.stream()
+                .filter(t -> currentUser != null && t.getAssignee() != null && t.getAssignee().getId().equals(currentUser.getId()))
+                .map(t -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", t.getId().toString());
+                    map.put("title", t.getTitle());
+                    map.put("status", t.getStatus() != null ? t.getStatus().name() : "TODO");
+                    map.put("priority", t.getPriority() != null ? t.getPriority().name() : "MEDIUM");
+                    return map;
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("userProfile", Map.of("activeOrganizationName", organization.getName()));
+        data.put("kpis", Map.of(
+                "activeProjects", activeProjectsCount,
+                "openTasks", openTasksCount
+        ));
+        data.put("projects", projectList);
+        data.put("myTasks", taskList);
+
+        return data;
     }
 
     private Organization resolveCurrentOrganization() {

@@ -1,5 +1,6 @@
 package com.shed.teamden.dashboard.controller;
 
+import com.shed.teamden.common.response.ApiResponse;
 import com.shed.teamden.dashboard.dto.DashboardDataDto;
 import com.shed.teamden.dashboard.dto.PriorityTaskDto;
 import com.shed.teamden.dashboard.service.DashboardService;
@@ -21,6 +22,11 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getDashboardData());
     }
 
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getDashboardSummary() {
+        return ResponseEntity.ok(ApiResponse.success(dashboardService.getDashboardSummary()));
+    }
+
     @PatchMapping("/tasks/{id}/toggle")
     public ResponseEntity<PriorityTaskDto> toggleTask(@PathVariable String id) {
         PriorityTaskDto toggled = dashboardService.toggleTask(id);
@@ -35,6 +41,7 @@ public class DashboardController {
         String column = payload.getOrDefault("column", "NOW");
         String title = payload.get("title");
         String tag = payload.getOrDefault("tag", "General");
-        return ResponseEntity.ok(dashboardService.addTask(column, title, tag));
+        String projectId = payload.get("projectId");
+        return ResponseEntity.ok(dashboardService.addTask(column, title, tag, projectId));
     }
 }

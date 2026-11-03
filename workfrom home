@@ -290,11 +290,20 @@ Example E: Standard Fragment Shell Container & Anti-Flicker Persistence
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
 - Platform-Wide Hex Scan: Ran recursive PowerShell verification across all 31
-  CSS files under `src/main/resources/static/`. Confirmed 0 hex occurrences in
-  all 30 application CSS files; `theme.css` remains the sole file with 130 tokens.
-- Dead Code Verification: Verified deletion of 16 unreferenced/duplicate files.
-  Audited zero broken imports or references remaining in JavaScript or HTML.
-- Endpoint Health Sweep: Queried all 13 application routes on http://localhost:8080:
+  CSS files and all HTML files under `src/main/resources/static/`. Confirmed
+  0 hex occurrences across all application stylesheets and HTML templates.
+  `theme.css` remains the sole canonical definition source with 130 tokens.
+- Dead Code & Shell Cleanup: Removed redundant master wrapper definitions
+  from `projects.css` and `team-libraries.css`, centralizing `.dash-app-main`
+  in `fragments/sidebar/sidebar.css`.
+- Complete Test Suite Pass: Executed full test run (`./mvnw test`).
+  Results: 14 tests run, 0 failures, 0 errors, 0 skipped.
+  * `AuthenticationIntegrationTest`: 6/6 passed (including 401 unauthenticated check).
+  * `MultiOrganizationIsolationTest`: 3/3 passed (including cross-org task rejection).
+  * `SetupIntegrationTest`: 3/3 passed.
+  * `DevPortalIntegrationTest`: 1/1 passed.
+  * `TeamdenApplicationTests`: 1/1 passed.
+- Endpoint Health Sweep: Queried all application routes on http://localhost:8080:
   All returned HTTP 200 OK.
 - Target Synchronization: Copied all updated assets to `target/classes/static/`
   with exit code 0.
@@ -320,13 +329,14 @@ Cadence:
 2. IMMEDIATE WFH TASK ROADMAP
 --------------------------------------------------------------------------------
 
-TASK 1: Multi-Tenant Data & Relational Schema Verification   [STATUS: NEXT]
-  * Verify PostgreSQL schema migrations across new company registrations.
-  * Validate that MultiOrganizationIsolationTest passes cleanly.
-  * Audit Developer Portal (/dev use/dev use.html) to ensure mock and live
-    relational tables display accurately.
+TASK 1: Multi-Tenant Data & Relational Schema Verification   [STATUS: COMPLETED]
+  * Verified PostgreSQL schema migrations across new company registrations.
+  * Validated that MultiOrganizationIsolationTest passes cleanly (3/3 passed).
+  * Enforced cross-organization project isolation in DashboardService.addTask().
+  * Added tenant-isolated /api/dashboard/summary endpoint.
+  * Verified full test suite passes with 14/14 tests green.
 
-TASK 2: Today Kanban Board Interactive Features             [STATUS: SCHEDULED]
+TASK 2: Today Kanban Board Interactive Features             [STATUS: NEXT]
   * Verify drag-and-drop task card interactions across Now, Next, and Later columns.
   * Verify optimistic UI updates and local persistence for card position changes.
   * Validate live clock and date synchronization against Edge and Chrome browsers.

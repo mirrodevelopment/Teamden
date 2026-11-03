@@ -39,6 +39,7 @@
 }
 
 .dash-main-area,
+.dash-app-main,
 .team-main-area,
 .tdet-main-area,
 .ws-main-area,
@@ -55,11 +56,13 @@
 }
 
 body.sidebar-collapsed .dash-main-area,
+body.sidebar-collapsed .dash-app-main,
 body.sidebar-collapsed .team-main-area,
 body.sidebar-collapsed .tdet-main-area,
 body.sidebar-collapsed .ws-main-area,
 body.sidebar-collapsed .tl-main-area,
 html.sidebar-collapsed .dash-main-area,
+html.sidebar-collapsed .dash-app-main,
 html.sidebar-collapsed .team-main-area,
 html.sidebar-collapsed .tdet-main-area,
 html.sidebar-collapsed .ws-main-area,

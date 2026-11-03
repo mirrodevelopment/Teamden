@@ -166,8 +166,8 @@
                   <svg class="intel-line-chart" id="intel-line-chart" viewBox="0 0 540 200" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="chartGlowGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.16"></stop>
-                        <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"></stop>
+                        <stop offset="0%" stop-color="var(--dash-dot-purple)" stop-opacity="0.16"></stop>
+                        <stop offset="100%" stop-color="var(--dash-dot-purple)" stop-opacity="0.0"></stop>
                       </linearGradient>
                     </defs>
 
@@ -193,7 +193,7 @@
                     <path id="chart-area-path" class="chart-area-fill" d="M 60 74 L 150 66 L 240 70 L 330 52 L 420 44 L 500 58 L 500 172 L 60 172 Z" fill="url(#chartGlowGradient)"></path>
 
                     <!-- Smooth Trendline Path -->
-                    <path id="chart-line-path" class="chart-trend-line" d="M 60 74 L 150 66 L 240 70 L 330 52 L 420 44 L 500 58" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path id="chart-line-path" class="chart-trend-line" d="M 60 74 L 150 66 L 240 70 L 330 52 L 420 44 L 500 58" fill="none" stroke="var(--dash-dot-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
 
                     <!-- Data Point Circles & Tooltip Triggers -->
                     <g id="chart-points-group">
@@ -224,7 +224,7 @@
 
                       <!-- Oct (80% Active Badge Point) -->
                       <circle cx="500" cy="58" r="5.5" class="chart-dot chart-dot-active" data-month="Oct" data-val="80%"></circle>
-                      <rect x="480" y="38" width="40" height="18" rx="9" fill="#7C3AED"></rect>
+                      <rect x="480" y="38" width="40" height="18" rx="9" fill="var(--dash-dot-purple)"></rect>
                       <text x="500" y="51" text-anchor="middle" class="chart-badge-text">80%</text>
                       <text x="500" y="190" text-anchor="middle" class="chart-axis-lbl chart-axis-active">Oct</text>
                     </g>

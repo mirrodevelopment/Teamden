@@ -24,33 +24,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Master Wrapper ────────────────────────────────────────────────────── */
-.tl-master-wrapper {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background: var(--dash-bg-canvas);
-}
-
-.sidebar-mount-area {
-  width: 0;
-  flex-shrink: 0;
-}
-
-.tl-main-area {
-  flex: 1;
-  margin-left: var(--sidebar-width, 210px);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-width: 0;
-  background: var(--dash-bg-canvas);
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-body.sidebar-collapsed .tl-main-area {
-  margin-left: var(--sidebar-collapsed-width, 64px);
-}
+/* Master application shell layout (.tl-master-wrapper, .sidebar-mount-area, .tl-main-area)
+   is centrally defined in fragments/sidebar/sidebar.css */
 
 /* ── Workspace Sub-navigation Tab Strip ────────────────────────────────── */
 .tl-workspace-subnav {
