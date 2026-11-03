@@ -125,7 +125,7 @@ public class ProjectFlowIntegrationTest {
                 .projectType("Design / Development")
                 .build());
 
-        ProjectMilestone m1 = milestoneRepository.save(ProjectMilestone.builder()
+        milestoneRepository.save(ProjectMilestone.builder()
                 .id(UUID.randomUUID())
                 .organization(org)
                 .project(project)
@@ -136,7 +136,7 @@ public class ProjectFlowIntegrationTest {
                 .dueDate(LocalDate.now().minusDays(5))
                 .build());
 
-        ProjectMilestone m2 = milestoneRepository.save(ProjectMilestone.builder()
+        milestoneRepository.save(ProjectMilestone.builder()
                 .id(UUID.randomUUID())
                 .organization(org)
                 .project(project)

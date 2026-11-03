@@ -242,7 +242,6 @@ public class DashboardService {
                     .infoText("Client feedback session\nTomorrow, 2:00 PM")
                     .build());
         } else {
-            int actIdx = 0;
             Instant lastTimestamp = null;
             for (ActivityEvent event : activityEvents) {
                 String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";

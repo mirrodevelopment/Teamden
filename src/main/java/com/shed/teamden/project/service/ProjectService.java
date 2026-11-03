@@ -822,10 +822,10 @@ public class ProjectService {
 
         // Tasks & Work in Motion
         List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
-        long todoCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).count();
-        long inProgCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
-        long inRevCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_REVIEW).count();
-        long blockedCount = tasks.stream().filter(Task::isBlocked).count();
+        long todoCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO).count();
+        long inProgCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS).count();
+        long inRevCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW).count();
+        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
 
         List<ProjectOverviewDto.WorkStatusCardDto> workCards = List.of(
                 ProjectOverviewDto.WorkStatusCardDto.builder()
@@ -833,7 +833,7 @@ public class ProjectService {
                         .statusLabel("TO DO")
                         .dotColor("gray")
                         .count(String.format("%02d", todoCount))
-                        .exampleTask(tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).findFirst().map(Task::getTitle).orElse("Prepare responsive layouts"))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO).findFirst().map(t -> t.getTitle()).orElse("Prepare responsive layouts"))
                         .assigneeAvatar("AR")
                         .build(),
                 ProjectOverviewDto.WorkStatusCardDto.builder()
@@ -841,7 +841,7 @@ public class ProjectService {
                         .statusLabel("IN PROGRESS")
                         .dotColor("amber")
                         .count(String.format("%02d", inProgCount))
-                        .exampleTask(tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).findFirst().map(Task::getTitle).orElse("Homepage development"))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS).findFirst().map(t -> t.getTitle()).orElse("Homepage development"))
                         .assigneeAvatar("MJ")
                         .build(),
                 ProjectOverviewDto.WorkStatusCardDto.builder()
@@ -849,7 +849,7 @@ public class ProjectService {
                         .statusLabel("IN REVIEW")
                         .dotColor("blue")
                         .count(String.format("%02d", inRevCount))
-                        .exampleTask(tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_REVIEW).findFirst().map(Task::getTitle).orElse("Design system review"))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW).findFirst().map(t -> t.getTitle()).orElse("Design system review"))
                         .assigneeAvatar("SK")
                         .build(),
                 ProjectOverviewDto.WorkStatusCardDto.builder()
@@ -857,7 +857,7 @@ public class ProjectService {
                         .statusLabel("BLOCKED")
                         .dotColor("red")
                         .count(String.format("%02d", blockedCount))
-                        .exampleTask(tasks.stream().filter(Task::isBlocked).findFirst().map(Task::getTitle).orElse("Client copy approval"))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.isBlocked()).findFirst().map(t -> t.getTitle()).orElse("Client copy approval"))
                         .assigneeAvatar("PK")
                         .build()
         );
@@ -957,8 +957,8 @@ public class ProjectService {
         long todoCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).count();
         long inProgCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
         long inRevCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_REVIEW).count();
-        long completedCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.COMPLETED).count();
-        long blockedCount = tasks.stream().filter(Task::isBlocked).count();
+        long completedCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED).count();
+        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
 
         ProjectTasksDto.WorkStatusSummaryDto workStatus = ProjectTasksDto.WorkStatusSummaryDto.builder()
                 .totalTasks(totalTasks)
@@ -975,22 +975,22 @@ public class ProjectService {
                 .build();
 
         List<ProjectTasksDto.TaskItemDto> inProgressItems = tasks.stream()
-                .filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS)
+                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS)
                 .map(this::mapToTaskItemDto)
                 .toList();
 
         List<ProjectTasksDto.TaskItemDto> todoItems = tasks.stream()
-                .filter(t -> t.getStatus() == TaskStatus.TODO)
+                .filter(t -> t != null && t.getStatus() == TaskStatus.TODO)
                 .map(this::mapToTaskItemDto)
                 .toList();
 
         List<ProjectTasksDto.TaskItemDto> inReviewItems = tasks.stream()
-                .filter(t -> t.getStatus() == TaskStatus.IN_REVIEW)
+                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW)
                 .map(this::mapToTaskItemDto)
                 .toList();
 
         List<ProjectTasksDto.TaskItemDto> completedItems = tasks.stream()
-                .filter(t -> t.getStatus() == TaskStatus.COMPLETED)
+                .filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED)
                 .map(this::mapToTaskItemDto)
                 .toList();
 
@@ -1002,7 +1002,7 @@ public class ProjectService {
         );
 
         List<ProjectTasksDto.BlockedTaskDto> blockedList = tasks.stream()
-                .filter(Task::isBlocked)
+                .filter(t -> t != null && t.isBlocked())
                 .map(t -> ProjectTasksDto.BlockedTaskDto.builder()
                         .id(t.getTaskCode() != null ? t.getTaskCode() : "T-" + t.getId().toString().substring(0, 4))
                         .title(t.getTitle())
