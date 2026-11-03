@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Teamden — Team People Tab Stylesheet (team-people.css)
  * Path: pages/team/team-detail/team-people/team-people.css
  *
@@ -69,7 +69,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tp-eyebrow-num {
@@ -91,7 +91,7 @@
   font-size: 1.75rem;
   font-weight: 900;
   letter-spacing: -0.035em;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
   line-height: 1.1;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .tp-title-dot {
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tp-action-link {
@@ -113,7 +113,7 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -122,7 +122,7 @@
 }
 
 .tp-action-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
   transform: translateX(2px);
 }
 
@@ -153,7 +153,7 @@
   background: transparent;
   border: none;
   padding: 0.35rem;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -163,25 +163,25 @@
 .tp-search-input {
   width: 175px;
   height: 30px;
-  background: #FAF7F1;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 6px;
   padding: 0 1.6rem 0 0.75rem;
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
-  color: #111111;
+  color: var(--dash-text-primary);
   transition: all 0.2s ease;
 }
 
 .tp-search-input:focus {
   outline: none;
-  background: #FFFFFF;
-  border-color: #111111;
+  background: var(--dash-bg-white);
+  border-color: var(--dash-text-primary);
   width: 210px;
 }
 
 .tp-search-input::placeholder {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   font-size: 0.72rem;
 }
 
@@ -190,7 +190,7 @@
   right: 0.4rem;
   background: transparent;
   border: none;
-  color: #888;
+  color: var(--dash-text-light);
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
@@ -198,7 +198,7 @@
 }
 
 .tp-search-clear:hover {
-  color: #111;
+  color: var(--dash-text-primary);
 }
 
 .tp-role-select-wrap {
@@ -211,35 +211,35 @@
   appearance: none;
   -webkit-appearance: none;
   height: 30px;
-  background: #FAF7F1;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 6px;
   padding: 0 1.6rem 0 0.75rem;
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.72rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .tp-role-select:focus {
   outline: none;
-  background: #FFFFFF;
-  border-color: #111111;
+  background: var(--dash-bg-white);
+  border-color: var(--dash-text-primary);
 }
 
 .tp-select-chevron {
   position: absolute;
   right: 0.55rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   pointer-events: none;
 }
 
 /* ── Section 01: Members Card & Grid ────────────────────────────────────── */
 .tp-members-card {
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.25rem 1.4rem;
 }
@@ -271,19 +271,19 @@
 }
 
 .tp-card--beige {
-  background: #F7EFE4; /* Peter K. Pale Beige */
+  background: var(--dash-col-now-bg); /* Peter K. Pale Beige */
 }
 
 .tp-card--lavender {
-  background: #EDEAF5; /* Alex R. Pale Lavender */
+  background: var(--dash-badge-comment-bg); /* Alex R. Pale Lavender */
 }
 
 .tp-card--green {
-  background: #EFF1E2; /* Sarah K. Pale Green */
+  background: var(--dash-badge-completed-bg); /* Sarah K. Pale Green */
 }
 
 .tp-card--blue {
-  background: #E5EDF7; /* Maria J. Pale Blue */
+  background: var(--dash-badge-assigned-bg); /* Maria J. Pale Blue */
 }
 
 /* Card Top Section */
@@ -316,23 +316,23 @@
 }
 
 .tp-avatar--beige {
-  background: #E8D9C5;
-  color: #111111;
+  background: var(--dash-col-now-bg);
+  color: var(--dash-text-primary);
 }
 
 .tp-avatar--lavender {
-  background: #DCD6EC;
-  color: #111111;
+  background: var(--dash-badge-comment-bg);
+  color: var(--dash-text-primary);
 }
 
 .tp-avatar--green {
-  background: #DDE2CB;
-  color: #111111;
+  background: var(--dash-badge-completed-bg);
+  color: var(--dash-text-primary);
 }
 
 .tp-avatar--blue {
-  background: #D1DFEF;
-  color: #111111;
+  background: var(--dash-badge-assigned-bg);
+  color: var(--dash-text-primary);
 }
 
 .tp-member-id-meta {
@@ -345,7 +345,7 @@
 .tp-member-name {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
@@ -353,7 +353,7 @@
 .tp-member-role {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
@@ -361,7 +361,7 @@
   background: transparent;
   border: none;
   font-size: 1rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -369,7 +369,7 @@
 }
 
 .tp-member-card:hover .tp-card-arrow-btn {
-  color: #111111;
+  color: var(--dash-text-primary);
   transform: translateX(3px);
 }
 
@@ -399,20 +399,20 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tp-meta-val {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tp-empty-msg {
   padding: 2.5rem 1rem;
   text-align: center;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -427,8 +427,8 @@
 }
 
 .tp-subcard {
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.15rem;
   display: flex;
@@ -453,7 +453,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.65rem 0.75rem;
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
@@ -461,8 +461,8 @@
 }
 
 .tp-resp-row:hover {
-  background: #FFFFFF;
-  border-color: var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border-color: var(--dash-border);
   transform: translateX(2px);
 }
 
@@ -484,34 +484,34 @@
 }
 
 .tp-icon--beige {
-  background: #F7EFE4;
-  color: #8D5B18;
+  background: var(--dash-col-now-bg);
+  color: var(--dash-badge-document-text);
 }
 
 .tp-icon--lavender {
-  background: #EDEAF5;
-  color: #5B4897;
+  background: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
 }
 
 .tp-icon--green {
-  background: #EFF1E2;
-  color: #436928;
+  background: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .tp-icon--blue {
-  background: #E5EDF7;
-  color: #2B5797;
+  background: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .tp-icon--neutral {
-  background: #F2EFE8;
-  color: #555555;
+  background: var(--dash-bg-search);
+  color: var(--dash-text-muted);
 }
 
 .tp-resp-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -533,11 +533,11 @@
 .tp-resp-owner {
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tp-row-chevron {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   font-size: 1.1rem;
   line-height: 1;
   font-weight: 600;
@@ -545,12 +545,12 @@
 }
 
 .tp-resp-row:hover .tp-row-chevron {
-  color: #111111;
+  color: var(--dash-text-primary);
   transform: translateX(2px);
 }
 
 .tp-row-arrow {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   font-size: 0.85rem;
   line-height: 1;
   transition: transform 0.15s ease, color 0.15s ease;
@@ -559,7 +559,7 @@
 .tp-collab-row:hover .tp-row-arrow,
 .tp-access-banner:hover .tp-row-arrow,
 .tp-quick-link-row:hover .tp-row-arrow {
-  color: #111111;
+  color: var(--dash-text-primary);
   transform: translateX(3px);
 }
 
@@ -575,7 +575,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.65rem 0.75rem;
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
@@ -583,8 +583,8 @@
 }
 
 .tp-collab-row:hover {
-  background: #FFFFFF;
-  border-color: var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border-color: var(--dash-border);
   transform: translateX(2px);
 }
 
@@ -603,7 +603,7 @@
 
 .tp-avatar-overlap {
   margin-left: -8px;
-  box-shadow: 0 0 0 2px #FAF7F1;
+  box-shadow: 0 0 0 2px var(--dash-bg-card);
 }
 
 .tp-collab-info {
@@ -616,7 +616,7 @@
 .tp-collab-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -624,7 +624,7 @@
 
 .tp-collab-meta {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -636,7 +636,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 0.85rem;
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
@@ -644,8 +644,8 @@
 }
 
 .tp-access-banner:hover {
-  background: #FFFFFF;
-  border-color: var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border-color: var(--dash-border);
   transform: translateX(2px);
 }
 
@@ -660,26 +660,26 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111111;
+  color: var(--dash-text-primary);
   flex-shrink: 0;
 }
 
 .tp-access-banner-text {
   font-size: 0.75rem;
-  color: #444444;
+  color: var(--dash-text-body);
   line-height: 1.35;
 }
 
 /* ── Right Panel Context Cards (5 Cards) ────────────────────────────────── */
 /* Card 1: Team Connections (Dark Charcoal) */
 .tp-dark-card {
-  background: #111111;
-  color: #FFFFFF;
+  background: var(--dash-text-primary);
+  color: var(--dash-text-white);
   border-radius: 8px;
   padding: 1.25rem 1.15rem;
   display: flex;
@@ -703,7 +703,7 @@
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: -0.03em;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
 }
 
 .tp-dark-sub {
@@ -726,7 +726,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
@@ -741,8 +741,8 @@
 
 /* Card 2: Needs an Owner (Pale Beige) */
 .tp-rail-card--beige {
-  background: #FBF3E8;
-  border: 1px solid #EFE4D2;
+  background: var(--dash-badge-document-bg);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.15rem;
   display: flex;
@@ -762,14 +762,14 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tp-rail-count-badge {
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.6875rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
   padding: 0.1rem 0.4rem;
@@ -785,12 +785,12 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background: #FAF0E1;
-  border: 1px solid #EADBCA;
+  background: var(--dash-col-now-bg);
+  border: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8D5B18;
+  color: var(--dash-badge-document-text);
   flex-shrink: 0;
 }
 
@@ -804,13 +804,13 @@
 .tp-needs-owner-title {
   font-size: 0.8125rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
 .tp-needs-owner-sub {
   font-size: 0.7rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   line-height: 1.3;
 }
 
@@ -821,7 +821,7 @@
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -835,8 +835,8 @@
 
 /* Card 3: Team Playbook (White Bordered) */
 .tp-rail-card {
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.15rem;
   display: flex;
@@ -854,11 +854,11 @@
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  background: #E5EDF7;
+  background: var(--dash-badge-assigned-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2B5797;
+  color: var(--dash-badge-assigned-text);
   flex-shrink: 0;
 }
 
@@ -873,13 +873,13 @@
   margin: 0.15rem 0 0 0;
   font-size: 0.875rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tp-rail-resource-meta {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tp-rail-action-btn {
@@ -889,7 +889,7 @@
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -903,8 +903,8 @@
 
 /* Card 4: Quick Links (Pale Lavender) */
 .tp-rail-card--lavender {
-  background: #EDEAF5;
-  border: 1px solid #E1DBEE;
+  background: var(--dash-badge-comment-bg);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.15rem;
   display: flex;
@@ -916,7 +916,7 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tp-quick-links-list {
@@ -938,7 +938,7 @@
 }
 
 .tp-quick-link-row:hover {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   border-color: rgba(0, 0, 0, 0.12);
   transform: translateX(2px);
 }
@@ -946,13 +946,13 @@
 .tp-quick-link-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Card 5: Team Standards (Pale Green) */
 .tp-rail-card--green {
-  background: #EFF1E2;
-  border: 1px solid #E3E7D2;
+  background: var(--dash-badge-completed-bg);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 1.15rem;
   display: flex;
@@ -968,7 +968,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #436928;
+  color: var(--dash-badge-completed-text);
   flex-shrink: 0;
 }
 
@@ -988,9 +988,9 @@
 }
 
 .tp-modal-dialog {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   border-radius: 10px;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  border: 1px solid var(--dash-border);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 580px;
@@ -1004,7 +1004,7 @@
 
 .tp-modal-header {
   padding: 1.25rem 1.4rem;
-  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  border-bottom: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1014,21 +1014,21 @@
   margin: 0;
   font-size: 1.15rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tp-modal-close-btn {
   background: transparent;
   border: none;
   font-size: 1.25rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   cursor: pointer;
   padding: 0.2rem;
   line-height: 1;
 }
 
 .tp-modal-close-btn:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tp-modal-body {
@@ -1040,40 +1040,40 @@
 
 .tp-modal-footer {
   padding: 1rem 1.4rem;
-  border-top: 1px solid var(--dash-border, #E5E1D9);
+  border-top: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 0.65rem;
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
   border-radius: 0 0 10px 10px;
 }
 
 .tp-btn-secondary {
   padding: 0.55rem 1rem;
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 6px;
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
 }
 
 .tp-btn-secondary:hover {
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
 }
 
 .tp-btn-primary {
   padding: 0.55rem 1.15rem;
-  background: #111111;
-  border: 1px solid #111111;
+  background: var(--dash-text-primary);
+  border: 1px solid var(--dash-text-primary);
   border-radius: 6px;
   font-family: var(--font-family, 'Montserrat', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
@@ -1087,8 +1087,8 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: #111111;
-  color: #FFFFFF;
+  background: var(--dash-text-primary);
+  color: var(--dash-text-white);
   padding: 0.75rem 1.25rem;
   border-radius: 6px;
   font-family: var(--font-family, 'Montserrat', sans-serif);

@@ -8,8 +8,8 @@
    MASTER APPLICATION SHELL LAYOUT (Sidebar & Main Workspace Wrapping)
    ========================================================================== */
 .calendar-body {
-  background-color: var(--dash-bg-canvas, #F8F4EE);
-  color: var(--dash-text-primary, #111111);
+  background-color: var(--dash-bg-canvas);
+  color: var(--dash-text-primary);
   overflow-x: clip;
   font-family: var(--font-family, 'Montserrat', sans-serif);
   --dash-right-rail-width: 280px;
@@ -19,7 +19,7 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
+  background-color: var(--dash-bg-canvas);
   overflow-x: clip;
 }
 
@@ -38,7 +38,7 @@
   flex-direction: column;
   min-width: 0;
   min-height: 100vh;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
+  background-color: var(--dash-bg-canvas);
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -93,7 +93,7 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #747474;
+  color: var(--dash-text-muted);
   line-height: 1.2;
 }
 
@@ -104,7 +104,7 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: -0.055em;
-  color: #111111;
+  color: var(--dash-text-primary);
   text-transform: lowercase;
   word-break: keep-all;
 }
@@ -113,7 +113,7 @@ html.sidebar-collapsed .dash-app-main {
   display: inline-block;
   width: 0.22em;
   height: 0.22em;
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
   margin-left: 0.02em;
   vertical-align: baseline;
   border-radius: 1px;
@@ -122,7 +122,7 @@ html.sidebar-collapsed .dash-app-main {
 .calendar-subtitle {
   margin: 0.45rem 0 0 0;
   font-size: 0.9375rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -134,8 +134,8 @@ html.sidebar-collapsed .dash-app-main {
 
 .segmented-view-group {
   display: inline-flex;
-  background-color: #FAF7F1;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 9999px;
   padding: 3px;
   gap: 3px;
@@ -149,7 +149,7 @@ html.sidebar-collapsed .dash-app-main {
   border-radius: 9999px;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #555555;
+  color: var(--dash-text-muted);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
@@ -157,13 +157,13 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .view-btn:hover:not(.active) {
-  color: #111111;
+  color: var(--dash-text-primary);
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 .view-btn.active {
-  background-color: #141414;
-  color: #FFFFFF;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
   font-weight: 700;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
@@ -183,7 +183,7 @@ html.sidebar-collapsed .dash-app-main {
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   font-family: var(--font-family-today, sans-serif);
 }
@@ -198,30 +198,30 @@ html.sidebar-collapsed .dash-app-main {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid #EAE5DB;
-  background-color: #FAF7F1;
+  border: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-card);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #111111;
+  color: var(--dash-text-primary);
   transition: all 0.15s ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .cal-nav-btn:hover {
-  background-color: #F0ECE4;
-  border-color: #D8D2C5;
+  background-color: var(--dash-bg-search);
+  border-color: var(--dash-border-strong);
 }
 
 .cal-today-btn {
   padding: 0.35rem 0.95rem;
   border-radius: 9999px;
-  border: 1px solid #EAE5DB;
-  background-color: #FAF7F1;
+  border: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-card);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
@@ -229,8 +229,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-today-btn:hover {
-  background-color: #F0ECE4;
-  border-color: #D8D2C5;
+  background-color: var(--dash-bg-search);
+  border-color: var(--dash-border-strong);
 }
 
 /* --------------------------------------------------------------------------
@@ -247,7 +247,7 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #747474;
+  color: var(--dash-text-muted);
 }
 
 .upcoming-commitments-grid {
@@ -276,22 +276,22 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Pastel Card Themes */
 .commitment-card.theme-lime {
-  background-color: #EDF9D4;
+  background-color: var(--dash-badge-completed-bg);
   border-color: rgba(163, 230, 53, 0.35);
 }
 
 .commitment-card.theme-blue {
-  background-color: #E8F2FC;
+  background-color: var(--dash-badge-assigned-bg);
   border-color: rgba(59, 130, 246, 0.22);
 }
 
 .commitment-card.theme-lavender {
-  background-color: #EFEAFC;
+  background-color: var(--dash-badge-comment-bg);
   border-color: rgba(168, 85, 247, 0.22);
 }
 
 .commitment-card.theme-peach {
-  background-color: #FDF0E6;
+  background-color: var(--dash-badge-document-bg);
   border-color: rgba(249, 115, 22, 0.22);
 }
 
@@ -305,10 +305,10 @@ html.sidebar-collapsed .dash-app-main {
   margin-top: 2px;
 }
 
-.commitment-card.theme-lime .commitment-card-icon { color: #4D7C0F; }
-.commitment-card.theme-blue .commitment-card-icon { color: #1D4ED8; }
-.commitment-card.theme-lavender .commitment-card-icon { color: #6D28D9; }
-.commitment-card.theme-peach .commitment-card-icon { color: #C2410C; }
+.commitment-card.theme-lime .commitment-card-icon { color: var(--dash-badge-completed-text); }
+.commitment-card.theme-blue .commitment-card-icon { color: var(--dash-badge-assigned-text); }
+.commitment-card.theme-lavender .commitment-card-icon { color: var(--dash-badge-comment-text); }
+.commitment-card.theme-peach .commitment-card-icon { color: var(--dash-dot-orange); }
 
 .commitment-card-content {
   display: flex;
@@ -321,14 +321,14 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #666666;
+  color: var(--dash-text-muted);
   margin-bottom: 0.15rem;
 }
 
 .commitment-title {
   font-size: 0.84375rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
   margin: 0;
   white-space: nowrap;
@@ -338,7 +338,7 @@ html.sidebar-collapsed .dash-app-main {
 
 .commitment-sub {
   font-size: 0.71875rem;
-  color: #555555;
+  color: var(--dash-text-muted);
   margin-top: 0.2rem;
   white-space: nowrap;
   overflow: hidden;
@@ -349,9 +349,9 @@ html.sidebar-collapsed .dash-app-main {
    Main Calendar Card (Container for Views)
    -------------------------------------------------------------------------- */
 .main-calendar-card {
-  border: 1px solid #EAE5DB;
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
-  background-color: #FAF7F1;
+  background-color: var(--dash-bg-card);
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
   display: flex;
@@ -373,22 +373,22 @@ html.sidebar-collapsed .dash-app-main {
 .cal-week-header-row {
   display: grid;
   grid-template-columns: 56px repeat(5, minmax(0, 1fr));
-  border-bottom: 1px solid #EAE5DB;
-  background-color: #FAF7F1;
+  border-bottom: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-card);
   position: sticky;
   top: 0;
   z-index: 5;
 }
 
 .cal-time-header-cell {
-  border-right: 1px solid #EAE5DB;
-  background-color: #FAF7F1;
+  border-right: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-card);
 }
 
 .cal-day-header-cell {
   padding: 0.65rem 0.5rem 0.55rem 0.5rem;
   text-align: center;
-  border-right: 1px solid #EAE5DB;
+  border-right: 1px solid var(--dash-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -405,13 +405,13 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .cal-day-num {
   font-size: 1.65rem;
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.1;
   margin-top: 0.2rem;
   font-family: var(--font-family-today, sans-serif);
@@ -419,14 +419,14 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Current Day Highlight (Monday in screenshot) */
 .cal-day-header-cell.is-today {
-  background-color: #F4FDE3;
+  background-color: var(--dash-badge-completed-bg);
 }
 
 .cal-current-indicator-bar {
   display: none;
   width: 28px;
   height: 3px;
-  background-color: #CBF931;
+  background-color: var(--dash-accent-lime);
   border-radius: 2px;
   margin-top: 0.25rem;
 }
@@ -443,7 +443,7 @@ html.sidebar-collapsed .dash-app-main {
   min-height: 580px;
   position: relative;
   scrollbar-width: thin;
-  scrollbar-color: #D8D4CC transparent;
+  scrollbar-color: var(--dash-border-strong) transparent;
 }
 
 .cal-grid-scrollable::-webkit-scrollbar {
@@ -452,7 +452,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-grid-scrollable::-webkit-scrollbar-thumb {
-  background: #D8D4CC;
+  background: var(--dash-border-strong);
   border-radius: 9999px;
 }
 
@@ -466,8 +466,8 @@ html.sidebar-collapsed .dash-app-main {
 .cal-time-gutter {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #EAE5DB;
-  background-color: #FAF7F1;
+  border-right: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-card);
   z-index: 3;
 }
 
@@ -478,7 +478,7 @@ html.sidebar-collapsed .dash-app-main {
   justify-content: center;
   font-size: 0.71875rem;
   font-weight: 600;
-  color: #888888;
+  color: var(--dash-text-light);
   transform: translateY(-7px);
   box-sizing: border-box;
 }
@@ -489,9 +489,9 @@ html.sidebar-collapsed .dash-app-main {
 
 .cal-day-column {
   position: relative;
-  border-right: 1px solid #EAE5DB;
+  border-right: 1px solid var(--dash-border);
   height: calc(10 * 64px); /* 10 hours: 08:00 to 18:00 */
-  background-color: #FAF7F1;
+  background-color: var(--dash-bg-card);
 }
 
 .cal-day-column:last-child {
@@ -507,7 +507,7 @@ html.sidebar-collapsed .dash-app-main {
   left: 0;
   right: 0;
   height: 64px;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid var(--dash-border);
   box-sizing: border-box;
   pointer-events: auto;
 }
@@ -545,33 +545,33 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Pastel Themes for Events */
 .cal-event-card.theme-lavender {
-  background-color: #EFEBFD;
+  background-color: var(--dash-badge-comment-bg);
   border: 1px solid rgba(139, 92, 246, 0.25);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .cal-event-card.theme-blue {
-  background-color: #E6F1FD;
+  background-color: var(--dash-badge-assigned-bg);
   border: 1px solid rgba(59, 130, 246, 0.22);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .cal-event-card.theme-lime {
-  background-color: #EBF8D5;
+  background-color: var(--dash-badge-completed-bg);
   border: 1px solid rgba(132, 204, 22, 0.25);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .cal-event-card.theme-peach {
-  background-color: #FCEDE1;
+  background-color: var(--dash-badge-document-bg);
   border: 1px solid rgba(249, 115, 22, 0.25);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .cal-event-card.theme-cream {
-  background-color: #FEF7D9;
+  background-color: var(--dash-badge-document-bg);
   border: 1px solid rgba(234, 179, 8, 0.25);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .event-top-row {
@@ -588,23 +588,23 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
 }
 
-.cal-event-card.theme-lavender .event-icon-badge { color: #6D28D9; }
-.cal-event-card.theme-blue .event-icon-badge { color: #1D4ED8; }
-.cal-event-card.theme-lime .event-icon-badge { color: #4D7C0F; }
-.cal-event-card.theme-peach .event-icon-badge { color: #C2410C; }
-.cal-event-card.theme-cream .event-icon-badge { color: #A16207; }
+.cal-event-card.theme-lavender .event-icon-badge { color: var(--dash-badge-comment-text); }
+.cal-event-card.theme-blue .event-icon-badge { color: var(--dash-badge-assigned-text); }
+.cal-event-card.theme-lime .event-icon-badge { color: var(--dash-badge-completed-text); }
+.cal-event-card.theme-peach .event-icon-badge { color: var(--dash-dot-orange); }
+.cal-event-card.theme-cream .event-icon-badge { color: var(--dash-badge-document-text); }
 
 .event-time-range {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #555555;
+  color: var(--dash-text-muted);
   white-space: nowrap;
 }
 
 .event-card-title {
   font-size: 0.8125rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
   margin-top: 0.25rem;
   white-space: nowrap;
@@ -614,7 +614,7 @@ html.sidebar-collapsed .dash-app-main {
 
 .event-card-sub {
   font-size: 0.71875rem;
-  color: #555555;
+  color: var(--dash-text-muted);
   line-height: 1.2;
   margin-top: 0.15rem;
   white-space: nowrap;
@@ -647,8 +647,8 @@ html.sidebar-collapsed .dash-app-main {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: #B5F228;
-  border: 2px solid #111111;
+  background-color: var(--dash-accent-lime);
+  border: 2px solid var(--dash-text-primary);
   margin-left: -4px;
   flex-shrink: 0;
   box-shadow: 0 0 6px rgba(181, 242, 40, 0.6);
@@ -657,7 +657,7 @@ html.sidebar-collapsed .dash-app-main {
 .current-time-line {
   flex: 1;
   height: 2px;
-  background-color: #B5F228;
+  background-color: var(--dash-accent-lime);
   box-shadow: 0 0 4px rgba(181, 242, 40, 0.4);
 }
 
@@ -666,8 +666,8 @@ html.sidebar-collapsed .dash-app-main {
    -------------------------------------------------------------------------- */
 .cal-day-view-header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #EAE5DB;
-  background: #FAF7F1;
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-bg-card);
 }
 
 .day-view-eyebrow {
@@ -675,14 +675,14 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #747474;
+  color: var(--dash-text-muted);
 }
 
 .day-view-date-title {
   margin: 0.25rem 0 0 0;
   font-size: 1.45rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-family: var(--font-family-today, sans-serif);
 }
 
@@ -696,7 +696,7 @@ html.sidebar-collapsed .dash-app-main {
 .cal-single-day-col {
   position: relative;
   height: calc(10 * 64px);
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
 }
 
 /* --------------------------------------------------------------------------
@@ -710,13 +710,13 @@ html.sidebar-collapsed .dash-app-main {
 .cal-month-header-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: #FAF7F1;
-  border-bottom: 1px solid #EAE5DB;
+  background: var(--dash-bg-card);
+  border-bottom: 1px solid var(--dash-border);
   text-align: center;
   padding: 0.65rem 0;
   font-size: 0.6875rem;
   font-weight: 800;
-  color: #777777;
+  color: var(--dash-text-muted);
   letter-spacing: 0.06em;
 }
 
@@ -724,12 +724,12 @@ html.sidebar-collapsed .dash-app-main {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: minmax(105px, 1fr);
-  background: #FAF7F1;
+  background: var(--dash-bg-card);
 }
 
 .month-cell {
-  border-right: 1px solid #ECE7DE;
-  border-bottom: 1px solid #ECE7DE;
+  border-right: 1px solid var(--dash-border);
+  border-bottom: 1px solid var(--dash-border);
   padding: 0.45rem;
   display: flex;
   flex-direction: column;
@@ -748,7 +748,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .month-cell.is-today {
-  background-color: #F4FDE3;
+  background-color: var(--dash-badge-completed-bg);
 }
 
 .month-cell-header {
@@ -760,12 +760,12 @@ html.sidebar-collapsed .dash-app-main {
 .month-date-num {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #222222;
+  color: var(--dash-text-body);
 }
 
 .month-cell.is-today .month-date-num {
-  background-color: #111111;
-  color: #CBF931;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-accent-lime);
   padding: 1px 5px;
   border-radius: 4px;
 }
@@ -811,8 +811,8 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #555555;
-  border-bottom: 1px solid #EAE5DB;
+  color: var(--dash-text-muted);
+  border-bottom: 1px solid var(--dash-border);
   padding-bottom: 0.35rem;
 }
 
@@ -847,19 +847,19 @@ html.sidebar-collapsed .dash-app-main {
 .agenda-time {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #444444;
+  color: var(--dash-text-body);
   min-width: 95px;
 }
 
 .agenda-title {
   font-size: 0.875rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .agenda-sub {
   font-size: 0.75rem;
-  color: #666666;
+  color: var(--dash-text-muted);
 }
 
 .agenda-badge {
@@ -877,12 +877,12 @@ html.sidebar-collapsed .dash-app-main {
   width: var(--dash-right-rail-width, 280px);
   min-width: 280px;
   max-width: 280px;
-  border-left: 1px solid var(--dash-border, #E5E2DC);
+  border-left: 1px solid var(--dash-border);
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
+  background-color: var(--dash-bg-canvas);
   position: sticky;
   top: 52px;
   align-self: start;
@@ -907,21 +907,21 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #888888;
+  color: var(--dash-text-light);
 }
 
 /* Card 1: 01 / NEXT COMMITMENT (Matte Black) */
 .next-commitment-card {
-  background-color: #141414;
-  color: #FFFFFF;
-  border: 1px solid #222222;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
+  border: 1px solid var(--dash-border);
 }
 
 .next-commitment-title {
   font-size: 1.45rem;
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   margin: 0.35rem 0 0.25rem 0;
   font-family: var(--font-family-today, sans-serif);
   line-height: 1.15;
@@ -937,12 +937,12 @@ html.sidebar-collapsed .dash-app-main {
 .commitment-project {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #CCCCCC;
+  color: var(--dash-text-light);
 }
 
 .commitment-time {
   font-size: 0.75rem;
-  color: #888888;
+  color: var(--dash-text-light);
 }
 
 .btn-open-meeting {
@@ -951,13 +951,13 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   background: transparent;
   border: none;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
   padding: 0.65rem 0 0 0;
   margin-top: 0.85rem;
-  border-top: 1px solid #282828;
+  border-top: 1px solid var(--dash-border);
   width: 100%;
   transition: opacity 0.15s ease;
   font-family: inherit;
@@ -981,26 +981,26 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Card 2: 02 / NEEDS SCHEDULING (Soft Peach) */
 .needs-scheduling-card {
-  background-color: #F8EFE7;
-  border: 1px solid #EFE4D9;
-  color: #111111;
+  background-color: var(--dash-badge-document-bg);
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text-primary);
 }
 
 .needs-scheduling-card .rail-card-label {
-  color: #A0735E;
+  color: var(--dash-badge-document-text);
 }
 
 .needs-scheduling-title {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0.35rem 0 0.25rem 0;
   line-height: 1.25;
 }
 
 .needs-scheduling-desc {
   font-size: 0.78125rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   line-height: 1.4;
   margin: 0;
 }
@@ -1011,7 +1011,7 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   background: transparent;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
@@ -1028,8 +1028,8 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Card 3: TEAM AVAILABILITY */
 .team-availability-card {
-  background-color: #FAF7F1;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
 }
 
 .rail-card-header-row {
@@ -1044,11 +1044,11 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .team-avail-icon {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .team-avatars-row {
@@ -1075,14 +1075,14 @@ html.sidebar-collapsed .dash-app-main {
   transform: translateY(-2px);
 }
 
-.avatar-pk { background-color: #FCDDCF; color: #7C3518; }
-.avatar-ar { background-color: #E7DCFC; color: #472382; }
-.avatar-sk { background-color: #E8EBD9; color: #3E4624; }
-.avatar-mj { background-color: #DCE8FD; color: #1D447F; }
+.avatar-pk { background-color: var(--dash-badge-document-bg); color: var(--dash-badge-document-text); }
+.avatar-ar { background-color: var(--dash-badge-comment-bg); color: var(--dash-badge-comment-text); }
+.avatar-sk { background-color: var(--dash-badge-completed-bg); color: var(--dash-badge-completed-text); }
+.avatar-mj { background-color: var(--dash-badge-assigned-bg); color: var(--dash-badge-assigned-text); }
 
 .team-avail-desc {
   font-size: 0.75rem;
-  color: #777777;
+  color: var(--dash-text-muted);
   line-height: 1.35;
   margin: 0;
 }
@@ -1093,13 +1093,13 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   background: transparent;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
   padding: 0.65rem 0 0 0;
   margin-top: 0.65rem;
-  border-top: 1px solid #EAE5DB;
+  border-top: 1px solid var(--dash-border);
   width: 100%;
   font-family: inherit;
   transition: opacity 0.15s ease;
@@ -1111,8 +1111,8 @@ html.sidebar-collapsed .dash-app-main {
 
 /* Card 4: YOUR CALENDARS */
 .your-calendars-card {
-  background-color: #FAF7F1;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
 }
 
 .btn-add-calendar {
@@ -1120,7 +1120,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 1.15rem;
   line-height: 1;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   font-weight: 700;
   padding: 0 0.2rem;
@@ -1156,8 +1156,8 @@ html.sidebar-collapsed .dash-app-main {
   width: 18px;
   height: 18px;
   border-radius: 4px;
-  border: 1px solid #D5D0C6;
-  background-color: #FAF7F1;
+  border: 1px solid var(--dash-border-strong);
+  background-color: var(--dash-bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1170,8 +1170,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-checkbox:checked + .cal-custom-checkbox {
-  background-color: #D4F443;
-  border-color: #BDDE38;
+  background-color: var(--dash-accent-lime);
+  border-color: var(--dash-accent-lime);
 }
 
 .cal-checkbox:checked + .cal-custom-checkbox svg {
@@ -1188,8 +1188,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-source-icon.icon-brick {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
   font-size: 0.625rem;
   font-weight: 900;
   border-radius: 4px;
@@ -1205,13 +1205,13 @@ html.sidebar-collapsed .dash-app-main {
 .cal-source-name {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
 .cal-source-sub {
   font-size: 0.6875rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1223,13 +1223,13 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   background: transparent;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
   padding: 0.65rem 0 0 0;
   margin-top: 0.65rem;
-  border-top: 1px solid #EAE5DB;
+  border-top: 1px solid var(--dash-border);
   width: 100%;
   font-family: inherit;
   transition: opacity 0.15s ease;
@@ -1260,8 +1260,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-modal-card {
-  background-color: #FAF7F1;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 14px;
   width: 100%;
   max-width: 480px;
@@ -1286,21 +1286,21 @@ html.sidebar-collapsed .dash-app-main {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid #EAE5DB;
+  border-bottom: 1px solid var(--dash-border);
 }
 
 .cal-modal-title {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-family: var(--font-family-today, sans-serif);
 }
 
 .modal-subtitle {
   margin: 0.25rem 0 0 0;
   font-size: 0.78125rem;
-  color: #666666;
+  color: var(--dash-text-muted);
 }
 
 .modal-header-badges {
@@ -1313,8 +1313,8 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 9999px;
-  background-color: #EFEAFC;
-  color: #6D28D9;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
 }
 
 .event-calendar-badge {
@@ -1322,15 +1322,15 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 9999px;
-  background-color: #E8F2FC;
-  color: #1D4ED8;
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .cal-modal-close-btn {
   background: transparent;
   border: none;
   font-size: 1rem;
-  color: #777777;
+  color: var(--dash-text-muted);
   cursor: pointer;
   padding: 0.2rem 0.4rem;
   line-height: 1;
@@ -1339,7 +1339,7 @@ html.sidebar-collapsed .dash-app-main {
 
 .cal-modal-close-btn:hover {
   background: rgba(0, 0, 0, 0.05);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .cal-modal-body {
@@ -1355,7 +1355,7 @@ html.sidebar-collapsed .dash-app-main {
   font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   font-family: var(--font-family-today, sans-serif);
 }
@@ -1363,7 +1363,7 @@ html.sidebar-collapsed .dash-app-main {
 .modal-event-project {
   font-size: 0.84375rem;
   font-weight: 600;
-  color: #666666;
+  color: var(--dash-text-muted);
   margin: 0.15rem 0 0.5rem 0;
 }
 
@@ -1371,11 +1371,11 @@ html.sidebar-collapsed .dash-app-main {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  background-color: #F3EFE7;
+  background-color: var(--dash-bg-search);
   padding: 0.85rem 1rem;
   border-radius: 8px;
   font-size: 0.8125rem;
-  color: #333333;
+  color: var(--dash-text-body);
 }
 
 .modal-info-item {
@@ -1385,7 +1385,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .modal-info-item svg {
-  color: #777777;
+  color: var(--dash-text-muted);
   flex-shrink: 0;
 }
 
@@ -1400,23 +1400,23 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #747474;
+  color: var(--dash-text-muted);
 }
 
 .modal-desc-text {
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: #444444;
+  color: var(--dash-text-body);
   margin: 0;
 }
 
 .cal-modal-footer {
   padding: 1rem 1.35rem;
-  border-top: 1px solid #EAE5DB;
+  border-top: 1px solid var(--dash-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #FAF7F1;
+  background-color: var(--dash-bg-card);
 }
 
 .modal-footer-right {
@@ -1427,8 +1427,8 @@ html.sidebar-collapsed .dash-app-main {
 
 .btn-modal-delete {
   background: transparent;
-  border: 1px solid #E5D5D5;
-  color: #C53030;
+  border: 1px solid var(--dash-priority-high-border);
+  color: var(--dash-dot-red);
   padding: 0.45rem 0.95rem;
   border-radius: 6px;
   font-size: 0.8125rem;
@@ -1439,14 +1439,14 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-modal-delete:hover {
-  background-color: #FDF2F2;
-  border-color: #C53030;
+  background-color: var(--dash-priority-high-bg);
+  border-color: var(--dash-dot-red);
 }
 
 .btn-modal-cancel {
   background: transparent;
-  border: 1px solid #EAE5DB;
-  color: #555555;
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text-muted);
   padding: 0.45rem 0.95rem;
   border-radius: 6px;
   font-size: 0.8125rem;
@@ -1457,14 +1457,14 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-modal-cancel:hover {
-  background-color: #F0ECE4;
-  color: #111111;
+  background-color: var(--dash-bg-search);
+  color: var(--dash-text-primary);
 }
 
 .btn-modal-edit {
-  background: #FAF7F1;
-  border: 1px solid #D5D0C6;
-  color: #111111;
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border-strong);
+  color: var(--dash-text-primary);
   padding: 0.45rem 0.95rem;
   border-radius: 6px;
   font-size: 0.8125rem;
@@ -1475,14 +1475,14 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-modal-edit:hover {
-  background-color: #F0ECE4;
+  background-color: var(--dash-bg-search);
 }
 
 .btn-modal-primary,
 .btn-modal-save {
-  background-color: #141414;
-  border: 1px solid #141414;
-  color: #FFFFFF;
+  background-color: var(--dash-hero-bg);
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text-white);
   padding: 0.45rem 1.15rem;
   border-radius: 6px;
   font-size: 0.8125rem;
@@ -1497,8 +1497,8 @@ html.sidebar-collapsed .dash-app-main {
 
 .btn-modal-primary:hover,
 .btn-modal-save:hover {
-  background-color: #262626;
-  border-color: #262626;
+  background-color: var(--dash-hero-bg);
+  border-color: var(--dash-border);
 }
 
 /* Form Controls in Modal */
@@ -1526,7 +1526,7 @@ html.sidebar-collapsed .dash-app-main {
 .form-label {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #333333;
+  color: var(--dash-text-body);
 }
 
 .form-input,
@@ -1534,11 +1534,11 @@ html.sidebar-collapsed .dash-app-main {
 .form-textarea {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #D5D0C6;
+  border: 1px solid var(--dash-border-strong);
   border-radius: 6px;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
   font-size: 0.8125rem;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-family: inherit;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -1548,7 +1548,7 @@ html.sidebar-collapsed .dash-app-main {
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #111111;
+  border-color: var(--dash-text-primary);
   box-shadow: 0 0 0 2px rgba(212, 244, 67, 0.4);
 }
 
@@ -1557,7 +1557,7 @@ html.sidebar-collapsed .dash-app-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #F3EFE7;
+  background-color: var(--dash-bg-search);
   padding: 0.55rem 0.85rem;
   border-radius: 8px;
 }
@@ -1567,7 +1567,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   padding: 0 0.5rem;
 }
@@ -1575,7 +1575,7 @@ html.sidebar-collapsed .dash-app-main {
 .avail-current-day {
   font-size: 0.84375rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .team-schedule-matrix {
@@ -1591,26 +1591,26 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   gap: 0.5rem;
   padding: 0.35rem 0.6rem;
-  background-color: #FFFFFF;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
 .matrix-time-slot:hover {
-  background-color: #F8FBEF;
+  background-color: var(--dash-badge-completed-bg);
 }
 
 .matrix-time-slot.selected {
-  border-color: #111111;
-  background-color: #F4FDE3;
+  border-color: var(--dash-text-primary);
+  background-color: var(--dash-badge-completed-bg);
 }
 
 .slot-time-text {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #444444;
+  color: var(--dash-text-body);
 }
 
 .slot-member-status {
@@ -1622,20 +1622,20 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .slot-member-status.free {
-  background-color: #EDF9D4;
-  color: #3F6212;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .slot-member-status.busy {
-  background-color: #F3EFE7;
-  color: #888888;
+  background-color: var(--dash-bg-search);
+  color: var(--dash-text-light);
 }
 
 .avail-legend {
   display: flex;
   gap: 1.25rem;
   font-size: 0.75rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   margin-top: 0.5rem;
 }
 
@@ -1651,8 +1651,8 @@ html.sidebar-collapsed .dash-app-main {
   border-radius: 50%;
 }
 
-.legend-dot.available { background-color: #22C55E; }
-.legend-dot.busy { background-color: #888888; }
+.legend-dot.available { background-color: var(--dash-dot-green); }
+.legend-dot.busy { background-color: var(--dash-text-light); }
 
 /* Manage Calendars Modal */
 .connected-account-row {
@@ -1660,8 +1660,8 @@ html.sidebar-collapsed .dash-app-main {
   align-items: center;
   gap: 0.85rem;
   padding: 0.65rem 0.85rem;
-  background-color: #FFFFFF;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
 }
 
@@ -1676,9 +1676,9 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
 }
 
-.account-badge.icon-brick { background-color: #111; color: #FFF; }
-.account-badge.icon-google { background-color: #E8F2FC; color: #1D4ED8; }
-.account-badge.icon-microsoft { background-color: #FCEDE1; color: #C2410C; }
+.account-badge.icon-brick { background-color: var(--dash-text-primary); color: var(--dash-text-white); }
+.account-badge.icon-google { background-color: var(--dash-badge-assigned-bg); color: var(--dash-badge-assigned-text); }
+.account-badge.icon-microsoft { background-color: var(--dash-badge-document-bg); color: var(--dash-dot-orange); }
 
 .account-details {
   display: flex;
@@ -1688,12 +1688,12 @@ html.sidebar-collapsed .dash-app-main {
 
 .account-details strong {
   font-size: 0.8125rem;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .account-details span {
   font-size: 0.6875rem;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .account-status-pill {
@@ -1704,8 +1704,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .account-status-pill.connected {
-  background-color: #EDF9D4;
-  color: #3F6212;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .add-ics-block {
@@ -1721,8 +1721,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-subscribe-feed {
-  background-color: #141414;
-  color: #FFFFFF;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 6px;
   padding: 0.5rem 0.95rem;
@@ -1761,8 +1761,8 @@ html.sidebar-collapsed .dash-app-main {
   max-width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background-color: #FAF7F0; /* Warm off-white canvas matching Brick */
-  border-left: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card); /* Warm off-white canvas matching Brick */
+  border-left: 1px solid var(--dash-border);
   box-shadow: -8px 0 36px rgba(0, 0, 0, 0.08);
   z-index: 1050;
   transform: translateX(100%);
@@ -1786,14 +1786,14 @@ html.sidebar-collapsed .dash-app-main {
   gap: 0.95rem;
   box-sizing: border-box;
   scrollbar-width: thin;
-  scrollbar-color: #DDD6C8 transparent;
+  scrollbar-color: var(--dash-border-strong) transparent;
 }
 
 .drawer-scroll-container::-webkit-scrollbar {
   width: 5px;
 }
 .drawer-scroll-container::-webkit-scrollbar-thumb {
-  background-color: #DDD6C8;
+  background-color: var(--dash-border-strong);
   border-radius: 4px;
 }
 
@@ -1817,7 +1817,7 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #78736B;
+  color: var(--dash-text-muted);
 }
 
 .drawer-top-actions {
@@ -1829,7 +1829,7 @@ html.sidebar-collapsed .dash-app-main {
 .drawer-icon-btn {
   background: transparent;
   border: none;
-  color: #555555;
+  color: var(--dash-text-muted);
   width: 28px;
   height: 28px;
   border-radius: 6px;
@@ -1844,7 +1844,7 @@ html.sidebar-collapsed .dash-app-main {
 
 .drawer-icon-btn:hover {
   background-color: rgba(0, 0, 0, 0.06);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .drawer-close-btn {
@@ -1857,7 +1857,7 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0.35rem 0 0.15rem 0;
   word-break: break-word;
 }
@@ -1876,37 +1876,37 @@ html.sidebar-collapsed .dash-app-main {
   text-transform: uppercase;
   padding: 0.22rem 0.65rem;
   border-radius: 9999px;
-  background-color: #EDE8FC;
-  color: #6B46C1;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
   display: inline-flex;
   align-items: center;
 }
 
 .drawer-badge-pill.theme-peach {
-  background-color: #FDECE2;
-  color: #C2410C;
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-dot-orange);
 }
 
 .drawer-badge-pill.theme-blue {
-  background-color: #E0EDFD;
-  color: #1D4ED8;
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .drawer-badge-pill.theme-lime {
-  background-color: #E8F9BE;
-  color: #3F6212;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .drawer-project-name {
   font-size: 0.8125rem;
-  color: #6B665F;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
 /* B. Date & Time Split Card (Soft Peach) */
 .drawer-datetime-card {
-  background-color: #FDEFE5; /* Soft pastel peach matching screenshot */
-  border: 1px solid #F5D9C8;
+  background-color: var(--dash-badge-document-bg); /* Soft pastel peach matching screenshot */
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.95rem 1.15rem;
   display: grid;
@@ -1926,7 +1926,7 @@ html.sidebar-collapsed .dash-app-main {
   font-size: 2.6rem;
   font-weight: 900;
   line-height: 0.95;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.04em;
 }
 
@@ -1934,7 +1934,7 @@ html.sidebar-collapsed .dash-app-main {
   font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #685D56;
+  color: var(--dash-text-muted);
   margin-top: 0.25rem;
   text-transform: uppercase;
 }
@@ -1942,7 +1942,7 @@ html.sidebar-collapsed .dash-app-main {
 .datetime-card-divider {
   width: 1px;
   height: 80%;
-  background-color: #E8D3C4;
+  background-color: var(--dash-col-now-bg);
 }
 
 .datetime-card-right {
@@ -1956,19 +1956,19 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8C7B71;
+  color: var(--dash-text-muted);
 }
 
 .datetime-time-range {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.02em;
 }
 
 .datetime-full-date {
   font-size: 0.75rem;
-  color: #6D625A;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
@@ -1997,13 +1997,13 @@ html.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #7B756E;
+  color: var(--dash-text-muted);
 }
 
 .organizer-name {
   font-size: 0.875rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .rsvp-col {
@@ -2018,9 +2018,9 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .rsvp-pill-btn {
-  background-color: #E4F99A; /* Lime-tinted accepted pill from screenshot */
-  color: #1A3403;
-  border: 1px solid #D2F272;
+  background-color: var(--dash-badge-completed-bg); /* Lime-tinted accepted pill from screenshot */
+  color: var(--dash-badge-completed-text);
+  border: 1px solid var(--dash-accent-lime);
   border-radius: 9999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
@@ -2037,15 +2037,15 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .rsvp-pill-btn.tentative {
-  background-color: #EDE8FC;
-  color: #6B46C1;
-  border-color: #DDD3F8;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
+  border-color: var(--dash-border);
 }
 
 .rsvp-pill-btn.declined {
-  background-color: #FEE2E2;
-  color: #991B1B;
-  border-color: #FECACA;
+  background-color: var(--dash-priority-high-bg);
+  color: var(--dash-dot-red);
+  border-color: var(--dash-priority-high-border);
 }
 
 .rsvp-chevron {
@@ -2057,8 +2057,8 @@ html.sidebar-collapsed .dash-app-main {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  background-color: #FFFFFF;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   padding: 0.35rem 0;
@@ -2078,14 +2078,14 @@ html.sidebar-collapsed .dash-app-main {
   padding: 0.38rem 0.85rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #222222;
+  color: var(--dash-text-body);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
 .rsvp-option:hover {
-  background-color: #F6F3EC;
+  background-color: var(--dash-bg-card);
 }
 
 /* Two Quick Action Buttons */
@@ -2096,8 +2096,8 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-drawer-primary {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 8px;
   padding: 0.62rem 0.85rem;
@@ -2112,14 +2112,14 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-drawer-primary:hover {
-  background-color: #262626;
+  background-color: var(--dash-hero-bg);
   transform: translateY(-1px);
 }
 
 .btn-drawer-secondary {
-  background-color: #FFFFFF;
-  color: #111111;
-  border: 1px solid #DDD7CC;
+  background-color: var(--dash-bg-white);
+  color: var(--dash-text-primary);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 8px;
   padding: 0.62rem 0.85rem;
   font-size: 0.75rem;
@@ -2133,15 +2133,15 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-drawer-secondary:hover {
-  background-color: #F8F5EE;
-  border-color: #CCC4B5;
+  background-color: var(--dash-bg-canvas);
+  border-color: var(--dash-border-strong);
   transform: translateY(-1px);
 }
 
 /* D. Attendees Card & Meeting Link Bar */
 .drawer-attendees-card {
-  background-color: #F5F1E8;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-search);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -2159,7 +2159,7 @@ html.sidebar-collapsed .dash-app-main {
   font-size: 0.625rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #7B756E;
+  color: var(--dash-text-muted);
   text-transform: uppercase;
 }
 
@@ -2189,23 +2189,23 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .attendee-avatar.avatar-pk {
-  background-color: #FCE5D8;
-  color: #9A3412;
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
 }
 
 .attendee-avatar.avatar-ar {
-  background-color: #ECE4FC;
-  color: #6B21A8;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
 }
 
 .attendee-avatar.avatar-sk {
-  background-color: #E2F0D9;
-  color: #166534;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .attendee-avatar.avatar-mj {
-  background-color: #DBEAFE;
-  color: #1E40AF;
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .btn-view-responses {
@@ -2213,7 +2213,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #555555;
+  color: var(--dash-text-muted);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2223,12 +2223,12 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-view-responses:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .meeting-link-bar {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   display: flex;
@@ -2240,7 +2240,7 @@ html.sidebar-collapsed .dash-app-main {
   flex: 1;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #2563EB;
+  color: var(--dash-dot-blue);
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2254,7 +2254,7 @@ html.sidebar-collapsed .dash-app-main {
 .btn-copy-link {
   background: none;
   border: none;
-  color: #718096;
+  color: var(--dash-text-muted);
   cursor: pointer;
   padding: 2px;
   display: flex;
@@ -2264,13 +2264,13 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-copy-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* E. 01 / MEETING AGENDA (Lavender Card) */
 .drawer-agenda-card {
-  background-color: #F3EEFB; /* Lavender card matching screenshot */
-  border: 1px solid #E4DAF5;
+  background-color: var(--dash-badge-comment-bg); /* Lavender card matching screenshot */
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -2291,17 +2291,17 @@ html.sidebar-collapsed .dash-app-main {
   text-transform: uppercase;
 }
 
-.card-section-label.lavender { color: #5B4886; }
-.card-section-label.neutral { color: #6D6860; }
-.card-section-label.sage { color: #386835; }
-.card-section-label.blue { color: #215A94; }
+.card-section-label.lavender { color: var(--dash-badge-comment-text); }
+.card-section-label.neutral { color: var(--dash-text-muted); }
+.card-section-label.sage { color: var(--dash-badge-completed-text); }
+.card-section-label.blue { color: var(--dash-badge-assigned-text); }
 
 .btn-card-edit {
   background: none;
   border: none;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #5B4886;
+  color: var(--dash-badge-comment-text);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2335,20 +2335,20 @@ html.sidebar-collapsed .dash-app-main {
 .agenda-num {
   font-size: 0.6875rem;
   font-weight: 800;
-  color: #8C7BAE;
+  color: var(--dash-badge-comment-text);
   width: 18px;
 }
 
 .agenda-text {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #1A162B;
+  color: var(--dash-text-body);
 }
 
 /* F. 02 / MEETING NOTES (Neutral Card) */
 .drawer-notes-card {
-  background-color: #F5F1E8;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-search);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -2359,14 +2359,14 @@ html.sidebar-collapsed .dash-app-main {
 .card-timestamp-label {
   font-size: 0.6875rem;
   font-weight: 500;
-  color: #8C867E;
+  color: var(--dash-text-light);
 }
 
 .drawer-notes-text {
   margin: 0.2rem 0 0.35rem 0;
   font-size: 0.8125rem;
   line-height: 1.45;
-  color: #333333;
+  color: var(--dash-text-body);
   font-weight: 500;
 }
 
@@ -2375,7 +2375,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #2563EB;
+  color: var(--dash-dot-blue);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2391,8 +2391,8 @@ html.sidebar-collapsed .dash-app-main {
 
 /* G. 03 / MEETING DECISIONS (Soft Sage Card) */
 .drawer-decisions-card {
-  background-color: #EBF5E9; /* Soft pale green matching screenshot */
-  border: 1px solid #D5E9D1;
+  background-color: var(--dash-badge-completed-bg); /* Soft pale green matching screenshot */
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -2401,7 +2401,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .decision-check-icon {
-  color: #22C55E;
+  color: var(--dash-dot-green);
 }
 
 .decision-content-row {
@@ -2414,7 +2414,7 @@ html.sidebar-collapsed .dash-app-main {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #559B32;
+  background-color: var(--dash-badge-completed-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2431,13 +2431,13 @@ html.sidebar-collapsed .dash-app-main {
 .decision-title {
   font-size: 0.8125rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.35;
 }
 
 .decision-status-sub {
   font-size: 0.6875rem;
-  color: #5E6D59;
+  color: var(--dash-badge-completed-text);
   font-weight: 500;
 }
 
@@ -2446,7 +2446,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #2E5C2A;
+  color: var(--dash-badge-completed-text);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2462,8 +2462,8 @@ html.sidebar-collapsed .dash-app-main {
 
 /* H. 04 / FOLLOW-UP WORK (Soft Blue Card) */
 .drawer-followups-card {
-  background-color: #EBF4FC; /* Soft pastel sky blue matching screenshot */
-  border: 1px solid #D4E5F7;
+  background-color: var(--dash-badge-assigned-bg); /* Soft pastel sky blue matching screenshot */
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -2476,7 +2476,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #215A94;
+  color: var(--dash-badge-assigned-text);
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -2501,7 +2501,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .followup-task-row:hover {
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
 }
 
 .followup-left {
@@ -2515,7 +2515,7 @@ html.sidebar-collapsed .dash-app-main {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #2563EB;
+  border: 2px solid var(--dash-dot-blue);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2528,27 +2528,27 @@ html.sidebar-collapsed .dash-app-main {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #2563EB;
+  background-color: var(--dash-dot-blue);
 }
 
 .followup-task-row.is-completed .followup-dot-icon {
-  background-color: #22C55E;
-  border-color: #22C55E;
+  background-color: var(--dash-dot-green);
+  border-color: var(--dash-dot-green);
 }
 
 .followup-task-row.is-completed .followup-dot-icon::after {
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
 }
 
 .followup-task-row.is-completed .followup-title {
   text-decoration: line-through;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .followup-title {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2563,13 +2563,13 @@ html.sidebar-collapsed .dash-app-main {
 
 .followup-meta {
   font-size: 0.6875rem;
-  color: #556980;
+  color: var(--dash-badge-assigned-text);
   font-weight: 500;
 }
 
 .followup-arrow {
   font-size: 0.75rem;
-  color: #2563EB;
+  color: var(--dash-dot-blue);
   font-weight: 700;
 }
 
@@ -2578,7 +2578,7 @@ html.sidebar-collapsed .dash-app-main {
   border: none;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #2563EB;
+  color: var(--dash-dot-blue);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -2598,14 +2598,14 @@ html.sidebar-collapsed .dash-app-main {
   justify-content: flex-end;
   gap: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid #EAE5DB;
+  border-top: 1px solid var(--dash-border);
   margin-top: 0.5rem;
 }
 
 .btn-drawer-delete {
   background: none;
-  border: 1px solid #E8D4D4;
-  color: #DC2626;
+  border: 1px solid var(--dash-priority-high-border);
+  color: var(--dash-dot-red);
   border-radius: 6px;
   padding: 0.45rem 0.85rem;
   font-size: 0.75rem;
@@ -2615,12 +2615,12 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-drawer-delete:hover {
-  background-color: #FEF2F2;
+  background-color: var(--dash-priority-high-bg);
 }
 
 .btn-drawer-edit {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 6px;
   padding: 0.45rem 0.95rem;
@@ -2631,7 +2631,7 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .btn-drawer-edit:hover {
-  background-color: #2D2D2D;
+  background-color: var(--dash-hero-bg);
 }
 
 /* Toast Notifications */
@@ -2647,9 +2647,9 @@ html.sidebar-collapsed .dash-app-main {
 }
 
 .cal-toast {
-  background-color: #141414;
-  color: #FFFFFF;
-  border: 1px solid #282828;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
+  border: 1px solid var(--dash-border);
   padding: 0.65rem 1.15rem;
   border-radius: 8px;
   font-size: 0.8125rem;
@@ -2693,7 +2693,7 @@ html.sidebar-collapsed .dash-app-main {
     min-width: 100%;
     max-width: 100%;
     border-left: none;
-    border-top: 1px solid var(--dash-border, #E5E2DC);
+    border-top: 1px solid var(--dash-border);
     position: static;
     min-height: auto;
   }

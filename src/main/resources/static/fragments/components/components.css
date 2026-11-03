@@ -84,7 +84,7 @@
   top: calc(50% - 0.5rem);
   left: calc(50% - 0.5rem);
   border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #ffffff;
+  border-top-color: var(--dash-text-white);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -513,7 +513,7 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background: linear-gradient(90deg, var(--dash-border-subtle) 25%, var(--dash-border) 50%, var(--dash-border-subtle) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);

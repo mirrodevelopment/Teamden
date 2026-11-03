@@ -592,8 +592,8 @@ body.sidebar-collapsed .dash-app-main {
 
 /* Task Card */
 .task-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E1D9;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 0.75rem 0.85rem;
   display: flex;
@@ -754,7 +754,7 @@ body.sidebar-collapsed .dash-app-main {
 
 .kanban-add-btn {
   background-color: transparent;
-  border: 1px dashed #D5CFBF;
+  border: 1px dashed var(--dash-border-strong);
   border-radius: 6px;
   padding: 0.45rem 0.6rem;
   min-height: 32px;
@@ -880,16 +880,16 @@ body.sidebar-collapsed .dash-app-main {
   height: 8px;
   border-radius: 50%;
   background-color: var(--dash-text-primary);
-  border: 1.5px solid var(--dash-bg-canvas, #FBF8F3);
+  border: 1.5px solid var(--dash-bg-canvas);
   z-index: 2;
 }
 
-.activity-node-dot.dot-purple { background-color: #8C62D7; }
-.activity-node-dot.dot-green { background-color: #7DB242; }
+.activity-node-dot.dot-purple { background-color: var(--dash-dot-purple); }
+.activity-node-dot.dot-green { background-color: var(--dash-dot-green); }
 .activity-node-dot.dot-silver,
 .activity-node-dot.dot-gray,
-.activity-node-dot.dot-amber { background-color: #B5ACA0; }
-.activity-node-dot.dot-blue { background-color: #4C93E6; }
+.activity-node-dot.dot-amber { background-color: var(--dash-dot-orange); }
+.activity-node-dot.dot-blue { background-color: var(--dash-dot-blue); }
 
 /* Content card to the right of the vertical line with its own underline */
 .activity-row-content {
@@ -918,7 +918,7 @@ body.sidebar-collapsed .dash-app-main {
 /* Warm beige highlight card and soft ambient glow ONLY on mouse hover */
 .activity-item:hover .activity-row-content,
 .activity-row-content:hover {
-  background-color: var(--dash-activity-highlight-bg, #F7EEE4);
+  background-color: var(--dash-activity-highlight-bg);
   border-bottom-color: transparent;
   box-shadow: 0 4px 16px rgba(220, 185, 150, 0.35), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
@@ -957,23 +957,23 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .activity-badge.badge-comment {
-  background-color: #ECE7F3;
-  color: #614B79;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
 }
 
 .activity-badge.badge-completed {
-  background-color: #EEF3DE;
-  color: #4F6225;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .activity-badge.badge-document {
-  background-color: #F3EDE3;
-  color: #6D5C43;
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
 }
 
 .activity-badge.badge-assigned {
-  background-color: #E3EEF8;
-  color: #34587A;
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .activity-desc-col {
@@ -1322,18 +1322,18 @@ body.sidebar-collapsed .dash-app-main {
 
 /* 1 point darker card tones for enhanced contrast and depth */
 .attention-card.card-peach {
-  background-color: #E6D7C3;
+  background-color: var(--dash-attention-peach);
   color: var(--dash-text-primary);
 }
 
 .attention-card.card-neutral {
-  background-color: #DDD9D0;
+  background-color: var(--dash-attention-neutral-1);
   color: var(--dash-text-primary);
 }
 
 .attention-card.card-neutral-light,
 .attention-card:nth-of-type(3) {
-  background-color: #E9E5DB;
+  background-color: var(--dash-attention-neutral-2);
   border: 1px solid var(--dash-border);
   color: var(--dash-text-primary);
 }
@@ -1344,16 +1344,16 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .attention-card.card-peach:hover {
-  background-color: #DECDB7;
+  background-color: var(--dash-attention-peach-hover);
 }
 
 .attention-card.card-neutral:hover {
-  background-color: #D4CFCE;
+  background-color: var(--dash-attention-neutral-1-hover);
 }
 
 .attention-card.card-neutral-light:hover,
 .attention-card:nth-of-type(3):hover {
-  background-color: #DFDBD0;
+  background-color: var(--dash-attention-neutral-2-hover);
 }
 
 [data-theme="dark"] .attention-card.card-peach {
@@ -1409,7 +1409,7 @@ body.sidebar-collapsed .dash-app-main {
 
 /* DAILY UPDATE Card */
 .daily-update-card {
-  background-color: #EFF1E2;
+  background-color: var(--dash-badge-completed-bg);
   border-radius: 12px;
   padding: 0.95rem 1.1rem;
   display: flex;
@@ -1428,7 +1428,7 @@ body.sidebar-collapsed .dash-app-main {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-card);
   border: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
@@ -1462,8 +1462,8 @@ body.sidebar-collapsed .dash-app-main {
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-daily-update-btn);
+  color: var(--dash-daily-update-btn-text);
   border: none;
   font-size: 0.875rem;
   cursor: pointer;
@@ -1476,7 +1476,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .update-action-btn:hover {
-  background-color: #262626;
+  background-color: var(--dash-hero-bg);
   transform: scale(1.05);
 }
 
@@ -1498,8 +1498,8 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .dash-modal-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   width: 100%;
   max-width: 560px;
@@ -1520,14 +1520,14 @@ body.sidebar-collapsed .dash-app-main {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  border-bottom: 1px solid var(--dash-border);
 }
 
 .dash-modal-header h3 {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 800;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
   letter-spacing: -0.01em;
 }
 
@@ -1544,7 +1544,7 @@ body.sidebar-collapsed .dash-app-main {
 .dash-modal-body {
   padding: 1.25rem;
   font-size: 0.8125rem;
-  color: var(--dash-text-body, #2B2B2B);
+  color: var(--dash-text-body);
   max-height: 70vh;
   overflow-y: auto;
   line-height: 1.5;
@@ -1552,8 +1552,8 @@ body.sidebar-collapsed .dash-app-main {
 
 .dash-modal-footer {
   padding: 0.75rem 1.25rem;
-  border-top: 1px solid var(--dash-border, #E5E1D9);
-  background: var(--dash-bg-search, #F3EFE7);
+  border-top: 1px solid var(--dash-border);
+  background: var(--dash-bg-search);
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -1572,8 +1572,8 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .dash-toast {
-  background: #111111;
-  color: #FFFFFF;
+  background: var(--dash-hero-bg);
+  color: var(--dash-text-white);
   padding: 0.65rem 1rem;
   border-radius: 8px;
   font-size: 0.75rem;

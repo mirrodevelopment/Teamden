@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    Teamden — Individual Team Details & Host Stylesheet (team-detail.css)
    Path: pages/team/team-detail/team-detail.css
    Pixel-accurate match to Brick Team Details layout with Overview tab.
@@ -60,11 +60,11 @@ body.sidebar-collapsed .tdet-main-area {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--dash-border, #E5E1D9);
+  border-right: 1px solid var(--dash-border);
 }
 
 .tdet-right-rail {
-  background: var(--dash-bg-canvas, #F8F6F0);
+  background: var(--dash-bg-canvas);
   padding: 1.25rem 1.25rem 3rem 1.25rem;
   overflow-y: auto;
   display: flex;
@@ -114,8 +114,8 @@ body.sidebar-collapsed .tdet-main-area {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  border-bottom: 1px solid var(--dash-border, #E5E1D9);
-  background: var(--dash-bg-canvas, #F8F6F0);
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-bg-canvas);
 }
 
 .tdet-header-top-meta {
@@ -132,27 +132,27 @@ body.sidebar-collapsed .tdet-main-area {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tdet-bc-link {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   text-decoration: none;
   transition: color 150ms;
 }
 
 .tdet-bc-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tdet-bc-sep {
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 .tdet-header-more-btn {
   background: none;
   border: none;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   font-size: 1.15rem;
   cursor: pointer;
   letter-spacing: 0.1em;
@@ -161,7 +161,7 @@ body.sidebar-collapsed .tdet-main-area {
 }
 
 .tdet-header-more-btn:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Headline */
@@ -178,18 +178,18 @@ body.sidebar-collapsed .tdet-main-area {
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 0.92;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
 }
 
 .tdet-title-dot {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tdet-subtitle {
   font-size: 0.9375rem;
   font-weight: 400;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   margin: 0.2rem 0 0;
 }
 
@@ -221,8 +221,8 @@ body.sidebar-collapsed .tdet-main-area {
   justify-content: center;
   font-size: 0.625rem;
   font-weight: 700;
-  color: #111111;
-  border: 2px solid var(--dash-bg-canvas, #F8F6F0);
+  color: var(--dash-text-primary);
+  border: 2px solid var(--dash-bg-canvas);
   margin-left: -6px;
   cursor: pointer;
   transition: transform 120ms;
@@ -237,21 +237,21 @@ body.sidebar-collapsed .tdet-main-area {
   z-index: 5;
 }
 
-.avatar--pk { background: #D8E8C0; }
-.avatar--ar { background: #D8C8E8; }
-.avatar--sk { background: #EFF1E2; }
-.avatar--mj { background: #C8D8E8; }
+.avatar--pk { background: var(--dash-badge-completed-bg); }
+.avatar--ar { background: var(--dash-badge-comment-bg); }
+.avatar--sk { background: var(--dash-badge-completed-bg); }
+.avatar--mj { background: var(--dash-badge-assigned-bg); }
 
 .tdet-members-count {
   font-size: 0.78rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   margin-left: 0.25rem;
 }
 
 .tdet-members-pipe {
   width: 1px;
   height: 16px;
-  background: var(--dash-border, #E5E1D9);
+  background: var(--dash-border);
   margin: 0 0.5rem;
 }
 
@@ -261,7 +261,7 @@ body.sidebar-collapsed .tdet-main-area {
   gap: 0.45rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
   background: none;
   border: none;
   cursor: pointer;
@@ -291,7 +291,7 @@ body.sidebar-collapsed .tdet-main-area {
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--dash-text-body, #2B2B2B);
+  color: var(--dash-text-body);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -301,12 +301,12 @@ body.sidebar-collapsed .tdet-main-area {
 
 .tdet-tab-btn:hover:not(.active) {
   background: rgba(0, 0, 0, 0.04);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tdet-tab-btn.active {
-  background: #111111;
-  color: #FFFFFF;
+  background: var(--dash-text-primary);
+  color: var(--dash-text-white);
   font-weight: 700;
 }
 
@@ -329,8 +329,8 @@ body.sidebar-collapsed .tdet-main-area {
 }
 
 .tdet-subtab-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 1.5rem;
 }
@@ -352,7 +352,7 @@ body.sidebar-collapsed .tdet-main-area {
   }
   .tdet-center-col {
     border-right: none;
-    border-bottom: 1px solid var(--dash-border, #E5E1D9);
+    border-bottom: 1px solid var(--dash-border);
   }
 }
 

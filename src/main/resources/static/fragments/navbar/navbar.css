@@ -281,7 +281,7 @@
 
 [data-theme="dark"] .theme-icon-sun {
   display: block;
-  color: #F8D847;
+  color: var(--dash-accent-lime);
 }
 
 [data-theme="dark"] .theme-icon-moon {

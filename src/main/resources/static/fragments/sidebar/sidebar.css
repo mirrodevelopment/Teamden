@@ -221,24 +221,24 @@
 
 /* Active Nav Item: Full Neon Chartreuse Pill */
 .nav-item.active {
-  background-color: var(--dash-accent-lime, #D4F443);
-  color: #111111;
+  background-color: var(--dash-accent-lime);
+  color: var(--dash-accent-lime-text);
   border-radius: 6px;
 }
 
 .nav-item.active .nav-num {
-  color: #111111;
+  color: var(--dash-accent-lime-text);
   font-weight: 800;
 }
 
 .nav-item.active .nav-icon {
-  color: #111111;
-  stroke: #111111;
+  color: var(--dash-accent-lime-text);
+  stroke: var(--dash-accent-lime-text);
   stroke-width: 2.2;
 }
 
 .nav-item.active .nav-label {
-  color: #111111;
+  color: var(--dash-accent-lime-text);
   font-weight: 800;
 }
 

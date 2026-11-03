@@ -3,7 +3,7 @@
  * Path: pages/overview/overview.css
  *
  * Pixel-accurate implementation of Brick executive overview dashboard:
- * - Warm off-white canvas (#FAF8F5 / #FBF9F5)
+ * - Warm off-white canvas (var(--dash-bg-canvas))
  * - Oversized bold editorial display typography
  * - Matte black hero pulse card & executive attention rail
  * - Four equal pastel KPI cards (Lavender, Peach, Pale Blue, Mint)
@@ -130,15 +130,15 @@ body.sidebar-collapsed .overview-app-main {
 /* Highlight Overview Nav Item in Lime Accent */
 #nav-overview.active {
   background-color: var(--ov-accent-lime) !important;
-  color: var(--dash-accent-lime-text, #111111) !important;
+  color: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
   font-weight: 700 !important;
 }
 
 #nav-overview.active .nav-num,
 #nav-overview.active .nav-label,
 #nav-overview.active .nav-icon {
-  color: var(--dash-accent-lime-text, #111111) !important;
-  stroke: var(--dash-accent-lime-text, #111111) !important;
+  color: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
+  stroke: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
 }
 
 /* ==========================================================================

@@ -3,7 +3,7 @@
  * Path: pages/overview/insights/insights.css
  *
  * Implements Brick's editorial design system for Organisational Analytics:
- * - Warm off-white canvas (#FAF8F5)
+ * - Warm off-white canvas (var(--dash-bg-canvas))
  * - Oversized bold editorial display typography (56px)
  * - 01 / Delivery Intelligence primary card with interactive purple line chart & SVG glow
  * - 3 Performance metric cards (Warm Beige, Pale Blue, Soft Lavender)
@@ -37,7 +37,7 @@
   --in-text-muted: var(--dash-text-muted);
 
   /* Accent Chart Purple */
-  --in-chart-purple: var(--dash-dot-purple, #8B5CF6);
+  --in-chart-purple: var(--dash-dot-purple);
   --in-chart-purple-light: rgba(139, 92, 246, 0.12);
 
   --in-radius-lg: var(--radius-lg, 16px);
@@ -107,15 +107,15 @@ body.sidebar-collapsed .insights-app-main {
 /* Highlight Overview Nav Item in Lime Accent */
 #nav-overview.active {
   background-color: var(--in-accent-lime) !important;
-  color: var(--dash-accent-lime-text, #111111) !important;
+  color: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
   font-weight: 700 !important;
 }
 
 #nav-overview.active .nav-num,
 #nav-overview.active .nav-label,
 #nav-overview.active .nav-icon {
-  color: var(--dash-accent-lime-text, #111111) !important;
-  stroke: var(--dash-accent-lime-text, #111111) !important;
+  color: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
+  stroke: var(--dash-accent-lime-text, var(--dash-text-primary)) !important;
 }
 
 /* ==========================================================================

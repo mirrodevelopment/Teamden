@@ -16,7 +16,7 @@
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
-  border-right: 1px solid var(--dash-border, #E5E1D9);
+  border-right: 1px solid var(--dash-border);
 }
 
 /* ── Section General ───────────────────────────────────────────────────── */
@@ -40,20 +40,20 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-eyebrow-num {
   font-family: var(--number-font);
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tk-eyebrow-sep {
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 .tk-eyebrow-label {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-section-title {
@@ -61,13 +61,13 @@
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0.15rem 0 0.25rem 0;
   line-height: 1.15;
 }
 
 .tk-title-dot {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tk-action-link {
@@ -76,7 +76,7 @@
   gap: 0.3rem;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -85,7 +85,7 @@
 }
 
 .tk-action-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tk-link-arrow {
@@ -99,10 +99,10 @@
   transform: translateX(2px);
 }
 
-/* ── Section 01: Team Playbook Card (Pale Lavender #EDEAF5) ────────────── */
+/* ── Section 01: Team Playbook Card ─────────────────────────────────────── */
 .tk-playbook-card {
-  background: #ECE8F6;
-  border: 1px solid #DCD7EB;
+  background: var(--dash-badge-comment-bg);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 1.5rem 1.5rem 1.25rem 1.5rem;
   display: flex;
@@ -122,7 +122,7 @@
 }
 
 .tk-playbook-icon-wrap {
-  color: #8C84A8;
+  color: var(--dash-badge-comment-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +137,7 @@
   font-size: clamp(1.6rem, 2.4vw, 1.95rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0 0 0.35rem 0;
   line-height: 1.15;
 }
@@ -145,7 +145,7 @@
 .tk-playbook-desc {
   font-size: 0.875rem;
   font-weight: 400;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   margin: 0 0 1.25rem 0;
   line-height: 1.45;
   max-width: 680px;
@@ -175,13 +175,13 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-version-value {
   font-size: 0.875rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tk-playbook-btn {
@@ -189,8 +189,8 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.55rem 1.25rem;
-  background: #111111;
-  color: #FFFFFF;
+  background: var(--dash-text-primary);
+  color: var(--dash-text-white);
   border: none;
   border-radius: var(--radius-sm, 6px);
   font-size: 0.78rem;
@@ -200,7 +200,7 @@
 }
 
 .tk-playbook-btn:hover {
-  background: #222222;
+  background: var(--dash-hero-bg);
   transform: translateY(-1px);
 }
 
@@ -231,18 +231,18 @@
 }
 
 .tk-doc-row--blue {
-  background: #E5EDF7;
-  border: 1px solid #D2DEEE;
+  background: var(--dash-badge-assigned-bg);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-doc-row--green {
-  background: #EFF1E2;
-  border: 1px solid #DFE3D0;
+  background: var(--dash-badge-completed-bg);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-doc-row--white {
-  background: #FFFFFF;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-doc-left {
@@ -265,20 +265,20 @@
 
 .tk-icon--blue {
   background: rgba(255, 255, 255, 0.7);
-  color: #385E8E;
+  color: var(--dash-badge-assigned-text);
   border: 1px solid rgba(56, 94, 142, 0.15);
 }
 
 .tk-icon--green {
   background: rgba(255, 255, 255, 0.7);
-  color: #3E5224;
+  color: var(--dash-badge-completed-text);
   border: 1px solid rgba(62, 82, 36, 0.15);
 }
 
 .tk-icon--neutral {
-  background: #F8F6F0;
-  color: #55514A;
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-canvas);
+  color: var(--dash-text-body);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-doc-info {
@@ -291,13 +291,13 @@
 .tk-doc-title {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tk-doc-sub {
   font-size: 0.75rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-doc-meta-row {
@@ -305,7 +305,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.6875rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   margin-top: 0.15rem;
   flex-wrap: wrap;
 }
@@ -317,7 +317,7 @@
 }
 
 .tk-meta-dot {
-  color: var(--dash-border, #E5E1D9);
+  color: var(--dash-border);
 }
 
 .tk-doc-right {
@@ -336,18 +336,18 @@
   justify-content: center;
   font-size: 0.625rem;
   font-weight: 700;
-  color: #111111;
-  border: 2px solid var(--dash-bg-canvas, #F8F6F0);
+  color: var(--dash-text-primary);
+  border: 2px solid var(--dash-bg-canvas);
 }
 
-.avatar--pk { background: #D8E8C0; }
-.avatar--ar { background: #D8C8E8; }
-.avatar--sk { background: #EFF1E2; }
-.avatar--mj { background: #C8D8E8; }
+.avatar--pk { background: var(--dash-badge-completed-bg); }
+.avatar--ar { background: var(--dash-badge-comment-bg); }
+.avatar--sk { background: var(--dash-badge-completed-bg); }
+.avatar--mj { background: var(--dash-badge-assigned-bg); }
 
 .tk-row-arrow {
   font-size: 0.95rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   transition: transform 150ms, color 150ms;
 }
 
@@ -357,13 +357,13 @@
 .tk-contributed-item:hover .tk-row-arrow,
 .tk-resource-row:hover .tk-row-arrow {
   transform: translateX(3px);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* ── Section 03: Decisions & Learnings Card ────────────────────────────── */
 .tk-decisions-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 0.25rem 1.25rem;
   display: flex;
@@ -397,17 +397,17 @@
 }
 
 .tk-icon--check {
-  background: #EFF1E2;
-  color: #3E5224;
-  border: 1px solid #DEE1CC;
+  background: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
+  border: 1px solid var(--dash-border);
   font-weight: 800;
   font-size: 0.95rem;
 }
 
 .tk-icon--lamp {
-  background: #FBF3E8;
-  color: #7A5520;
-  border: 1px solid #EADCCC;
+  background: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-decision-info {
@@ -430,26 +430,26 @@
 
 .tk-badge--approved {
   background: rgba(62, 82, 36, 0.12);
-  color: #3E5224;
+  color: var(--dash-badge-completed-text);
   border: 1px solid rgba(62, 82, 36, 0.2);
 }
 
 .tk-badge--learning {
   background: rgba(122, 85, 32, 0.12);
-  color: #7A5520;
+  color: var(--dash-badge-document-text);
   border: 1px solid rgba(122, 85, 32, 0.2);
 }
 
 .tk-decision-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
 .tk-decision-meta {
   font-size: 0.72rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-decision-divider {
@@ -464,16 +464,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  background: var(--dash-bg-canvas, #F8F6F0);
+  background: var(--dash-bg-canvas);
   overflow-y: auto;
 }
 
-/* Card 1: Team Knowledge Review (Dark Charcoal #111111) */
+/* Card 1: Team Knowledge Review */
 .tk-dark-card {
-  background: #111111;
+  background: var(--dash-text-primary);
   border-radius: var(--radius-md, 10px);
   padding: 1.25rem 1.15rem;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   display: flex;
   flex-direction: column;
 }
@@ -484,7 +484,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #A1A1AA;
+  color: var(--dash-text-light);
 }
 
 .tk-dark-title {
@@ -494,12 +494,12 @@
   letter-spacing: -0.02em;
   margin: 0.4rem 0 0.15rem;
   line-height: 1.15;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
 }
 
 .tk-dark-sub {
   font-size: 0.75rem;
-  color: #A1A1AA;
+  color: var(--dash-text-light);
   margin: 0 0 0.85rem;
   line-height: 1.4;
 }
@@ -517,8 +517,8 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.65rem 0.95rem;
-  background: #FAF7F1;
-  color: #111111;
+  background: var(--dash-bg-card);
+  color: var(--dash-text-primary);
   font-size: 0.75rem;
   font-weight: 700;
   border: none;
@@ -528,7 +528,7 @@
 }
 
 .tk-dark-btn:hover {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   transform: translateY(-1px);
 }
 
@@ -536,10 +536,10 @@
   transform: translateX(2px);
 }
 
-/* Card 2: Awaiting Approval (Pale Beige Card #FBF3E8) */
+/* Card 2: Awaiting Approval */
 .tk-rail-card--beige {
-  background: #FBF3E8;
-  border: 1px solid #EADCCC;
+  background: var(--dash-badge-document-bg);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 1.15rem;
   display: flex;
@@ -558,14 +558,14 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-rail-count-badge {
   font-family: var(--number-font);
   font-size: 0.65rem;
   font-weight: 700;
-  color: #7A5520;
+  color: var(--dash-badge-document-text);
 }
 
 .tk-awaiting-row {
@@ -583,7 +583,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-awaiting-copy {
@@ -597,13 +597,13 @@
 .tk-awaiting-title {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tk-awaiting-desc {
   font-size: 0.7rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   line-height: 1.35;
 }
 
@@ -613,7 +613,7 @@
   gap: 0.35rem;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   background: none;
   border: none;
   padding: 0;
@@ -631,8 +631,8 @@
 
 /* Generic Rail Card */
 .tk-rail-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 1.15rem;
   display: flex;
@@ -643,7 +643,7 @@
 .tk-rail-card-link {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -652,7 +652,7 @@
 }
 
 .tk-rail-card-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Card 3: Knowledge Requests Item */
@@ -668,8 +668,8 @@
   width: 30px;
   height: 30px;
   border-radius: var(--radius-xs, 4px);
-  background: #EDEAF5;
-  color: #6C5FA0;
+  background: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -687,18 +687,18 @@
 .tk-request-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tk-request-sub {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-request-time {
   font-size: 0.65rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 /* Card 4: Recently Contributed List */
@@ -727,18 +727,18 @@
 .tk-contributed-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .tk-contributed-sub {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tk-contributed-time {
   font-size: 0.65rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 /* Card 5: Team Resources List */
@@ -772,9 +772,9 @@
 }
 
 .tk-icon--beige {
-  background: #FBF3E8;
-  color: #7A5520;
-  border: 1px solid #EADCCC;
+  background: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+  border: 1px solid var(--dash-border);
 }
 
 .tk-resource-copy {
@@ -788,12 +788,12 @@
 .tk-resource-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tk-resource-desc {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 /* ── Responsive ────────────────────────────────────────────────────────── */

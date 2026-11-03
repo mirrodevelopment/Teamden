@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    Teamden by shed — Project Detail & Tab Host Styles (project.css)
    Path: pages/project/project.css
    Single source of truth: fragments/theme/theme.css
@@ -21,8 +21,8 @@ body.project-body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
-  color: var(--dash-text-primary, #171717);
+  background-color: var(--dash-bg-canvas);
+  color: var(--dash-text-primary);
   font-family: var(--font-family, 'Mostarct', 'Montserrat', sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -33,7 +33,7 @@ body.project-body {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
+  background-color: var(--dash-bg-canvas);
   overflow-x: clip;
 }
 
@@ -50,7 +50,7 @@ body.project-body {
   flex-direction: column;
   min-width: 0;
   min-height: 100vh;
-  background-color: var(--dash-bg-canvas, #F8F4EE);
+  background-color: var(--dash-bg-canvas);
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -88,7 +88,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-right-rail {
-  border-left: 1px solid var(--dash-border, #E5E2DC);
+  border-left: 1px solid var(--dash-border);
   padding: 0.85rem 1rem 3.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -100,7 +100,7 @@ body.sidebar-collapsed .dash-app-main {
   position: sticky;
   top: 52px;
   align-self: start;
-  background-color: var(--dash-bg-canvas, #F5F4EF);
+  background-color: var(--dash-bg-canvas);
   z-index: 2;
   box-sizing: border-box;
 }
@@ -125,7 +125,7 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #747474;
+  color: var(--dash-text-muted);
   line-height: 1.2;
 }
 
@@ -139,8 +139,8 @@ body.sidebar-collapsed .dash-app-main {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background-color: #EAF7EE;
-  color: #1B873F;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
   border: 1px solid rgba(27, 135, 63, 0.18);
   border-radius: 9999px;
   padding: 0.22rem 0.65rem;
@@ -152,33 +152,33 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-status-pill-btn:hover {
-  background-color: #DCF2E2;
+  background-color: var(--dash-badge-completed-bg);
 }
 
 .project-status-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #22C55E;
+  background-color: var(--dash-dot-green);
 }
 
 .project-status-chevron {
   font-size: 0.65rem;
-  color: #1B873F;
+  color: var(--dash-badge-completed-text);
 }
 
 .project-more-btn {
   background: transparent;
   border: none;
   font-size: 0.95rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   cursor: pointer;
   padding: 0.2rem 0.35rem;
   line-height: 1;
 }
 
 .project-more-btn:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Title & Meta Row */
@@ -204,7 +204,7 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: -0.055em;
-  color: #111111;
+  color: var(--dash-text-primary);
   text-transform: lowercase;
   word-break: keep-all;
 }
@@ -213,7 +213,7 @@ body.sidebar-collapsed .dash-app-main {
   margin: 0.25rem 0 0 0;
   font-size: 0.84375rem;
   line-height: 1.45;
-  color: #555555;
+  color: var(--dash-text-muted);
   max-width: 520px;
 }
 
@@ -237,13 +237,13 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .meta-field-val {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -254,7 +254,7 @@ body.sidebar-collapsed .dash-app-main {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #F59E0B;
+  background-color: var(--dash-dot-orange);
 }
 
 /* Tasks Tab Specific Header Layout & Two-Column Split */
@@ -273,7 +273,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-tasks-drawer-rail {
-  border-left: 1px solid var(--dash-border, #E5E2DC);
+  border-left: 1px solid var(--dash-border);
   padding: 0.85rem 1rem 3.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -285,7 +285,7 @@ body.sidebar-collapsed .dash-app-main {
   position: sticky;
   top: 52px;
   align-self: start;
-  background-color: var(--dash-bg-canvas, #F5F4EF);
+  background-color: var(--dash-bg-canvas);
   z-index: 2;
   box-sizing: border-box;
 }
@@ -300,7 +300,7 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-activity-rail {
-  border-left: 1px solid var(--dash-border, #E5E2DC);
+  border-left: 1px solid var(--dash-border);
   padding: 0.85rem 1rem 3.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -312,7 +312,7 @@ body.sidebar-collapsed .dash-app-main {
   position: sticky;
   top: 52px;
   align-self: start;
-  background-color: var(--dash-bg-canvas, #F5F4EF);
+  background-color: var(--dash-bg-canvas);
   box-sizing: border-box;
 }
 
@@ -327,7 +327,7 @@ body.sidebar-collapsed .dash-app-main {
   align-self: start;
   height: calc(100vh - 52px);
   max-height: calc(100vh - 52px);
-  background-color: #FAF8F4;
+  background-color: var(--dash-bg-card);
   overflow: hidden;
   z-index: 10;
   box-sizing: border-box;
@@ -339,12 +339,12 @@ body.sidebar-collapsed .dash-app-main {
   max-width: 100%;
   height: 100%;
   max-height: 100%;
-  background-color: #FAF8F4;
+  background-color: var(--dash-bg-card);
   border-left: none;
   padding: 0.85rem 0.85rem 2.5rem 0.85rem;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #D8D4CC transparent;
+  scrollbar-color: var(--dash-border-strong) transparent;
   box-sizing: border-box;
 }
 
@@ -357,12 +357,12 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-tasks-drawer-rail .tasks-details-drawer::-webkit-scrollbar-thumb {
-  background: #D8D4CC;
+  background: var(--dash-border-strong);
   border-radius: 9999px;
 }
 
 .project-tasks-drawer-rail .tasks-details-drawer::-webkit-scrollbar-thumb:hover {
-  background: #BCB8B0;
+  background: var(--dash-border-strong);
 }
 
 .project-tasks-drawer-rail .tasks-overview-widgets {
@@ -406,7 +406,7 @@ body.sidebar-collapsed .dash-app-main {
   gap: 0.45rem;
   font-size: 0.78125rem;
   font-weight: 600;
-  color: #555555;
+  color: var(--dash-text-muted);
   margin-top: 0.05rem;
   line-height: 1.2;
 }
@@ -414,7 +414,7 @@ body.sidebar-collapsed .dash-app-main {
 .project-content-container.tab-tasks-mode .meta-inline-dot,
 .project-content-container.tab-documents-mode .meta-inline-dot,
 .project-content-container.tab-activity-mode .meta-inline-dot {
-  color: #888888;
+  color: var(--dash-text-light);
 }
 
 .project-content-container.tab-tasks-mode .meta-inline-status,
@@ -432,7 +432,7 @@ body.sidebar-collapsed .dash-app-main {
   gap: 0.35rem;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   vertical-align: middle;
   margin-left: 0.65rem;
   letter-spacing: normal;
@@ -445,7 +445,7 @@ body.sidebar-collapsed .dash-app-main {
 .title-inline-status .project-status-dot {
   width: 6px;
   height: 6px;
-  background-color: #22C55E;
+  background-color: var(--dash-dot-green);
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
@@ -466,9 +466,9 @@ body.sidebar-collapsed .dash-app-main {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background-color: #FAF7F1;
-  color: #444444;
-  border: 1px solid #EAE5DB;
+  background-color: var(--dash-bg-card);
+  color: var(--dash-text-body);
+  border: 1px solid var(--dash-border);
   border-radius: 9999px;
   padding: 0.26rem 0.9rem;
   font-size: 0.8125rem;
@@ -480,15 +480,15 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .project-tab-btn:hover:not(.active) {
-  background-color: #F3EFE7;
-  color: #111111;
-  border-color: #DFDACF;
+  background-color: var(--dash-bg-search);
+  color: var(--dash-text-primary);
+  border-color: var(--dash-border-strong);
 }
 
 .project-tab-btn.active {
-  background-color: #141414;
-  border-color: #141414;
-  color: #FFFFFF;
+  background-color: var(--dash-hero-bg);
+  border-color: var(--dash-border);
+  color: var(--dash-text-white);
   font-weight: 700;
 }
 
@@ -498,11 +498,11 @@ body.sidebar-collapsed .dash-app-main {
 .health-dark-card,
 .card-last-visit,
 #card-last-visit {
-  background-color: #141414 !important;
-  border: 1px solid #222222 !important;
+  background-color: var(--dash-hero-bg) !important;
+  border: 1px solid var(--dash-border) !important;
   border-radius: 12px;
   padding: 1.25rem 1.35rem;
-  color: #FFFFFF !important;
+  color: var(--dash-text-white) !important;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
@@ -519,11 +519,11 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #888888;
+  color: var(--dash-text-light);
 }
 
 .health-pulse-svg {
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   flex-shrink: 0;
 }
 
@@ -533,7 +533,7 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   margin: 0.5rem 0 0.25rem 0;
 }
 
@@ -541,13 +541,13 @@ body.sidebar-collapsed .dash-app-main {
   margin: 0.35rem 0 0.15rem 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
 }
 
 .health-desc-text {
   margin: 0;
   font-size: 0.78125rem;
-  color: #999999;
+  color: var(--dash-text-light);
   line-height: 1.4;
 }
 
@@ -557,7 +557,7 @@ body.sidebar-collapsed .dash-app-main {
   gap: 0.35rem;
   font-size: 0.78125rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   text-decoration: none;
   margin-top: 1rem;
   transition: opacity 0.15s ease;
@@ -576,8 +576,8 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .pending-decision-box {
-  background-color: #FAF9F5;
-  border: 1px solid #DFD9CE;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 10px;
   padding: 0.95rem 1.05rem;
   display: flex;
@@ -594,22 +594,22 @@ body.sidebar-collapsed .dash-app-main {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background-color: #FEF3C7;
-  border: 1px solid #FDE68A;
+  background-color: var(--dash-badge-document-bg);
+  border: 1px solid var(--dash-border);
   border-radius: 9999px;
   padding: 0.18rem 0.55rem;
   font-size: 0.59375rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #92400E;
+  color: var(--dash-badge-document-text);
 }
 
 .decision-dot-amber {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: #F59E0B;
+  background-color: var(--dash-dot-orange);
 }
 
 .decision-due-str {
@@ -617,21 +617,21 @@ body.sidebar-collapsed .dash-app-main {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .decision-title-text {
   margin: 0.45rem 0 0.15rem 0;
   font-size: 0.90625rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.25;
 }
 
 .decision-desc-text {
   margin: 0;
   font-size: 0.75rem;
-  color: #555555;
+  color: var(--dash-text-muted);
   line-height: 1.38;
 }
 
@@ -650,19 +650,19 @@ body.sidebar-collapsed .dash-app-main {
 
 .decision-owner-label {
   font-size: 0.625rem;
-  color: #777777;
+  color: var(--dash-text-muted);
   font-weight: 600;
 }
 
 .decision-owner-name {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .btn-review-pill {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 9999px;
   padding: 0.32rem 0.75rem;
@@ -682,7 +682,7 @@ body.sidebar-collapsed .dash-app-main {
   align-items: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   text-decoration: none;
   padding-top: 0.25rem;
 }
@@ -717,32 +717,32 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .team-avatar-circle.avatar-pk {
-  background-color: #FDE8E8;
-  color: #9B1C1C;
+  background-color: var(--dash-priority-high-bg);
+  color: var(--dash-dot-red);
 }
 
 .team-avatar-circle.avatar-ar {
-  background-color: #EEF2FF;
-  color: #4338CA;
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
 }
 
 .team-avatar-circle.avatar-sk {
-  background-color: #ECFCCB;
-  color: #3F6212;
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
 }
 
 .team-avatar-circle.avatar-mj {
-  background-color: #E0F2FE;
-  color: #0369A1;
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
 }
 
 .team-add-btn {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px dashed #BFB9AC;
+  border: 1px dashed var(--dash-border-strong);
   background: transparent;
-  color: #555555;
+  color: var(--dash-text-muted);
   font-size: 1.05rem;
   display: flex;
   align-items: center;
@@ -752,14 +752,14 @@ body.sidebar-collapsed .dash-app-main {
 }
 
 .team-add-btn:hover {
-  border-color: #111111;
-  color: #111111;
+  border-color: var(--dash-text-primary);
+  color: var(--dash-text-primary);
 }
 
 .team-members-footer {
   margin: 0;
   font-size: 0.75rem;
-  color: #666666;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
@@ -780,8 +780,8 @@ body.sidebar-collapsed .dash-app-main {
 
 .project-knowledge-card .doc-card,
 .knowledge-cards-list .doc-card {
-  background-color: #FAF9F5;
-  border: 1px solid #DFD9CE;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 10px;
   padding: 0.65rem 0.85rem;
   display: flex;
@@ -794,7 +794,7 @@ body.sidebar-collapsed .dash-app-main {
 
 .project-knowledge-card .doc-card:hover,
 .knowledge-cards-list .doc-card:hover {
-  border-color: #CFC7BA;
+  border-color: var(--dash-border-strong);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
   transform: translateY(-1px);
 }
@@ -812,12 +812,12 @@ body.sidebar-collapsed .dash-app-main {
 
 .project-knowledge-card .doc-icon-box.doc-pdf,
 .knowledge-cards-list .doc-icon-box.doc-pdf {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .project-knowledge-card .doc-icon-box.doc-doc,
 .knowledge-cards-list .doc-icon-box.doc-doc {
-  color: var(--dash-dot-blue, #2563EB);
+  color: var(--dash-dot-blue);
 }
 
 .project-knowledge-card .doc-icon-box.doc-figma,
@@ -838,7 +838,7 @@ body.sidebar-collapsed .dash-app-main {
   margin: 0;
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -847,7 +847,7 @@ body.sidebar-collapsed .dash-app-main {
 .project-knowledge-card .doc-meta,
 .knowledge-cards-list .doc-meta {
   font-size: 0.65625rem;
-  color: #777777;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
@@ -880,8 +880,8 @@ body.sidebar-collapsed .dash-app-main {
 
 /* Secondary Tab Panes Placeholder Styling */
 .tab-pane-content-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E2DC;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   padding: 2rem;
   display: flex;
@@ -893,13 +893,13 @@ body.sidebar-collapsed .dash-app-main {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tab-pane-desc {
   margin: 0;
   font-size: 0.875rem;
-  color: #666666;
+  color: var(--dash-text-muted);
 }
 
 /* ==========================================================================
@@ -921,7 +921,7 @@ body.sidebar-collapsed .dash-app-main {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: 100%;
-    border-top: 1px solid #E5E2DC;
+    border-top: 1px solid var(--dash-border);
     padding-top: 1rem;
   }
 }

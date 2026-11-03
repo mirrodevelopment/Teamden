@@ -1,4 +1,4 @@
-@import url('../../../fragments/theme/theme.css');
+﻿@import url('../../../fragments/theme/theme.css');
 
 /* Main Container for Overview Tab (Fills the Center Column of Project Page) */
 .overview-tab-root {
@@ -27,13 +27,13 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .overview-section-action {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #555555;
+  color: var(--dash-text-muted);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -42,7 +42,7 @@
 }
 
 .overview-section-action:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
   transform: translateX(2px);
 }
 
@@ -50,8 +50,8 @@
    01 / PROJECT SPECIFICATION CARD
    ========================================================================== */
 .spec-card {
-  background-color: #EAE3D6;
-  border: 1px solid #DFD7C9;
+  background-color: var(--dash-col-now-bg);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 12px;
   padding: 0.85rem 1.15rem;
   display: flex;
@@ -82,21 +82,21 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #4A453E;
+  color: var(--dash-text-body);
 }
 
 .spec-main-title {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.02em;
 }
 
 .spec-view-brief-link {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   text-decoration: none;
   white-space: nowrap;
   display: inline-flex;
@@ -145,7 +145,7 @@
 .spec-col-icon {
   width: 14px;
   height: 14px;
-  color: #222222;
+  color: var(--dash-text-body);
   flex-shrink: 0;
 }
 
@@ -154,7 +154,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .spec-col-list {
@@ -162,7 +162,7 @@
   padding-left: 1rem;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: #2B2824;
+  color: var(--dash-text-body);
 }
 
 .spec-col-list li {
@@ -173,7 +173,7 @@
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: #2B2824;
+  color: var(--dash-text-body);
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -186,11 +186,11 @@
 
 .spec-context-label {
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .spec-context-val {
-  color: #444444;
+  color: var(--dash-text-body);
 }
 
 /* ==========================================================================
@@ -218,7 +218,7 @@
   font-family: var(--number-font);
   font-size: 1.1rem;
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -227,7 +227,7 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #777777;
+  color: var(--dash-text-muted);
   margin-top: 0.15rem;
 }
 
@@ -258,7 +258,7 @@
   left: 14px;
   right: 14px;
   height: 2px;
-  background-color: #E2DFD8;
+  background-color: var(--dash-border-strong);
   z-index: 1;
 }
 
@@ -268,7 +268,7 @@
   left: 14px;
   width: 62.5%;
   height: 2px;
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
   z-index: 2;
 }
 
@@ -293,9 +293,9 @@
   font-size: 0.6875rem;
   font-weight: 800;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  background-color: #FAF9F5;
-  border: 2px solid #E0DDD7;
-  color: #777777;
+  background-color: var(--dash-bg-card);
+  border: 1.5px solid var(--dash-border-strong);
+  color: var(--dash-text-muted);
 }
 
 .milestone-node:hover .node-circle {
@@ -304,32 +304,32 @@
 
 /* State: Completed (Black circle with white checkmark) */
 .milestone-node.completed .node-circle {
-  background-color: #111111;
-  border-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  border-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
 }
 
 .milestone-node.completed .node-circle svg {
   width: 12px;
   height: 12px;
-  stroke: #FFFFFF;
+  stroke: var(--dash-text-white);
   stroke-width: 3;
 }
 
 /* State: Current Milestone (Bright Lime circle with number 6) */
 .milestone-node.current .node-circle {
-  background-color: #DAF94E;
-  border-color: #DAF94E;
-  color: #111111;
+  background-color: var(--dash-accent-lime);
+  border-color: var(--dash-accent-lime);
+  color: var(--dash-text-primary);
   font-weight: 900;
   box-shadow: 0 0 0 3px rgba(218, 249, 78, 0.4);
 }
 
 /* State: Upcoming (Light gray circle with number) */
 .milestone-node.upcoming .node-circle {
-  background-color: #ECEAE3;
-  border-color: #ECEAE3;
-  color: #555555;
+  background-color: var(--dash-bg-search);
+  border-color: var(--dash-border);
+  color: var(--dash-text-muted);
   font-weight: 700;
 }
 
@@ -345,20 +345,20 @@
   font-family: var(--number-font);
   font-size: 0.59375rem;
   font-weight: 700;
-  color: #777777;
+  color: var(--dash-text-muted);
 }
 
 .node-label {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
 }
 
 .node-subtag {
   font-size: 0.5625rem;
   font-weight: 700;
-  color: #777777;
+  color: var(--dash-text-muted);
   white-space: nowrap;
 }
 
@@ -377,8 +377,8 @@
 }
 
 .work-card {
-  background-color: #FAF9F5;
-  border: 1px solid #DFD9CE;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 10px;
   padding: 0.95rem 1rem;
   display: flex;
@@ -391,7 +391,7 @@
 }
 
 .work-card:hover {
-  border-color: #CFC7BA;
+  border-color: var(--dash-border-strong);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
 
@@ -418,7 +418,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #555555;
+  color: var(--dash-text-muted);
 }
 
 .work-count-huge {
@@ -426,7 +426,7 @@
   font-size: 1.85rem;
   font-weight: 900;
   line-height: 1;
-  color: #111111;
+  color: var(--dash-text-primary);
   letter-spacing: -0.03em;
   margin: 0.25rem 0 0.15rem 0;
 }
@@ -435,7 +435,7 @@
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.35;
-  color: #555555;
+  color: var(--dash-text-muted);
   font-weight: 500;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -466,15 +466,15 @@
   flex-shrink: 0;
 }
 
-.work-avatar.avatar-ar { background-color: #EEF2FF; color: #4338CA; }
-.work-avatar.avatar-mj { background-color: #E0F2FE; color: #0369A1; }
-.work-avatar.avatar-sk { background-color: #ECFCCB; color: #3F6212; }
-.work-avatar.avatar-pk { background-color: #FDE8E8; color: #9B1C1C; }
+.work-avatar.avatar-ar { background-color: var(--dash-badge-comment-bg); color: var(--dash-badge-comment-text); }
+.work-avatar.avatar-mj { background-color: var(--dash-badge-assigned-bg); color: var(--dash-badge-assigned-text); }
+.work-avatar.avatar-sk { background-color: var(--dash-badge-completed-bg); color: var(--dash-badge-completed-text); }
+.work-avatar.avatar-pk { background-color: var(--dash-priority-high-bg); color: var(--dash-dot-red); }
 
 .work-link-text {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -498,8 +498,8 @@
 }
 
 .doc-card {
-  background-color: #FAF9F5;
-  border: 1px solid #DFD9CE;
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border-strong);
   border-radius: 10px;
   padding: 0.85rem 1rem;
   display: flex;
@@ -511,7 +511,7 @@
 }
 
 .doc-card:hover {
-  border-color: #CFC7BA;
+  border-color: var(--dash-border-strong);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
 
@@ -526,7 +526,7 @@
 }
 
 .doc-icon-box.doc-pdf {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .doc-icon-box.doc-doc {
@@ -548,7 +548,7 @@
   margin: 0;
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -556,7 +556,7 @@
 
 .doc-meta {
   font-size: 0.6875rem;
-  color: #777777;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 

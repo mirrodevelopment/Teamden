@@ -16,7 +16,7 @@
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
-  border-right: 1px solid var(--dash-border, #E5E1D9);
+  border-right: 1px solid var(--dash-border);
 }
 
 /* ── Section General ───────────────────────────────────────────────────── */
@@ -40,20 +40,20 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-eyebrow-num {
   font-family: var(--number-font);
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tov-eyebrow-sep {
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 .tov-eyebrow-label {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-eyebrow-tag {
@@ -61,7 +61,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-action-link {
@@ -70,7 +70,7 @@
   gap: 0.3rem;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -80,7 +80,7 @@
 }
 
 .tov-action-link:hover {
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
 }
 
 .tov-link-arrow {
@@ -89,8 +89,8 @@
 
 /* ── Section 01: Team Focus (Pale Lavender) ────────────────────────────── */
 .tov-focus-card {
-  background: #EDEAF5;
-  border: 1px solid #DDD9EE;
+  background: var(--dash-badge-comment-bg);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 1.35rem 1.45rem 1.15rem 1.45rem;
   display: flex;
@@ -109,14 +109,14 @@
   font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   line-height: 1.1;
 }
 
 .tov-focus-desc {
   font-size: 0.8125rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   margin: 0;
   line-height: 1.45;
 }
@@ -144,13 +144,13 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-delivery-val {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-focus-btn {
@@ -158,8 +158,8 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.5rem 1rem;
-  background: #FFFFFF;
-  color: #111111;
+  background: var(--dash-bg-white);
+  color: var(--dash-text-primary);
   font-size: 0.75rem;
   font-weight: 700;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -170,7 +170,7 @@
 }
 
 .tov-focus-btn:hover {
-  background: #F8F8F8;
+  background: var(--dash-bg-card);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -197,9 +197,9 @@
   transform: translateY(-1px);
 }
 
-.tov-motion-card--blue  { background: #E5EDF7; border-color: #D2DFF0; }
-.tov-motion-card--beige { background: #F2E9DC; border-color: #E6DCCF; }
-.tov-motion-card--green { background: #EFF1E2; border-color: #DEE1CC; }
+.tov-motion-card--blue  { background: var(--dash-badge-assigned-bg); border-color: var(--dash-border); }
+.tov-motion-card--beige { background: var(--dash-col-now-bg); border-color: var(--dash-border); }
+.tov-motion-card--green { background: var(--dash-badge-completed-bg); border-color: var(--dash-border); }
 
 .tov-motion-top {
   display: flex;
@@ -212,7 +212,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin-top: 0.2rem;
 }
 
@@ -221,7 +221,7 @@
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1;
 }
 
@@ -234,14 +234,14 @@
 .tov-motion-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   letter-spacing: -0.01em;
 }
 
 .tov-motion-desc {
   font-size: 0.72rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   margin: 0;
   line-height: 1.45;
   min-height: 2.1rem;
@@ -259,17 +259,17 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-motion-arrow {
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   transition: transform 150ms, color 150ms;
 }
 
 .tov-motion-card:hover .tov-motion-arrow {
   transform: translate(2px, -2px);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* ── Two Columns Side-by-Side: Active Projects & Team Library ───────────── */
@@ -281,8 +281,8 @@
 
 /* ── Section 03 & 04: Project & Document Lists ─────────────────────────── */
 .tov-card-list {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   display: flex;
   flex-direction: column;
@@ -294,7 +294,7 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.85rem 1.05rem;
-  border-bottom: 1px solid var(--dash-border, #E5E1D9);
+  border-bottom: 1px solid var(--dash-border);
   cursor: pointer;
   transition: background 120ms;
 }
@@ -311,7 +311,7 @@
   font-family: var(--number-font);
   font-size: 0.8125rem;
   font-weight: 700;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   min-width: 18px;
 }
 
@@ -325,9 +325,9 @@
   flex-shrink: 0;
 }
 
-.tov-row-icon--purple { background: #EDEAF5; color: #4E446B; }
-.tov-row-icon--blue   { background: #E5EDF7; color: #365369; }
-.tov-row-icon--green  { background: #EFF1E2; color: #3E5224; }
+.tov-row-icon--purple { background: var(--dash-badge-comment-bg); color: var(--dash-badge-comment-text); }
+.tov-row-icon--blue   { background: var(--dash-badge-assigned-bg); color: var(--dash-badge-assigned-text); }
+.tov-row-icon--green  { background: var(--dash-badge-completed-bg); color: var(--dash-badge-completed-text); }
 
 .tov-row-content {
   flex: 1;
@@ -340,7 +340,7 @@
 .tov-row-title {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -348,7 +348,7 @@
 
 .tov-row-meta {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -356,14 +356,14 @@
 
 .tov-row-arrow {
   font-size: 0.85rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   flex-shrink: 0;
   transition: transform 150ms, color 150ms;
 }
 
 .tov-list-row:hover .tov-row-arrow {
   transform: translateX(3px);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* ── Section 05: Team Updates ──────────────────────────────────────────── */
@@ -374,8 +374,8 @@
 }
 
 .tov-update-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 0.95rem 1.05rem;
   display: flex;
@@ -400,7 +400,7 @@
   font-size: 0.625rem;
   font-weight: 700;
   flex-shrink: 0;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-update-content {
@@ -420,31 +420,31 @@
 .tov-update-title {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-update-desc {
   font-size: 0.72rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   line-height: 1.4;
 }
 
 .tov-update-meta {
   font-size: 0.6875rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   margin-top: 0.15rem;
 }
 
 .tov-update-arrow {
   font-size: 0.85rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   flex-shrink: 0;
   transition: transform 150ms, color 150ms;
 }
 
 .tov-update-card:hover .tov-update-arrow {
   transform: translateX(2px);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* ── Right Information Sidebar (~27%) ──────────────────────────────────── */
@@ -453,16 +453,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  background: var(--dash-bg-canvas, #F8F6F0);
+  background: var(--dash-bg-canvas);
   overflow-y: auto;
 }
 
-/* Card 1: Team Coordination / Next Delivery (Dark Charcoal #111111) */
+/* Card 1: Team Coordination / Next Delivery */
 .tov-dark-card {
-  background: #111111;
+  background: var(--dash-text-primary);
   border-radius: var(--radius-md, 10px);
   padding: 1.25rem 1.15rem;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   display: flex;
   flex-direction: column;
 }
@@ -473,7 +473,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #A1A1AA;
+  color: var(--dash-text-light);
 }
 
 .tov-dark-title {
@@ -483,12 +483,12 @@
   letter-spacing: -0.02em;
   margin: 0.4rem 0 0.15rem;
   line-height: 1.15;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
 }
 
 .tov-dark-sub {
   font-size: 0.75rem;
-  color: #A1A1AA;
+  color: var(--dash-text-light);
   margin: 0 0 0.85rem;
 }
 
@@ -501,7 +501,7 @@
 
 .tov-dark-due {
   font-size: 0.72rem;
-  color: #D4D4D8;
+  color: var(--dash-text-light);
   margin-bottom: 0.85rem;
   font-weight: 500;
 }
@@ -512,8 +512,8 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.65rem 0.95rem;
-  background: #FAF7F1;
-  color: #111111;
+  background: var(--dash-bg-card);
+  color: var(--dash-text-primary);
   font-size: 0.75rem;
   font-weight: 700;
   border: none;
@@ -523,14 +523,14 @@
 }
 
 .tov-dark-btn:hover {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   transform: translateY(-1px);
 }
 
 /* Card 2: Awaiting Review (Pale Beige Card) */
 .tov-rail-card--beige {
-  background: #FBF3E8;
-  border: 1px solid #EADCCC;
+  background: var(--dash-badge-document-bg);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 0.95rem 1.05rem;
   display: flex;
@@ -553,7 +553,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-review-copy {
@@ -567,12 +567,12 @@
 .tov-review-title {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-review-desc {
   font-size: 0.7rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   line-height: 1.35;
 }
 
@@ -582,7 +582,7 @@
   gap: 0.35rem;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   background: none;
   border: none;
   padding: 0;
@@ -596,8 +596,8 @@
 
 /* Standard Rail Card */
 .tov-rail-card {
-  background: var(--dash-bg-card, #FAF7F1);
-  border: 1px solid var(--dash-border, #E5E1D9);
+  background: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 0.95rem 1.05rem;
   display: flex;
@@ -616,13 +616,13 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-rail-card-link {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -631,7 +631,7 @@
 }
 
 .tov-rail-card-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Team Members Card Inside Rail */
@@ -650,7 +650,7 @@
   justify-content: center;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: transform 120ms;
 }
@@ -661,13 +661,13 @@
 
 .tov-members-summary {
   font-size: 0.72rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-members-divider {
   width: 100%;
   height: 1px;
-  background: var(--dash-border, #E5E1D9);
+  background: var(--dash-border);
 }
 
 .tov-settings-link-btn {
@@ -677,7 +677,7 @@
   width: 100%;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--dash-text-primary, #111111);
+  color: var(--dash-text-primary);
   background: none;
   border: none;
   padding: 0;
@@ -691,8 +691,8 @@
 
 /* Card 4: Upcoming Handoff (Pale Green) */
 .tov-rail-card--green {
-  background: #EFF1E2;
-  border: 1px solid #DEE1CC;
+  background: var(--dash-badge-completed-bg);
+  border: 1px solid var(--dash-border);
   border-radius: var(--radius-md, 10px);
   padding: 0.95rem 1.05rem;
   display: flex;
@@ -715,7 +715,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-handoff-copy {
@@ -729,17 +729,17 @@
 .tov-handoff-title {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-handoff-sub {
   font-size: 0.7rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
 }
 
 .tov-handoff-meta {
   font-size: 0.6875rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
 }
 
 .tov-handoff-action-btn {
@@ -748,7 +748,7 @@
   gap: 0.35rem;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
   background: none;
   border: none;
   padding: 0;
@@ -772,14 +772,14 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #EFF1E2;
-  border: 1px solid #DEE1CC;
+  background: var(--dash-badge-completed-bg);
+  border: 1px solid var(--dash-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.72rem;
   font-weight: 800;
-  color: #3E5224;
+  color: var(--dash-badge-completed-text);
   flex-shrink: 0;
   margin-top: 0.1rem;
 }
@@ -801,31 +801,31 @@
 .tov-decision-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .tov-decision-desc {
   font-size: 0.6875rem;
-  color: var(--dash-text-muted, #77736C);
+  color: var(--dash-text-muted);
   line-height: 1.35;
 }
 
 .tov-decision-meta {
   font-size: 0.65rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   margin-top: 0.15rem;
 }
 
 .tov-decision-arrow {
   font-size: 0.85rem;
-  color: var(--dash-text-light, #8E8A84);
+  color: var(--dash-text-light);
   flex-shrink: 0;
   transition: transform 150ms, color 150ms;
 }
 
 .tov-decision-row:hover .tov-decision-arrow {
   transform: translateX(2px);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* ── Responsive Behavior ───────────────────────────────────────────────── */
@@ -835,7 +835,7 @@
   }
   .tov-main-col {
     border-right: none;
-    border-bottom: 1px solid var(--dash-border, #E5E1D9);
+    border-bottom: 1px solid var(--dash-border);
     padding: 1.25rem 1.5rem 3rem;
   }
   .tov-right-rail {

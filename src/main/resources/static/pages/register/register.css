@@ -1,4 +1,4 @@
-/* ==========================================================
+﻿/* ==========================================================
    BRICK / Teamden — Company Registration Page Styles (register.css)
    Neo-Editorial 4-Step Onboarding Flow matching Brick Design Language
    ========================================================== */
@@ -114,7 +114,7 @@ body.brick-register-body {
   font-size: clamp(2.4rem, 4.2vw, 3rem);
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 0.9;
   display: inline-block;
 }
@@ -142,12 +142,12 @@ body.brick-register-body {
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: -0.045em;
-  color: #0F0F0F;
+  color: var(--dash-text-primary);
   margin: 0;
 }
 
 .lime-period {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .panel-description {
@@ -183,7 +183,7 @@ body.brick-register-body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #1A1A1A;
+  color: var(--dash-text-primary);
 }
 
 .feature-text-block {
@@ -194,7 +194,7 @@ body.brick-register-body {
 .feature-title {
   font-weight: 800;
   font-size: clamp(0.86rem, 1.35vh, 0.95rem);
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
@@ -214,7 +214,7 @@ body.brick-register-body {
   bottom: clamp(10px, 2.5vh, 40px);
   width: clamp(190px, 20vw, 230px);
   height: clamp(250px, 44vh, 310px);
-  background-color: #ECE7DE;
+  background-color: var(--dash-bg-search-focus);
   border-radius: 28px;
   transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) rotateZ(-4deg);
   z-index: 1;
@@ -227,7 +227,7 @@ body.brick-register-body {
   top: clamp(28px, 5vh, 65px);
   width: clamp(410px, 42vw, 460px);
   height: clamp(520px, 86vh, 610px);
-  background-color: #FAF9F6;
+  background-color: var(--dash-bg-search);
   border-radius: 24px;
   box-shadow: -18px 30px 65px rgba(0, 0, 0, 0.09), 0 4px 14px rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.85);
@@ -246,8 +246,8 @@ body.brick-register-body {
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-bottom: 1px solid #ECE7DE;
-  background: #FAF9F6;
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-bg-search);
   flex-shrink: 0;
 }
 
@@ -256,18 +256,18 @@ body.brick-register-body {
   font-weight: 900;
   font-size: 15px;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .preview-search {
   display: flex;
   align-items: center;
   gap: 6px;
-  background-color: #F1EDE4;
+  background-color: var(--dash-bg-search);
   padding: 5px 12px;
   border-radius: 20px;
   font-size: 10px;
-  color: #88867F;
+  color: var(--dash-text-light);
   width: 160px;
 }
 
@@ -280,8 +280,8 @@ body.brick-register-body {
 
 .preview-sidebar {
   padding: 14px 8px;
-  border-right: 1px solid #ECE7DE;
-  background: #FAF9F6;
+  border-right: 1px solid var(--dash-border);
+  background: var(--dash-bg-search);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -295,18 +295,18 @@ body.brick-register-body {
   border-radius: 6px;
   font-size: 10.5px;
   font-weight: 600;
-  color: #55534E;
+  color: var(--dash-text-muted);
 }
 
 .preview-nav-item.active {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 800;
 }
 
 .preview-content {
   padding: 14px 18px;
-  background-color: #FAF9F6;
+  background-color: var(--dash-bg-search);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -316,7 +316,7 @@ body.brick-register-body {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #88867F;
+  color: var(--dash-text-light);
   text-transform: uppercase;
 }
 
@@ -325,14 +325,14 @@ body.brick-register-body {
   font-size: 26px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1;
   margin: 3px 0 2px 0;
 }
 
 .preview-workspace-desc {
   font-size: 9.5px;
-  color: #77756E;
+  color: var(--dash-text-muted);
   margin-bottom: 10px;
 }
 
@@ -351,7 +351,7 @@ body.brick-register-body {
   font-size: 7.5px;
   font-weight: 800;
   letter-spacing: 0.1em;
-  color: #88867F;
+  color: var(--dash-text-light);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -361,7 +361,7 @@ body.brick-register-body {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: #2ED573;
+  background-color: var(--dash-dot-green);
   display: inline-block;
 }
 
@@ -369,7 +369,7 @@ body.brick-register-body {
   font-family: var(--number-font) !important;
   font-size: 22px;
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.1;
   font-feature-settings: 'tnum' on, 'lnum' on;
 }
@@ -381,13 +381,13 @@ body.brick-register-body {
 }
 
 .mini-project-card.card-focus {
-  background-color: #F1ECE1;
-  border: 1px solid #E5DFD2;
+  background-color: var(--dash-bg-search);
+  border: 1px solid var(--dash-border);
 }
 
 .mini-project-card:not(.card-focus) {
-  background-color: #FFFFFF;
-  border: 1px solid #ECE7DE;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
 }
 
 .mini-card-badge-row {
@@ -402,14 +402,14 @@ body.brick-register-body {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .mini-pill-lime {
   font-size: 7.5px;
   font-weight: 800;
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   padding: 1px 5px;
   border-radius: 4px;
 }
@@ -417,13 +417,13 @@ body.brick-register-body {
 .mini-card-title {
   font-size: 12px;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin-bottom: 2px;
 }
 
 .mini-card-desc {
   font-size: 9px;
-  color: #66645E;
+  color: var(--dash-text-muted);
   line-height: 1.3;
   margin-bottom: 5px;
 }
@@ -433,7 +433,7 @@ body.brick-register-body {
   align-items: center;
   justify-content: space-between;
   font-size: 8px;
-  color: #77756E;
+  color: var(--dash-text-muted);
   font-weight: 600;
 }
 
@@ -473,13 +473,13 @@ body.brick-register-body {
 
 .sign-in-text {
   font-size: 0.88rem;
-  color: #55534E;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
 .btn-sign-in {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
   font-size: 0.88rem;
   padding: 0.52rem 1.15rem;
@@ -527,8 +527,8 @@ body.brick-register-body {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #F1EDE5;
-  color: #77756E;
+  background-color: var(--dash-bg-search);
+  color: var(--dash-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -544,22 +544,22 @@ body.brick-register-body {
 
 .step-node.active .step-circle {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .step-node.completed .step-circle {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
 }
 
 .step-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .step-node.active .step-label {
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
 }
 
@@ -571,7 +571,7 @@ body.brick-register-body {
 }
 
 .step-connector.completed {
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
 }
 
 /* Step Header */
@@ -592,7 +592,7 @@ body.brick-register-body {
   font-family: var(--brick-font-brand);
   font-size: clamp(1.4rem, 2.6vh, 1.85rem);
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0 0 0.15rem 0;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -613,14 +613,14 @@ body.brick-register-body {
 }
 
 .alert-danger {
-  background-color: #FDF2F2;
+  background-color: var(--dash-priority-high-bg);
   color: var(--brick-error);
   border: 1px solid rgba(233, 75, 75, 0.2);
 }
 
 /* Form Card */
 .bordered-form-card {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   border: 1px solid var(--brick-border);
   border-radius: 12px;
   padding: clamp(0.6rem, 1.5vh, 1.1rem);
@@ -640,11 +640,11 @@ body.brick-register-body {
   width: 30px;
   height: 30px;
   border-radius: 7px;
-  background-color: #F3EFE7;
+  background-color: var(--dash-bg-search);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111111;
+  color: var(--dash-text-primary);
   flex-shrink: 0;
 }
 
@@ -656,7 +656,7 @@ body.brick-register-body {
 .card-heading {
   font-size: clamp(0.9rem, 1.6vh, 1.02rem);
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   line-height: 1.2;
 }
@@ -685,7 +685,7 @@ body.brick-register-body {
 .input-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #222221;
+  color: var(--dash-text-primary);
   margin-bottom: 0.2rem;
 }
 
@@ -701,7 +701,7 @@ body.brick-register-body {
   border-radius: 8px;
   padding: 0 10px;
   font-size: 0.85rem;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-family: var(--brick-font-body);
   box-sizing: border-box;
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
@@ -709,9 +709,9 @@ body.brick-register-body {
 
 .brick-control:focus {
   outline: none;
-  background: #FFFFFF;
-  border-color: #111111;
-  box-shadow: 0 0 0 1px #111111;
+  background: var(--dash-bg-white);
+  border-color: var(--dash-text-primary);
+  box-shadow: 0 0 0 1px var(--dash-text-primary);
 }
 
 .select-wrapper {
@@ -731,7 +731,7 @@ body.brick-register-body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #77756E;
+  color: var(--dash-text-muted);
   width: 14px;
   height: 14px;
 }
@@ -746,7 +746,7 @@ body.brick-register-body {
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #77756E;
+  color: var(--dash-text-muted);
   pointer-events: none;
   width: 15px;
   height: 15px;
@@ -769,7 +769,7 @@ body.brick-register-body {
   border: none;
   padding: 4px;
   cursor: pointer;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .field-error-msg {
@@ -794,7 +794,7 @@ body.brick-register-body {
 }
 
 .logo-upload-dropzone:hover {
-  border-color: #111111;
+  border-color: var(--dash-text-primary);
 }
 
 .upload-idle-state {
@@ -808,11 +808,11 @@ body.brick-register-body {
   width: 24px;
   height: 24px;
   border-radius: 5px;
-  background-color: #EFEBE2;
+  background-color: var(--dash-bg-search);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111111;
+  color: var(--dash-text-primary);
   flex-shrink: 0;
 }
 
@@ -830,7 +830,7 @@ body.brick-register-body {
 .upload-link-text {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .upload-hint {
@@ -849,7 +849,7 @@ body.brick-register-body {
   height: 26px;
   border-radius: 4px;
   object-fit: contain;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
   border: 1px solid var(--brick-border);
 }
 
@@ -862,7 +862,7 @@ body.brick-register-body {
 .file-name-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .btn-remove-logo {
@@ -890,7 +890,7 @@ body.brick-register-body {
 }
 
 .inline-legal-link {
-  color: #111111;
+  color: var(--dash-text-primary);
   text-decoration: underline;
 }
 
@@ -917,14 +917,14 @@ body.brick-register-body {
 .review-section-title {
   font-size: 0.94rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
 }
 
 .btn-jump-step {
   background: none;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
   font-size: 0.82rem;
   cursor: pointer;
@@ -957,7 +957,7 @@ body.brick-register-body {
 .review-val {
   font-size: 0.88rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin-top: 2px;
 }
 
@@ -982,14 +982,14 @@ body.brick-register-body {
   border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: var(--brick-font-body);
 }
 
 .btn-brick-secondary:hover {
-  background-color: #F5F3EE;
+  background-color: var(--dash-bg-search);
 }
 
 .btn-brick-primary {
@@ -998,19 +998,19 @@ body.brick-register-body {
   gap: 8px;
   height: 42px;
   padding: 0 1.5rem;
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
   border: none;
   border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   cursor: pointer;
   transition: background-color 0.15s ease, transform 0.1s ease;
   font-family: var(--brick-font-body);
 }
 
 .btn-brick-primary:hover {
-  background-color: #2A2A28;
+  background-color: var(--dash-hero-bg);
 }
 
 .btn-right-arrow {

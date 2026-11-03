@@ -1,4 +1,4 @@
-/* ==========================================================
+﻿/* ==========================================================
    BRICK WORKSPACE — Neo-Editorial SaaS Login & Auth Styles
    Exact 1:1 Pixel-Perfect Recreation of Brick Design Language
    ========================================================== */
@@ -121,7 +121,7 @@ html, body.brick-auth-body {
   font-size: clamp(2.4rem, 4.2vw, 3rem);
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 0.9;
   display: inline-block;
 }
@@ -149,13 +149,13 @@ html, body.brick-auth-body {
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: -0.05em;
-  color: #0F0F0F;
+  color: var(--dash-text-primary);
   margin: 0;
   text-transform: lowercase;
 }
 
 .lime-period {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .brand-tagline {
@@ -191,7 +191,7 @@ html, body.brick-auth-body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #1A1A1A;
+  color: var(--dash-text-primary);
 }
 
 .feature-copy {
@@ -202,7 +202,7 @@ html, body.brick-auth-body {
 .feature-title {
   font-weight: 800;
   font-size: clamp(0.86rem, 1.35vh, 0.95rem);
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.2;
 }
 
@@ -236,7 +236,7 @@ html, body.brick-auth-body {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  background-color: #E2DDD3;
+  background-color: var(--dash-bg-search);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
@@ -260,7 +260,7 @@ html, body.brick-auth-body {
   bottom: clamp(10px, 2.5vh, 40px);
   width: clamp(200px, 22vw, 240px);
   height: clamp(260px, 45vh, 320px);
-  background-color: #ECE7DE;
+  background-color: var(--dash-bg-search-focus);
   border-radius: 28px;
   transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) rotateZ(-4deg);
   z-index: 1;
@@ -273,7 +273,7 @@ html, body.brick-auth-body {
   top: clamp(28px, 5vh, 65px);
   width: clamp(430px, 45vw, 475px);
   height: clamp(520px, 86vh, 610px);
-  background-color: #FAF9F6;
+  background-color: var(--dash-bg-search);
   border-radius: 24px;
   box-shadow: -18px 30px 65px rgba(0, 0, 0, 0.09), 0 4px 14px rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.85);
@@ -293,8 +293,8 @@ html, body.brick-auth-body {
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-bottom: 1px solid #ECE7DE;
-  background: #FAF9F6;
+  border-bottom: 1px solid var(--dash-border);
+  background: var(--dash-bg-search);
   flex-shrink: 0;
 }
 
@@ -303,18 +303,18 @@ html, body.brick-auth-body {
   font-weight: 900;
   font-size: 15px;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .preview-search {
   display: flex;
   align-items: center;
   gap: 6px;
-  background-color: #F1EDE4;
+  background-color: var(--dash-bg-search);
   padding: 5px 12px;
   border-radius: 20px;
   font-size: 10px;
-  color: #88867F;
+  color: var(--dash-text-light);
   width: 160px;
 }
 
@@ -328,8 +328,8 @@ html, body.brick-auth-body {
 
 .preview-sidebar {
   padding: 14px 8px;
-  border-right: 1px solid #ECE7DE;
-  background: #FAF9F6;
+  border-right: 1px solid var(--dash-border);
+  background: var(--dash-bg-search);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -343,18 +343,18 @@ html, body.brick-auth-body {
   border-radius: 6px;
   font-size: 10.5px;
   font-weight: 600;
-  color: #55534E;
+  color: var(--dash-text-muted);
 }
 
 .preview-nav-item.active {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 800;
 }
 
 .preview-content {
   padding: 14px 18px;
-  background-color: #FAF9F6;
+  background-color: var(--dash-bg-search);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -364,7 +364,7 @@ html, body.brick-auth-body {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #88867F;
+  color: var(--dash-text-light);
   text-transform: uppercase;
 }
 
@@ -373,14 +373,14 @@ html, body.brick-auth-body {
   font-size: 26px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1;
   margin: 3px 0 2px 0;
 }
 
 .preview-workspace-desc {
   font-size: 9.5px;
-  color: #77756E;
+  color: var(--dash-text-muted);
   margin-bottom: 10px;
 }
 
@@ -399,7 +399,7 @@ html, body.brick-auth-body {
   font-size: 7.5px;
   font-weight: 800;
   letter-spacing: 0.1em;
-  color: #88867F;
+  color: var(--dash-text-light);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -409,7 +409,7 @@ html, body.brick-auth-body {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: #2ED573;
+  background-color: var(--dash-dot-green);
   display: inline-block;
 }
 
@@ -417,7 +417,7 @@ html, body.brick-auth-body {
   font-family: var(--number-font) !important;
   font-size: 22px;
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   line-height: 1.1;
   font-feature-settings: 'tnum' on, 'lnum' on;
 }
@@ -430,13 +430,13 @@ html, body.brick-auth-body {
 }
 
 .mini-project-card.card-focus {
-  background-color: #F1ECE1;
-  border: 1px solid #E5DFD2;
+  background-color: var(--dash-bg-search);
+  border: 1px solid var(--dash-border);
 }
 
 .mini-project-card:not(.card-focus) {
-  background-color: #FFFFFF;
-  border: 1px solid #ECE7DE;
+  background-color: var(--dash-bg-white);
+  border: 1px solid var(--dash-border);
 }
 
 .mini-card-badge-row {
@@ -451,14 +451,14 @@ html, body.brick-auth-body {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .mini-pill-lime {
   font-size: 7.5px;
   font-weight: 800;
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   padding: 1px 5px;
   border-radius: 4px;
 }
@@ -466,13 +466,13 @@ html, body.brick-auth-body {
 .mini-card-title {
   font-size: 12px;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin-bottom: 2px;
 }
 
 .mini-card-desc {
   font-size: 9px;
-  color: #66645E;
+  color: var(--dash-text-muted);
   line-height: 1.3;
   margin-bottom: 5px;
 }
@@ -482,7 +482,7 @@ html, body.brick-auth-body {
   align-items: center;
   justify-content: space-between;
   font-size: 8px;
-  color: #77756E;
+  color: var(--dash-text-muted);
   font-weight: 600;
 }
 
@@ -529,13 +529,13 @@ html, body.brick-auth-body {
 
 .top-switch-prompt {
   font-size: 0.88rem;
-  color: #55534E;
+  color: var(--dash-text-muted);
   font-weight: 500;
 }
 
 .top-switch-btn {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
   font-size: 0.88rem;
   padding: 0.52rem 1.15rem;
@@ -581,7 +581,7 @@ html, body.brick-auth-body {
   font-size: clamp(2.8rem, 5.5vh, 3.6rem);
   font-weight: 900;
   letter-spacing: -0.04em;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0 0 clamp(0.25rem, 0.6vh, 0.45rem) 0;
   line-height: 1;
 }
@@ -601,7 +601,7 @@ html, body.brick-auth-body {
 }
 
 .alert-danger {
-  background-color: #FDF2F2;
+  background-color: var(--dash-priority-high-bg);
   color: var(--brick-error);
   border: 1px solid rgba(233, 75, 75, 0.2);
 }
@@ -615,7 +615,7 @@ html, body.brick-auth-body {
   display: block;
   font-size: 0.86rem;
   font-weight: 600;
-  color: #222221;
+  color: var(--dash-text-primary);
   margin-bottom: 0.35rem;
 }
 
@@ -633,13 +633,13 @@ html, body.brick-auth-body {
 .brick-forgot-link {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #222221;
+  color: var(--dash-text-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .brick-forgot-link:hover {
-  color: #000000;
+  color: var(--dash-text-primary);
 }
 
 .brick-input-wrapper {
@@ -652,7 +652,7 @@ html, body.brick-auth-body {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #77756E;
+  color: var(--dash-text-muted);
   pointer-events: none;
   z-index: 2;
 }
@@ -665,7 +665,7 @@ html, body.brick-auth-body {
   border-radius: 8px;
   font-size: 0.92rem;
   font-family: var(--brick-font-body);
-  color: #111111;
+  color: var(--dash-text-primary);
   padding: 0 12px;
   box-sizing: border-box;
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
@@ -680,14 +680,14 @@ html, body.brick-auth-body {
 }
 
 .brick-input::placeholder {
-  color: #9E9C96;
+  color: var(--dash-text-light);
 }
 
 .brick-input:focus {
   outline: none;
-  background: #FFFFFF;
-  border-color: #111111;
-  box-shadow: 0 0 0 1px #111111;
+  background: var(--dash-bg-white);
+  border-color: var(--dash-text-primary);
+  box-shadow: 0 0 0 1px var(--dash-text-primary);
 }
 
 .brick-trailing-btn {
@@ -699,7 +699,7 @@ html, body.brick-auth-body {
   border: none;
   padding: 6px;
   cursor: pointer;
-  color: #77756E;
+  color: var(--dash-text-muted);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -707,7 +707,7 @@ html, body.brick-auth-body {
 }
 
 .brick-trailing-btn:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .form-error {
@@ -724,8 +724,8 @@ html, body.brick-auth-body {
   gap: 8px;
   width: 100%;
   height: clamp(40px, 4.8vh, 46px);
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
   font-family: var(--brick-font-body);
   font-size: 0.94rem;
   font-weight: 700;
@@ -737,7 +737,7 @@ html, body.brick-auth-body {
 }
 
 .brick-btn-primary:hover {
-  background-color: #2A2A28;
+  background-color: var(--dash-hero-bg);
 }
 
 .btn-arrow {
@@ -753,7 +753,7 @@ html, body.brick-auth-body {
   display: flex;
   align-items: center;
   margin: clamp(0.85rem, 1.8vh, 1.35rem) 0;
-  color: #8E8C86;
+  color: var(--dash-text-light);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -787,12 +787,12 @@ html, body.brick-auth-body {
   justify-content: center;
   gap: 8px;
   height: clamp(38px, 4.5vh, 44px);
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
   border: 1px solid var(--brick-border);
   border-radius: 8px;
   font-size: 0.86rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease;
   font-family: var(--brick-font-body);
@@ -801,8 +801,8 @@ html, body.brick-auth-body {
 }
 
 .brick-btn-social:hover {
-  background-color: #FAF9F6;
-  border-color: #D4D1C7;
+  background-color: var(--dash-bg-search);
+  border-color: var(--dash-border-strong);
 }
 
 .social-icon {
@@ -819,13 +819,13 @@ html, body.brick-auth-body {
 }
 
 .legal-link {
-  color: #55534E;
+  color: var(--dash-text-muted);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .legal-link:hover {
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 /* Hide copyright line (matches reference) */
@@ -864,8 +864,8 @@ html, body.brick-auth-body {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #F1EDE5;
-  color: #77756E;
+  background-color: var(--dash-bg-search);
+  color: var(--dash-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -881,22 +881,22 @@ html, body.brick-auth-body {
 
 .step-node.active .step-circle {
   background-color: var(--brick-accent-lime);
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .step-node.completed .step-circle {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--dash-text-primary);
+  color: var(--dash-text-white);
 }
 
 .step-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .step-node.active .step-label {
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
 }
 
@@ -908,7 +908,7 @@ html, body.brick-auth-body {
 }
 
 .step-connector.completed {
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
 }
 
 /* Step Header */
@@ -929,7 +929,7 @@ html, body.brick-auth-body {
   font-family: var(--brick-font-brand);
   font-size: clamp(1.4rem, 2.6vh, 1.85rem);
   font-weight: 900;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0 0 0.15rem 0;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -943,7 +943,7 @@ html, body.brick-auth-body {
 
 /* Form Card */
 .bordered-form-card {
-  background: #FFFFFF;
+  background: var(--dash-bg-white);
   border: 1px solid var(--brick-border);
   border-radius: 12px;
   padding: clamp(0.6rem, 1.5vh, 1.1rem);
@@ -963,11 +963,11 @@ html, body.brick-auth-body {
   width: 30px;
   height: 30px;
   border-radius: 7px;
-  background-color: #F3EFE7;
+  background-color: var(--dash-bg-search);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111111;
+  color: var(--dash-text-primary);
   flex-shrink: 0;
 }
 
@@ -979,7 +979,7 @@ html, body.brick-auth-body {
 .card-heading {
   font-size: clamp(0.9rem, 1.6vh, 1.02rem);
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
   line-height: 1.2;
 }
@@ -1008,7 +1008,7 @@ html, body.brick-auth-body {
 .input-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #222221;
+  color: var(--dash-text-primary);
   margin-bottom: 0.2rem;
 }
 
@@ -1024,7 +1024,7 @@ html, body.brick-auth-body {
   border-radius: 8px;
   padding: 0 10px;
   font-size: 0.85rem;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-family: var(--brick-font-body);
   box-sizing: border-box;
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
@@ -1032,9 +1032,9 @@ html, body.brick-auth-body {
 
 .brick-control:focus {
   outline: none;
-  background: #FFFFFF;
-  border-color: #111111;
-  box-shadow: 0 0 0 1px #111111;
+  background: var(--dash-bg-white);
+  border-color: var(--dash-text-primary);
+  box-shadow: 0 0 0 1px var(--dash-text-primary);
 }
 
 .select-wrapper {
@@ -1054,7 +1054,7 @@ html, body.brick-auth-body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #77756E;
+  color: var(--dash-text-muted);
   width: 14px;
   height: 14px;
 }
@@ -1069,7 +1069,7 @@ html, body.brick-auth-body {
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #77756E;
+  color: var(--dash-text-muted);
   pointer-events: none;
   width: 15px;
   height: 15px;
@@ -1092,7 +1092,7 @@ html, body.brick-auth-body {
   border: none;
   padding: 4px;
   cursor: pointer;
-  color: #77756E;
+  color: var(--dash-text-muted);
 }
 
 .field-error-msg {
@@ -1117,7 +1117,7 @@ html, body.brick-auth-body {
 }
 
 .logo-upload-dropzone:hover {
-  border-color: #111111;
+  border-color: var(--dash-text-primary);
 }
 
 .upload-idle-state {
@@ -1131,11 +1131,11 @@ html, body.brick-auth-body {
   width: 24px;
   height: 24px;
   border-radius: 5px;
-  background-color: #EFEBE2;
+  background-color: var(--dash-bg-search);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111111;
+  color: var(--dash-text-primary);
   flex-shrink: 0;
 }
 
@@ -1153,7 +1153,7 @@ html, body.brick-auth-body {
 .upload-link-text {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .upload-hint {
@@ -1172,7 +1172,7 @@ html, body.brick-auth-body {
   height: 26px;
   border-radius: 4px;
   object-fit: contain;
-  background-color: #FFFFFF;
+  background-color: var(--dash-bg-white);
   border: 1px solid var(--brick-border);
 }
 
@@ -1185,7 +1185,7 @@ html, body.brick-auth-body {
 .file-name-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
 }
 
 .btn-remove-logo {
@@ -1213,7 +1213,7 @@ html, body.brick-auth-body {
 }
 
 .inline-legal-link {
-  color: #111111;
+  color: var(--dash-text-primary);
   text-decoration: underline;
 }
 
@@ -1240,14 +1240,14 @@ html, body.brick-auth-body {
 .review-section-title {
   font-size: 0.94rem;
   font-weight: 800;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin: 0;
 }
 
 .btn-jump-step {
   background: none;
   border: none;
-  color: #111111;
+  color: var(--dash-text-primary);
   font-weight: 700;
   font-size: 0.82rem;
   cursor: pointer;
@@ -1280,7 +1280,7 @@ html, body.brick-auth-body {
 .review-val {
   font-size: 0.88rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   margin-top: 2px;
 }
 
@@ -1305,14 +1305,14 @@ html, body.brick-auth-body {
   border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #111111;
+  color: var(--dash-text-primary);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: var(--brick-font-body);
 }
 
 .btn-brick-secondary:hover {
-  background-color: #F5F3EE;
+  background-color: var(--dash-bg-search);
 }
 
 .btn-brick-primary {
@@ -1321,19 +1321,19 @@ html, body.brick-auth-body {
   gap: 8px;
   height: 42px;
   padding: 0 1.5rem;
-  background-color: #111111;
+  background-color: var(--dash-text-primary);
   border: none;
   border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--dash-text-white);
   cursor: pointer;
   transition: background-color 0.15s ease;
   font-family: var(--brick-font-body);
 }
 
 .btn-brick-primary:hover {
-  background-color: #2A2A28;
+  background-color: var(--dash-hero-bg);
 }
 
 .btn-right-arrow {
