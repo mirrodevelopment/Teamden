@@ -10,6 +10,10 @@ const Navbar = (() => {
     const searchInput = document.getElementById('global-search-input');
     const kbdShortcut = document.getElementById('search-kbd-shortcut');
 
+    if (searchInput && window.innerWidth <= 480) {
+      searchInput.placeholder = 'Search...';
+    }
+
     // Adapt shortcut text for Mac vs Windows/Linux
     if (kbdShortcut) {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;

@@ -1378,11 +1378,16 @@ html, body.brick-auth-body {
     max-height: none;
     border-right: none;
     border-bottom: 1px solid var(--brick-border);
+    padding: 0.25rem 0;
   }
 
   .brand-pane-inner {
     max-width: 100%;
-    padding: 2rem 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .brand-editorial {
+    display: none;
   }
 
   .auth-form-pane {
