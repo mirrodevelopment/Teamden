@@ -13,53 +13,54 @@ DAY 2 - 2026-11-04 (WEDNESDAY - TODAY)
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
 - Full Mobile Layout Modernization (320px - 768px):
-  * Overhauled all 20+ pages and fragments for small phones, phablets, and tablets.
-  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops (transparent click-dismiss).
-  * Zero Overlap: Eliminated negative margins causing header/text collisions in projects, dashboard, and team.
+  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops (transparent
+    click-dismiss on mobile sidebar drawer and calendar event drawers).
+  * Zero Overlap: Eliminated negative margins causing header/text collisions
+    in projects, dashboard, and team views.
   * Resolved topbar grid overflow: collapsed to flex row, hid shortcut keys & live date.
   * Mobile drawer: touch scroll locking, auto-close on nav tap, capped width (min(260px, 80vw)).
-  * Dashboard & Kanban: collapsed 2-column split to 1-column, horizontal scroll-snap on Kanban.
-  * Projects & Team Suites: fluid headline clamps, stacked detail cards, responsive tables/tabs.
+  * Dashboard & Kanban: collapsed 2-col split to 1-col, horizontal scroll-snap on Kanban.
+  * Projects & Team Suites: fluid headline clamps, stacked cards, responsive tables/tabs.
   * Workspace, Calendar & Auth: responsive 7-day grid scroll, 44px touch targets, 16px inputs.
-- Chrome Control Strategy:
-  * Recommended official Chrome DevTools plugin (`chrome-devtools-plugin`) for automation.
-  * Formulated CLI commands for headless/remote debugging viewport inspection.
+- Chrome CDP Automation & Live Visual Verification:
+  * Built native PowerShell WebSocket script (`capture_mobile.ps1`) via Chrome DevTools Protocol.
+  * Simulated 375x812 mobile viewport and captured full-fidelity live page screenshots.
+  * Visually inspected & verified Dashboard, Projects, Team, Calendar, Overview, Login, Register.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Shell Fragments: `theme.css`, `navbar.css`, `sidebar.css`, `sidebar.js`.
+- Shell & Tokens: `theme.css`, `navbar.css`, `sidebar.css`, `sidebar.js`.
 - Core Views: `dashboard.css`, `overview.css`, `insights.css`.
 - Projects Suite: `projects.css`, `project-detail.css`, `project-overview.css`, `project-tasks.css`, `project-documents.css`, `project-activity.css`.
 - Team Suite: `team.css`, `team-detail.css`, `team-overview.css`, `team-people.css`, `team-work.css`, `team-knowledge.css`.
 - Workspace, Calendar & Auth: `workspace.css`, `team-libraries.css`, `calendar.css`, `login.css`, `register.css`.
+- Verification Tooling: `capture_mobile.ps1`, `mobile_layout_visual_audit.md`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example A: Topbar Fixed Grid -> Responsive Flexbox
-  [BEFORE]:
-  .app-topbar { display: grid; grid-template-columns: minmax(0, 1fr) var(--dash-right-rail-width); }
-  .topbar-right-section { width: 295px; min-width: 295px; }
+Example A: Zero Overlap - Negative Margins -> Clean Relative Spacing
+  [BEFORE - projects.css]:
+  .projects-headline-group { margin-top: -1rem; }
+  .projects-stats-row { margin-top: -0.45rem; }
 
-  [AFTER]:
-  @media (max-width: 768px) {
-    .app-topbar { display: flex; justify-content: space-between; align-items: center; }
-    .topbar-right-section { width: auto; min-width: 0; border-left: none; }
-    .search-kbd, .topbar-live-date { display: none !important; }
-  }
+  [AFTER - projects.css]:
+  .projects-headline-group { margin-top: 0.35rem; }
+  .projects-stats-row { margin-top: 0.35rem; }
 
-Example B: Kanban Crushed 3 Columns -> Smooth Scroll-Snap Swipe
-  [BEFORE]:
-  .kanban-grid-three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+Example B: Zero Overlay - Dark Screen Dimming -> Transparent Backdrop
+  [BEFORE - sidebar.css & calendar.css]:
+  body.sidebar-mobile-open::after { background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(2px); }
+  .event-drawer-backdrop { background-color: rgba(0, 0, 0, 0.35); backdrop-filter: blur(2px); }
 
-  [AFTER]:
-  @media (max-width: 768px) {
-    .kanban-grid-three { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-    .kanban-column { flex: 0 0 85%; min-width: 260px; scroll-snap-align: start; }
-  }
+  [AFTER - sidebar.css & calendar.css]:
+  body.sidebar-mobile-open::after { background: transparent; backdrop-filter: none; }
+  .event-drawer-backdrop { background-color: transparent; backdrop-filter: none; }
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
 - Test Suite: 18/18 integration tests green (`./mvnw test` passing 100%).
+- Chrome CDP Visual Inspection: Captured 375x812 screenshots across all pages; verified
+  zero overlapping elements and zero dark dimming overlays.
 - Resource Sync: 86 static resources synced to `target/classes/static`.
 - Anti-Overflow Check: All containers verify `max-width: 100vw; overflow-x: hidden`.
 
@@ -101,7 +102,7 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 1 [COMPLETED]: Color token harmonization, shell unification & zero hex audit.
 - Phase 2 [COMPLETED]: Project Flow relational schema, Flyway V2 & dynamic hydration.
 - Phase 3 [COMPLETED]: Mobile layout modernization across all 20+ pages & fragments.
-- Phase 4 [NEXT]: Chrome DevTools automation & visual regression checks.
+- Phase 4 [COMPLETED]: Chrome DevTools automation, zero overlay/overlap audit & screenshots.
 - Phase 5 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
