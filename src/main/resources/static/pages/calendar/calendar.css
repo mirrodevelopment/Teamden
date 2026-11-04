@@ -2720,6 +2720,16 @@ html.sidebar-collapsed .dash-app-main {
     align-items: flex-start;
     gap: 0.75rem;
   }
+  .cal-grid-scrollable,
+  .cal-month-grid-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cal-grid-body,
+  .cal-month-body-grid,
+  .cal-month-header-row {
+    min-width: 480px;
+  }
   .upcoming-commitments-grid {
     grid-template-columns: 1fr;
   }
@@ -2727,4 +2737,24 @@ html.sidebar-collapsed .dash-app-main {
     width: 100vw;
   }
 }
+
+@media (max-width: 480px) {
+  .calendar-center-column {
+    padding: 0.5rem 0.75rem 2rem 0.75rem;
+  }
+  .calendar-right-rail {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+  .calendar-huge-title {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+  .view-btn {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.75rem;
+  }
+  .calendar-date-huge-num {
+    font-size: 3.5rem;
+  }
+}
+
 

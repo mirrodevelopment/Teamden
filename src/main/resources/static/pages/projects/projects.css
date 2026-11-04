@@ -1961,13 +1961,34 @@ body.projects-body {
 
 /* Mobile Small (<= 480px) */
 @media (max-width: 480px) {
+  .projects-center-column {
+    padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+    gap: 1rem;
+  }
+
+  .projects-title-main {
+    font-size: clamp(2.25rem, 11vw, 3.25rem);
+  }
+
   .featured-meta-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 
+  .featured-project-card {
+    padding: 1rem;
+  }
+
   .stat-value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+  }
+
+  .projects-stats-row {
+    gap: 0.5rem;
+  }
+
+  .stat-box {
+    padding: 0.5rem 0.25rem;
   }
 }

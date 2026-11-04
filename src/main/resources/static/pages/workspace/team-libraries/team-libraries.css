@@ -997,6 +997,25 @@ body {
   }
 }
 
+@media (max-width: 480px) {
+  .tl-main-col {
+    padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tl-right-panel {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tl-title {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+
+  .tl-collection-card {
+    padding: 0.85rem;
+  }
+}
+
+
 /* ── Selected Collection Highlight ─────────────────────────────────────── */
 .tl-collection-card--selected {
   outline: 2px solid var(--dash-text-primary);

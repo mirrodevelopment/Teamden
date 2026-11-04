@@ -419,3 +419,35 @@ body.dark-theme {
   --brick-card-sand-dark: var(--dash-border-strong);
   --brick-input-bg: var(--dash-bg-input);
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE TOKENS SYSTEM (<= 768px & <= 480px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 0px;
+    --dash-right-rail-width: 100%;
+    --dash-center-padding-x: 1rem;
+    --dash-center-padding-top: 1rem;
+    --dash-center-gap: 1.25rem;
+    --dash-today-title-size: clamp(3rem, 12vw, 4.5rem);
+    --dash-subtitle-size: 0.8125rem;
+    --dash-hero-padding: 1rem;
+    --dash-hero-gap: 1rem;
+    --dash-hero-title-size: 1.125rem;
+    --dash-hero-due-size: 3rem;
+    --dash-date-huge-size: 4.5rem;
+    --dash-kanban-col-padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --dash-center-padding-x: 0.75rem;
+    --dash-center-padding-top: 0.75rem;
+    --dash-today-title-size: clamp(2.35rem, 13vw, 3.25rem);
+    --dash-hero-due-size: 2.35rem;
+    --dash-date-huge-size: 3.5rem;
+  }
+}
+

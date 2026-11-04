@@ -36,10 +36,12 @@ const Sidebar = (() => {
       return;
     }
 
-    // 3. Close mobile sidebar when clicking backdrop / outside
+    // 3. Close mobile sidebar when clicking backdrop / outside or navigating
     if (document.body.classList.contains('sidebar-mobile-open')) {
       const sidebar = document.getElementById('app-sidebar');
       if (sidebar && !sidebar.contains(e.target)) {
+        document.body.classList.remove('sidebar-mobile-open');
+      } else if (e.target.closest('.nav-item, .sub-nav-item, .org-item, .sidebar-footer-link')) {
         document.body.classList.remove('sidebar-mobile-open');
       }
     }

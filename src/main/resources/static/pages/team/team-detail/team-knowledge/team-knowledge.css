@@ -833,3 +833,22 @@
     justify-content: space-between;
   }
 }
+
+@media (max-width: 480px) {
+  .tk-main-col {
+    padding: 0.75rem 0.75rem 2rem 0.75rem;
+  }
+
+  .tk-right-rail {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tk-playbook-card {
+    padding: 1rem;
+  }
+
+  .tk-playbook-title {
+    font-size: 1.25rem;
+  }
+}
+

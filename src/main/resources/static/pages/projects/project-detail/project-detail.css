@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    Teamden by shed — Project Detail & Tab Host Styles (project.css)
    Path: pages/project/project.css
    Single source of truth: fragments/theme/theme.css
@@ -949,3 +949,28 @@ body.sidebar-collapsed .dash-app-main {
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .project-content-container {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .project-detail-title {
+    font-size: clamp(1.65rem, 8vw, 2.25rem);
+  }
+
+  .project-right-rail {
+    padding: 1.25rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .project-meta-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .project-tab-item {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.75rem;
+  }
+}
+

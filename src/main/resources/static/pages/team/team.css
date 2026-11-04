@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    Teamden — Team Collaboration Dashboard (team.css)
    Path: pages/team/team.css
    Pixel-accurate match to Brick-inspired Team dashboard reference.
@@ -1125,3 +1125,28 @@ body.sidebar-collapsed .team-main-area {
     white-space: normal;
   }
 }
+
+@media (max-width: 480px) {
+  .team-main-col {
+    padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+    gap: 1rem;
+  }
+
+  .team-title {
+    font-size: clamp(2.25rem, 11vw, 3.25rem);
+  }
+
+  .team-featured-card {
+    padding: 1rem;
+  }
+
+  .team-right-panel {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .team-filter-btn {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+  }
+}
+

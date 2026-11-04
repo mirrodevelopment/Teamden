@@ -979,3 +979,23 @@
     font-size: 1.65rem;
   }
 }
+
+@media (max-width: 480px) {
+  .activity-journal-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .activity-entry {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .activity-right-rail {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .activity-meta-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

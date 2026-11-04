@@ -405,3 +405,82 @@
 .dropdown-item.logout-action:hover {
   background-color: rgba(229, 57, 53, 0.08);
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE RULES (<= 768px & <= 480px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .app-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+    grid-template-columns: none;
+    padding: 0;
+  }
+
+  .topbar-center-section {
+    flex: 1;
+    min-width: 0;
+    padding: 0.4rem 0.5rem 0.4rem 0.75rem;
+  }
+
+  .topbar-mobile-toggle {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topbar-search-box {
+    padding: 0.35rem 0.65rem;
+  }
+
+  .search-kbd {
+    display: none !important;
+  }
+
+  .topbar-right-section {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    border-left: none;
+    padding: 0.4rem 0.75rem 0.4rem 0;
+    gap: 0.5rem;
+  }
+
+  .topbar-live-date {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-center-section {
+    padding: 0.35rem 0.25rem 0.35rem 0.5rem;
+  }
+
+  .topbar-right-section {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    gap: 0.35rem;
+  }
+
+  .topbar-icons-row {
+    gap: 0.35rem;
+  }
+
+  .btn-create-pill {
+    padding: 0.35rem 0.55rem;
+  }
+
+  .btn-create-pill .create-text,
+  .btn-create-pill .create-chevron {
+    display: none;
+  }
+
+  .btn-create-pill .create-plus {
+    font-size: 1.15rem;
+  }
+}
+

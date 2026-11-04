@@ -854,3 +854,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .tov-main-col {
+    padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tov-right-rail {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tov-motion-card {
+    padding: 1rem;
+  }
+
+  .tov-featured-lead {
+    padding: 1rem;
+  }
+}
+

@@ -1669,3 +1669,38 @@ body.sidebar-collapsed .overview-app-main {
   }
 }
 
+@media (max-width: 480px) {
+  .overview-center-column {
+    padding: 12px 10px 36px 10px;
+  }
+
+  .overview-right-rail {
+    padding: 14px 10px 36px 10px;
+  }
+
+  .ov-hero-pulse-card {
+    padding: 14px;
+  }
+
+  .hero-pulse-number {
+    font-size: clamp(2.2rem, 11vw, 3.2rem);
+  }
+
+  .kpi-card {
+    padding: 12px;
+  }
+
+  .kpi-metric-number {
+    font-size: 24px;
+  }
+
+  .overview-page-title {
+    font-size: clamp(2.25rem, 9vw, 3rem);
+  }
+
+  .project-row-item {
+    padding: 10px 12px;
+  }
+}
+
+

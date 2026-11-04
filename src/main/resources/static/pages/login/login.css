@@ -1,4 +1,4 @@
-﻿/* ==========================================================
+/* ==========================================================
    BRICK WORKSPACE — Neo-Editorial SaaS Login & Auth Styles
    Exact 1:1 Pixel-Perfect Recreation of Brick Design Language
    ========================================================== */
@@ -1473,3 +1473,27 @@ html, body.brick-auth-body {
     font-size: 0.82rem;
   }
 }
+
+@media (max-width: 480px) {
+  .brand-pane-inner {
+    padding: 1.25rem 1rem;
+  }
+
+  .auth-form-pane {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .brick-control,
+  .input-with-icon input,
+  .logo-upload-dropzone {
+    font-size: 16px !important;
+    min-height: 42px;
+  }
+
+  .btn-brick-cta,
+  .btn-brick-primary {
+    min-height: 44px;
+    font-size: 0.875rem;
+  }
+}
+

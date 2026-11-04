@@ -1,4 +1,4 @@
-﻿@import url('../../../fragments/theme/theme.css');
+@import url('../../../fragments/theme/theme.css');
 
 /* Main Split Container: Left Workspace + Right Task Details Drawer */
 .tasks-workspace-split {
@@ -1827,6 +1827,14 @@
 }
 
 @media (max-width: 640px) {
+  .group-content-body {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .task-table-header,
+  .task-row {
+    min-width: 520px;
+  }
   .work-status-metrics-grid {
     grid-template-columns: 1fr;
     row-gap: 0.85rem;
@@ -1838,3 +1846,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .tasks-main-workspace {
+    padding: 0.5rem 0.25rem 2rem 0.25rem;
+  }
+  .tasks-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .toolbar-actions-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .tasks-details-drawer {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+}
+

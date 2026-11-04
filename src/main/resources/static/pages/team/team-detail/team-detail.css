@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    Teamden — Individual Team Details & Host Stylesheet (team-detail.css)
    Path: pages/team/team-detail/team-detail.css
    Pixel-accurate match to Brick Team Details layout with Overview tab.
@@ -373,3 +373,27 @@ body.sidebar-collapsed .tdet-main-area {
     width: 100%;
   }
 }
+
+@media (max-width: 480px) {
+  .tdet-header {
+    padding: 0.75rem 0.75rem 0.5rem;
+  }
+
+  .tdet-title {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+
+  .tdet-center-col {
+    padding: 1rem 0.75rem;
+  }
+
+  .tdet-right-panel {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .tdet-tab-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+

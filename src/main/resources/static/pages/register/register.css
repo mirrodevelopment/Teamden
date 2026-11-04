@@ -1,4 +1,4 @@
-﻿/* ==========================================================
+/* ==========================================================
    BRICK / Teamden — Company Registration Page Styles (register.css)
    Neo-Editorial 4-Step Onboarding Flow matching Brick Design Language
    ========================================================== */
@@ -1152,5 +1152,32 @@ body.brick-register-body {
     height: 34px;
     padding: 0 1.15rem;
     font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-pane-inner {
+    padding: 1.25rem 1rem;
+  }
+
+  .auth-form-pane {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .form-two-column-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brick-control,
+  .input-with-icon input,
+  .logo-upload-dropzone {
+    font-size: 16px !important;
+    min-height: 42px;
+  }
+
+  .btn-brick-secondary,
+  .btn-brick-primary {
+    min-height: 44px;
+    font-size: 0.875rem;
   }
 }

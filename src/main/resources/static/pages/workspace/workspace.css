@@ -943,11 +943,37 @@ body.sidebar-collapsed .ws-ki-grid {
 }
 
 @media (max-width: 680px) {
+  .ws-main-area {
+    margin-left: 0 !important;
+  }
+
+  .ws-main-col {
+    padding: 1rem 1rem 2.5rem 1rem;
+  }
+
   .ws-ki-grid {
     grid-template-columns: 1fr;
   }
 
   .ws-title {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 10vw, 3.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .ws-main-col {
+    padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .ws-right-rail {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .ws-title {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+
+  .ws-banner-card {
+    padding: 1rem;
   }
 }
