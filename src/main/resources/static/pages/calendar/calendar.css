@@ -1737,9 +1737,9 @@ html.sidebar-collapsed .dash-app-main {
 .event-drawer-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(20, 20, 20, 0.22);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 1040;
   opacity: 0;
   pointer-events: none;

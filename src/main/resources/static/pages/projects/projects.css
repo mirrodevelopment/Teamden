@@ -84,7 +84,7 @@ body.projects-body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  margin-top: -1rem;
+  margin-top: 0.35rem;
   width: 100%;
 }
 
@@ -130,7 +130,7 @@ body.projects-body {
   align-items: center;
   justify-content: space-between;
   padding: 0 0 0.85rem 0;
-  margin-top: -0.45rem;
+  margin-top: 0.35rem;
   border-bottom: 1px solid var(--dash-border);
 }
 

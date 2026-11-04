@@ -169,7 +169,7 @@ body.sidebar-collapsed .tdet-main-area {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  margin-top: -0.2rem;
+  margin-top: 0.35rem;
 }
 
 .tdet-title {

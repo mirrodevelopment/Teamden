@@ -937,6 +937,10 @@ body.sidebar-collapsed .dash-app-main {
   .project-content-container {
     padding: 1.25rem 1rem 3rem 1rem;
   }
+  .project-title-huge {
+    font-size: clamp(2.25rem, 10vw, 3.25rem);
+    line-height: 1.05;
+  }
   .project-meta-strip {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.85rem 1rem;
@@ -955,8 +959,10 @@ body.sidebar-collapsed .dash-app-main {
     padding: 1rem 0.75rem 2.5rem 0.75rem;
   }
 
+  .project-title-huge,
   .project-detail-title {
-    font-size: clamp(1.65rem, 8vw, 2.25rem);
+    font-size: clamp(1.75rem, 8.5vw, 2.35rem);
+    line-height: 1.05;
   }
 
   .project-right-rail {

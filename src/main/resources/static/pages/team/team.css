@@ -92,7 +92,7 @@ body.sidebar-collapsed .team-main-area {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  margin-top: -0.25rem;
+  margin-top: 0.35rem;
 }
 
 .team-title {
