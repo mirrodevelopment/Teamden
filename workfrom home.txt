@@ -14,6 +14,8 @@ DAY 2 - 2026-11-04 (WEDNESDAY - TODAY)
 --------------------------------------------------------------------------------
 - Full Mobile Layout Modernization (320px - 768px):
   * Overhauled all 20+ pages and fragments for small phones, phablets, and tablets.
+  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops (transparent click-dismiss).
+  * Zero Overlap: Eliminated negative margins causing header/text collisions in projects, dashboard, and team.
   * Resolved topbar grid overflow: collapsed to flex row, hid shortcut keys & live date.
   * Mobile drawer: touch scroll locking, auto-close on nav tap, capped width (min(260px, 80vw)).
   * Dashboard & Kanban: collapsed 2-column split to 1-column, horizontal scroll-snap on Kanban.
