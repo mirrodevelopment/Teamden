@@ -4,8 +4,22 @@
    Strict adherence to fragments/theme/theme.css design tokens (Zero Hex Standard)
    ========================================================================== */
 
+:root {
+  --body-font: var(--font-family-base, 'Montserrat', -apple-system, sans-serif);
+  --title-font: var(--font-family-today, 'Inter', sans-serif);
+  --dash-canvas: var(--dash-bg-canvas);
+  --dash-surface: var(--dash-bg-card);
+  --dash-surface-hover: var(--dash-bg-search);
+  --dash-accent-green: var(--dash-dot-green);
+  --dash-accent-amber: var(--dash-dot-orange);
+  --dash-accent-blue: var(--dash-dot-blue);
+  --dash-accent-purple: var(--dash-dot-purple);
+  --dash-text-secondary: var(--dash-text-body);
+  --dash-border-hover: var(--dash-border-strong);
+}
+
 .activity-body {
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   color: var(--dash-text-primary);
   font-family: var(--body-font);
   min-height: 100vh;
@@ -18,7 +32,7 @@
   flex-direction: column;
   min-width: 0;
   width: 100%;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
 }
 
 .activity-content-canvas {
@@ -158,10 +172,10 @@
   flex-shrink: 0;
 }
 
-.dot-green { background-color: var(--dash-accent-green); }
-.dot-silver { background-color: var(--dash-text-muted); }
-.dot-blue { background-color: var(--dash-accent-blue); }
-.dot-purple { background-color: var(--dash-accent-purple); }
+.dot-green { background-color: var(--dash-dot-green); }
+.dot-silver, .dot-amber { background-color: var(--dash-dot-orange); }
+.dot-blue { background-color: var(--dash-dot-blue); }
+.dot-purple { background-color: var(--dash-dot-purple); }
 
 .activity-back-link {
   display: inline-flex;
@@ -207,7 +221,7 @@
 .filter-segmented-group {
   display: inline-flex;
   align-items: center;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-card);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 3px;
@@ -223,7 +237,7 @@
   border-radius: 6px;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--dash-text-secondary);
+  color: var(--dash-text-body);
   transition: all 0.15s ease;
   white-space: nowrap;
 }
@@ -233,17 +247,17 @@
 }
 
 .filter-seg-btn.is-active {
-  background-color: var(--dash-surface);
+  background-color: var(--dash-bg-white);
   color: var(--dash-text-primary);
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .filter-search-box {
   display: inline-flex;
   align-items: center;
   position: relative;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-card);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 0.45rem 0.85rem;
@@ -283,7 +297,7 @@
 /* Custom Date Expandable Panel */
 .custom-date-panel {
   padding: 0.75rem 0.9rem;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-card);
   border: 1px dashed var(--dash-border);
   border-radius: 8px;
   animation: fadeInDown 0.2s ease-out;
@@ -324,7 +338,7 @@
 
 .custom-date-apply-btn {
   background-color: var(--dash-text-primary);
-  color: var(--dash-canvas);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 6px;
   padding: 0.4rem 0.9rem;
@@ -367,43 +381,98 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.45rem;
 }
 
 .type-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  background-color: var(--dash-canvas);
+  gap: 0.45rem;
+  background-color: var(--dash-bg-white);
   border: 1px solid var(--dash-border);
   border-radius: 9999px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--dash-text-secondary);
+  color: var(--dash-text-body);
   cursor: pointer;
   transition: all 0.15s ease;
+  user-select: none;
 }
 
-.type-pill:hover {
-  border-color: var(--dash-text-primary);
+.type-pill:hover:not(.is-active) {
+  border-color: var(--dash-border-strong);
   color: var(--dash-text-primary);
+  background-color: var(--dash-bg-card);
 }
 
+/* Default active fallback (crisp dark charcoal pill with pure white text) */
 .type-pill.is-active {
-  background-color: var(--dash-text-primary);
-  border-color: var(--dash-text-primary);
-  color: var(--dash-canvas);
+  background-color: var(--dash-hero-bg);
+  border-color: var(--dash-hero-bg);
+  color: var(--dash-text-white) !important;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .type-pill-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
-.type-pill.is-active .type-pill-dot {
-  background-color: var(--dash-canvas);
+/* "All Types" active: crisp charcoal pill with white text */
+.type-pill[data-type="all"].is-active {
+  background-color: var(--dash-hero-bg);
+  border-color: var(--dash-hero-bg);
+  color: var(--dash-text-white) !important;
+  font-weight: 700;
+}
+
+/* "Completed" active: soft lime background with deep green text matching badge */
+.type-pill[data-type="COMPLETED"].is-active {
+  background-color: var(--dash-badge-completed-bg);
+  border-color: var(--dash-badge-completed-text);
+  color: var(--dash-badge-completed-text) !important;
+  font-weight: 700;
+}
+.type-pill[data-type="COMPLETED"].is-active .type-pill-dot {
+  background-color: var(--dash-badge-completed-text);
+}
+
+/* "Documents" active: warm amber background with rich amber text matching badge */
+.type-pill[data-type="DOCUMENT"].is-active {
+  background-color: var(--dash-badge-document-bg);
+  border-color: var(--dash-badge-document-text);
+  color: var(--dash-badge-document-text) !important;
+  font-weight: 700;
+}
+.type-pill[data-type="DOCUMENT"].is-active .type-pill-dot {
+  background-color: var(--dash-badge-document-text);
+}
+
+/* "Assigned" active: soft slate blue background with deep navy text matching badge */
+.type-pill[data-type="ASSIGNED"].is-active {
+  background-color: var(--dash-badge-assigned-bg);
+  border-color: var(--dash-badge-assigned-text);
+  color: var(--dash-badge-assigned-text) !important;
+  font-weight: 700;
+}
+.type-pill[data-type="ASSIGNED"].is-active .type-pill-dot {
+  background-color: var(--dash-badge-assigned-text);
+}
+
+/* "Comments" active: muted lilac background with deep purple text matching badge */
+.type-pill[data-type="COMMENT"].is-active {
+  background-color: var(--dash-badge-comment-bg);
+  border-color: var(--dash-badge-comment-text);
+  color: var(--dash-badge-comment-text) !important;
+  font-weight: 700;
+}
+.type-pill[data-type="COMMENT"].is-active .type-pill-dot {
+  background-color: var(--dash-badge-comment-text);
 }
 
 .filter-active-status {
@@ -510,7 +579,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  box-shadow: 0 0 0 3px var(--dash-canvas);
+  box-shadow: 0 0 0 3px var(--dash-bg-canvas);
 }
 
 .act-content-card {
@@ -556,27 +625,27 @@
 }
 
 .badge-completed {
-  background-color: rgba(16, 185, 129, 0.12);
-  color: var(--dash-accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
+  border: 1px solid rgba(62, 82, 36, 0.2);
 }
 
 .badge-document {
-  background-color: rgba(245, 158, 11, 0.12);
-  color: var(--dash-accent-amber);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+  border: 1px solid rgba(122, 85, 32, 0.2);
 }
 
 .badge-assigned {
-  background-color: rgba(59, 130, 246, 0.12);
-  color: var(--dash-accent-blue);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
+  border: 1px solid rgba(54, 83, 105, 0.2);
 }
 
 .badge-comment {
-  background-color: rgba(139, 92, 246, 0.12);
-  color: var(--dash-accent-purple);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
+  border: 1px solid rgba(78, 68, 107, 0.2);
 }
 
 .act-desc-block {
@@ -654,7 +723,7 @@
 }
 
 .act-action-btn:hover {
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   border-color: var(--dash-text-primary);
   color: var(--dash-text-primary);
 }
@@ -677,7 +746,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -702,7 +771,7 @@
 
 .empty-reset-btn {
   background-color: var(--dash-text-primary);
-  color: var(--dash-canvas);
+  color: var(--dash-text-white);
   border: none;
   border-radius: 6px;
   padding: 0.5rem 1.15rem;
@@ -834,7 +903,7 @@
 }
 
 .drawer-info-box {
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 0.85rem 1rem;
@@ -848,7 +917,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   border: 1px solid var(--dash-border);
   border-radius: 8px;
   padding: 0.75rem 1rem;
@@ -888,7 +957,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--dash-text-primary);
-  color: var(--dash-canvas);
+  color: var(--dash-text-white);
   text-decoration: none;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -914,7 +983,7 @@
 }
 
 .drawer-action-secondary:hover {
-  background-color: var(--dash-canvas);
+  background-color: var(--dash-bg-canvas);
   color: var(--dash-text-primary);
 }
 

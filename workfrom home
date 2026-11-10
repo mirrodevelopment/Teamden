@@ -20,6 +20,7 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 - Dedicated Recent Activity Page with Multi-Range Filtering:
   * Created dedicated page at `/pages/activity/activity.html` (.css, .js) with continuous hairline timeline, KPI stat chips, and non-dimming inspection drawer.
   * Implemented date range filters: `All Time`, `Today`, `Yesterday`, `Last Week`, and `Custom Date` (with start/end date inputs), plus type filters and live text search.
+  * Resolved active filter pill color overlay: applied semantic badge tokens (`--dash-badge-*-bg/text`) for high contrast readability and eliminated black-on-black text clipping.
   * Engineered `/api/activity/data` and `/api/activity/{id}` with strict multi-tenant isolation in `ActivityService` and `ActivityController`.
   * Connected "VIEW ALL →" on Dashboard to `/pages/activity/activity.html`.
 - Multi-Tenant Isolation & Security Hardening:
@@ -43,12 +44,12 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Recent Activity timeline and multi-range filtering
-  [BEFORE - Dashboard Static Excerpt]:
-  Dashboard only showed 4 recent activity rows; "VIEW ALL →" was an inert link; no range filtering or inspection drawer existed.
+Example: Recent Activity timeline, multi-range filtering & high-contrast pills
+  [BEFORE - Dashboard Static Excerpt & Pill Color Overlay]:
+  Dashboard only showed 4 recent activity rows; "VIEW ALL →" was an inert link; active filter pill rendered as a solid black blob covering text due to missing token fallback.
 
-  [AFTER - Dedicated Activity Page & Dynamic Filters]:
-  Full page at `/pages/activity/activity.html` loads all historical events grouped by day with continuous hairline timeline. Live filter bar instantly slices by Today, Yesterday, Last Week, or Custom Date range, with full inspection drawer.
+  [AFTER - Dedicated Activity Page, Dynamic Filters & Semantic Badges]:
+  Full page at `/pages/activity/activity.html` loads historical events grouped by day with continuous timeline. Active filter pills render semantic badge colors (`COMPLETED` pale lime, `DOCUMENTS` amber, `ASSIGNED` slate blue, `COMMENTS` lilac) with crisp, high-contrast typography.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------

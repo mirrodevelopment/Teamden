@@ -1020,6 +1020,11 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Created `ActivityIntegrationTest.java` (8 tests) covering default data, today, yesterday, last week, custom date range, event type, query search, and cross-tenant isolation.
     - Fixed foreign-key constraint cleanup in `AuthenticationIntegrationTest.java`.
     - All 45/45 integration tests passing 100% green (`./mvnw test`).
+  * Filter Pill Color Overlay & Contrast Remediation:
+    - Eliminated undefined `--dash-canvas` variable references causing black-on-black text rendering when pills are activated.
+    - Added comprehensive `:root` token mapping in `activity.css` linking `--dash-canvas`, `--dash-surface`, `--dash-surface-hover`, and accent dots to canonical `theme.css` tokens.
+    - Assigned distinct semantic badge colors to active type pills (`COMPLETED` gets pale lime background `--dash-badge-completed-bg` with deep green text; `DOCUMENT` gets warm amber; `ASSIGNED` gets slate blue; `COMMENT` gets muted lilac).
+    - Enforced crisp `#FFFFFF` white text (`var(--dash-text-white)`) with dark charcoal background for `All Types` active pill, custom date apply button, and empty state action buttons.
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding
@@ -1211,6 +1216,13 @@ Example D: Dedicated Recent Activity Page & Multi-Range Filtering
 
   [AFTER - Dedicated Activity Page & Dynamic Filters]:
   Full page at `/pages/activity/activity.html` loads all historical events grouped by day with continuous hairline timeline. Live filter bar instantly slices by Today, Yesterday, Last Week, or Custom Date range, with full inspection drawer and zero-overlay UX.
+
+Example E: Filter Pill Active State Color Overlay & Contrast Remediation
+  [BEFORE - activity.css]:
+  `.type-pill.is-active` used `background-color: var(--dash-text-primary)` (black) with `color: var(--dash-canvas)`. Because `--dash-canvas` was undefined in `theme.css`, text color fell back to inherited `#171717` (black), causing an opaque solid black overlay covering the button text completely.
+
+  [AFTER - activity.css]:
+  Mapped `:root` aliases to canonical `theme.css` tokens. Active type pills inherit semantic badge palettes (`COMPLETED` renders `#EFF1E2` pale lime with `#3E5224` dark green text and border; `DOCUMENT` renders `#FBF3E8` with `#7A5520` amber text; `ALL TYPES` renders `#1F1F1D` charcoal with pure `#FFFFFF` white text), ensuring 100% crystal-clear readability and zero black-on-black collisions.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
