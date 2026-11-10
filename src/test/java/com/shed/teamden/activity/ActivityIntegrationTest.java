@@ -61,6 +61,9 @@ public class ActivityIntegrationTest {
     private ActivityEventRepository activityEventRepository;
 
     @Autowired
+    private com.shed.teamden.activity.service.ActivityService activityService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -156,6 +159,9 @@ public class ActivityIntegrationTest {
 
         sessionAlpha = loginAndGetSession("alpha_" + sA + "@activitytest.org", "Secret123!");
         sessionBeta = loginAndGetSession("beta_" + sB + "@activitytest.org", "Secret123!");
+
+        // Explicitly seed orgAlpha with baseline activity records for filter testing
+        activityService.ensureBaselineActivityRecords(orgAlpha, userAlpha);
     }
 
     private MockHttpSession loginAndGetSession(String email, String password) throws Exception {
@@ -256,5 +262,47 @@ public class ActivityIntegrationTest {
                         .session(sessionAlpha))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString("Activity event does not belong to the active organization")));
+    }
+
+    @Test
+    @DisplayName("Purged/Empty Database Verification: Query endpoint must not auto-seed and must return empty list")
+    void testEmptyActivityWhenDatabasePurged() throws Exception {
+        // Create an empty organization with no activity events
+        String suffix = UUID.randomUUID().toString().substring(0, 8);
+        Organization emptyOrg = organizationRepository.save(Organization.builder()
+                .name("Empty Org " + suffix)
+                .status(OrganizationStatus.ACTIVE)
+                .build());
+
+        User emptyUser = userRepository.save(User.builder()
+                .email("empty_" + suffix + "@activitytest.org")
+                .fullName("Empty User")
+                .passwordHash(passwordEncoder.encode("Secret123!"))
+                .status(UserStatus.ACTIVE)
+                .build());
+
+        membershipRepository.save(OrganizationMembership.builder()
+                .organization(emptyOrg)
+                .user(emptyUser)
+                .role(MembershipRole.OWNER)
+                .status(MembershipStatus.ACTIVE)
+                .build());
+
+        MockHttpSession emptySession = loginAndGetSession("empty_" + suffix + "@activitytest.org", "Secret123!");
+
+        // Request activity page data
+        mockMvc.perform(get("/api/activity/data")
+                        .session(emptySession))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalCount").value(0))
+                .andExpect(jsonPath("$.completedCount").value(0))
+                .andExpect(jsonPath("$.documentCount").value(0))
+                .andExpect(jsonPath("$.assignedCount").value(0))
+                .andExpect(jsonPath("$.commentCount").value(0))
+                .andExpect(jsonPath("$.activities", hasSize(0)));
+
+        // Verify that the database table remains genuinely empty (NO query-time auto-seeding occurred!)
+        long count = activityEventRepository.countByOrganizationId(emptyOrg.getId());
+        assertThat(count).isEqualTo(0L);
     }
 }

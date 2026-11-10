@@ -152,9 +152,6 @@ public class DashboardService {
                     .build();
         }
 
-        // Ensure baseline activity records are seeded in PostgreSQL if needed
-        activityService.ensureBaselineActivityRecords(organization, currentUser);
-
         // Fetch real activity events from PostgreSQL
         List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
         List<ActivityItemDto> activities = new ArrayList<>();

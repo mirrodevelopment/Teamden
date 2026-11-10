@@ -117,8 +117,6 @@ public class ActivityService {
         Organization organization = resolveCurrentOrganization();
         User currentUser = resolveCurrentUser(organization);
 
-        ensureBaselineActivityRecords(organization, currentUser);
-
         String rangeNorm = (range != null && !range.isBlank()) ? range.trim().toLowerCase() : "all";
         LocalDate today = LocalDate.now();
 

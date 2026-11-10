@@ -29,6 +29,8 @@ public interface ActivityEventRepository extends JpaRepository<ActivityEvent, UU
     @Query("SELECT e FROM ActivityEvent e LEFT JOIN FETCH e.actor LEFT JOIN FETCH e.project WHERE e.organization.id = :orgId AND e.project.id = :projectId ORDER BY e.eventTimestamp DESC")
     List<ActivityEvent> findByOrganizationIdAndProjectIdOrderByEventTimestampDesc(@Param("orgId") UUID orgId, @Param("projectId") UUID projectId);
 
+    long countByOrganizationId(UUID orgId);
+
     long countByOrganizationIdAndProjectId(UUID orgId, UUID projectId);
 
     long countByOrganizationIdAndProjectIdAndCategoryKey(UUID orgId, UUID projectId, String categoryKey);

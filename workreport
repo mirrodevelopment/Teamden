@@ -1154,7 +1154,13 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     tables prior to `calendar_events`.
   * Expanded `DashboardKanbanIntegrationTest.java`: Added `testToggleTaskMultiTenantIsolation()`, `testToggleTaskInvalidId()`, and `testToggleTaskNotFound()`.
   * Expanded `MultiOrganizationIsolationTest.java`: Added `testCrossOrganizationProjectAccessRejected()`, `testCrossOrganizationTaskToggleRejected()`, `testCrossOrganizationTaskMoveRejected()`, and `testOwnOrganizationProjectAccessAllowed()`.
-  * Successfully passed all 45 integration tests across all 8 test suites with 0 failures and 0 errors.
+  * Successfully passed all 46 integration tests across all 9 test suites with 0 failures and 0 errors.
+- Query-Time Auto-Reseeding Trap Eradication & Purge Persistence:
+  * Diagnosed root cause of data persisting after `purge_db.bat`: `ActivityService.getActivityPageData()` and `DashboardService.getDashboardData()` contained an auto-re-seed check (`count < 10`) that automatically inserted 12 hardcoded activity records into PostgreSQL on every GET request.
+  * Completely removed query-time auto-reseeding from `ActivityService.getActivityPageData()` and `DashboardService.getDashboardData()`.
+  * Verified that when `purge_db.bat` is executed, `activity_events` stays at 0 rows permanently until real activities occur.
+  * Added regression test `testEmptyActivityWhenDatabasePurged()` in `ActivityIntegrationTest.java` verifying 0 records and zero side-effect database inserts.
+  * 46/46 integration tests passing 100% green.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
