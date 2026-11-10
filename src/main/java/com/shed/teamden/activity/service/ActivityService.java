@@ -275,46 +275,8 @@ public class ActivityService {
         String infoText = event.getInfoText();
         String quotePreview = event.getQuotePreview();
 
-        // If entity does not have rich columns set (fallback for legacy/custom events), derive defaults
-        if (badge == null || badge.isBlank()) {
-            if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
-                dot = "green";
-                badge = "COMPLETED";
-                if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Marcus";
-                actionText = "completed";
-                targetTitle = (event.getDescription() != null && !event.getDescription().isBlank() && !event.getDescription().contains("complete")) 
-                        ? event.getDescription() : "Set up staging environment";
-                subMeta = "Client Application / Engineering";
-                infoText = "Task marked complete";
-            } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
-                dot = "silver";
-                badge = "DOCUMENT";
-                author = "";
-                actionText = "was updated";
-                targetTitle = event.getTitle() != null && !event.getTitle().isBlank() ? event.getTitle() : "Product brief";
-                subMeta = "Product / Workspace";
-                infoText = event.getDescription() != null ? event.getDescription() : "Version 1.2 · 3 pages";
-            } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
-                dot = "blue";
-                badge = "ASSIGNED";
-                author = "You";
-                actionText = "assigned a task to";
-                targetTitle = "Priya";
-                subMeta = "Website Redesign / Design Team";
-                infoText = event.getDescription() != null ? event.getDescription() : "Client feedback session\nTomorrow, 2:00 PM";
-            } else {
-                dot = "purple";
-                badge = "COMMENT";
-                if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Sonia";
-                actionText = "commented on";
-                targetTitle = "Design review notes";
-                subMeta = "Website Redesign / Design Team";
-                quotePreview = event.getDescription() != null ? event.getDescription() : "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.";
-                infoText = null;
-            }
-        }
-
         if (dot == null || dot.isBlank()) dot = "purple";
+        if (badge == null || badge.isBlank()) badge = event.getEventType() != null ? event.getEventType().name() : "ACTIVITY";
         if (actionText == null || actionText.isBlank()) actionText = event.getTitle() != null ? event.getTitle() : "updated";
         if (targetTitle == null || targetTitle.isBlank()) targetTitle = event.getDescription() != null ? event.getDescription() : "Activity item";
         if (subMeta == null || subMeta.isBlank()) {

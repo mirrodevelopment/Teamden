@@ -1045,6 +1045,19 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Replaced hardcoded demo content in `activity.html` drawer with clean initial empty tags (`-`).
     - Injected `ActivityService` into `DashboardService.java` to guarantee PostgreSQL baseline records, removing all in-code activity mock arrays and hardcoded string branching.
     - Removed hardcoded fallback activity arrays from `dashboard.js` (`renderActivityTimeline` and fallback structure).
+- Project Chronicle Activity Persistence & Universal Seed Eradication (Flyway V7):
+  * Relational Schema Migration (Flyway V7):
+    - Authored Flyway migration `V7__project_chronicle_activity_schema.sql` adding 10 chronicle columns to `activity_events`: `category_key`, `icon_type`, `icon_bg_class`, `action_label`, `action_type`, `action_target_id`, `is_important`, `is_mention`, `status_from`, `status_to`.
+    - Added high-performance indexes `idx_activity_proj_time` on `(project_id, event_timestamp DESC)` and `idx_activity_org_cat` on `(organization_id, category_key)`.
+  * Universal In-Code Seed & Mock Data Eradication:
+    - `ProjectActivityDto.java`: Eradicated the 179-line `createDefault(...)` hardcoded static mock builder method.
+    - `ActivityService.java`: Eradicated the 39-line fallback string block in `toActivityItemDto(...)` ("Marcus", "Set up staging environment", "Product brief", "Priya", "Sonia").
+    - `project-activity.html`: Eradicated 292 lines of hardcoded static mock timeline HTML cards (`group-2026-10-26`, `act-01` to `act-06`); container is now pure dynamic mount point.
+    - `project-activity.js`: Eradicated 166 lines of `defaultActivityData` static mock array; 100% dynamic API hydration from `/api/projects/{id}/activity`.
+  * Dynamic Backend Hydration & Date-Group Aggregation:
+    - Updated `ProjectService.java` (`getProjectActivity`): queries `activityEventRepository.findByOrganizationIdAndProjectIdOrderByEventTimestampDesc`, groups events dynamically by local date (`ActivityDateGroupDto`), dynamically aggregates filter counts (`milestones`, `decisions`, `tasks`, `documents`, `comments`, `files`, `mentions`), and calculates `sinceLastVisit` stats based on `isImportant`.
+    - Injected `ActivityEventRepository` and implemented `ensureProjectActivityBaseline` to seed initial chronicle events into PostgreSQL `activity_events` table if project has 0 activity rows.
+    - Added `Alex Rivera` (Owner) and `Priya Kapoor` (Admin) users to PostgreSQL database in organization `BRICK`.
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding

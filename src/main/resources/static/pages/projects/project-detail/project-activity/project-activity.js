@@ -27,174 +27,9 @@
       .replace(/'/g, '&#39;');
   }
 
-  // Baseline data strictly adhering to ProjectActivityDto and reference screenshot
-  const defaultActivityData = {
-    id: 'featured-01',
-    breadcrumb: 'PROJECTS / 02 / WEBSITE REDESIGN',
-    title: 'website redesign.',
-    owner: 'Design Team',
-    dueDate: '15 Nov 2026',
-    status: 'Active',
-    sinceLastVisit: {
-      count: 6,
-      title: 'Relevant updates',
-      description: 'Including one decision requiring your review.',
-      actionLabel: 'Review new activity ↗'
-    },
-    filterCounts: {
-      milestones: 6,
-      decisions: 4,
-      taskUpdates: 18,
-      documentActivity: 12,
-      comments: 9,
-      filesAndAttachments: 5,
-      mentions: 7
-    },
-    dateGroups: [
-      {
-        dayNumber: '26',
-        monthYear: 'OCT 2026',
-        weekday: 'MONDAY',
-        fullDate: '2026-10-26',
-        events: [
-          {
-            id: 'act-01',
-            time: '09:42',
-            category: 'MILESTONE COMPLETED',
-            categoryKey: 'milestones',
-            dotColor: 'lime',
-            iconType: 'flag',
-            iconBgClass: 'icon-bg-lime',
-            title: 'Design approved.',
-            description: 'Milestone 05 / Design has been completed and work can proceed to the next stage.',
-            userInitials: 'MJ',
-            userName: 'Maria J.',
-            userTeam: 'Design Team',
-            avatarColor: 'avatar-mj',
-            actionLabel: 'View milestone ↗',
-            actionType: 'milestone',
-            actionTargetId: 'ms-05',
-            isImportant: true,
-            isMention: false
-          },
-          {
-            id: 'act-02',
-            time: '08:15',
-            category: 'COMMENT',
-            categoryKey: 'comments',
-            dotColor: 'amber',
-            iconType: 'comment',
-            iconBgClass: 'icon-bg-amber',
-            title: 'Alex R. commented on Design Review Notes.',
-            description: '“The navigation direction looks good. Please refine the mobile interaction.”',
-            userInitials: 'AR',
-            userName: 'Alex R.',
-            userTeam: 'Design Team',
-            avatarColor: 'avatar-ar',
-            actionLabel: 'Open discussion ↗',
-            actionType: 'comment',
-            actionTargetId: 'doc-01',
-            isImportant: true,
-            isMention: true
-          },
-          {
-            id: 'act-03',
-            time: '07:28',
-            category: 'TASK UPDATED',
-            categoryKey: 'tasks',
-            dotColor: 'blue',
-            iconType: 'check-circle',
-            iconBgClass: 'icon-bg-blue',
-            title: 'Homepage development moved to In Progress.',
-            description: 'Status changed from',
-            statusFrom: 'To Do',
-            statusTo: 'In Progress',
-            userInitials: 'PK',
-            userName: 'Peter K.',
-            userTeam: 'Development',
-            avatarColor: 'avatar-pk',
-            actionLabel: 'View task ↗',
-            actionType: 'task',
-            actionTargetId: 'T-014',
-            isImportant: true,
-            isMention: false
-          }
-        ]
-      },
-      {
-        dayNumber: '25',
-        monthYear: 'OCT 2026',
-        weekday: 'SUNDAY',
-        fullDate: '2026-10-25',
-        events: [
-          {
-            id: 'act-04',
-            time: '15:30',
-            category: 'DOCUMENT UPDATED',
-            categoryKey: 'documents',
-            dotColor: 'purple',
-            iconType: 'document',
-            iconBgClass: 'icon-bg-purple',
-            title: 'Design Review Notes updated.',
-            description: 'Version 2.3 · 5 changes',
-            userInitials: 'PK',
-            userName: 'Peter K.',
-            userTeam: 'Design Team',
-            avatarColor: 'avatar-pk',
-            actionLabel: 'View changes ↗',
-            actionType: 'document',
-            actionTargetId: 'doc-01',
-            isImportant: true,
-            isMention: false
-          },
-          {
-            id: 'act-05',
-            time: '11:14',
-            category: 'DECISION RECORDED',
-            categoryKey: 'decisions',
-            dotColor: 'amber',
-            iconType: 'decision',
-            iconBgClass: 'icon-bg-amber',
-            title: 'Homepage layout approved (pending client confirmation).',
-            description: 'Awaiting final client sign-off.',
-            userInitials: 'MJ',
-            userName: 'Maria J.',
-            userTeam: 'Design Team',
-            avatarColor: 'avatar-mj',
-            actionLabel: 'View decision ↗',
-            actionType: 'decision',
-            actionTargetId: 'dec-01',
-            isImportant: true,
-            isMention: false
-          },
-          {
-            id: 'act-06',
-            time: '09:02',
-            category: 'FILE ADDED',
-            categoryKey: 'files',
-            dotColor: 'gray',
-            iconType: 'attachment',
-            iconBgClass: 'icon-bg-gray',
-            title: 'Added file to Project Brief.',
-            description: 'homepage-wireframes-v2.fig · 12 MB',
-            userInitials: 'SK',
-            userName: 'Sarah K.',
-            userTeam: 'Design Team',
-            avatarColor: 'avatar-sk',
-            actionLabel: 'Open document ↗',
-            actionType: 'file',
-            actionTargetId: 'doc-02',
-            isImportant: false,
-            isMention: false
-          }
-        ]
-      }
-    ]
-  };
-
   const State = {
     projectId: 'featured-01',
-    data: defaultActivityData,
+    data: null,
     activePill: 'important', // 'important', 'all', 'mentions'
     secondaryFilter: null,   // null or 'milestones', 'decisions', 'tasks', 'documents', 'comments', 'files', 'mentions'
     searchQuery: '',
@@ -242,29 +77,46 @@
         railInContainer.remove();
       }
 
-      // 3. Fetch live data from /api/projects/{id}/activity or fallback
-      let data = defaultActivityData;
+      // 3. Fetch live data from /api/projects/{id}/activity
+      let data = null;
       if (this.projectId) {
         try {
           const res = await fetch(`/api/projects/${encodeURIComponent(this.projectId)}/activity`);
           if (res.ok) {
-            const apiData = await res.json();
-            if (apiData && apiData.dateGroups && apiData.dateGroups.length > 0) {
-              data = apiData;
-            }
+            data = await res.json();
           }
         } catch (netErr) {
-          console.warn(`Could not fetch /api/projects/${this.projectId}/activity, using baseline:`, netErr);
+          console.warn(`Could not fetch /api/projects/${this.projectId}/activity:`, netErr);
         }
       }
 
-      State.data = data;
+      State.data = data || {
+        id: this.projectId,
+        title: 'Project Activity',
+        dateGroups: [],
+        filterCounts: {
+          milestones: 0,
+          decisions: 0,
+          taskUpdates: 0,
+          documentActivity: 0,
+          comments: 0,
+          filesAndAttachments: 0,
+          mentions: 0
+        },
+        sinceLastVisit: {
+          count: 0,
+          title: 'All caught up',
+          description: 'No pending updates requiring attention.',
+          actionLabel: 'Dismiss'
+        }
+      };
+
       if (options.filter) {
         State.secondaryFilter = options.filter;
       }
 
       // 3. Populate Right Rail Summary Stats
-      this.populateRightRail(data);
+      this.populateRightRail(State.data);
 
       // 4. Render main activity timeline
       this.renderTimeline();
@@ -280,16 +132,16 @@
       if (!data) return;
 
       // Card 1: Since Your Last Visit
-      const lastVisit = data.sinceLastVisit || defaultActivityData.sinceLastVisit;
+      const lastVisit = data.sinceLastVisit || { count: 0, title: 'All caught up', description: 'No pending updates requiring attention.' };
       const countEl = document.getElementById('last-visit-count');
       const titleEl = document.getElementById('last-visit-title');
       const descEl = document.getElementById('last-visit-desc');
-      if (countEl) countEl.textContent = String(lastVisit.count).padStart(2, '0');
+      if (countEl) countEl.textContent = String(lastVisit.count || 0).padStart(2, '0');
       if (titleEl && lastVisit.title) titleEl.textContent = lastVisit.title;
       if (descEl && lastVisit.description) descEl.textContent = lastVisit.description;
 
       // Card 3: Activity Filter Counts
-      const fc = data.filterCounts || defaultActivityData.filterCounts;
+      const fc = data.filterCounts || {};
       const setCt = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.textContent = val !== undefined ? val : 0;
@@ -339,7 +191,7 @@
       });
 
       const q = State.searchQuery.toLowerCase().trim();
-      let rawGroups = JSON.parse(JSON.stringify(State.data.dateGroups || defaultActivityData.dateGroups));
+      let rawGroups = JSON.parse(JSON.stringify((State.data && State.data.dateGroups) || []));
 
       // Filter groups and events
       let totalVisibleEvents = 0;

@@ -71,6 +71,46 @@ public class ActivityEvent {
     @Column(name = "dot_color", length = 30)
     private String dotColor;
 
+    @Column(name = "category_key", length = 50)
+    private String categoryKey;
+
+    @Column(name = "icon_type", length = 50)
+    private String iconType;
+
+    @Column(name = "icon_bg_class", length = 50)
+    private String iconBgClass;
+
+    @Column(name = "action_label", length = 100)
+    private String actionLabel;
+
+    @Column(name = "action_type", length = 50)
+    private String actionType;
+
+    @Column(name = "action_target_id", length = 100)
+    private String actionTargetId;
+
+    @Column(name = "is_important")
+    @Builder.Default
+    private Boolean isImportant = false;
+
+    @Column(name = "is_mention")
+    @Builder.Default
+    private Boolean isMention = false;
+
+    public boolean isImportant() {
+        return Boolean.TRUE.equals(this.isImportant);
+    }
+
+    public boolean isMention() {
+        return Boolean.TRUE.equals(this.isMention);
+    }
+
+    @Column(name = "status_from", length = 50)
+    private String statusFrom;
+
+    @Column(name = "status_to", length = 50)
+    private String statusTo;
+
     @Column(name = "event_timestamp", nullable = false, updatable = false)
     private Instant eventTimestamp;
 

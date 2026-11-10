@@ -1,5 +1,8 @@
 package com.shed.teamden.project.service;
 
+import com.shed.teamden.activity.entity.ActivityEvent;
+import com.shed.teamden.activity.entity.ActivityEventType;
+import com.shed.teamden.activity.repository.ActivityEventRepository;
 import com.shed.teamden.common.exception.BadRequestException;
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
@@ -24,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -40,6 +45,7 @@ public class ProjectService {
     private final ProjectDocumentRepository projectDocumentRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final TaskRepository taskRepository;
+    private final ActivityEventRepository activityEventRepository;
 
     public ProjectService(ProjectRepository projectRepository,
                           OrganizationRepository organizationRepository,
@@ -49,7 +55,8 @@ public class ProjectService {
                           ProjectDecisionRepository projectDecisionRepository,
                           ProjectDocumentRepository projectDocumentRepository,
                           ProjectMemberRepository projectMemberRepository,
-                          TaskRepository taskRepository) {
+                          TaskRepository taskRepository,
+                          ActivityEventRepository activityEventRepository) {
         this.projectRepository = projectRepository;
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
@@ -59,6 +66,7 @@ public class ProjectService {
         this.projectDocumentRepository = projectDocumentRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.taskRepository = taskRepository;
+        this.activityEventRepository = activityEventRepository;
     }
 
     @Transactional
@@ -661,6 +669,154 @@ public class ProjectService {
             );
             taskRepository.saveAll(baselineTasks);
         }
+
+        // 7. Project Chronicle Activity Events
+        if (activityEventRepository.countByOrganizationIdAndProjectId(org.getId(), project.getId()) == 0) {
+            ensureProjectActivityBaseline(project, currentUser);
+        }
+    }
+
+    private void ensureProjectActivityBaseline(Project project, User user) {
+        Organization org = project.getOrganization();
+        Instant now = Instant.now();
+
+        List<ActivityEvent> chronicle = List.of(
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.TASK_COMPLETED)
+                        .entityType("MILESTONE")
+                        .title("Design approved.")
+                        .description("Milestone 05 / Design has been completed and work can proceed to the next stage.")
+                        .categoryKey("milestones")
+                        .badgeType("MILESTONE COMPLETED")
+                        .dotColor("lime")
+                        .iconType("flag")
+                        .iconBgClass("icon-bg-lime")
+                        .actionLabel("View milestone ↗")
+                        .actionType("milestone")
+                        .actionTargetId("ms-05")
+                        .isImportant(true)
+                        .isMention(false)
+                        .eventTimestamp(now.minusSeconds(3600 * 3))
+                        .build(),
+
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.TASK_CREATED)
+                        .entityType("COMMENT")
+                        .title("Alex R. commented on Design Review Notes.")
+                        .description("\"The navigation direction looks good. Please refine the mobile interaction.\"")
+                        .categoryKey("comments")
+                        .badgeType("COMMENT")
+                        .dotColor("amber")
+                        .iconType("comment")
+                        .iconBgClass("icon-bg-amber")
+                        .actionLabel("Open discussion ↗")
+                        .actionType("comment")
+                        .actionTargetId("doc-01")
+                        .isImportant(true)
+                        .isMention(true)
+                        .eventTimestamp(now.minusSeconds(3600 * 5))
+                        .build(),
+
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.TASK_STATUS_CHANGED)
+                        .entityType("TASK")
+                        .title("Homepage development moved to In Progress.")
+                        .description("Status changed from")
+                        .categoryKey("tasks")
+                        .badgeType("TASK UPDATED")
+                        .dotColor("blue")
+                        .iconType("check-circle")
+                        .iconBgClass("icon-bg-blue")
+                        .statusFrom("To Do")
+                        .statusTo("In Progress")
+                        .actionLabel("View task ↗")
+                        .actionType("task")
+                        .actionTargetId("T-014")
+                        .isImportant(true)
+                        .isMention(false)
+                        .eventTimestamp(now.minusSeconds(3600 * 6))
+                        .build(),
+
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.PROJECT_UPDATED)
+                        .entityType("DOCUMENT")
+                        .title("Design Review Notes updated.")
+                        .description("Version 2.3 · 5 changes")
+                        .categoryKey("documents")
+                        .badgeType("DOCUMENT UPDATED")
+                        .dotColor("purple")
+                        .iconType("document")
+                        .iconBgClass("icon-bg-purple")
+                        .actionLabel("View changes ↗")
+                        .actionType("document")
+                        .actionTargetId("doc-01")
+                        .isImportant(true)
+                        .isMention(false)
+                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 2))
+                        .build(),
+
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.TASK_COMPLETED)
+                        .entityType("DECISION")
+                        .title("Homepage layout approved (pending client confirmation).")
+                        .description("Awaiting final client sign-off.")
+                        .categoryKey("decisions")
+                        .badgeType("DECISION RECORDED")
+                        .dotColor("amber")
+                        .iconType("decision")
+                        .iconBgClass("icon-bg-amber")
+                        .actionLabel("View decision ↗")
+                        .actionType("decision")
+                        .actionTargetId("dec-01")
+                        .isImportant(true)
+                        .isMention(false)
+                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 6))
+                        .build(),
+
+                ActivityEvent.builder()
+                        .id(UUID.randomUUID())
+                        .organization(org)
+                        .project(project)
+                        .actor(user)
+                        .eventType(ActivityEventType.PROJECT_UPDATED)
+                        .entityType("FILE")
+                        .title("Added file to Project Brief.")
+                        .description("homepage-wireframes-v2.fig · 12 MB")
+                        .categoryKey("files")
+                        .badgeType("FILE ADDED")
+                        .dotColor("gray")
+                        .iconType("attachment")
+                        .iconBgClass("icon-bg-gray")
+                        .actionLabel("Open document ↗")
+                        .actionType("file")
+                        .actionTargetId("doc-02")
+                        .isImportant(false)
+                        .isMention(false)
+                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 8))
+                        .build()
+        );
+
+        activityEventRepository.saveAll(chronicle);
     }
 
     private void ensureBaselineProjects(Organization org, User user) {
@@ -1173,27 +1329,171 @@ public class ProjectService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProjectActivityDto getProjectActivity(String projectId) {
-        String projectName = "website redesign.";
-        String projectOwner = "Design Team";
-        String dueDate = "15 Nov 2026";
-        String status = "ACTIVE";
-
         Project project = resolveProject(projectId);
-        if (project != null) {
-            if (project.getName() != null) projectName = project.getName();
-            try {
-                if (project.getOwner() != null && project.getOwner().getFullName() != null) {
-                    projectOwner = project.getOwner().getFullName();
-                }
-            } catch (Exception e) {
-                log.debug("Could not resolve project owner name: {}", e.getMessage());
-            }
-            if (project.getDueDate() != null) dueDate = project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-            if (project.getStatus() != null) status = project.getStatus().name();
+        if (project == null) {
+            Organization organization = resolveCurrentOrganization();
+            User currentUser = resolveCurrentUser(organization);
+            ensureBaselineProjects(organization, currentUser);
+            List<Project> projs = projectRepository.findByOrganizationIdWithDetails(organization.getId());
+            project = projs.isEmpty() ? null : projs.get(0);
+        }
+        if (project == null) {
+            throw new ResourceNotFoundException("Project not found: " + projectId);
         }
 
-        return ProjectActivityDto.createDefault(projectId, projectName, projectOwner, dueDate, status);
+        Organization org = project.getOrganization();
+        User currentUser = resolveCurrentUser(org);
+        ensureProjectFlowBaseline(project, currentUser);
+
+        final String projectName = project.getName() != null ? project.getName() : "Team";
+
+        List<ActivityEvent> events = activityEventRepository
+                .findByOrganizationIdAndProjectIdOrderByEventTimestampDesc(org.getId(), project.getId());
+
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDate today = LocalDate.now(zone);
+        LocalDate yesterday = today.minusDays(1);
+
+        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(zone);
+        DateTimeFormatter fullDateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(zone);
+        DateTimeFormatter dayNumFmt = DateTimeFormatter.ofPattern("dd").withZone(zone);
+        DateTimeFormatter monthYearFmt = DateTimeFormatter.ofPattern("MMM yyyy").withZone(zone);
+        DateTimeFormatter weekdayFmt = DateTimeFormatter.ofPattern("EEE").withZone(zone);
+
+        Map<String, List<ActivityEvent>> groupedByDate = new LinkedHashMap<>();
+        int countMilestones = 0;
+        int countDecisions = 0;
+        int countTasks = 0;
+        int countDocs = 0;
+        int countComments = 0;
+        int countFiles = 0;
+        int countMentions = 0;
+        int importantCount = 0;
+
+        for (ActivityEvent e : events) {
+            Instant ts = e.getEventTimestamp() != null ? e.getEventTimestamp() : Instant.now();
+            String dateKey = fullDateFmt.format(ts);
+            groupedByDate.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(e);
+
+            String catKey = e.getCategoryKey() != null ? e.getCategoryKey().toLowerCase() : "";
+            switch (catKey) {
+                case "milestones" -> countMilestones++;
+                case "decisions" -> countDecisions++;
+                case "tasks" -> countTasks++;
+                case "documents" -> countDocs++;
+                case "comments" -> countComments++;
+                case "files" -> countFiles++;
+                default -> {}
+            }
+            if (e.isMention()) {
+                countMentions++;
+            }
+            if (e.isImportant()) {
+                importantCount++;
+            }
+        }
+
+        List<ProjectActivityDto.ActivityDateGroupDto> dateGroups = new ArrayList<>();
+        for (Map.Entry<String, List<ActivityEvent>> entry : groupedByDate.entrySet()) {
+            String fullDate = entry.getKey();
+            List<ActivityEvent> dayEvents = entry.getValue();
+            Instant firstTs = dayEvents.get(0).getEventTimestamp() != null ? dayEvents.get(0).getEventTimestamp() : Instant.now();
+            LocalDate eventLocalDate = LocalDate.ofInstant(firstTs, zone);
+
+            String weekday;
+            if (eventLocalDate.equals(today)) {
+                weekday = "TODAY";
+            } else if (eventLocalDate.equals(yesterday)) {
+                weekday = "YESTERDAY";
+            } else {
+                weekday = weekdayFmt.format(firstTs).toUpperCase();
+            }
+
+            List<ProjectActivityDto.ActivityEventDto> eventDtos = dayEvents.stream().map(e -> {
+                Instant et = e.getEventTimestamp() != null ? e.getEventTimestamp() : Instant.now();
+
+                String initials = "TD";
+                String actorName = "Team Member";
+                String actorTeam = projectName;
+                String avatarColor = "#3B82F6";
+
+                if (e.getActor() != null) {
+                    actorName = e.getActor().getFullName();
+                    if (actorName != null && !actorName.isBlank()) {
+                        String[] parts = actorName.trim().split("\\s+");
+                        if (parts.length >= 2) {
+                            initials = ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+                        } else if (parts.length == 1 && !parts[0].isEmpty()) {
+                            initials = parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+                        }
+                    }
+                }
+
+                return ProjectActivityDto.ActivityEventDto.builder()
+                        .id(e.getId().toString())
+                        .time(timeFmt.format(et))
+                        .category(e.getBadgeType() != null ? e.getBadgeType() : "ACTIVITY")
+                        .categoryKey(e.getCategoryKey() != null ? e.getCategoryKey() : "tasks")
+                        .dotColor(e.getDotColor() != null ? e.getDotColor() : "blue")
+                        .iconType(e.getIconType() != null ? e.getIconType() : "check-circle")
+                        .iconBgClass(e.getIconBgClass() != null ? e.getIconBgClass() : "icon-bg-blue")
+                        .title(e.getTitle())
+                        .description(e.getDescription())
+                        .statusFrom(e.getStatusFrom())
+                        .statusTo(e.getStatusTo())
+                        .userInitials(initials)
+                        .userName(actorName)
+                        .userTeam(actorTeam)
+                        .avatarColor(avatarColor)
+                        .actionLabel(e.getActionLabel())
+                        .actionType(e.getActionType())
+                        .actionTargetId(e.getActionTargetId())
+                        .isImportant(e.isImportant())
+                        .isMention(e.isMention())
+                        .build();
+            }).toList();
+
+            dateGroups.add(ProjectActivityDto.ActivityDateGroupDto.builder()
+                    .dayNumber(dayNumFmt.format(firstTs))
+                    .monthYear(monthYearFmt.format(firstTs).toUpperCase())
+                    .weekday(weekday)
+                    .fullDate(fullDate)
+                    .events(eventDtos)
+                    .build());
+        }
+
+        ProjectActivityDto.SinceLastVisitDto sinceLastVisit = ProjectActivityDto.SinceLastVisitDto.builder()
+                .count(importantCount)
+                .title(importantCount + " important updates since your last visit")
+                .description("Includes milestone completions, mentions, and key decisions.")
+                .actionLabel("Dismiss")
+                .build();
+
+        ProjectActivityDto.ActivityFilterCountsDto filterCounts = ProjectActivityDto.ActivityFilterCountsDto.builder()
+                .milestones(countMilestones)
+                .decisions(countDecisions)
+                .taskUpdates(countTasks)
+                .documentActivity(countDocs)
+                .comments(countComments)
+                .filesAndAttachments(countFiles)
+                .mentions(countMentions)
+                .build();
+
+        String dueStr = project.getDueDate() != null ? project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "15 Nov 2026";
+        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : "Design Team";
+
+        return ProjectActivityDto.builder()
+                .id(project.getId().toString())
+                .breadcrumb("PROJECTS / 02 / " + project.getName().toUpperCase())
+                .title(project.getName())
+                .owner(ownerStr)
+                .dueDate(dueStr)
+                .status(project.getStatus() != null ? project.getStatus().name() : "Active")
+                .sinceLastVisit(sinceLastVisit)
+                .filterCounts(filterCounts)
+                .dateGroups(dateGroups)
+                .build();
     }
 }

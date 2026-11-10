@@ -18,105 +18,71 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Eradicated hardcoded `SEED_EVENTS` and `UPCOMING_COMMITMENTS` static arrays from `calendar.js`.
   * Added `.cal-event-card.is-compact` in `calendar.css` preventing vertical text clipping on 30-min slots.
 - Dedicated Recent Activity Page with Multi-Range Filtering:
-  * Created dedicated page at `/pages/activity/activity.html` (.css, .js) with continuous hairline timeline, KPI stat chips, and non-dimming inspection drawer.
-  * Implemented date range filters: `All Time`, `Today`, `Yesterday`, `Last Week`, and `Custom Date` (with start/end date inputs), plus type filters and live text search.
-  * Resolved active filter pill color overlay: applied semantic badge tokens (`--dash-badge-*-bg/text`) for high contrast readability and eliminated black-on-black text clipping.
-  * Engineered `/api/activity/data` and `/api/activity/{id}` with strict multi-tenant isolation in `ActivityService` and `ActivityController`.
-  * Connected "VIEW ALL →" on Dashboard to `/pages/activity/activity.html`.
+  * Created dedicated page at `/pages/activity/activity.html` (.css, .js) with continuous hairline timeline and KPI chips.
+  * Implemented date range filters: `All Time`, `Today`, `Yesterday`, `Last Week`, and `Custom Date`, plus type filters and live search.
+  * Resolved active filter pill color overlay: applied semantic badge tokens (`--dash-badge-*-bg/text`) for high contrast readability.
+  * Engineered `/api/activity/data` and `/api/activity/{id}` with strict multi-tenant isolation in `ActivityService`.
 - Activity Full Database Persistence & Interactive Table View (Flyway V6):
-  * Authored Flyway V6 migration (`V6__activity_events_full_data.sql`) adding 7 rich display columns (`action_text`, `target_title`, `sub_meta`, `info_text`, `quote_preview`, `badge_type`, `dot_color`) with composite index `idx_activity_badge_time`.
-  * Updated `ActivityEvent.java` entity and `ActivityService.java` to eliminate synthetic defaults and directly hydrate `ActivityItemDto` from PostgreSQL.
-  * Seeded 12 complete reference movements into database across Today, Yesterday, and Last Week.
-  * Built dual-mode View Switcher (`[Timeline]` / `[Table View]`) in `activity.html` with `#pane-timeline` and `#pane-table`.
-  * Styled responsive `.act-data-table` in `activity.css` adhering strictly to Neo-Editorial theme design tokens (Zero Hex Standard).
-  * Implemented `renderTable()` and view toggling with `localStorage` persistence in `activity.js`.
-- Complete Seed Value Eradication across Activity & Dashboard:
-  * Removed hardcoded fallback object in `activity.js` (`window.openActivityDrawer`); now fetches asynchronously from `/api/activity/{id}` database API if not cached.
-  * Replaced hardcoded demo content in `activity.html` drawer with clean initial empty tags (`-`).
-  * Injected `ActivityService` into `DashboardService.java` to guarantee PostgreSQL baseline records, removing all in-code activity mock arrays and hardcoded string branching.
-  * Removed hardcoded fallback activity arrays from `dashboard.js`.
-- Multi-Tenant Isolation & Security Hardening:
-  * `DashboardService.java`: Enforced active tenant boundary checks on `toggleTask()`; rejected cross-tenant toggling and invalid UUID formats with 400 Bad Request. Scoped activity events to active org.
-  * `ProjectService.java`: Fixed critical data leak in `resolveProject(id)`. Enforced active organization verification for project overview, tasks, documents, and activity endpoints.
-  * Fixed lazy initialization on `getProjectActivity()` by adding `@Transactional(readOnly = true)`.
-  * Eliminated unsafe tenant resolution fallbacks for authenticated users.
+  * Authored Flyway V6 migration (`V6__activity_events_full_data.sql`) adding 7 rich display columns to `activity_events`.
+  * Updated `ActivityEvent.java` and `ActivityService.java` to eliminate synthetic defaults and hydrate directly from PostgreSQL.
+  * Built dual-mode View Switcher (`[Timeline]` / `[Table View]`) in `activity.html` with responsive `.act-data-table` in `activity.css`.
+- Project Chronicle Activity Persistence & Universal Seed Eradication (Flyway V7):
+  * Authored Flyway V7 migration (`V7__project_chronicle_activity_schema.sql`) adding 10 chronicle columns and composite indexes.
+  * Eradicated 179-line `createDefault` from `ProjectActivityDto.java` and 39-line fallback block from `ActivityService.java`.
+  * Eradicated 292 lines of hardcoded static mock cards from `project-activity.html` and 166-line mock array from `project-activity.js`.
+  * Updated `ProjectService.java` (`getProjectActivity`): 100% dynamic DB hydration, date grouping, KPI counts & `sinceLastVisit`.
+  * Seeded 2 users (`alex@teamden.com` Owner, `priya@teamden.com` Admin) in org `BRICK` in PostgreSQL.
 - Database Purge Utility Robustness & Cascade Truncation:
-  * Eliminated Windows batch parse-time expansion bug on `set /p` inside parenthesized block in `purge_db.bat`.
-  * Added whitespace removal and first-character matching (`Y`/`y`) handling trailing space inputs.
-  * Extended truncation list to all 20 relational application tables with `RESTART IDENTITY CASCADE`.
-  * Preserved `flyway_schema_history` while verifying 0 rows across all user data tables.
+  * Fixed batch parse expansion bug in `purge_db.bat`; added whitespace-safe confirmation and complete 20-table cascade.
 - Automated Integration Testing & Verification:
-  * Added `ActivityIntegrationTest.java` (8 tests) covering all date filters, event types, search queries, and multi-tenant isolation.
-  * Expanded `DashboardKanbanIntegrationTest.java` and `MultiOrganizationIsolationTest.java` with cross-tenant mutation assertions.
   * 45/45 integration tests 100% green across all test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Database Purge Utility: `purge_db.bat`.
-- Activity Persistence & Table View: `V6__activity_events_full_data.sql`, `ActivityEvent.java`, `ActivityService.java`, `activity.html`, `activity.css`, `activity.js`, `ActivityIntegrationTest.java`.
-- Dashboard & Activity Synchronization: `DashboardService.java`, `dashboard.js`.
-- Activity Suite: `ActivityController.java`, `ActivityPageDataDto.java`, `ActivityEventRepository.java`.
-- Project Service: `ProjectService.java`.
-- Calendar Database & Frontend: `V5__calendar_full_data_tables.sql`, `calendar.js`, `calendar.css`.
-- Security & Test Fixtures: `SecurityConfig.java`, `AuthenticationIntegrationTest.java`.
+- Database & Migrations: `V5__calendar_full_data_tables.sql`, `V6__activity_events_full_data.sql`, `V7__project_chronicle_activity_schema.sql`, `purge_db.bat`.
+- Activity Suite: `ActivityEvent.java`, `ActivityEventRepository.java`, `ActivityService.java`, `ActivityController.java`, `activity.html`, `activity.css`, `activity.js`, `ActivityIntegrationTest.java`.
+- Project Chronicle: `ProjectActivityDto.java`, `ProjectService.java`, `project-activity.html`, `project-activity.js`.
+- Dashboard & Calendar: `DashboardService.java`, `dashboard.js`, `CalendarService.java`, `calendar.js`, `calendar.css`.
+- Security & Tests: `MultiOrganizationIsolationTest.java`, `DashboardKanbanIntegrationTest.java`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Full eradication of code seed values in favor of database persistence
-  [BEFORE - Hardcoded Fallback Seed Objects]:
-  `activity.js` and `dashboard.js` had fallback mock arrays (`Marcus`, `Set up staging environment`, `Product brief`); `DashboardService.java` had fallback `activities.add(...)` and string branches if DB was empty.
+Example: Universal Eradication of Code Seed Values in Favor of Relational Database Persistence
+  [BEFORE]:
+  `project-activity.js` and `activity.js` contained hundreds of lines of static mock arrays (`defaultActivityData`, `fallbackActivities`); `project-activity.html` had 292 lines of hardcoded mock HTML cards; `ProjectActivityDto` generated static mock strings.
 
-  [AFTER - 100% Database-Driven Hydration]:
-  All seed activities are persisted in PostgreSQL table `activity_events` via Flyway/JPA. `activity.js`, `dashboard.js`, and `DashboardService.java` fetch directly from database APIs with zero in-code seed fallbacks.
+  [AFTER]:
+  100% of activity data is persisted in and queried from PostgreSQL `activity_events` via Flyway V6/V7 and JPA. Zero hardcoded mock arrays or fallback mock strings remain in frontend JavaScript or backend Java services.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Database Purge: Tested interactive confirmation with trailing whitespace and `--force` flag; verified 0 rows across 13 monitored table categories with Flyway preserved at 6.
+- Database Purge: Tested interactive confirmation with trailing whitespace and `--force` flag (0 rows across all 20 tables).
 - Test Suite: 45/45 integration tests passing 100% with 0 errors/failures (`./mvnw test`).
 - Multi-Tenant Isolation: Verified cross-organization rejection for activity, tasks, projects, calendar, and dashboards.
 
 ================================================================================
 DAY 2 - 2026-11-04 (WEDNESDAY)
 ================================================================================
-
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
 - Full Mobile Layout Modernization (320px - 768px):
   * Zero Overlay: Eradicated dark screen-dimming overlay backdrops across drawers.
   * Zero Overlap: Eliminated negative margins causing header/text collisions.
-  * Resolved topbar grid overflow: collapsed to flex row, hid shortcut keys & live date.
-  * Mobile drawer: touch scroll locking, auto-close on nav tap, capped width (min(260px, 80vw)).
-  * Dashboard & Kanban: collapsed 2-col split to 1-col, horizontal scroll-snap on Kanban.
-  * Projects & Team Suites: fluid headline clamps, stacked cards, responsive tables/tabs.
-  * Workspace, Calendar & Auth: responsive 7-day grid scroll, 44px touch targets, 16px inputs.
-- Chrome DevTools Protocol Verification:
-  * Simulated 375x812 mobile viewport and verified Dashboard, Projects, Team, Calendar, Overview, Login.
+  * Resolved topbar grid overflow; mobile drawer with touch scroll locking; responsive 1-col dashboard & Kanban snap.
+- Chrome DevTools Protocol Verification: Simulated 375x812 mobile viewport across all pages.
 
-2. WHAT WAS CHANGED & FILES AFFECTED
---------------------------------------------------------------------------------
-- Shell & Tokens: `theme.css`, `navbar.css`, `sidebar.css`, `sidebar.js`.
-- Core Views: `dashboard.css`, `overview.css`, `insights.css`.
-- Projects & Team Suites: `projects.css`, `project-detail.css`, `team.css`, `team-detail.css`.
-- Workspace, Calendar & Auth: `workspace.css`, `calendar.css`, `login.css`, `register.css`.
-
-3. VERIFICATION PERFORMED
---------------------------------------------------------------------------------
-- Test Suite: 18/18 integration tests green.
-- Chrome CDP Visual Inspection: Captured 375x812 screenshots across all pages.
+2. WHAT WAS CHANGED & FILES AFFECTED: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`, `overview.css`, `projects.css`, `team.css`, `calendar.css`, `login.css`.
+3. VERIFICATION: 18/18 integration tests green; visual inspection verified.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 ================================================================================
-- Phase 1 [COMPLETED]: Color token harmonization, shell unification & zero hex audit.
-- Phase 2 [COMPLETED]: Project Flow relational schema, Flyway V2 & dynamic hydration.
-- Phase 3 [COMPLETED]: Mobile layout modernization across all 20+ pages & fragments.
-- Phase 4 [COMPLETED]: Interactive Kanban column transitions, drag-and-drop & Flyway V3.
-- Phase 5 [COMPLETED]: Relational Calendar persistence, Flyway V4 & Table view.
-- Phase 6 [COMPLETED]: Full Calendar raw data migration to DB, Flyway V5 & dynamic hydration.
+- Phase 1-6 [COMPLETED]: Shell unification, mobile layout, Kanban drag-and-drop, relational Calendar persistence & V5.
 - Phase 7 [COMPLETED]: Multi-tenant security isolation across project, dashboard, and task APIs.
 - Phase 8 [COMPLETED]: Dedicated Recent Activity page with multi-range & custom date filtering.
 - Phase 9 [COMPLETED]: Activity full database persistence (Flyway V6) & Table View switcher.
-- Phase 10 [SCHEDULED]: Production build verification & asset minification.
+- Phase 10 [COMPLETED]: Project chronicle activity persistence (Flyway V7) & universal in-code seed eradication.
+- Phase 11 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT
