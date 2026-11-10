@@ -481,6 +481,56 @@
   color: var(--dash-text-muted);
 }
 
+.filter-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.activity-view-switcher {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--dash-bg-canvas);
+  border: 1px solid var(--dash-border);
+  border-radius: 9999px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.act-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--dash-text-body);
+  font-family: var(--body-font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.act-view-btn svg {
+  flex-shrink: 0;
+}
+
+.act-view-btn:hover:not(.is-active) {
+  color: var(--dash-text-primary);
+  background-color: var(--dash-bg-card);
+}
+
+.act-view-btn.is-active {
+  background-color: var(--dash-bg-card);
+  color: var(--dash-text-primary);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
 /* ==========================================================================
    TIMELINE SECTION & CONTINUOUS HAIRLINE
    ========================================================================== */
@@ -786,6 +836,181 @@
 }
 
 /* ==========================================================================
+   ACTIVITY TABLE VIEW SECTION
+   ========================================================================== */
+.activity-table-section {
+  width: 100%;
+}
+
+.act-table-card {
+  background-color: var(--dash-bg-card);
+  border: 1px solid var(--dash-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.act-table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.act-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.8125rem;
+}
+
+.act-data-table th {
+  background-color: var(--dash-bg-card);
+  border-bottom: 1px solid var(--dash-border);
+  color: var(--dash-text-light);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+
+.act-data-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--dash-border-subtle);
+  color: var(--dash-text-body);
+  vertical-align: middle;
+  background-color: var(--dash-bg-card);
+  transition: background-color 0.15s ease;
+}
+
+.act-data-table tr:hover td {
+  background-color: var(--dash-bg-search);
+}
+
+.act-data-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Specific column styles */
+.act-cell-time {
+  font-family: var(--dash-font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--dash-text-primary);
+  white-space: nowrap;
+}
+
+.act-cell-time .act-tbl-day {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+}
+
+.act-table-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.act-table-badge.badge-completed {
+  background-color: var(--dash-badge-completed-bg);
+  color: var(--dash-badge-completed-text);
+  border: 1px solid var(--dash-badge-completed-border);
+}
+
+.act-table-badge.badge-document {
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+  border: 1px solid var(--dash-badge-document-border);
+}
+
+.act-table-badge.badge-assigned {
+  background-color: var(--dash-badge-assigned-bg);
+  color: var(--dash-badge-assigned-text);
+  border: 1px solid var(--dash-badge-assigned-border);
+}
+
+.act-table-badge.badge-comment {
+  background-color: var(--dash-badge-comment-bg);
+  color: var(--dash-badge-comment-text);
+  border: 1px solid var(--dash-badge-comment-border);
+}
+
+.act-tbl-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.act-cell-actor {
+  font-weight: 600;
+  color: var(--dash-text-primary);
+  white-space: nowrap;
+}
+
+.act-cell-target {
+  font-weight: 500;
+  color: var(--dash-text-body);
+}
+
+.act-cell-target strong {
+  font-weight: 700;
+  color: var(--dash-text-primary);
+}
+
+.act-cell-project {
+  font-size: 0.75rem;
+  color: var(--dash-text-muted);
+  white-space: nowrap;
+}
+
+.act-cell-details {
+  font-size: 0.75rem;
+  color: var(--dash-text-body);
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.act-cell-details .quote-italic {
+  font-style: italic;
+  color: var(--dash-text-primary);
+}
+
+.act-tbl-inspect-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--dash-border);
+  background-color: var(--dash-bg-canvas);
+  color: var(--dash-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.85rem;
+}
+
+.act-tbl-inspect-btn:hover {
+  border-color: var(--dash-border-strong);
+  color: var(--dash-text-primary);
+  background-color: var(--dash-bg-card);
+}
+
+/* ==========================================================================
    SLIDE-IN EVENT DETAILS DRAWER (Zero Overlay standard)
    ========================================================================== */
 .activity-drawer-overlay {
@@ -1031,6 +1256,12 @@
   .filter-secondary-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .filter-controls-right {
+    width: 100%;
+    justify-content: space-between;
   }
 
   /* Compact timeline on mobile */

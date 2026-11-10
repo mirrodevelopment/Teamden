@@ -6,9 +6,9 @@ File: workfrom home.txt (and workfrom home)
 Tracking Standard: Every day entry strictly begins with "DAY X - [Date]"
 ================================================================================
 
-================================================================================
+===============================================================================
 DAY 3 - 2026-11-10 (TUESDAY - TODAY)
-================================================================================
+===============================================================================
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
@@ -23,33 +23,39 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Resolved active filter pill color overlay: applied semantic badge tokens (`--dash-badge-*-bg/text`) for high contrast readability and eliminated black-on-black text clipping.
   * Engineered `/api/activity/data` and `/api/activity/{id}` with strict multi-tenant isolation in `ActivityService` and `ActivityController`.
   * Connected "VIEW ALL →" on Dashboard to `/pages/activity/activity.html`.
+- Activity Full Database Persistence & Interactive Table View (Flyway V6):
+  * Authored Flyway V6 migration (`V6__activity_events_full_data.sql`) adding 7 rich display columns (`action_text`, `target_title`, `sub_meta`, `info_text`, `quote_preview`, `badge_type`, `dot_color`) with composite index `idx_activity_badge_time`.
+  * Updated `ActivityEvent.java` entity and `ActivityService.java` to eliminate synthetic defaults and directly hydrate `ActivityItemDto` from PostgreSQL.
+  * Seeded 12 complete reference movements into database across Today, Yesterday, and Last Week.
+  * Built dual-mode View Switcher (`[Timeline]` / `[Table View]`) in `activity.html` with `#pane-timeline` and `#pane-table`.
+  * Styled responsive `.act-data-table` in `activity.css` adhering strictly to Neo-Editorial theme design tokens (Zero Hex Standard).
+  * Implemented `renderTable()` and view toggling with `localStorage` persistence in `activity.js`. Eradicated `fallbackActivities` mock array.
 - Multi-Tenant Isolation & Security Hardening:
   * `DashboardService.java`: Enforced active tenant boundary checks on `toggleTask()`; rejected cross-tenant toggling and invalid UUID formats with 400 Bad Request. Scoped activity events to active org.
   * `ProjectService.java`: Fixed critical data leak in `resolveProject(id)`. Enforced active organization verification for project overview, tasks, documents, and activity endpoints.
   * Fixed lazy initialization on `getProjectActivity()` by adding `@Transactional(readOnly = true)`.
   * Eliminated unsafe tenant resolution fallbacks for authenticated users.
-- Security Integration Test Expansion:
+- Automated Integration Testing & Verification:
   * Added `ActivityIntegrationTest.java` (8 tests) covering all date filters, event types, search queries, and multi-tenant isolation.
   * Expanded `DashboardKanbanIntegrationTest.java` and `MultiOrganizationIsolationTest.java` with cross-tenant mutation assertions.
-- Full Test Suite Verification:
   * 45/45 integration tests 100% green across all test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Activity Page: `activity.html`, `activity.css`, `activity.js`, `ActivityController.java`, `ActivityService.java`, `ActivityPageDataDto.java`, `ActivityIntegrationTest.java`.
-- Dashboard Service: `DashboardService.java` (toggle multi-tenancy, fallback hardening, dashboard link).
-- Project Service: `ProjectService.java` (project endpoint multi-tenancy, transactional activity).
+- Activity Persistence & Table View: `V6__activity_events_full_data.sql`, `ActivityEvent.java`, `ActivityService.java`, `activity.html`, `activity.css`, `activity.js`, `ActivityIntegrationTest.java`.
+- Activity Suite: `ActivityController.java`, `ActivityPageDataDto.java`, `ActivityEventRepository.java`.
+- Dashboard & Project Services: `DashboardService.java`, `ProjectService.java`.
 - Calendar Database & Frontend: `V5__calendar_full_data_tables.sql`, `calendar.js`, `calendar.css`.
 - Security & Test Fixtures: `SecurityConfig.java`, `AuthenticationIntegrationTest.java`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Recent Activity timeline, multi-range filtering & high-contrast pills
-  [BEFORE - Dashboard Static Excerpt & Pill Color Overlay]:
-  Dashboard only showed 4 recent activity rows; "VIEW ALL →" was an inert link; active filter pill rendered as a solid black blob covering text due to missing token fallback.
+Example: Activity events stored in PostgreSQL and displayed in Table View
+  [BEFORE - Heuristic Synthesis & Timeline-Only]:
+  Rich UI strings ("Marcus completed Set up staging environment", "Version 1.2 · 3 pages") were synthesized in code; database table only had basic event_type/title; only a timeline view existed.
 
-  [AFTER - Dedicated Activity Page, Dynamic Filters & Semantic Badges]:
-  Full page at `/pages/activity/activity.html` loads historical events grouped by day with continuous timeline. Active filter pills render semantic badge colors (`COMPLETED` pale lime, `DOCUMENTS` amber, `ASSIGNED` slate blue, `COMMENTS` lilac) with crisp, high-contrast typography.
+  [AFTER - Relational Persistence & Dual View Modes]:
+  Flyway V6 stores full movement data directly in `activity_events`; frontend provides dual modes (`[Timeline]` and `[Table View]`) with segmented controls, sorting, search, responsive layout, and drawer inspection.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
@@ -96,7 +102,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 6 [COMPLETED]: Full Calendar raw data migration to DB, Flyway V5 & dynamic hydration.
 - Phase 7 [COMPLETED]: Multi-tenant security isolation across project, dashboard, and task APIs.
 - Phase 8 [COMPLETED]: Dedicated Recent Activity page with multi-range & custom date filtering.
-- Phase 9 [SCHEDULED]: Production build verification & asset minification.
+- Phase 9 [COMPLETED]: Activity full database persistence (Flyway V6) & Table View switcher.
+- Phase 10 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

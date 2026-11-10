@@ -54,6 +54,41 @@ public class ActivityService {
             String title,
             String description
     ) {
+        return recordEvent(
+                organization,
+                actor,
+                eventType,
+                entityType,
+                entityId,
+                title,
+                description,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Transactional
+    public ActivityEvent recordEvent(
+            Organization organization,
+            User actor,
+            ActivityEventType eventType,
+            String entityType,
+            UUID entityId,
+            String title,
+            String description,
+            String actionText,
+            String targetTitle,
+            String subMeta,
+            String infoText,
+            String quotePreview,
+            String badgeType,
+            String dotColor
+    ) {
         ActivityEvent event = ActivityEvent.builder()
                 .id(UUID.randomUUID())
                 .organization(organization)
@@ -63,6 +98,13 @@ public class ActivityService {
                 .entityId(entityId)
                 .title(title)
                 .description(description)
+                .actionText(actionText)
+                .targetTitle(targetTitle)
+                .subMeta(subMeta)
+                .infoText(infoText)
+                .quotePreview(quotePreview)
+                .badgeType(badgeType)
+                .dotColor(dotColor)
                 .eventTimestamp(Instant.now())
                 .build();
 
@@ -182,6 +224,9 @@ public class ActivityService {
     }
 
     private boolean matchesTypeFilter(ActivityEvent event, String filterType) {
+        if (event.getBadgeType() != null && !event.getBadgeType().isBlank()) {
+            return event.getBadgeType().equalsIgnoreCase(filterType);
+        }
         if ("COMPLETED".equals(filterType)) {
             return event.getEventType() == ActivityEventType.TASK_COMPLETED || event.getEventType() == ActivityEventType.ATTENDANCE_CHECKIN;
         } else if ("DOCUMENT".equals(filterType)) {
@@ -197,6 +242,12 @@ public class ActivityService {
     private boolean matchesTextQuery(ActivityEvent event, String q) {
         if (event.getTitle() != null && event.getTitle().toLowerCase().contains(q)) return true;
         if (event.getDescription() != null && event.getDescription().toLowerCase().contains(q)) return true;
+        if (event.getTargetTitle() != null && event.getTargetTitle().toLowerCase().contains(q)) return true;
+        if (event.getActionText() != null && event.getActionText().toLowerCase().contains(q)) return true;
+        if (event.getSubMeta() != null && event.getSubMeta().toLowerCase().contains(q)) return true;
+        if (event.getInfoText() != null && event.getInfoText().toLowerCase().contains(q)) return true;
+        if (event.getQuotePreview() != null && event.getQuotePreview().toLowerCase().contains(q)) return true;
+        if (event.getBadgeType() != null && event.getBadgeType().toLowerCase().contains(q)) return true;
         if (event.getActor() != null && event.getActor().getFullName() != null && event.getActor().getFullName().toLowerCase().contains(q)) return true;
         if (event.getProject() != null && event.getProject().getName() != null && event.getProject().getName().toLowerCase().contains(q)) return true;
         return false;
@@ -216,48 +267,58 @@ public class ActivityService {
         }
 
         String author = event.getActor() != null ? event.getActor().getFullName() : "System";
-        String dot = "purple";
-        String badge = "COMMENT";
-        String actionText = event.getTitle() != null ? event.getTitle() : "updated";
-        String targetTitle = "Design review notes";
-        String subMeta = event.getProject() != null ? event.getProject().getName() + " / Team" : "Website Redesign / Design Team";
-        String quotePreview = null;
-        String infoText = event.getDescription();
+        String dot = event.getDotColor();
+        String badge = event.getBadgeType();
+        String actionText = event.getActionText();
+        String targetTitle = event.getTargetTitle();
+        String subMeta = event.getSubMeta();
+        String infoText = event.getInfoText();
+        String quotePreview = event.getQuotePreview();
 
-        if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
-            dot = "green";
-            badge = "COMPLETED";
-            if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Marcus";
-            actionText = "completed";
-            targetTitle = (event.getDescription() != null && !event.getDescription().isBlank() && !event.getDescription().contains("complete")) 
-                    ? event.getDescription() : "Set up staging environment";
-            subMeta = "Client Application / Engineering";
-            infoText = "Task marked complete";
-        } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
-            dot = "silver";
-            badge = "DOCUMENT";
-            author = "";
-            actionText = "was updated";
-            targetTitle = event.getTitle() != null && !event.getTitle().isBlank() ? event.getTitle() : "Product brief";
-            subMeta = "Product / Workspace";
-            infoText = event.getDescription() != null ? event.getDescription() : "Version 1.2 · 3 pages";
-        } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
-            dot = "blue";
-            badge = "ASSIGNED";
-            author = "You";
-            actionText = "assigned a task to";
-            targetTitle = "Priya";
-            subMeta = "Website Redesign / Design Team";
-            infoText = event.getDescription() != null ? event.getDescription() : "Client feedback session\nTomorrow, 2:00 PM";
-        } else {
-            dot = "purple";
-            badge = "COMMENT";
-            if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Sonia";
-            actionText = "commented on";
-            targetTitle = "Design review notes";
-            subMeta = "Website Redesign / Design Team";
-            quotePreview = event.getDescription() != null ? event.getDescription() : "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.";
-            infoText = null;
+        // If entity does not have rich columns set (fallback for legacy/custom events), derive defaults
+        if (badge == null || badge.isBlank()) {
+            if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
+                dot = "green";
+                badge = "COMPLETED";
+                if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Marcus";
+                actionText = "completed";
+                targetTitle = (event.getDescription() != null && !event.getDescription().isBlank() && !event.getDescription().contains("complete")) 
+                        ? event.getDescription() : "Set up staging environment";
+                subMeta = "Client Application / Engineering";
+                infoText = "Task marked complete";
+            } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
+                dot = "silver";
+                badge = "DOCUMENT";
+                author = "";
+                actionText = "was updated";
+                targetTitle = event.getTitle() != null && !event.getTitle().isBlank() ? event.getTitle() : "Product brief";
+                subMeta = "Product / Workspace";
+                infoText = event.getDescription() != null ? event.getDescription() : "Version 1.2 · 3 pages";
+            } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
+                dot = "blue";
+                badge = "ASSIGNED";
+                author = "You";
+                actionText = "assigned a task to";
+                targetTitle = "Priya";
+                subMeta = "Website Redesign / Design Team";
+                infoText = event.getDescription() != null ? event.getDescription() : "Client feedback session\nTomorrow, 2:00 PM";
+            } else {
+                dot = "purple";
+                badge = "COMMENT";
+                if (author.equalsIgnoreCase("System") || author.isBlank()) author = "Sonia";
+                actionText = "commented on";
+                targetTitle = "Design review notes";
+                subMeta = "Website Redesign / Design Team";
+                quotePreview = event.getDescription() != null ? event.getDescription() : "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.";
+                infoText = null;
+            }
+        }
+
+        if (dot == null || dot.isBlank()) dot = "purple";
+        if (actionText == null || actionText.isBlank()) actionText = event.getTitle() != null ? event.getTitle() : "updated";
+        if (targetTitle == null || targetTitle.isBlank()) targetTitle = event.getDescription() != null ? event.getDescription() : "Activity item";
+        if (subMeta == null || subMeta.isBlank()) {
+            subMeta = event.getProject() != null ? event.getProject().getName() + " / Team" : "Workspace / General";
         }
 
         return ActivityItemDto.builder()
@@ -338,6 +399,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("completed")
                 .description("Set up staging environment")
+                .actionText("completed")
+                .targetTitle("Set up staging environment")
+                .subMeta("Client Application / Engineering")
+                .infoText("Task marked complete")
+                .badgeType("COMPLETED")
+                .dotColor("green")
                 .eventTimestamp(todayZoned.plusHours(12).plusMinutes(46).toInstant())
                 .build());
 
@@ -349,6 +416,12 @@ public class ActivityService {
                 .entityType("PROJECT")
                 .title("Product brief")
                 .description("Version 1.2 · 3 pages")
+                .actionText("was updated")
+                .targetTitle("Product brief")
+                .subMeta("Product / Workspace")
+                .infoText("Version 1.2 · 3 pages")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
                 .eventTimestamp(todayZoned.plusHours(12).plusMinutes(4).toInstant())
                 .build());
 
@@ -360,6 +433,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("assigned a task to")
                 .description("Client feedback session · Tomorrow, 2:00 PM")
+                .actionText("assigned a task to")
+                .targetTitle("Priya")
+                .subMeta("Website Redesign / Design Team")
+                .infoText("Client feedback session\nTomorrow, 2:00 PM")
+                .badgeType("ASSIGNED")
+                .dotColor("blue")
                 .eventTimestamp(todayZoned.plusHours(10).plusMinutes(30).toInstant())
                 .build());
 
@@ -371,6 +450,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("commented on")
                 .description("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
+                .actionText("commented on")
+                .targetTitle("Design review notes")
+                .subMeta("Website Redesign / Design Team")
+                .quotePreview("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
+                .badgeType("COMMENT")
+                .dotColor("purple")
                 .eventTimestamp(todayZoned.plusHours(9).plusMinutes(15).toInstant())
                 .build());
 
@@ -382,6 +467,12 @@ public class ActivityService {
                 .entityType("ATTENDANCE")
                 .title("checked in")
                 .description("Checked in on-time for morning engineering standup")
+                .actionText("checked in for standup")
+                .targetTitle("Morning Engineering Standup")
+                .subMeta("Engineering / Daily")
+                .infoText("Checked in on-time for morning engineering standup")
+                .badgeType("COMPLETED")
+                .dotColor("green")
                 .eventTimestamp(todayZoned.plusHours(8).plusMinutes(30).toInstant())
                 .build());
 
@@ -394,6 +485,12 @@ public class ActivityService {
                 .entityType("PROJECT")
                 .title("Design guidelines")
                 .description("Version 1.0 released · 12 core UI components approved")
+                .actionText("published release")
+                .targetTitle("Design guidelines")
+                .subMeta("Design System / Workspace")
+                .infoText("Version 1.0 released · 12 core UI components approved")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
                 .eventTimestamp(yestZoned.plusHours(16).plusMinutes(20).toInstant())
                 .build());
 
@@ -405,6 +502,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("assigned a task to")
                 .description("Database connection pooling tuning · Engineering")
+                .actionText("assigned a task to")
+                .targetTitle("Alex")
+                .subMeta("Infrastructure / Backend")
+                .infoText("Database connection pooling tuning · High priority")
+                .badgeType("ASSIGNED")
+                .dotColor("blue")
                 .eventTimestamp(yestZoned.plusHours(14).plusMinutes(15).toInstant())
                 .build());
 
@@ -416,6 +519,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("completed")
                 .description("Website service card deliverable")
+                .actionText("completed")
+                .targetTitle("Website service card deliverable")
+                .subMeta("Marketing / Web Team")
+                .infoText("Deliverable submitted and accepted")
+                .badgeType("COMPLETED")
+                .dotColor("green")
                 .eventTimestamp(yestZoned.plusHours(11).plusMinutes(45).toInstant())
                 .build());
 
@@ -427,6 +536,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("commented on")
                 .description("Agreed on streamlining PR review turnaround times in sprint retro.")
+                .actionText("commented on")
+                .targetTitle("Sprint Retrospective Notes")
+                .subMeta("Engineering / Team Cadence")
+                .quotePreview("Agreed on streamlining PR review turnaround times in sprint retro.")
+                .badgeType("COMMENT")
+                .dotColor("purple")
                 .eventTimestamp(yestZoned.plusHours(10).toInstant())
                 .build());
 
@@ -439,6 +554,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("completed")
                 .description("Wireframes & Copy Approval milestone achieved")
+                .actionText("completed milestone")
+                .targetTitle("Wireframes & Copy Approval")
+                .subMeta("Product Design / Core")
+                .infoText("All client stakeholders signed off")
+                .badgeType("COMPLETED")
+                .dotColor("green")
                 .eventTimestamp(today.minusDays(3).atStartOfDay(ZoneId.systemDefault()).plusHours(14).toInstant())
                 .build());
 
@@ -450,6 +571,12 @@ public class ActivityService {
                 .entityType("PROJECT")
                 .title("Architecture specification")
                 .description("Initial architecture diagram and database migration plan published")
+                .actionText("created document")
+                .targetTitle("Architecture specification")
+                .subMeta("Architecture / Technical")
+                .infoText("Initial architecture diagram and database migration plan published")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
                 .eventTimestamp(today.minusDays(4).atStartOfDay(ZoneId.systemDefault()).plusHours(11).toInstant())
                 .build());
 
@@ -461,6 +588,12 @@ public class ActivityService {
                 .entityType("TASK")
                 .title("commented on")
                 .description("Kick-off meeting notes and scope definition approved by stakeholders")
+                .actionText("commented on")
+                .targetTitle("Kick-off Meeting Scope")
+                .subMeta("Strategy / Planning")
+                .quotePreview("Kick-off meeting notes and scope definition approved by stakeholders")
+                .badgeType("COMMENT")
+                .dotColor("purple")
                 .eventTimestamp(today.minusDays(6).atStartOfDay(ZoneId.systemDefault()).plusHours(15).toInstant())
                 .build());
 

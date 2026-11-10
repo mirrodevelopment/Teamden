@@ -13,9 +13,15 @@
   let searchQuery = '';
   let searchDebounceTimer = null;
   let currentActivities = [];
+  let currentView = localStorage.getItem('teamden-activity-view') || 'timeline';
 
   // DOM Elements
   const timelineContainer = document.getElementById('activity-timeline-container');
+  const paneTimeline = document.getElementById('pane-timeline');
+  const paneTable = document.getElementById('pane-table');
+  const viewTimelineBtn = document.getElementById('view-timeline-btn');
+  const viewTableBtn = document.getElementById('view-table-btn');
+  const tableTbody = document.getElementById('activity-table-tbody');
   const emptyState = document.getElementById('activity-empty-state');
   const filterStatusText = document.getElementById('filter-status-text');
   const movementsLabel = document.getElementById('activity-movements-label');
@@ -222,10 +228,49 @@
         loadActivityData();
       });
     }
+
+    // 6. View Switcher (Timeline vs Table View)
+    if (viewTimelineBtn) {
+      viewTimelineBtn.addEventListener('click', () => switchView('timeline'));
+    }
+    if (viewTableBtn) {
+      viewTableBtn.addEventListener('click', () => switchView('table'));
+    }
   }
 
   /**
-   * Fetch activity data from the backend
+   * Switch between Timeline and Table views
+   */
+  function switchView(viewMode) {
+    currentView = (viewMode === 'table') ? 'table' : 'timeline';
+    try {
+      localStorage.setItem('teamden-activity-view', currentView);
+    } catch (e) {
+      // Ignore private storage limitations
+    }
+
+    if (viewTimelineBtn) {
+      viewTimelineBtn.classList.toggle('is-active', currentView === 'timeline');
+      viewTimelineBtn.setAttribute('aria-selected', currentView === 'timeline');
+    }
+    if (viewTableBtn) {
+      viewTableBtn.classList.toggle('is-active', currentView === 'table');
+      viewTableBtn.setAttribute('aria-selected', currentView === 'table');
+    }
+
+    if (currentActivities && currentActivities.length > 0) {
+      if (paneTimeline) paneTimeline.style.display = (currentView === 'timeline') ? 'block' : 'none';
+      if (paneTable) paneTable.style.display = (currentView === 'table') ? 'block' : 'none';
+      if (emptyState) emptyState.style.display = 'none';
+    } else {
+      if (paneTimeline) paneTimeline.style.display = 'none';
+      if (paneTable) paneTable.style.display = 'none';
+      if (emptyState) emptyState.style.display = 'flex';
+    }
+  }
+
+  /**
+   * Fetch activity data from the backend database
    */
   async function loadActivityData() {
     try {
@@ -258,11 +303,19 @@
       // Update active filter text
       updateFilterStatus(data.totalCount);
 
-      // Render timeline
+      // Render both views and apply current view preference
       renderTimeline(currentActivities);
+      renderTable(currentActivities);
+      switchView(currentView);
     } catch (err) {
-      console.warn('Failed to load activity data, using resilient fallback:', err);
-      renderFallbackTimeline();
+      console.warn('Failed to load activity data from database:', err);
+      currentActivities = [];
+      if (paneTimeline) paneTimeline.style.display = 'none';
+      if (paneTable) paneTable.style.display = 'none';
+      if (emptyState) emptyState.style.display = 'flex';
+      if (filterStatusText) {
+        filterStatusText.textContent = 'Error connecting to database. Please refresh or check connection.';
+      }
     }
   }
 
@@ -390,66 +443,69 @@
   }
 
   /**
-   * Fallback timeline if API is offline
+   * Render the table view with full structured details
    */
-  function renderFallbackTimeline() {
-    const fallbackActivities = [
-      {
-        id: 'fallback-01',
-        time: '12:46',
-        dayLabel: 'TODAY',
-        badgeType: 'COMPLETED',
-        dotColor: 'green',
-        author: 'Marcus',
-        actionText: 'completed',
-        targetTitle: 'Set up staging environment',
-        subMeta: 'Client Application / Engineering',
-        infoText: 'Task marked complete'
-      },
-      {
-        id: 'fallback-02',
-        time: '12:04',
-        dayLabel: 'TODAY',
-        badgeType: 'DOCUMENT',
-        dotColor: 'silver',
-        author: '',
-        actionText: 'was updated',
-        targetTitle: 'Product brief',
-        subMeta: 'Product / Workspace',
-        infoText: 'Version 1.2 · 3 pages'
-      },
-      {
-        id: 'fallback-03',
-        time: '10:30',
-        dayLabel: 'TODAY',
-        badgeType: 'ASSIGNED',
-        dotColor: 'blue',
-        author: 'You',
-        actionText: 'assigned a task to',
-        targetTitle: 'Priya',
-        subMeta: 'Website Redesign / Design Team',
-        infoText: 'Client feedback session\nTomorrow, 2:00 PM'
-      },
-      {
-        id: 'fallback-04',
-        time: '09:15',
-        dayLabel: 'TODAY',
-        badgeType: 'COMMENT',
-        dotColor: 'purple',
-        author: 'Sonia',
-        actionText: 'commented on',
-        targetTitle: 'Design review notes',
-        subMeta: 'Website Redesign / Design Team',
-        quotePreview: "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing."
+  function renderTable(activities) {
+    if (!tableTbody) return;
+    tableTbody.innerHTML = '';
+
+    if (!activities || activities.length === 0) {
+      return;
+    }
+
+    const rows = activities.map(item => {
+      const badgeType = (item.badgeType || 'COMMENT').toUpperCase();
+      const badgeClass = 'badge-' + badgeType.toLowerCase();
+      const dotColor = item.dotColor || 'purple';
+
+      let movementTarget = '';
+      if (item.author) {
+        movementTarget = `${escapeHtml(item.actionText)} <strong>${escapeHtml(item.targetTitle)}</strong>`;
+      } else {
+        movementTarget = `<strong>${escapeHtml(item.targetTitle)}</strong> ${item.actionText ? escapeHtml(item.actionText) : ''}`;
       }
-    ];
 
-    if (chipTotal) chipTotal.textContent = 4;
-    if (chipCompleted) chipCompleted.textContent = 1;
-    if (chipDocuments) chipDocuments.textContent = 1;
-    if (chipComments) chipComments.textContent = 1;
+      let detailContent = '';
+      if (item.quotePreview) {
+        detailContent = `<div class="quote-italic">"${escapeHtml(item.quotePreview)}"</div>`;
+      } else if (item.infoText) {
+        detailContent = `<div>${escapeHtml(item.infoText)}</div>`;
+      } else {
+        detailContent = `<span style="opacity: 0.5;">—</span>`;
+      }
 
-    renderTimeline(fallbackActivities);
+      return `
+        <tr id="act-tbl-row-${escapeHtml(item.id)}">
+          <td class="act-cell-time">
+            <span>${escapeHtml(item.time || '12:00')}</span>
+            <span class="act-tbl-day">${escapeHtml(item.dayLabel || 'TODAY')}</span>
+          </td>
+          <td>
+            <span class="act-table-badge ${badgeClass}">
+              <span class="act-tbl-dot dot-${dotColor}"></span>
+              <span>${escapeHtml(badgeType)}</span>
+            </span>
+          </td>
+          <td class="act-cell-actor">
+            ${escapeHtml(item.author || 'System')}
+          </td>
+          <td class="act-cell-target">
+            ${movementTarget}
+          </td>
+          <td class="act-cell-project">
+            ${escapeHtml(item.subMeta || 'Workspace / General')}
+          </td>
+          <td class="act-cell-details">
+            ${detailContent}
+          </td>
+          <td style="text-align: right;">
+            <button type="button" class="act-tbl-inspect-btn" onclick="window.openActivityDrawer('${escapeHtml(item.id)}')" title="Inspect details" aria-label="Inspect details">↗</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    tableTbody.innerHTML = rows;
   }
 
   /**

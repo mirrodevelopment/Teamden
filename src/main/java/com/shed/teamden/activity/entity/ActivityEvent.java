@@ -50,6 +50,27 @@ public class ActivityEvent {
     @Column(name = "description", length = 500)
     private String description;
 
+    @Column(name = "action_text", length = 100)
+    private String actionText;
+
+    @Column(name = "target_title", length = 255)
+    private String targetTitle;
+
+    @Column(name = "sub_meta", length = 255)
+    private String subMeta;
+
+    @Column(name = "info_text", length = 500)
+    private String infoText;
+
+    @Column(name = "quote_preview", columnDefinition = "TEXT")
+    private String quotePreview;
+
+    @Column(name = "badge_type", length = 50)
+    private String badgeType;
+
+    @Column(name = "dot_color", length = 30)
+    private String dotColor;
+
     @Column(name = "event_timestamp", nullable = false, updatable = false)
     private Instant eventTimestamp;
 

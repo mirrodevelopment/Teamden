@@ -1025,6 +1025,21 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Added comprehensive `:root` token mapping in `activity.css` linking `--dash-canvas`, `--dash-surface`, `--dash-surface-hover`, and accent dots to canonical `theme.css` tokens.
     - Assigned distinct semantic badge colors to active type pills (`COMPLETED` gets pale lime background `--dash-badge-completed-bg` with deep green text; `DOCUMENT` gets warm amber; `ASSIGNED` gets slate blue; `COMMENT` gets muted lilac).
     - Enforced crisp `#FFFFFF` white text (`var(--dash-text-white)`) with dark charcoal background for `All Types` active pill, custom date apply button, and empty state action buttons.
+- Full Activity Table View & Database Persistence (Flyway V6):
+  * Relational Schema Migration (Flyway V6):
+    - Authored Flyway migration `V6__activity_events_full_data.sql` extending `activity_events` with 7 rich display columns: `action_text`, `target_title`, `sub_meta`, `info_text`, `quote_preview`, `badge_type`, and `dot_color`.
+    - Added high-performance composite index `idx_activity_badge_time` on `(organization_id, badge_type, event_timestamp DESC)`.
+  * JPA Entity & Service Hydration:
+    - Updated `ActivityEvent.java` entity with the 7 new columns.
+    - Updated `ActivityService.java` to eliminate synthetic code fallbacks and directly hydrate `ActivityItemDto` from the database.
+    - Added overloaded `recordEvent(...)` method accepting rich metadata.
+    - Enhanced baseline seeding (`ensureBaselineActivityRecords`) with 12 complete, production-grade activity records.
+    - Enhanced `matchesTypeFilter` and `matchesTextQuery` to search across all rich database columns.
+  * Interactive Table View & View Switcher:
+    - Added segmented view switcher (`[Timeline]` / `[Table View]`) in `activity.html` with `#pane-timeline` and `#pane-table`.
+    - Built responsive `.act-data-table` in `activity.css` adhering strictly to Neo-Editorial design tokens (`--dash-*`), displaying Time & Date, Type, Actor, Movement & Target, Workspace / Project, Details, and Inspect (`↗`).
+    - Implemented `renderTable()` and view toggling in `activity.js` with `localStorage.getItem('teamden-activity-view')` persistence.
+    - Eradicated `fallbackActivities` mock array from `activity.js`.
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding
@@ -1290,6 +1305,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Interactive task completion & state transition tests on Kanban board.
 - [x] Full Calendar raw data migration to PostgreSQL (Flyway V5) and Table view.
 - [x] Dedicated Recent Activity page with multi-range & custom date filtering.
+- [x] Activity full database persistence (Flyway V6) and dual Table / Timeline views.
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------
