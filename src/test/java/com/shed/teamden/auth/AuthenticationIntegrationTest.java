@@ -53,6 +53,9 @@ public class AuthenticationIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+
     private User testUser;
     private User disabledUser;
     private Organization testOrg;
@@ -63,9 +66,26 @@ public class AuthenticationIntegrationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
-        membershipRepository.deleteAll();
-        userRepository.deleteAll();
-        organizationRepository.deleteAll();
+        jdbcTemplate.execute("DELETE FROM task_linked_documents");
+        jdbcTemplate.execute("DELETE FROM project_document_collaborators");
+        jdbcTemplate.execute("DELETE FROM project_documents");
+        jdbcTemplate.execute("DELETE FROM project_decisions");
+        jdbcTemplate.execute("DELETE FROM project_specifications");
+        jdbcTemplate.execute("DELETE FROM project_members");
+        jdbcTemplate.execute("DELETE FROM task_subtasks");
+        jdbcTemplate.execute("DELETE FROM activity_events");
+        jdbcTemplate.execute("DELETE FROM tasks");
+        jdbcTemplate.execute("DELETE FROM project_milestones");
+        jdbcTemplate.execute("DELETE FROM attendance_records");
+        jdbcTemplate.execute("DELETE FROM calendar_commitments");
+        jdbcTemplate.execute("DELETE FROM calendar_needs_scheduling");
+        jdbcTemplate.execute("DELETE FROM calendar_sources");
+        jdbcTemplate.execute("DELETE FROM calendar_team_availability");
+        jdbcTemplate.execute("DELETE FROM calendar_events");
+        jdbcTemplate.execute("DELETE FROM projects");
+        jdbcTemplate.execute("DELETE FROM organization_memberships");
+        jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("DELETE FROM organizations");
 
         // Create organization
         testOrg = organizationRepository.save(Organization.builder()

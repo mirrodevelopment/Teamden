@@ -305,23 +305,13 @@
       `;
     }).join('');
 
-    // Wire up "View all →" / "Show less ↑" link
+    // Wire up "View all →" link to navigate to dedicated activity page
     const viewAllLink = document.getElementById('activity-view-all-link');
-    if (viewAllLink && allActivities.length > 4) {
-      viewAllLink.style.display = 'inline-block';
-      viewAllLink.textContent = showAllActivities ? 'Show less ↑' : 'View all →';
-      viewAllLink.onclick = (e) => {
-        e.preventDefault();
-        showAllActivities = !showAllActivities;
-        renderActivityTimeline(allActivities);
-      };
-    } else if (viewAllLink && allActivities.length <= 4) {
+    if (viewAllLink) {
       viewAllLink.style.display = 'inline-block';
       viewAllLink.textContent = 'View all →';
-      viewAllLink.onclick = (e) => {
-        e.preventDefault();
-        window.openAllActivitiesModal();
-      };
+      viewAllLink.href = '/pages/activity/activity.html';
+      viewAllLink.onclick = null;
     }
   }
 

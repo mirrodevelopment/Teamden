@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — recent activity.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=12">
+
+  <!-- Activity Page Styles -->
+  <link rel="stylesheet" href="activity.css?v=1">
+</head>
+<body class="dashboard-body activity-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount (Loaded dynamically from /fragments/sidebar/sidebar.html) -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Content Main Area -->
+    <div class="dash-main-area activity-app-main">
+      <!-- Modular Topbar Mount (Loaded dynamically from /fragments/navbar/navbar.html) -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Activity Content Canvas -->
+      <main class="activity-content-canvas" id="activity-content-canvas">
+        <div class="activity-wrapper-inner">
+
+          <!-- Top Header Block -->
+          <header class="activity-page-head">
+            <div class="activity-head-left">
+              <div class="activity-breadcrumb" id="activity-breadcrumb">
+                <a href="/pages/dashboard/dashboard.html" class="activity-crumb-link">YOUR WORKSPACE</a>
+                <span class="activity-crumb-sep">/</span>
+                <span class="activity-crumb-active">RECENT ACTIVITY</span>
+                <span class="activity-crumb-sep">/</span>
+                <span class="activity-crumb-sub">AUDIT LOG</span>
+              </div>
+              <div class="activity-title-row">
+                <h1 class="activity-title-main">RECENT ACTIVITY</h1>
+                <span class="activity-movements-badge" id="activity-movements-label">LATEST MOVEMENTS / TUE, 10 NOV 2026</span>
+              </div>
+            </div>
+
+            <div class="activity-head-right">
+              <!-- KPI Summary Counters -->
+              <div class="activity-summary-chips" id="activity-summary-chips">
+                <div class="act-chip chip-total">
+                  <span class="act-chip-num" id="chip-total-count">0</span>
+                  <span class="act-chip-label">Movements</span>
+                </div>
+                <div class="act-chip chip-completed">
+                  <span class="act-chip-dot dot-green"></span>
+                  <span class="act-chip-num" id="chip-completed-count">0</span>
+                  <span class="act-chip-label">Completed</span>
+                </div>
+                <div class="act-chip chip-documents">
+                  <span class="act-chip-dot dot-silver"></span>
+                  <span class="act-chip-num" id="chip-documents-count">0</span>
+                  <span class="act-chip-label">Documents</span>
+                </div>
+                <div class="act-chip chip-comments">
+                  <span class="act-chip-dot dot-purple"></span>
+                  <span class="act-chip-num" id="chip-comments-count">0</span>
+                  <span class="act-chip-label">Discussions</span>
+                </div>
+              </div>
+
+              <a href="/pages/dashboard/dashboard.html" class="activity-back-link" title="Return to Dashboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>Back to Today</span>
+              </a>
+            </div>
+          </header>
+
+          <!-- Interactive Filter Section -->
+          <section class="activity-filter-toolbar" aria-label="Activity Filter Options">
+            <div class="filter-primary-row">
+              <!-- Date Range Segmented Filter -->
+              <div class="filter-segmented-group" id="range-filter-group" role="tablist" aria-label="Date Range Filters">
+                <button type="button" class="filter-seg-btn is-active" data-range="all" role="tab">All Time</button>
+                <button type="button" class="filter-seg-btn" data-range="today" role="tab">Today</button>
+                <button type="button" class="filter-seg-btn" data-range="yesterday" role="tab">Yesterday</button>
+                <button type="button" class="filter-seg-btn" data-range="last_week" role="tab">Last Week</button>
+                <button type="button" class="filter-seg-btn" data-range="custom" role="tab" id="custom-range-toggle">Custom Date ▾</button>
+              </div>
+
+              <!-- Live Search Box -->
+              <div class="filter-search-box">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="activity-search-input" placeholder="Search movements, authors, targets..." autocomplete="off">
+                <button type="button" id="activity-search-clear" class="search-clear-btn" style="display:none;" title="Clear search">×</button>
+              </div>
+            </div>
+
+            <!-- Custom Date Range Expandable Panel -->
+            <div class="custom-date-panel" id="custom-date-panel" style="display: none;">
+              <div class="custom-date-inner">
+                <span class="custom-date-label">From:</span>
+                <input type="date" id="custom-start-date" class="custom-date-input" aria-label="Start Date">
+                <span class="custom-date-label">To:</span>
+                <input type="date" id="custom-end-date" class="custom-date-input" aria-label="End Date">
+                <button type="button" class="custom-date-apply-btn" id="custom-date-apply-btn">Apply Range</button>
+                <button type="button" class="custom-date-reset-btn" id="custom-date-reset-btn">Reset</button>
+              </div>
+            </div>
+
+            <!-- Secondary Filter Row: Event Types & Counter -->
+            <div class="filter-secondary-row">
+              <div class="type-filter-pills" id="type-filter-group">
+                <button type="button" class="type-pill is-active" data-type="all">All Types</button>
+                <button type="button" class="type-pill" data-type="COMPLETED">
+                  <span class="type-pill-dot dot-green"></span>
+                  <span>Completed</span>
+                </button>
+                <button type="button" class="type-pill" data-type="DOCUMENT">
+                  <span class="type-pill-dot dot-silver"></span>
+                  <span>Documents</span>
+                </button>
+                <button type="button" class="type-pill" data-type="ASSIGNED">
+                  <span class="type-pill-dot dot-blue"></span>
+                  <span>Assigned</span>
+                </button>
+                <button type="button" class="type-pill" data-type="COMMENT">
+                  <span class="type-pill-dot dot-purple"></span>
+                  <span>Comments</span>
+                </button>
+              </div>
+
+              <div class="filter-active-status">
+                <span id="filter-status-text">Showing all records</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Timeline Register Block -->
+          <section class="activity-timeline-section" aria-label="Activity Events Timeline">
+            <div class="activity-timeline-hairline" id="activity-timeline-container">
+              <!-- Dynamically populated activity rows -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="activity-empty-state" id="activity-empty-state" style="display: none;">
+              <div class="empty-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </div>
+              <h3 class="empty-title">No movements found</h3>
+              <p class="empty-desc">No activity events match your current date range and filter criteria.</p>
+              <button type="button" class="empty-reset-btn" id="empty-reset-btn">Clear All Filters</button>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Event Detail Slide-In Drawer -->
+  <div class="activity-drawer-overlay" id="activity-drawer-overlay" style="display: none;">
+    <aside class="activity-detail-drawer" id="activity-detail-drawer" aria-label="Event Details">
+      <div class="drawer-head">
+        <div class="drawer-head-badge" id="drawer-badge-wrap">
+          <span class="drawer-badge-pill" id="drawer-badge">COMPLETED</span>
+        </div>
+        <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close drawer">×</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="drawer-headline-block">
+          <div class="drawer-time-tag" id="drawer-time-tag">12:46 · TODAY</div>
+          <h2 class="drawer-title" id="drawer-title">Marcus completed Set up staging environment</h2>
+          <div class="drawer-submeta" id="drawer-submeta">Client Application / Engineering</div>
+        </div>
+
+        <div class="drawer-divider"></div>
+
+        <div class="drawer-section">
+          <span class="drawer-section-label">DETAILS & CONTEXT</span>
+          <div class="drawer-info-box" id="drawer-info-text">Task marked complete</div>
+        </div>
+
+        <div class="drawer-section">
+          <span class="drawer-section-label">EVENT METADATA</span>
+          <div class="drawer-meta-table">
+            <div class="meta-row">
+              <span class="meta-key">Event ID:</span>
+              <span class="meta-val font-mono" id="drawer-event-id">-</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Actor:</span>
+              <span class="meta-val" id="drawer-actor-name">System</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Organization:</span>
+              <span class="meta-val" id="drawer-org-name">Acme Co.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-actions-row">
+          <a href="/pages/projects/projects.html" class="drawer-action-primary" id="drawer-jump-link">View Project →</a>
+          <button type="button" class="drawer-action-secondary" id="drawer-copy-id-btn">Copy Event ID</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Shared Fragment Loaders -->
+  <script src="/fragments/sidebar/sidebar.js?v=12"></script>
+  <script src="/fragments/navbar/navbar.js?v=12"></script>
+  <script src="/shared/api.js?v=5"></script>
+
+  <!-- Activity Page Logic -->
+  <script src="activity.js?v=1"></script>
+</body>
+</html>

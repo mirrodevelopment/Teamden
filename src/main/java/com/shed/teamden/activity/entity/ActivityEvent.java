@@ -5,7 +5,6 @@ import com.shed.teamden.project.entity.Project;
 import com.shed.teamden.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -51,7 +50,6 @@ public class ActivityEvent {
     @Column(name = "description", length = 500)
     private String description;
 
-    @CreationTimestamp
     @Column(name = "event_timestamp", nullable = false, updatable = false)
     private Instant eventTimestamp;
 

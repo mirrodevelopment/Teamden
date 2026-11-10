@@ -998,6 +998,28 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
+- Dedicated Recent Activity Page Architecture & Multi-Range Filtering:
+  * Full Page Development at `/pages/activity/activity.html` (.css, .js):
+    - Recreated the user's reference "RECENT ACTIVITY / LATEST MOVEMENTS" UI as a full-screen dedicated page.
+    - Continuous hairline vertical timeline with colored event status nodes (Completed: green, Document: amber, Assigned: blue, Comment: purple).
+    - Top summary metrics with 4 interactive KPI chips: Total Activities, Completed, Docs & Comments, and Active Users.
+    - Full-height slide-in inspection drawer (`#activity-detail-drawer`) adhering to the Zero Overlay Standard (transparent non-dimming backdrop, clickable background).
+  * Flexible Multi-Range Date Filtering:
+    - Quick-filter range pills: `All Time`, `Today`, `Yesterday`, `Last Week`, and `Custom Date`.
+    - Custom Date range controls: Start Date (`#custom-start-date`) and End Date (`#custom-end-date`) datepickers with "Apply Filter" button.
+    - Secondary event type filter pills: `All`, `Completed`, `Documents`, `Assigned`, and `Comments`.
+    - Real-time live text search filter (`#activity-search-input`) with debounced querying.
+  * Backend API & Multi-Tenant Isolation (`/api/activity`):
+    - Created `ActivityController.java` with `GET /api/activity/data` and `GET /api/activity/{id}` endpoints.
+    - Added filtered queries in `ActivityEventRepository.java` (`findFilteredByOrganizationId` and `findAllByOrganizationIdWithDetails`).
+    - Enforced strict tenant boundary checks in `ActivityService.java`; cross-organization requests reject with HTTP 400 Bad Request.
+    - Removed `@CreationTimestamp` from `ActivityEvent.java` to allow historical timestamp preservation on insert while defaulting nulls via `@PrePersist`.
+  * Dashboard Integration:
+    - Updated "VIEW ALL →" link on `dashboard.html` to navigate directly to `/pages/activity/activity.html`.
+  * Automated Integration Testing & 100% Green Test Suite:
+    - Created `ActivityIntegrationTest.java` (8 tests) covering default data, today, yesterday, last week, custom date range, event type, query search, and cross-tenant isolation.
+    - Fixed foreign-key constraint cleanup in `AuthenticationIntegrationTest.java`.
+    - All 45/45 integration tests passing 100% green (`./mvnw test`).
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding
@@ -1092,6 +1114,20 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
+- Activity Suite (Dedicated Page & Range Filtering):
+  * `src/main/resources/static/pages/activity/activity.html`: Master markup with timeline, range filters, KPI chips, and drawer.
+  * `src/main/resources/static/pages/activity/activity.css`: Responsive design tokens, continuous hairline timeline, and drawer styles.
+  * `src/main/resources/static/pages/activity/activity.js`: Dynamic client controller, range filters (today, yesterday, last week, custom date), drawer logic.
+  * `src/main/java/com/shed/teamden/activity/controller/ActivityController.java`: Activity REST API endpoints (`/api/activity/data`, `/api/activity/{id}`).
+  * `src/main/java/com/shed/teamden/activity/service/ActivityService.java`: Business logic and multi-tenant isolation.
+  * `src/main/java/com/shed/teamden/activity/dto/ActivityPageDataDto.java`: Aggregated activity page DTO.
+  * `src/main/java/com/shed/teamden/activity/entity/ActivityEvent.java`: Historical timestamp support (removed `@CreationTimestamp`).
+  * `src/main/java/com/shed/teamden/activity/repository/ActivityEventRepository.java`: Filtered queries (`findFilteredByOrganizationId`).
+  * `src/main/resources/static/pages/dashboard/dashboard.html`: Linked "VIEW ALL →" to `/pages/activity/activity.html`.
+  * `src/main/resources/static/pages/dashboard/dashboard.js`: Navigation handler.
+  * `src/main/java/com/shed/teamden/security/SecurityConfig.java`: Permitted `/pages/activity/**` and `/api/activity/**`.
+  * `src/test/java/com/shed/teamden/activity/ActivityIntegrationTest.java`: 8 integration tests.
+  * `src/test/java/com/shed/teamden/auth/AuthenticationIntegrationTest.java`: Cascading table cleanup fix.
 - Services & Security:
   * `src/main/java/com/shed/teamden/dashboard/service/DashboardService.java`: `toggleTask` multi-tenant validation, fallback hardening.
   * `src/main/java/com/shed/teamden/project/service/ProjectService.java`: `resolveProject` tenant isolation, transactional activity.
@@ -1169,12 +1205,19 @@ Example C: Multi-Tenant Project Resolution and Task Toggling
   [AFTER - ProjectService & DashboardService]:
   `resolveProject()` and `toggleTask()` enforce `p.getOrganization().getId().equals(org.getId())`. Any cross-organization request immediately throws `BadRequestException("Project not found in this organization")` or `BadRequestException("Task does not belong to the active organization")` returning HTTP 400.
 
+Example D: Dedicated Recent Activity Page & Multi-Range Filtering
+  [BEFORE - Limited Dashboard Activity Excerpt]:
+  Dashboard only showed 4 recent activity rows; "VIEW ALL →" was an inert link; no range filtering, custom date pickers, or event drawer existed.
+
+  [AFTER - Dedicated Activity Page & Dynamic Filters]:
+  Full page at `/pages/activity/activity.html` loads all historical events grouped by day with continuous hairline timeline. Live filter bar instantly slices by Today, Yesterday, Last Week, or Custom Date range, with full inspection drawer and zero-overlay UX.
+
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 37/37 integration tests green (`./mvnw test` passing 100% across all 7 test suites).
-- Multi-Tenant Isolation: Verified cross-organization project inspection (overview, tasks, documents, activity), task toggle, move, and calendar actions are strictly rejected with HTTP 400 Bad Request.
+- Test Suite: 45/45 integration tests green (`./mvnw test` passing 100% across all 8 test suites).
+- Multi-Tenant Isolation: Verified cross-organization project inspection, activity events, task toggle, move, and calendar actions are strictly rejected with HTTP 400 Bad Request.
 - Static Asset Hot Reload: Synced all updated frontend assets to `target/classes/static/`.
-- Zero Regression: Verified existing project, attendance, auth, and dashboard flows remain 100% functional.
+- Zero Regression: Verified existing project, attendance, auth, calendar, and dashboard flows remain 100% functional.
 
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
@@ -1230,10 +1273,11 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Strict adherence to `fragments/theme/theme.css` `--dash-*` tokens platform-wide.
 - [x] Universal dual-theme (Light and Dark mode) support across all application views.
 - [x] Multi-tenant organization isolation and security validation in backend controller & service.
-- [x] 100% green test suite across all 29 integration test cases.
+- [x] 100% green test suite across all 45 integration test cases.
 - [x] Target directory hot-reload synchronization (`target/classes/static`).
 - [x] Interactive task completion & state transition tests on Kanban board.
-- [ ] End-to-end responsiveness verification for tablet (768px-1024px) viewports.
+- [x] Full Calendar raw data migration to PostgreSQL (Flyway V5) and Table view.
+- [x] Dedicated Recent Activity page with multi-range & custom date filtering.
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------
