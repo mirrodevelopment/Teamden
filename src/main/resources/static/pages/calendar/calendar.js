@@ -571,9 +571,25 @@
   }
 
   /**
-   * Load stored events or initialize seed
+   * Load stored events from backend API or initialize seed
    */
-  function loadEvents() {
+  async function loadEvents() {
+    try {
+      const resp = await fetch('/api/calendar/events');
+      if (resp.ok) {
+        const data = await resp.json();
+        if (Array.isArray(data) && data.length > 0) {
+          events = data.map(normalizeEvent);
+          saveEvents();
+          renderUpcomingCommitments();
+          switchView(currentView);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend /api/calendar/events unreachable, falling back to cache', err);
+    }
+
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
@@ -586,6 +602,8 @@
       console.warn('Failed to parse stored events, resetting to seed', e);
       events = SEED_EVENTS.map(normalizeEvent);
     }
+    renderUpcomingCommitments();
+    switchView(currentView);
   }
 
   function saveEvents() {
@@ -593,6 +611,50 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
     } catch (e) {
       console.error('Failed to save events to localStorage', e);
+    }
+  }
+
+  async function persistEventToBackend(evt, isUpdate) {
+    try {
+      const payload = {
+        title: evt.title,
+        date: evt.date,
+        startTime: evt.startTime,
+        endTime: evt.endTime,
+        project: evt.project,
+        sub: evt.sub,
+        category: evt.category,
+        colorTheme: evt.colorTheme,
+        calendar: evt.calendar,
+        icon: evt.icon,
+        location: evt.location,
+        attendees: evt.attendees,
+        desc: evt.desc
+      };
+      const url = isUpdate ? `/api/calendar/events/${evt.id}` : '/api/calendar/events';
+      const method = isUpdate ? 'PUT' : 'POST';
+      const resp = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (resp.ok) {
+        const saved = await resp.json();
+        if (saved && saved.id) {
+          evt.id = saved.id;
+          saveEvents();
+        }
+      }
+    } catch (err) {
+      console.warn('Backend sync failed, saved locally', err);
+    }
+  }
+
+  async function deleteEventFromBackend(id) {
+    try {
+      await fetch(`/api/calendar/events/${id}`, { method: 'DELETE' });
+    } catch (err) {
+      console.warn('Backend delete failed', err);
     }
   }
 
@@ -691,6 +753,8 @@
       headingEl.textContent = `${MONTH_NAMES[currentBaseDate.getMonth()]} ${currentBaseDate.getFullYear()}`;
     } else if (currentView === 'agenda') {
       headingEl.textContent = `Upcoming Agenda — ${MONTH_NAMES[currentBaseDate.getMonth()]} ${currentBaseDate.getFullYear()}`;
+    } else if (currentView === 'table') {
+      headingEl.textContent = `Schedule Register — ${MONTH_NAMES[currentBaseDate.getMonth()]} ${currentBaseDate.getFullYear()}`;
     }
   }
 
@@ -1067,7 +1131,182 @@
   }
 
   /**
-   * Switch between Day, Week, Month, Agenda
+   * 5. TABLE VIEW (Schedule Register)
+   */
+  function renderTableView() {
+    const tbody = document.getElementById('cal-table-body');
+    const emptyState = document.getElementById('cal-table-empty');
+    const totalCountEl = document.getElementById('cal-table-total-count');
+    if (!tbody) return;
+
+    // Filter controls
+    const catSelect = document.getElementById('cal-table-category-select');
+    const srcSelect = document.getElementById('cal-table-source-select');
+    const searchInput = document.getElementById('cal-table-search-input');
+
+    const selectedCategory = catSelect ? catSelect.value : 'all';
+    const selectedSource = srcSelect ? srcSelect.value : 'all';
+    const tableSearch = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+    // Filter events
+    let filtered = events.filter(e => {
+      // Calendar visibility from rail toggle
+      if (!activeCalendars.has(e.calendar)) return false;
+
+      // Table category filter
+      if (selectedCategory !== 'all' && (e.category || '').toLowerCase() !== selectedCategory) {
+        return false;
+      }
+
+      // Table source filter
+      if (selectedSource !== 'all' && (e.calendar || '').toLowerCase() !== selectedSource) {
+        return false;
+      }
+
+      // Table search filter
+      if (tableSearch) {
+        const titleMatch = (e.title || '').toLowerCase().includes(tableSearch);
+        const projMatch = (e.project || '').toLowerCase().includes(tableSearch);
+        const descMatch = (e.desc || '').toLowerCase().includes(tableSearch);
+        const attendeesMatch = Array.isArray(e.attendees) && e.attendees.some(a => a.toLowerCase().includes(tableSearch));
+        if (!titleMatch && !projMatch && !descMatch && !attendeesMatch) return false;
+      }
+
+      // Global navbar search filter if active
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const m1 = (e.title || '').toLowerCase().includes(q);
+        const m2 = (e.project || '').toLowerCase().includes(q);
+        if (!m1 && !m2) return false;
+      }
+
+      return true;
+    });
+
+    // Sort by date, then startTime
+    filtered.sort((a, b) => {
+      if (a.date !== b.date) return a.date.localeCompare(b.date);
+      return (a.startMinutes || 0) - (b.startMinutes || 0);
+    });
+
+    if (totalCountEl) {
+      totalCountEl.textContent = filtered.length;
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      if (emptyState) emptyState.classList.remove('d-none');
+      return;
+    }
+
+    if (emptyState) emptyState.classList.add('d-none');
+
+    const rowsHtml = filtered.map(evt => {
+      // Date formatting
+      const dateParts = evt.date.split('-');
+      const dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+      const dayName = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][dateObj.getDay()];
+      const monthName = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'][dateObj.getMonth()];
+      const dayNum = dateObj.getDate();
+      const formattedDate = `${dayName}, ${dayNum} ${monthName}`;
+
+      // Project pill
+      const projectHtml = evt.project ? `<span class="cal-table-project-pill">${escapeHtml(evt.project)}</span>` : '<span class="text-muted">—</span>';
+
+      // Category pill
+      const catClass = `cat-${(evt.category || 'meeting').toLowerCase()}`;
+      const categoryHtml = `<span class="cal-table-cat-pill ${catClass}">${escapeHtml((evt.category || 'meeting').toUpperCase())}</span>`;
+
+      // Source badge
+      const srcName = evt.calendar === 'brick' ? 'Brick' : evt.calendar === 'google' ? 'Google' : 'Microsoft 365';
+      const srcClass = `source-${(evt.calendar || 'brick').toLowerCase()}`;
+      const sourceHtml = `<span class="cal-table-source-badge ${srcClass}"><span class="cal-table-source-dot"></span>${srcName}</span>`;
+
+      // Attendees initials avatars
+      let avatarsHtml = '';
+      if (Array.isArray(evt.attendees) && evt.attendees.length > 0) {
+        avatarsHtml = '<div class="cal-table-avatar-stack">';
+        evt.attendees.slice(0, 3).forEach(name => {
+          const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+          avatarsHtml += `<span class="cal-table-avatar" title="${escapeHtml(name)}">${initials}</span>`;
+        });
+        if (evt.attendees.length > 3) {
+          avatarsHtml += `<span class="cal-table-avatar" title="More">+${evt.attendees.length - 3}</span>`;
+        }
+        avatarsHtml += '</div>';
+      } else {
+        avatarsHtml = '<span class="text-muted">—</span>';
+      }
+
+      // Icon template
+      const iconKey = evt.icon && ICONS[evt.icon] ? evt.icon : 'calendar';
+      const iconSvg = ICONS[iconKey] || ICONS.calendar;
+
+      return `
+        <tr class="cal-table-row" data-event-id="${escapeHtml(evt.id)}">
+          <td>
+            <div class="cal-table-datetime-cell">
+              <span class="cal-table-date-text">${formattedDate}</span>
+              <span class="cal-table-time-text">${escapeHtml(evt.startTime)} – ${escapeHtml(evt.endTime)}</span>
+            </div>
+          </td>
+          <td>
+            <div class="cal-table-event-cell">
+              <div class="cal-table-event-title-wrap">
+                <span class="cal-table-event-icon">${iconSvg}</span>
+                <span class="cal-table-event-title">${escapeHtml(evt.title)}</span>
+              </div>
+              ${evt.desc ? `<span class="cal-table-event-desc">${escapeHtml(evt.desc)}</span>` : ''}
+            </div>
+          </td>
+          <td>${projectHtml}</td>
+          <td>${categoryHtml}</td>
+          <td>${avatarsHtml}</td>
+          <td>${sourceHtml}</td>
+          <td>
+            <div class="cal-table-actions-cell" onclick="event.stopPropagation()">
+              <button class="cal-table-action-btn btn-edit" data-action="edit" data-event-id="${escapeHtml(evt.id)}" title="Edit event">Edit</button>
+              <button class="cal-table-action-btn btn-delete" data-action="delete" data-event-id="${escapeHtml(evt.id)}" title="Delete event">✕</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    tbody.innerHTML = rowsHtml;
+
+    // Row click listeners
+    tbody.querySelectorAll('.cal-table-row').forEach(row => {
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('.cal-table-actions-cell')) return;
+        const evtId = row.getAttribute('data-event-id');
+        const targetEvt = events.find(item => item.id === evtId);
+        if (targetEvt) openEventDetails(targetEvt);
+      });
+    });
+
+    // Action button listeners
+    tbody.querySelectorAll('.cal-table-action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.getAttribute('data-action');
+        const evtId = btn.getAttribute('data-event-id');
+        const targetEvt = events.find(item => item.id === evtId);
+        if (!targetEvt) return;
+
+        if (action === 'edit') {
+          selectedEvent = targetEvt;
+          openCreateModal({ isEdit: true });
+        } else if (action === 'delete') {
+          selectedEvent = targetEvt;
+          deleteSelectedEvent();
+        }
+      });
+    });
+  }
+
+  /**
+   * Switch between Day, Week, Month, Agenda, Table
    */
   function switchView(viewName) {
     currentView = viewName;
@@ -1093,6 +1332,7 @@
     else if (viewName === 'day') renderDayView();
     else if (viewName === 'month') renderMonthView();
     else if (viewName === 'agenda') renderAgendaView();
+    else if (viewName === 'table') renderTableView();
   }
 
   /**
@@ -1103,7 +1343,7 @@
       currentBaseDate.setDate(currentBaseDate.getDate() + (direction * 7));
     } else if (currentView === 'day') {
       currentBaseDate.setDate(currentBaseDate.getDate() + direction);
-    } else if (currentView === 'month' || currentView === 'agenda') {
+    } else if (currentView === 'month' || currentView === 'agenda' || currentView === 'table') {
       currentBaseDate.setMonth(currentBaseDate.getMonth() + direction);
     }
     updatePeriodDisplay();
@@ -1397,6 +1637,7 @@
           icon,
           desc
         };
+        persistEventToBackend(events[idx], true);
         showToast(`Event "${title}" updated`);
       }
     } else {
@@ -1421,6 +1662,7 @@
         desc
       };
       events.push(newEvt);
+      persistEventToBackend(newEvt, false);
       showToast(`Event "${title}" scheduled!`);
     }
 
@@ -1433,7 +1675,9 @@
   function deleteSelectedEvent() {
     if (!selectedEvent) return;
     if (confirm(`Are you sure you want to delete "${selectedEvent.title}"?`)) {
-      events = events.filter(e => e.id !== selectedEvent.id);
+      const targetId = selectedEvent.id;
+      events = events.filter(e => e.id !== targetId);
+      deleteEventFromBackend(targetId);
       saveEvents();
       showToast(`Deleted "${selectedEvent.title}"`);
       closeEventDetails();
@@ -1857,6 +2101,35 @@
       });
     }
 
+    // 13.5 Connect to Table View Filters & Search
+    const tableSearch = document.getElementById('cal-table-search-input');
+    if (tableSearch) {
+      tableSearch.addEventListener('input', () => {
+        if (currentView === 'table') renderTableView();
+      });
+    }
+
+    const tableCatSelect = document.getElementById('cal-table-category-select');
+    if (tableCatSelect) {
+      tableCatSelect.addEventListener('change', () => {
+        if (currentView === 'table') renderTableView();
+      });
+    }
+
+    const tableSrcSelect = document.getElementById('cal-table-source-select');
+    if (tableSrcSelect) {
+      tableSrcSelect.addEventListener('change', () => {
+        if (currentView === 'table') renderTableView();
+      });
+    }
+
+    const tableNewBtn = document.getElementById('btn-table-new-event');
+    if (tableNewBtn) {
+      tableNewBtn.addEventListener('click', () => {
+        openCreateModal();
+      });
+    }
+
     // 14. Connect to Topbar "+ Create" Button
     // We delegate on document in case navbar is loaded dynamically
     document.addEventListener('click', (e) => {
@@ -1895,7 +2168,7 @@
     }
 
     // 3. Load & Render Events
-    loadEvents();
+    await loadEvents();
     renderUpcomingCommitments();
     renderTimeGutter('cal-time-gutter');
     updatePeriodDisplay();

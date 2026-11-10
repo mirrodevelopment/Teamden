@@ -15,37 +15,35 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 - Interactive Kanban Workflow (Track 2):
   * Relational task persistence for columns (NOW, NEXT, LATER) and ordering via Flyway V3.
   * Backend transition endpoint `PATCH /api/dashboard/tasks/{id}/move` with multi-tenant isolation.
-  * Eradicated title-based heuristics in `DashboardService.java`; tasks dynamically query columns.
   * HTML5 Drag & Drop for Kanban boards, plus quick-transition action buttons for mobile/touch.
-  * Task options modal enhanced with direct column shift actions.
+- Relational Calendar Table & Interactive Table View (Track 3):
+  * Authored Flyway V4 migration (`V4__calendar_events.sql`) for PostgreSQL schedule persistence.
+  * Built Spring Boot JPA domain: `CalendarEvent.java`, `CalendarEventRepository.java`, `CalendarService.java`, `CalendarController.java`.
+  * REST endpoints (`GET`, `POST`, `PUT`, `DELETE /api/calendar/events`) with tenant isolation and auto-seeding.
+  * Added Neo-Editorial Table View (`data-view="table"`) on `calendar.html` with search, category/calendar filters, attendee badges, and CRUD modal triggers.
 - Full Test Suite Verification:
-  * Resolved database foreign key cascade teardown in test setups.
-  * 24/24 integration tests 100% green across all suites (`./mvnw test`).
+  * 29/29 integration tests 100% green across all 7 test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Flyway: `V3__kanban_task_columns_and_ordering.sql`.
-- Domain & DTOs: `KanbanColumn.java`, `Task.java`, `MoveTaskRequestDto.java`, `PriorityTaskDto.java`, `ActivityEventType.java`.
-- Backend: `DashboardService.java`, `DashboardController.java`.
-- Frontend: `dashboard.html`, `dashboard.css`, `dashboard.js`.
-- Tests: `DashboardKanbanIntegrationTest.java`, `MultiOrganizationIsolationTest.java`.
+- Flyway: `V3__kanban_task_columns_and_ordering.sql`, `V4__calendar_events.sql`.
+- Backend Domain & API: `CalendarEvent.java`, `CalendarEventRepository.java`, `CalendarService.java`, `CalendarController.java`, `CalendarEventDto.java`, `SecurityConfig.java`, `ActivityEventType.java`.
+- Frontend UI: `calendar.html`, `calendar.css`, `calendar.js`, `dashboard.html`, `dashboard.css`, `dashboard.js`.
+- Tests: `CalendarIntegrationTest.java` (5 tests), `DashboardKanbanIntegrationTest.java` (6 tests), `MultiOrganizationIsolationTest.java` (3 tests).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Relational Kanban Column Persistence vs Heuristic Filtering
-  [BEFORE - DashboardService.java]:
-  List<PriorityTaskDto> nowTasks = allTasks.stream()
-      .filter(t -> t.getTitle().toLowerCase().contains("now")).toList();
+Example: Calendar Persistence & Table View
+  [BEFORE - calendar.js]:
+  Stored events purely in browser `localStorage` under `teamden-calendar-events-v2`; no database table; 4 views (Day, Week, Month, Agenda).
 
-  [AFTER - DashboardService.java & V3 Migration]:
-  List<PriorityTaskDto> nowTasks = allTasks.stream()
-      .filter(t -> t.getKanbanColumn() == KanbanColumn.NOW)
-      .sorted(Comparator.comparing(Task::getColumnOrder)).toList();
+  [AFTER - calendar.js, calendar.html & Flyway V4]:
+  Relational PostgreSQL table `calendar_events` with REST sync, plus 5th view mode "Table" (`#pane-table`) rendering a filterable schedule data table.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 24/24 integration tests green (`./mvnw test` passing 100%).
-- Multi-tenant security: Verified Cross-organization move requests rejected with HTTP 400.
+- Test Suite: 29/29 integration tests green (`./mvnw test` passing 100% across all 7 test classes).
+- Multi-Tenant Isolation: Verified cross-organization move, calendar edits, and deletions rejected.
 - Resource Sync: Synchronized static resources to `target/classes/static`.
 
 ================================================================================
@@ -88,7 +86,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 2 [COMPLETED]: Project Flow relational schema, Flyway V2 & dynamic hydration.
 - Phase 3 [COMPLETED]: Mobile layout modernization across all 20+ pages & fragments.
 - Phase 4 [COMPLETED]: Interactive Kanban column transitions, drag-and-drop & Flyway V3.
-- Phase 5 [SCHEDULED]: Production build verification & asset minification.
+- Phase 5 [COMPLETED]: Relational Calendar persistence, Flyway V4 & Table view.
+- Phase 6 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT
