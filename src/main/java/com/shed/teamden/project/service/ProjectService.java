@@ -6,8 +6,11 @@ import com.shed.teamden.activity.repository.ActivityEventRepository;
 import com.shed.teamden.common.exception.BadRequestException;
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
+import com.shed.teamden.organization.entity.MembershipStatus;
 import com.shed.teamden.organization.entity.Organization;
+import com.shed.teamden.organization.entity.OrganizationMembership;
 import com.shed.teamden.organization.entity.OrganizationStatus;
+import com.shed.teamden.organization.repository.OrganizationMembershipRepository;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.project.dto.*;
 import com.shed.teamden.project.entity.*;
@@ -46,6 +49,7 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final TaskRepository taskRepository;
     private final ActivityEventRepository activityEventRepository;
+    private final OrganizationMembershipRepository organizationMembershipRepository;
 
     public ProjectService(ProjectRepository projectRepository,
                           OrganizationRepository organizationRepository,
@@ -56,7 +60,8 @@ public class ProjectService {
                           ProjectDocumentRepository projectDocumentRepository,
                           ProjectMemberRepository projectMemberRepository,
                           TaskRepository taskRepository,
-                          ActivityEventRepository activityEventRepository) {
+                          ActivityEventRepository activityEventRepository,
+                          OrganizationMembershipRepository organizationMembershipRepository) {
         this.projectRepository = projectRepository;
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
@@ -67,6 +72,7 @@ public class ProjectService {
         this.projectMemberRepository = projectMemberRepository;
         this.taskRepository = taskRepository;
         this.activityEventRepository = activityEventRepository;
+        this.organizationMembershipRepository = organizationMembershipRepository;
     }
 
     @Transactional
@@ -212,63 +218,169 @@ public class ProjectService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public ProjectOptionsDto getProjectOptions() {
+        Organization organization = resolveCurrentOrganization();
+
+        List<OrganizationMembership> memberships = organizationMembershipRepository
+                .findByOrganizationIdAndStatusWithUser(organization.getId(), MembershipStatus.ACTIVE);
+
+        List<ProjectOptionsDto.OwnerOptionDto> ownerDtos = memberships.stream()
+                .map(m -> {
+                    User u = m.getUser();
+                    String fullName = (u != null && u.getFullName() != null) ? u.getFullName() : "Member";
+                    String[] parts = fullName.trim().split("\\s+");
+                    String initials = parts.length > 1
+                            ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
+                            : (fullName.length() > 0 ? fullName.substring(0, Math.min(2, fullName.length())).toUpperCase() : "TM");
+                    return ProjectOptionsDto.OwnerOptionDto.builder()
+                            .id(u != null ? u.getId() : m.getId())
+                            .name(fullName)
+                            .email(u != null ? u.getEmail() : "")
+                            .role(m.getRole() != null ? m.getRole().name() : "MEMBER")
+                            .initials(initials)
+                            .build();
+                })
+                .toList();
+
+        return ProjectOptionsDto.builder()
+                .owners(ownerDtos)
+                .statuses(List.of("ACTIVE", "PLANNING", "ON_HOLD", "COMPLETED", "CANCELLED"))
+                .priorities(List.of("HIGH", "MEDIUM", "LOW"))
+                .healthOptions(List.of("ON_TRACK", "AT_RISK", "DELAYED"))
+                .projectTypes(List.of("General", "Design & UX", "Engineering", "Marketing", "Product Roadmap"))
+                .build();
+    }
+
     @Transactional
     public ProjectItemDto createProject(CreateProjectRequestDto req) {
+        if (req == null || req.getName() == null || req.getName().isBlank()) {
+            throw new BadRequestException("Project name is required");
+        }
+
         Organization organization = resolveCurrentOrganization();
         User currentUser = resolveCurrentUser(organization);
 
+        // Resolve Project Lead / Owner
+        User projectOwner = currentUser;
+        if (req.getOwnerId() != null) {
+            Optional<User> ownerOpt = userRepository.findById(req.getOwnerId());
+            if (ownerOpt.isPresent()) {
+                Optional<OrganizationMembership> memberOpt = organizationMembershipRepository
+                        .findByOrganizationIdAndUserId(organization.getId(), req.getOwnerId());
+                if (memberOpt.isPresent()) {
+                    projectOwner = ownerOpt.get();
+                }
+            }
+        }
+
         ProjectStatus status = ProjectStatus.ACTIVE;
-        if (req.getStatus() != null) {
+        if (req.getStatus() != null && !req.getStatus().isBlank()) {
             try {
-                status = ProjectStatus.valueOf(req.getStatus().toUpperCase());
+                status = ProjectStatus.valueOf(req.getStatus().trim().toUpperCase());
             } catch (Exception ignored) {}
         }
 
-        LocalDate due = null;
+        String health = "ON_TRACK";
+        if (req.getHealth() != null && !req.getHealth().isBlank()) {
+            health = req.getHealth().trim().toUpperCase();
+        }
+
+        String priority = "MEDIUM";
+        if (req.getPriority() != null && !req.getPriority().isBlank()) {
+            priority = req.getPriority().trim().toUpperCase();
+        }
+
+        String projectType = "General";
+        if (req.getProjectType() != null && !req.getProjectType().isBlank()) {
+            projectType = req.getProjectType().trim();
+        }
+
+        LocalDate start = LocalDate.now();
+        if (req.getStartDate() != null && !req.getStartDate().isBlank()) {
+            try {
+                start = LocalDate.parse(req.getStartDate().trim());
+            } catch (Exception ignored) {}
+        }
+
+        LocalDate due = start.plusDays(30);
         if (req.getDueDate() != null && !req.getDueDate().isBlank()) {
             try {
-                due = LocalDate.parse(req.getDueDate());
+                due = LocalDate.parse(req.getDueDate().trim());
             } catch (Exception ignored) {}
         }
 
         Project newProject = Project.builder()
                 .id(UUID.randomUUID())
                 .organization(organization)
-                .name(req.getName() != null && !req.getName().isBlank() ? req.getName().trim() : "Untitled Project")
-                .description(req.getDescription())
-                .owner(currentUser)
+                .name(req.getName().trim())
+                .description(req.getDescription() != null ? req.getDescription().trim() : "")
+                .owner(projectOwner)
                 .status(status)
-                .health("ON_TRACK")
-                .priority("MEDIUM")
-                .projectType("General")
-                .startDate(LocalDate.now())
-                .dueDate(due != null ? due : LocalDate.now().plusDays(30))
+                .health(health)
+                .priority(priority)
+                .projectType(projectType)
+                .startDate(start)
+                .dueDate(due)
                 .build();
 
         newProject = projectRepository.save(newProject);
-        ensureProjectFlowBaseline(newProject, currentUser);
+
+        // Record Activity Event
+        ActivityEvent event = ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .actor(currentUser)
+                .eventType(ActivityEventType.PROJECT_CREATED)
+                .entityType("PROJECT")
+                .entityId(newProject.getId())
+                .title("created project")
+                .description(newProject.getName())
+                .actionText("created project")
+                .targetTitle(newProject.getName())
+                .subMeta(newProject.getProjectType() != null ? newProject.getProjectType() + " / Workspace" : "Workspace / Projects")
+                .badgeType("DOCUMENT")
+                .dotColor("green")
+                .eventTimestamp(Instant.now())
+                .build();
+        activityEventRepository.save(event);
+
+        long totalCount = projectRepository.countByOrganizationId(organization.getId());
+        String indexNum = String.format("%02d", totalCount);
 
         String dueStr = newProject.getDueDate() != null
                 ? "Due " + newProject.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
                 : "Upcoming";
 
+        String ownerName = projectOwner.getFullName() != null ? projectOwner.getFullName() : "Team";
+        String[] parts = ownerName.trim().split("\\s+");
+        String initials = parts.length > 1
+                ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
+                : (ownerName.length() > 0 ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase() : "TM");
+
+        String statusDotColor = (status == ProjectStatus.ACTIVE) ? "green"
+                : (status == ProjectStatus.PLANNING ? "blue" : (status == ProjectStatus.ON_HOLD ? "red" : "orange"));
+        String healthDotColor = "ON_TRACK".equalsIgnoreCase(health) ? "green" : ("AT_RISK".equalsIgnoreCase(health) ? "red" : "orange");
+
         return ProjectItemDto.builder()
                 .id(newProject.getId().toString())
-                .indexNum("08")
+                .indexNum(indexNum)
                 .name(newProject.getName())
                 .description(newProject.getDescription())
                 .status(newProject.getStatus().name())
                 .statusLabel(newProject.getStatus().name().replace("_", " "))
-                .statusDotColor("green")
-                .health("ON_TRACK")
-                .healthLabel("ON TRACK")
-                .healthDotColor("green")
-                .team(currentUser.getFullName())
+                .statusDotColor(statusDotColor)
+                .health(health)
+                .healthLabel(health.replace("_", " "))
+                .healthDotColor(healthDotColor)
+                .team(ownerName)
                 .dueDate(dueStr)
-                .milestonesLabel("0/9 milestones")
+                .priority(priority.charAt(0) + priority.substring(1).toLowerCase() + " Priority")
+                .milestonesLabel("0/0 milestones")
                 .milestonesCompleted(0)
-                .milestonesTotal(9)
-                .avatars(List.of("ME"))
+                .milestonesTotal(0)
+                .blockersCount(0)
+                .avatars(List.of(initials))
                 .avatarOverflow("")
                 .build();
     }

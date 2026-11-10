@@ -54,9 +54,15 @@
             </div>
 
             <!-- Headline: projects. -->
-            <div class="projects-headline-group">
-              <h2 class="projects-title-main" aria-label="projects.">projects<span class="title-square-dot" aria-hidden="true"></span></h2>
-              <p class="projects-subtitle">Everything we're building, in one place.</p>
+            <div class="projects-headline-row" style="display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
+              <div class="projects-headline-group">
+                <h2 class="projects-title-main" aria-label="projects.">projects<span class="title-square-dot" aria-hidden="true"></span></h2>
+                <p class="projects-subtitle">Everything we're building, in one place.</p>
+              </div>
+              <button type="button" class="btn-create-project-primary" id="btn-open-create-project">
+                <span class="plus-icon">+</span>
+                <span>New Project</span>
+              </button>
             </div>
           </header>
 
@@ -64,7 +70,7 @@
           <section class="projects-stats-row" aria-label="Projects Overview Statistics">
             <div class="stat-metric-block">
               <span class="stat-label">TOTAL PROJECTS</span>
-              <span class="stat-value" id="stat-total-projects">12</span>
+              <span class="stat-value" id="stat-total-projects">0</span>
             </div>
             <div class="stat-divider"></div>
 
@@ -73,7 +79,7 @@
                 <span class="stat-label">ACTIVE</span>
                 <span class="stat-dot dot-green"></span>
               </div>
-              <span class="stat-value" id="stat-active-projects">08</span>
+              <span class="stat-value" id="stat-active-projects">00</span>
             </div>
             <div class="stat-divider"></div>
 
@@ -82,7 +88,7 @@
                 <span class="stat-label">AT RISK</span>
                 <span class="stat-dot dot-red"></span>
               </div>
-              <span class="stat-value" id="stat-at-risk-projects">02</span>
+              <span class="stat-value" id="stat-at-risk-projects">00</span>
             </div>
             <div class="stat-divider"></div>
 
@@ -91,7 +97,7 @@
                 <span class="stat-label">DUE SOON</span>
                 <span class="stat-dot dot-amber"></span>
               </div>
-              <span class="stat-value" id="stat-due-soon-projects">03</span>
+              <span class="stat-value" id="stat-due-soon-projects">00</span>
             </div>
           </section>
 
@@ -573,12 +579,48 @@
         </div>
         <div class="form-row">
           <div class="form-group col-half">
+            <label for="select-project-owner" class="form-label">Project Lead / Owner</label>
+            <select id="select-project-owner" class="form-control form-select">
+              <option value="">Loading members...</option>
+            </select>
+          </div>
+          <div class="form-group col-half">
+            <label for="select-project-type" class="form-label">Project Type</label>
+            <select id="select-project-type" class="form-control form-select">
+              <option value="General" selected>General</option>
+              <option value="Design &amp; UX">Design &amp; UX</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Product Roadmap">Product Roadmap</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-half">
             <label for="select-project-status" class="form-label">Initial Status</label>
             <select id="select-project-status" class="form-control form-select">
               <option value="ACTIVE" selected>Active</option>
               <option value="PLANNING">Planning</option>
-              <option value="IN_REVIEW">In Review</option>
               <option value="ON_HOLD">On Hold</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+          <div class="form-group col-half">
+            <label for="select-project-priority" class="form-label">Priority</label>
+            <select id="select-project-priority" class="form-control form-select">
+              <option value="HIGH">High Priority</option>
+              <option value="MEDIUM" selected>Medium Priority</option>
+              <option value="LOW">Low Priority</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="select-project-health" class="form-label">Health</label>
+            <select id="select-project-health" class="form-control form-select">
+              <option value="ON_TRACK" selected>On Track</option>
+              <option value="AT_RISK">At Risk</option>
+              <option value="DELAYED">Delayed</option>
             </select>
           </div>
           <div class="form-group col-half">

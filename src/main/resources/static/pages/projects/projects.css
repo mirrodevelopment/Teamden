@@ -122,6 +122,34 @@ body.projects-body {
   letter-spacing: -0.01em;
 }
 
+.btn-create-project-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.6rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-create-project-primary:hover {
+  background-color: var(--dash-text-primary);
+  transform: translateY(-1px);
+}
+
+.btn-create-project-primary .plus-icon {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* ==========================================================================
    STATISTICS ROW (4 metrics with thin vertical dividers)
    ========================================================================== */

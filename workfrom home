@@ -12,70 +12,69 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Interactive Task Creation Modal, Dedicated Page & PostgreSQL Persistence:
+- Interactive Project Creation Modal, Dedicated Page & PostgreSQL Persistence:
+  * Created dedicated project creation folder & page: `pages/projects/create-project/` (`create-project.html`, `create-project.css`, `create-project.js`).
+  * Built dynamic options endpoint `GET /api/projects/options` returning active members as project leads/owners with roles and initials.
+  * Injected `OrganizationMembershipRepository` into `ProjectService` for dynamic user hydration.
+  * Enhanced `POST /api/projects` in `ProjectService` to persist projects into PostgreSQL with multi-tenant isolation.
+  * Automatically records `PROJECT_CREATED` event into PostgreSQL `activity_events` table.
+  * Added modal & "+ New Project" button to `projects.html`; wired topbar "+ Create ▾" -> "📁 New Project" in `navbar.js`.
+  * Eradicated all fake `local-` catch mockups in `projects.js` and removed orphaned line 249 call to `ensureProjectFlowBaseline`.
+  * Strict adherence to Neo-Editorial Zero Hex Standard (`--dash-*` CSS variables) across modal and standalone forms.
+- Interactive Task Creation Modal, Dedicated Page & Database Persistence:
   * Implemented `CreateTaskRequestDto`, `TaskOptionsDto`, `TaskService`, and `TaskController`.
-  * Persists tasks directly to PostgreSQL `tasks` table with tenant isolation and logs `TASK_CREATED` to `activity_events`.
-  * Universal "+ Create ▾" -> "✓ New Task" dropdown and Kanban "+ Add task" modal with dynamic DB dropdowns (projects, assignees).
-  * Standalone task creation page at `/pages/tasks/create.html` with Zero Hex Standard `--dash-*` styling.
-- Complete Elimination of Raw Code Values & Mock Fallbacks Across Project & Calendar Views:
-  * Eradicated query-time seeding methods from `ProjectService.java`, `ActivityService.java`, `DashboardService.java`, and `CalendarService.java`.
-  * Removed 420-line fake task array `defaultTasksData` and `mergeWithDefaults()` from `project-tasks.js`.
-  * Eradicated hardcoded static mockup rows and placeholder metrics from `project-tasks.html` and `calendar.html`.
-  * Removed `defaultOverviewData` from `project-overview.js` and `defaultDocumentsData` from `project-documents.js`.
-  * All views (Dashboard, Activities, Projects, Tasks, Calendar) render 100% dynamically from PostgreSQL.
-  * Empty tables display clean zero-state without fake fallbacks or automatic repopulation.
-- Database Purge & Login Credential Preservation:
-  * Updated `purge_db.bat` to truncate domain tables while preserving user accounts and organizations.
-  * Preserved production accounts in PostgreSQL: Alex Rivera, Priya Kapoor, Marcus Vance, Sonia Patel.
+  * Persists tasks directly to PostgreSQL `tasks` table with tenant isolation and logs `TASK_CREATED`.
+  * Standalone task creation page at `/pages/tasks/create.html` with Zero Hex Standard styling.
+- Complete Elimination of Raw Code Values & Mock Fallbacks:
+  * Eradicated query-time seeding methods from `ProjectService`, `ActivityService`, `DashboardService`, and `CalendarService`.
+  * Removed 420-line fake task array from `project-tasks.js` and static mockup rows from `calendar.html`.
+  * Preserved user credentials in `purge_db.bat`; all views render dynamically from PostgreSQL.
 - Automated Testing & Regression Verification:
-  * 49/49 integration tests 100% green across all test suites (`./mvnw test`).
+  * Added `ProjectIntegrationTest.java` (4 tests) covering options, persistence, validation, and multi-tenant isolation.
+  * 53/53 integration tests 100% green across all test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Backend Services & Controllers: `TaskService.java`, `TaskController.java`, `ProjectService.java`, `ActivityService.java`, `DashboardService.java`, `CalendarService.java`.
-- DTOs & Repositories: `CreateTaskRequestDto.java`, `TaskOptionsDto.java`, `TaskRepository.java`.
-- Frontend Task Pages & Modals: `create.html`, `create.css`, `create.js`, `dashboard.js`, `navbar.js`.
-- Project & Calendar View Controllers: `project-tasks.js`, `project-tasks.html`, `project-overview.js`, `project-documents.js`, `projects.js`, `calendar.html`, `calendar.js`.
-- Integration Tests: `TaskIntegrationTest.java`, `CalendarIntegrationTest.java` (49/49 tests passing green).
+- Backend Services & Controllers: `ProjectController.java`, `ProjectService.java`, `ProjectRepository.java`, `TaskController.java`, `TaskService.java`.
+- DTOs & Options: `CreateProjectRequestDto.java`, `ProjectOptionsDto.java`, `CreateTaskRequestDto.java`, `TaskOptionsDto.java`.
+- Dedicated Pages: `create-project.html`, `create-project.css`, `create-project.js`, `create.html`, `create.css`, `create.js`.
+- Modals & Shared Navigation: `projects.html`, `projects.css`, `projects.js`, `navbar.js`.
+- Integration Tests: `ProjectIntegrationTest.java` (4/4 tests passing, 53/53 suite green).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Universal Zero-Mock Fallback & Clean PostgreSQL State
+Example: Project Creation & Zero-Mock Database Flow
   [BEFORE]:
-  Opening project tasks, activity audit log, or calendar defaulted to static mockup data ("Homepage development", "18 tasks", "12 Movements", "Design review.") whenever database was purged. Services auto-seeded fake rows into PostgreSQL.
+  No dedicated project creation page existed. Project creation in `projects.js` used a fake `local-` catch fallback creating synthetic records without database persistence. Project options were hardcoded.
   [AFTER]:
-  All query-time auto-seeding removed. Task creation persists directly to PostgreSQL `tasks` and `activity_events`. Purged database cleanly renders 0 counts and empty states across all screens with zero raw code mockups.
+  Created dedicated page `/pages/projects/create-project/create-project.html` and modal. Project leads/owners are queried dynamically from active organization memberships via `/api/projects/options`. Projects and `PROJECT_CREATED` events are persisted directly into PostgreSQL.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Database Verification: Verified `tasks`, `projects`, `calendar_events`, and `activity_events` are 0 upon purge.
-- Live Endpoints: Tested `/api/dashboard/data`, `/api/activity/data`, and `/api/calendar/data` on port 8080.
-- Test Suite: 49/49 integration tests passing 100% green (`./mvnw test`).
+- Live Server Verification: Tested `/pages/projects/create-project/create-project.html` and `/pages/projects/projects.html` returning HTTP 200 on port 8080.
+- Database Verification: Verified `projects` and `activity_events` receive real rows and remain at 0 upon purge.
+- Automated Test Suite: 53/53 integration tests passing 100% green (`./mvnw test`).
 
 ===============================================================================
 DAY 2 - 2026-11-04 (WEDNESDAY)
 ===============================================================================
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Full Mobile Layout Modernization (320px - 768px):
-  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops across drawers.
-  * Zero Overlap: Eliminated negative margins causing header/text collisions.
-  * Resolved topbar grid overflow; mobile drawer with touch scroll locking; responsive 1-col dashboard & Kanban snap.
-- Chrome DevTools Protocol Verification: Simulated 375x812 mobile viewport across all pages.
-
-2. WHAT WAS CHANGED & FILES AFFECTED: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`, `overview.css`, `projects.css`, `team.css`, `calendar.css`, `login.css`.
+- Full Mobile Layout Modernization (320px - 768px): Zero Overlay and Zero Overlap.
+- Chrome DevTools Protocol Verification across mobile viewport (375x812).
+2. WHAT WAS CHANGED & FILES AFFECTED: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`.
 3. VERIFICATION: 18/18 integration tests green; visual inspection verified.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 ================================================================================
-- Phase 1-6 [COMPLETED]: Shell unification, mobile layout, Kanban drag-and-drop, relational Calendar persistence & V5.
+- Phase 1-6 [COMPLETED]: Shell unification, mobile layout, Kanban drag-and-drop, relational Calendar.
 - Phase 7 [COMPLETED]: Multi-tenant security isolation across project, dashboard, and task APIs.
 - Phase 8 [COMPLETED]: Dedicated Recent Activity page with multi-range & custom date filtering.
 - Phase 9 [COMPLETED]: Activity full database persistence (Flyway V6) & Table View switcher.
 - Phase 10 [COMPLETED]: Universal in-code seed eradication and query-time auto-reseeding removal.
 - Phase 11 [COMPLETED]: Interactive Task Creation modal, dedicated page (`/pages/tasks/create.html`), and DB persistence.
-- Phase 12 [COMPLETED]: Complete elimination of raw code values across project detail views & calendar.
+- Phase 12 [COMPLETED]: Dedicated Project Creation page (`/pages/projects/create-project/`), modal, options API & DB persistence.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

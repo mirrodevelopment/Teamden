@@ -339,6 +339,39 @@
     }
   }
 
+  let cachedOptions = null;
+
+  async function loadProjectOptions() {
+    try {
+      const res = await Api.get('/api/projects/options');
+      if (res) {
+        cachedOptions = res;
+        populateOwnerSelect(res.owners);
+      }
+    } catch (err) {
+      console.warn('Could not load project options:', err);
+    }
+  }
+
+  function populateOwnerSelect(owners) {
+    const ownerSelect = document.getElementById('select-project-owner');
+    if (!ownerSelect) return;
+    ownerSelect.innerHTML = '';
+    if (!owners || owners.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'Current User (Default)';
+      ownerSelect.appendChild(opt);
+      return;
+    }
+    owners.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.id;
+      opt.textContent = `${o.name} (${o.role || 'Member'})`;
+      ownerSelect.appendChild(opt);
+    });
+  }
+
   /**
    * Wire Project Creation Modal
    */
@@ -347,14 +380,25 @@
     const closeBtn = document.getElementById('btn-close-project-modal');
     const cancelBtn = document.getElementById('btn-cancel-project-modal');
     const form = document.getElementById('form-create-project');
+    const newProjectBtn = document.getElementById('btn-open-create-project');
 
     const openModal = () => {
       if (modal) {
         modal.classList.remove('d-none');
+        loadProjectOptions();
         const nameInput = document.getElementById('input-project-name');
         if (nameInput) nameInput.focus();
       }
     };
+
+    window.openProjectModal = openModal;
+
+    if (newProjectBtn) {
+      newProjectBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
 
     const closeModal = () => {
       if (modal) modal.classList.add('d-none');
@@ -384,8 +428,17 @@
         e.preventDefault();
         const name = (document.getElementById('input-project-name') || {}).value || '';
         const desc = (document.getElementById('input-project-desc') || {}).value || '';
+        const ownerId = (document.getElementById('select-project-owner') || {}).value || null;
+        const projectType = (document.getElementById('select-project-type') || {}).value || 'General';
         const status = (document.getElementById('select-project-status') || {}).value || 'ACTIVE';
-        const dueDate = (document.getElementById('input-project-due') || {}).value || '';
+        const priority = (document.getElementById('select-project-priority') || {}).value || 'MEDIUM';
+        const health = (document.getElementById('select-project-health') || {}).value || 'ON_TRACK';
+        const dueDate = (document.getElementById('input-project-due') || {}).value || null;
+
+        if (!name.trim()) {
+          alert('Please enter a project name.');
+          return;
+        }
 
         const submitBtn = document.getElementById('btn-submit-project');
         if (submitBtn) {
@@ -394,46 +447,23 @@
         }
 
         try {
-          let newProject = null;
-          try {
-            newProject = await Api.post('/api/projects', {
-              name,
-              description: desc,
-              status,
-              dueDate
-            });
-          } catch (netErr) {
-            console.warn('Backend create project failed, fallback to client record:', netErr);
-            newProject = {
-              id: 'local-' + Date.now(),
-              indexNum: String((currentProjectData.projects.length + 2)).padStart(2, '0'),
-              name,
-              description: desc,
-              status,
-              statusLabel: status.replace('_', ' '),
-              statusDotColor: 'green',
-              health: 'ON_TRACK',
-              healthLabel: 'ON TRACK',
-              healthDotColor: 'green',
-              team: 'Team',
-              dueDate: dueDate ? `Due ${dueDate}` : 'Upcoming',
-              milestonesLabel: '0/3 milestones',
-              avatars: ['ME'],
-              avatarOverflow: ''
-            };
-          }
+          const payload = {
+            name: name.trim(),
+            description: desc.trim(),
+            ownerId: ownerId || null,
+            projectType,
+            status,
+            priority,
+            health,
+            dueDate: dueDate || null
+          };
 
-          if (newProject && currentProjectData && currentProjectData.projects) {
-            currentProjectData.projects.unshift(newProject);
-            currentProjectData.totalProjects = (currentProjectData.totalProjects || 12) + 1;
-            renderStats(currentProjectData);
-            updateFilterCounts(currentProjectData.projects);
-            renderProjectsCollection();
-          }
-
+          await Api.post('/api/projects', payload);
           closeModal();
+          await fetchAndRenderProjectData();
         } catch (err) {
-          alert('Could not create project: ' + err.message);
+          console.error('Failed to create project:', err);
+          alert('Could not create project: ' + (err.message || 'Please check your inputs and try again.'));
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
@@ -441,6 +471,39 @@
           }
         }
       });
+    }
+  }
+
+  async function fetchAndRenderProjectData() {
+    try {
+      const res = await fetch('/api/projects/data');
+      if (res.ok) {
+        currentProjectData = await res.json();
+      } else {
+        throw new Error(`HTTP ${res.status}`);
+      }
+    } catch (err) {
+      console.warn('Could not load from /api/projects/data:', err);
+      currentProjectData = {
+        workspaceBreadcrumb: 'YOUR WORKSPACE / 02',
+        currentDateLabel: '',
+        totalProjects: 0,
+        activeCount: 0,
+        atRiskCount: 0,
+        dueSoonCount: 0,
+        featuredProject: null,
+        projects: [],
+        decisions: [],
+        projectAttention: [],
+        upcomingMilestones: []
+      };
+    }
+
+    if (currentProjectData) {
+      renderStats(currentProjectData);
+      renderFeaturedCard(currentProjectData.featuredProject);
+      updateFilterCounts(currentProjectData.projects);
+      renderProjectsCollection();
     }
   }
 
@@ -481,38 +544,8 @@
     updateLiveDateHeader();
     setInterval(updateLiveDateHeader, 60000);
 
-    // 5. Fetch Projects Dashboard Data from backend
-    try {
-      const res = await fetch('/api/projects/data');
-      if (res.ok) {
-        currentProjectData = await res.json();
-      } else {
-        throw new Error(`HTTP ${res.status}`);
-      }
-    } catch (err) {
-      console.warn('Could not load from /api/projects/data:', err);
-      currentProjectData = {
-        workspaceBreadcrumb: 'YOUR WORKSPACE / 02',
-        currentDateLabel: '',
-        totalProjects: 0,
-        activeCount: 0,
-        atRiskCount: 0,
-        dueSoonCount: 0,
-        featuredProject: null,
-        projects: [],
-        decisions: [],
-        projectAttention: [],
-        upcomingMilestones: []
-      };
-    }
-
-    // 6. Populate DOM
-    if (currentProjectData) {
-      renderStats(currentProjectData);
-      renderFeaturedCard(currentProjectData.featuredProject);
-      updateFilterCounts(currentProjectData.projects);
-      renderProjectsCollection();
-    }
+    // 5. Fetch & Populate Projects Dashboard Data from backend
+    await fetchAndRenderProjectData();
 
     // 7. Bind Interactive Events
     bindToolbarEvents();

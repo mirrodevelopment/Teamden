@@ -1,14 +1,9 @@
 package com.shed.teamden.project.controller;
 
-import com.shed.teamden.project.dto.CreateProjectRequestDto;
-import com.shed.teamden.project.dto.ProjectDashboardDto;
-import com.shed.teamden.project.dto.ProjectItemDto;
-import com.shed.teamden.project.dto.ProjectOverviewDto;
-import com.shed.teamden.project.dto.ProjectTasksDto;
-import com.shed.teamden.project.dto.ProjectDocumentsDto;
-import com.shed.teamden.project.dto.ProjectActivityDto;
+import com.shed.teamden.project.dto.*;
 import com.shed.teamden.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+
+    @GetMapping("/options")
+    public ResponseEntity<ProjectOptionsDto> getProjectOptions() {
+        return ResponseEntity.ok(projectService.getProjectOptions());
+    }
 
     @GetMapping("/data")
     public ResponseEntity<ProjectDashboardDto> getProjectDashboardData() {
@@ -46,6 +46,6 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectItemDto> createProject(@RequestBody CreateProjectRequestDto request) {
-        return ResponseEntity.ok(projectService.createProject(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request));
     }
 }

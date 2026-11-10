@@ -98,6 +98,19 @@ const Navbar = (() => {
           }
         });
       }
+
+      const projectAction = document.getElementById('create-action-project');
+      if (projectAction) {
+        projectAction.addEventListener('click', (e) => {
+          e.preventDefault();
+          createMenu.classList.remove('show');
+          if (typeof window.openProjectModal === 'function') {
+            window.openProjectModal();
+          } else {
+            window.location.href = '/pages/projects/create-project/create-project.html';
+          }
+        });
+      }
     }
 
     // --- Theme Switcher Logic ---
