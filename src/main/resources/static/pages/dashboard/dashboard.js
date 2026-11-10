@@ -125,38 +125,62 @@
       badgeEl.textContent = String(activeCount).padStart(2, '0');
     }
 
-    listEl.innerHTML = tasks.map(task => `
-      <div class="task-card ${task.completed ? 'task-completed' : ''}" id="card-${task.id}" data-task-id="${task.id}" onclick="window.openTaskDetails('${task.id}')">
-        <button class="task-card-menu-btn" 
-                onclick="event.stopPropagation(); window.openTaskMenu('${task.id}')" 
-                title="Options" 
-                aria-label="Task options">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="5" cy="12" r="2"/>
-            <circle cx="12" cy="12" r="2"/>
-            <circle cx="19" cy="12" r="2"/>
-          </svg>
-        </button>
-        <div class="task-top-row">
-          <button class="task-checkbox-custom" 
-                  aria-label="Toggle task completion" 
-                  onclick="event.stopPropagation(); window.toggleTaskCompletion('${task.id}')"
-                  title="${task.completed ? 'Mark incomplete' : 'Mark complete'}">
+    listEl.innerHTML = tasks.map(task => {
+      const col = (task.column || (containerId.includes('now') ? 'NOW' : containerId.includes('next') ? 'NEXT' : 'LATER')).toUpperCase();
+
+      let moveButtonsHtml = '';
+      if (col === 'NOW') {
+        moveButtonsHtml = `<button class="task-move-btn" onclick="event.stopPropagation(); window.moveTaskToColumn('${task.id}', 'NEXT')" title="Move to NEXT">NEXT →</button>`;
+      } else if (col === 'NEXT') {
+        moveButtonsHtml = `
+          <button class="task-move-btn" onclick="event.stopPropagation(); window.moveTaskToColumn('${task.id}', 'NOW')" title="Move to NOW">← NOW</button>
+          <button class="task-move-btn" onclick="event.stopPropagation(); window.moveTaskToColumn('${task.id}', 'LATER')" title="Move to LATER">LATER →</button>
+        `;
+      } else if (col === 'LATER') {
+        moveButtonsHtml = `<button class="task-move-btn" onclick="event.stopPropagation(); window.moveTaskToColumn('${task.id}', 'NEXT')" title="Move to NEXT">← NEXT</button>`;
+      }
+
+      return `
+        <div class="task-card ${task.completed ? 'task-completed' : ''}" 
+             id="card-${task.id}" 
+             data-task-id="${task.id}" 
+             data-col="${col}"
+             draggable="true"
+             onclick="window.openTaskDetails('${task.id}')">
+          <button class="task-card-menu-btn" 
+                  onclick="event.stopPropagation(); window.openTaskMenu('${task.id}')" 
+                  title="Options" 
+                  aria-label="Task options">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="5" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="19" cy="12" r="2"/>
+            </svg>
           </button>
-          <div class="task-title-wrap">
-            <span class="task-num">${task.indexNum || '01'}</span>
-            <span class="task-text">${escapeHtml(task.title)}</span>
+          <div class="task-top-row">
+            <button class="task-checkbox-custom" 
+                    aria-label="Toggle task completion" 
+                    onclick="event.stopPropagation(); window.toggleTaskCompletion('${task.id}')"
+                    title="${task.completed ? 'Mark incomplete' : 'Mark complete'}">
+            </button>
+            <div class="task-title-wrap">
+              <span class="task-num">${task.indexNum || '01'}</span>
+              <span class="task-text">${escapeHtml(task.title)}</span>
+            </div>
+          </div>
+          <div class="task-meta-row">
+            <span class="task-tag-badge" title="${escapeHtml(task.tag || 'General')}">${escapeHtml(task.tag || 'General')}</span>
+            <span class="task-due-status">
+              <span class="pill-dot dot-${task.dotColor || 'gray'}"></span>
+              <span>${escapeHtml(task.dueDateLabel || 'Today')}</span>
+            </span>
+          </div>
+          <div class="task-quick-move-row">
+            ${moveButtonsHtml}
           </div>
         </div>
-        <div class="task-meta-row">
-          <span class="task-tag-badge" title="${escapeHtml(task.tag || 'General')}">${escapeHtml(task.tag || 'General')}</span>
-          <span class="task-due-status">
-            <span class="pill-dot dot-${task.dotColor || 'gray'}"></span>
-            <span>${escapeHtml(task.dueDateLabel || 'Today')}</span>
-          </span>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   /**
@@ -383,6 +407,157 @@
   }
 
   /**
+   * Re-render all 3 Kanban columns and refresh drag & drop handlers
+   */
+  function renderAllColumns() {
+    if (!currentDashboardData) return;
+    renderTaskList(currentDashboardData.nowTasks || [], 'list-tasks-now', 'badge-count-now');
+    renderTaskList(currentDashboardData.nextTasks || [], 'list-tasks-next', 'badge-count-next');
+    renderTaskList(currentDashboardData.laterTasks || [], 'list-tasks-later', 'badge-count-later');
+    updateTotalTaskCount();
+    initKanbanDragAndDrop();
+  }
+
+  /**
+   * Move task to a different Kanban column with optimistic UI updates and backend sync
+   */
+  window.moveTaskToColumn = async function (taskId, targetColumn, targetIndex) {
+    if (!taskId || !targetColumn || !currentDashboardData) return;
+    targetColumn = targetColumn.toUpperCase();
+
+    const columns = [
+      { name: 'NOW', list: currentDashboardData.nowTasks || [] },
+      { name: 'NEXT', list: currentDashboardData.nextTasks || [] },
+      { name: 'LATER', list: currentDashboardData.laterTasks || [] }
+    ];
+
+    let sourceColObj = null;
+    let targetColObj = null;
+    let task = null;
+    let origIdx = -1;
+
+    for (const c of columns) {
+      if (c.name === targetColumn) {
+        targetColObj = c;
+      }
+      const idx = c.list.findIndex(t => t.id === taskId);
+      if (idx !== -1) {
+        sourceColObj = c;
+        task = c.list[idx];
+        origIdx = idx;
+      }
+    }
+
+    if (!task || !targetColObj || !sourceColObj) return;
+    if (sourceColObj.name === targetColumn && (targetIndex === undefined || targetIndex === null || targetIndex === origIdx)) {
+      return;
+    }
+
+    const prevColName = sourceColObj.name;
+
+    // Optimistically remove from source
+    sourceColObj.list.splice(origIdx, 1);
+
+    // Update column property
+    task.column = targetColumn;
+
+    // Insert into target list
+    if (typeof targetIndex === 'number' && targetIndex >= 0 && targetIndex <= targetColObj.list.length) {
+      targetColObj.list.splice(targetIndex, 0, task);
+    } else {
+      targetColObj.list.push(task);
+    }
+
+    // Re-render immediately
+    renderAllColumns();
+    window.showToast(`Moved to ${targetColumn}: "${task.title}"`);
+
+    // Synchronize with backend API
+    try {
+      const response = await fetch(`/api/dashboard/tasks/${encodeURIComponent(taskId)}/move`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetColumn: targetColumn,
+          targetIndex: typeof targetIndex === 'number' ? targetIndex : null
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
+      }
+    } catch (err) {
+      console.warn('Failed to persist task move, rolling back:', err);
+      window.showToast('Could not save task move. Reverting...');
+      // Revert optimistic update
+      const currentIdx = targetColObj.list.indexOf(task);
+      if (currentIdx !== -1) {
+        targetColObj.list.splice(currentIdx, 1);
+      }
+      task.column = prevColName;
+      sourceColObj.list.splice(origIdx, 0, task);
+      renderAllColumns();
+    }
+  };
+
+  /**
+   * Native HTML5 Drag and Drop across Kanban columns
+   */
+  function initKanbanDragAndDrop() {
+    const cards = document.querySelectorAll('.kanban-task-list .task-card');
+    cards.forEach(card => {
+      card.setAttribute('draggable', 'true');
+
+      card.ondragstart = (e) => {
+        const taskId = card.getAttribute('data-task-id');
+        e.dataTransfer.setData('text/plain', taskId);
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => card.classList.add('is-dragging'), 0);
+      };
+
+      card.ondragend = () => {
+        card.classList.remove('is-dragging');
+        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      };
+    });
+
+    const dropZones = [
+      { id: 'kanban-col-now', col: 'NOW' },
+      { id: 'list-tasks-now', col: 'NOW' },
+      { id: 'kanban-col-next', col: 'NEXT' },
+      { id: 'list-tasks-next', col: 'NEXT' },
+      { id: 'kanban-col-later', col: 'LATER' },
+      { id: 'list-tasks-later', col: 'LATER' }
+    ];
+
+    dropZones.forEach(zone => {
+      const el = document.getElementById(zone.id);
+      if (!el) return;
+
+      el.ondragover = (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        el.classList.add('drag-over');
+      };
+
+      el.ondragleave = (e) => {
+        if (!el.contains(e.relatedTarget)) {
+          el.classList.remove('drag-over');
+        }
+      };
+
+      el.ondrop = (e) => {
+        e.preventDefault();
+        el.classList.remove('drag-over');
+        const taskId = e.dataTransfer.getData('text/plain');
+        if (taskId) {
+          window.moveTaskToColumn(taskId, zone.col);
+        }
+      };
+    });
+  }
+
+  /**
    * Interactive Toggle Task Completion
    */
   window.toggleTaskCompletion = async function (taskId) {
@@ -402,10 +577,7 @@
       }
     }
 
-    renderTaskList(currentDashboardData.nowTasks, 'list-tasks-now', 'badge-count-now');
-    renderTaskList(currentDashboardData.nextTasks, 'list-tasks-next', 'badge-count-next');
-    renderTaskList(currentDashboardData.laterTasks, 'list-tasks-later', 'badge-count-later');
-    updateTotalTaskCount();
+    renderAllColumns();
 
     if (targetTask) {
       window.showToast(targetTask.completed ? `Completed: "${targetTask.title}"` : `Reopened: "${targetTask.title}"`);
@@ -498,6 +670,22 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Copy Task Link
         </button>
+        <div style="margin-top:0.35rem; padding-top:0.45rem; border-top:1px solid var(--dash-border); font-size:0.6875rem; font-weight:800; color:var(--dash-text-muted); text-transform:uppercase; letter-spacing:0.06em;">Move to Column</div>
+        ${task.column !== 'NOW' ? `
+        <button onclick="window.closeModal(); window.moveTaskToColumn('${task.id}', 'NOW');" style="text-align:left; padding:0.6rem 0.8rem; background:none; border:none; border-radius:6px; font-size:0.8125rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.6rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Move to NOW
+        </button>` : ''}
+        ${task.column !== 'NEXT' ? `
+        <button onclick="window.closeModal(); window.moveTaskToColumn('${task.id}', 'NEXT');" style="text-align:left; padding:0.6rem 0.8rem; background:none; border:none; border-radius:6px; font-size:0.8125rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.6rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          Move to NEXT
+        </button>` : ''}
+        ${task.column !== 'LATER' ? `
+        <button onclick="window.closeModal(); window.moveTaskToColumn('${task.id}', 'LATER');" style="text-align:left; padding:0.6rem 0.8rem; background:none; border:none; border-radius:6px; font-size:0.8125rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.6rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          Move to LATER
+        </button>` : ''}
       </div>
     `;
 
@@ -685,17 +873,14 @@
       if (col === 'NEXT') {
         currentDashboardData.nextTasks = currentDashboardData.nextTasks || [];
         currentDashboardData.nextTasks.push(newTask);
-        renderTaskList(currentDashboardData.nextTasks, 'list-tasks-next', 'badge-count-next');
       } else if (col === 'LATER') {
         currentDashboardData.laterTasks = currentDashboardData.laterTasks || [];
         currentDashboardData.laterTasks.push(newTask);
-        renderTaskList(currentDashboardData.laterTasks, 'list-tasks-later', 'badge-count-later');
       } else {
         currentDashboardData.nowTasks = currentDashboardData.nowTasks || [];
         currentDashboardData.nowTasks.push(newTask);
-        renderTaskList(currentDashboardData.nowTasks, 'list-tasks-now', 'badge-count-now');
       }
-      updateTotalTaskCount();
+      renderAllColumns();
     }
 
     window.closeModal();
@@ -1229,11 +1414,8 @@
         }
       }
 
-      // Kanban Columns
-      renderTaskList(currentDashboardData.nowTasks || [], 'list-tasks-now', 'badge-count-now');
-      renderTaskList(currentDashboardData.nextTasks || [], 'list-tasks-next', 'badge-count-next');
-      renderTaskList(currentDashboardData.laterTasks || [], 'list-tasks-later', 'badge-count-later');
-      updateTotalTaskCount();
+      // Kanban Columns with Drag and Drop
+      renderAllColumns();
 
       // Activities
       renderActivityTimeline(currentDashboardData.activities || []);

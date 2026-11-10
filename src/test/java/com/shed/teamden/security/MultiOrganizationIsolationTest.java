@@ -75,6 +75,9 @@ public class MultiOrganizationIsolationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+
     private Organization orgAlpha;
     private Organization orgBeta;
 
@@ -107,13 +110,21 @@ public class MultiOrganizationIsolationTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
-        activityEventRepository.deleteAll();
-        attendanceRecordRepository.deleteAll();
-        taskRepository.deleteAll();
-        projectRepository.deleteAll();
-        membershipRepository.deleteAll();
-        userRepository.deleteAll();
-        organizationRepository.deleteAll();
+        jdbcTemplate.execute("DELETE FROM task_linked_documents");
+        jdbcTemplate.execute("DELETE FROM project_document_collaborators");
+        jdbcTemplate.execute("DELETE FROM project_documents");
+        jdbcTemplate.execute("DELETE FROM project_decisions");
+        jdbcTemplate.execute("DELETE FROM project_specifications");
+        jdbcTemplate.execute("DELETE FROM project_members");
+        jdbcTemplate.execute("DELETE FROM task_subtasks");
+        jdbcTemplate.execute("DELETE FROM activity_events");
+        jdbcTemplate.execute("DELETE FROM tasks");
+        jdbcTemplate.execute("DELETE FROM project_milestones");
+        jdbcTemplate.execute("DELETE FROM attendance_records");
+        jdbcTemplate.execute("DELETE FROM projects");
+        jdbcTemplate.execute("DELETE FROM organization_memberships");
+        jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("DELETE FROM organizations");
 
         String suffixAlpha = UUID.randomUUID().toString().substring(0, 8);
         alphaOrgName = "Org Alpha " + suffixAlpha;

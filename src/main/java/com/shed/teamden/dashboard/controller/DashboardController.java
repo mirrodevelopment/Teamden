@@ -2,6 +2,7 @@ package com.shed.teamden.dashboard.controller;
 
 import com.shed.teamden.common.response.ApiResponse;
 import com.shed.teamden.dashboard.dto.DashboardDataDto;
+import com.shed.teamden.dashboard.dto.MoveTaskRequestDto;
 import com.shed.teamden.dashboard.dto.PriorityTaskDto;
 import com.shed.teamden.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,17 @@ public class DashboardController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(toggled);
+    }
+
+    @PatchMapping("/tasks/{id}/move")
+    public ResponseEntity<PriorityTaskDto> moveTask(
+            @PathVariable String id,
+            @RequestBody MoveTaskRequestDto request) {
+        PriorityTaskDto moved = dashboardService.moveTask(id, request);
+        if (moved == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(moved);
     }
 
     @PostMapping("/tasks")

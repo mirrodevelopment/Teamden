@@ -603,13 +603,26 @@ body.sidebar-collapsed .dash-app-main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   min-width: 0;
   position: relative;
-  cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, background-color var(--transition-fast);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color var(--transition-fast), opacity 150ms ease;
+}
+
+.task-card:active {
+  cursor: grabbing;
 }
 
 .task-card:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.task-card.is-dragging {
+  opacity: 0.35 !important;
+  transform: scale(0.97);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px dashed var(--dash-text-muted) !important;
 }
 
 .task-card.task-completed {
@@ -618,6 +631,53 @@ body.sidebar-collapsed .dash-app-main {
 
 .task-card.task-completed .task-text {
   text-decoration: line-through;
+}
+
+/* Kanban column and task list drop zones */
+.kanban-task-list {
+  min-height: 80px;
+  border-radius: var(--dash-radius-card);
+  transition: background-color 150ms ease, outline 150ms ease;
+}
+
+.kanban-task-list.drag-over,
+.kanban-column.drag-over {
+  background: var(--dash-border-subtle) !important;
+  outline: 2px dashed var(--dash-accent-lime);
+  outline-offset: -2px;
+}
+
+/* Quick Move Action Row for Mobile / Cards */
+.task-quick-move-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+  padding-top: 0.35rem;
+  border-top: 1px dashed var(--dash-border-subtle);
+}
+
+.task-move-btn {
+  background: var(--dash-bg-canvas);
+  border: 1px solid var(--dash-border);
+  border-radius: 4px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--dash-text-muted);
+  padding: 0.16rem 0.45rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.task-move-btn:hover {
+  background: var(--dash-accent-lime);
+  color: #000;
+  border-color: var(--dash-accent-lime);
 }
 
 /* Card Menu (Options ...) Button - positioned absolutely to never collide with title or meta */

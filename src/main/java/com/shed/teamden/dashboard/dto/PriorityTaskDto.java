@@ -13,6 +13,7 @@ public class PriorityTaskDto {
     private String id;
     private String column; // NOW, NEXT, LATER
     private String indexNum; // 01, 02, etc.
+    private Integer columnOrder;
     private String title;
     private String tag;
     private String dueDateLabel;

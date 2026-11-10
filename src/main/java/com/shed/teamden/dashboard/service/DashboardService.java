@@ -12,6 +12,7 @@ import com.shed.teamden.project.entity.ProjectStatus;
 import com.shed.teamden.project.repository.ProjectRepository;
 import com.shed.teamden.security.CustomUserDetails;
 import com.shed.teamden.security.SecurityUtils;
+import com.shed.teamden.task.entity.KanbanColumn;
 import com.shed.teamden.task.entity.Task;
 import com.shed.teamden.task.entity.TaskPriority;
 import com.shed.teamden.task.entity.TaskStatus;
@@ -87,77 +88,39 @@ public class DashboardService {
 
         final UUID heroId = heroCandidate != null ? heroCandidate.getId() : null;
 
-        // 2. Populate Kanban Columns (NOW, NEXT, LATER) excluding the hero card from the 6 column tasks
-        int nowIdx = 1;
-        int nextIdx = 3;
-        int laterIdx = 5;
+        // 2. Populate Kanban Columns (NOW, NEXT, LATER) excluding the hero card from column tasks
+        List<Task> openTasks = allTasks.stream()
+                .filter(t -> t.getStatus() != TaskStatus.CANCELLED)
+                .filter(t -> heroId == null || !t.getId().equals(heroId))
+                .sorted(Comparator.comparingInt(Task::getColumnOrder)
+                        .thenComparing(Task::getCreatedAt))
+                .collect(Collectors.toList());
 
-        for (Task task : allTasks) {
-            if (task.getStatus() == TaskStatus.CANCELLED) {
-                continue;
-            }
-            // Skip the featured hero task from the column list so column count is exactly 06
-            if (heroId != null && task.getId().equals(heroId)) {
-                continue;
-            }
+        List<Task> nowColTasks = openTasks.stream()
+                .filter(t -> (t.getKanbanColumn() == null || t.getKanbanColumn() == KanbanColumn.NOW))
+                .collect(Collectors.toList());
 
-            String title = task.getTitle();
-            String col;
-            String seqNum;
+        List<Task> nextColTasks = openTasks.stream()
+                .filter(t -> t.getKanbanColumn() == KanbanColumn.NEXT)
+                .collect(Collectors.toList());
 
-            if (title.contains("Review mobile app")) {
-                col = "NOW";
-                seqNum = "01";
-            } else if (title.contains("Update homepage")) {
-                col = "NOW";
-                seqNum = "02";
-            } else if (title.contains("Prepare client")) {
-                col = "NEXT";
-                seqNum = "03";
-            } else if (title.contains("Refine brand")) {
-                col = "NEXT";
-                seqNum = "04";
-            } else if (title.contains("Set up analytics")) {
-                col = "LATER";
-                seqNum = "05";
-            } else if (title.contains("Write project")) {
-                col = "LATER";
-                seqNum = "06";
-            } else {
-                // Dynamic added tasks
-                if (task.getPriority() == TaskPriority.URGENT || task.getPriority() == TaskPriority.HIGH) {
-                    col = "NOW";
-                    seqNum = String.format("%02d", nowIdx > 2 ? ++nowIdx : (nowIdx = 7));
-                } else if (task.getPriority() == TaskPriority.MEDIUM) {
-                    col = "NEXT";
-                    seqNum = String.format("%02d", nextIdx > 4 ? ++nextIdx : (nextIdx = 7));
-                } else {
-                    col = "LATER";
-                    seqNum = String.format("%02d", laterIdx > 6 ? ++laterIdx : (laterIdx = 7));
-                }
-            }
+        List<Task> laterColTasks = openTasks.stream()
+                .filter(t -> t.getKanbanColumn() == KanbanColumn.LATER)
+                .collect(Collectors.toList());
 
-            PriorityTaskDto dto = toPriorityTaskDto(task, seqNum);
-            dto.setColumn(col);
-
-            if ("NOW".equals(col)) {
-                nowTasks.add(dto);
-            } else if ("NEXT".equals(col)) {
-                nextTasks.add(dto);
-            } else {
-                laterTasks.add(dto);
-            }
+        int seqCounter = 1;
+        for (Task task : nowColTasks) {
+            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+            nowTasks.add(dto);
         }
-
-        // Sort columns by sequence index
-        Comparator<PriorityTaskDto> indexComparator = (a, b) -> {
-            String s1 = a != null && a.getIndexNum() != null ? a.getIndexNum() : "";
-            String s2 = b != null && b.getIndexNum() != null ? b.getIndexNum() : "";
-            return s1.compareTo(s2);
-        };
-        nowTasks.sort(indexComparator);
-        nextTasks.sort(indexComparator);
-        laterTasks.sort(indexComparator);
+        for (Task task : nextColTasks) {
+            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+            nextTasks.add(dto);
+        }
+        for (Task task : laterColTasks) {
+            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+            laterTasks.add(dto);
+        }
 
         // Hero Priority DTO from real database task
         HeroPriorityDto hero = null;
@@ -406,6 +369,58 @@ public class DashboardService {
     }
 
     @Transactional
+    public PriorityTaskDto moveTask(String taskId, MoveTaskRequestDto request) {
+        if (taskId == null || taskId.isBlank()) {
+            throw new BadRequestException("Task ID is required");
+        }
+        if (request == null || request.getTargetColumn() == null || request.getTargetColumn().isBlank()) {
+            throw new BadRequestException("Target column is required");
+        }
+
+        UUID taskUuid;
+        try {
+            taskUuid = UUID.fromString(taskId.trim());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid task ID format");
+        }
+
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser(organization);
+
+        Task task = taskRepository.findById(taskUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        if (!task.getOrganization().getId().equals(organization.getId())) {
+            throw new BadRequestException("Task does not belong to the active organization");
+        }
+
+        KanbanColumn oldColumn = task.getKanbanColumn() != null ? task.getKanbanColumn() : KanbanColumn.NOW;
+        KanbanColumn newColumn = KanbanColumn.fromString(request.getTargetColumn());
+
+        task.setKanbanColumn(newColumn);
+        if (request.getTargetIndex() != null) {
+            task.setColumnOrder(request.getTargetIndex());
+        }
+
+        task = taskRepository.save(task);
+
+        // Record activity event
+        ActivityEvent event = ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .actor(currentUser)
+                .eventType(ActivityEventType.TASK_MOVED)
+                .entityType("TASK")
+                .entityId(task.getId())
+                .title("moved task to " + newColumn.name())
+                .description(String.format("Moved '%s' from %s to %s", task.getTitle(), oldColumn.name(), newColumn.name()))
+                .build();
+        activityEventRepository.save(event);
+
+        return toPriorityTaskDto(task, "01");
+    }
+
+    @Transactional
     public PriorityTaskDto addTask(String column, String title, String tag) {
         return addTask(column, title, tag, null);
     }
@@ -469,6 +484,8 @@ public class DashboardService {
                 .description("Created from dashboard")
                 .priority(priority)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.fromString(col))
+                .columnOrder(99)
                 .dueDate(dueDate)
                 .build();
 
@@ -518,10 +535,12 @@ public class DashboardService {
             }
         }
 
+        String colName = task.getKanbanColumn() != null ? task.getKanbanColumn().name() : "NOW";
         return PriorityTaskDto.builder()
                 .id(task.getId().toString())
-                .column("NOW")
+                .column(colName)
                 .indexNum(indexNum)
+                .columnOrder(task.getColumnOrder())
                 .title(task.getTitle())
                 .tag(task.getProject() != null ? task.getProject().getName() : "General")
                 .dueDateLabel(dueLabel)
@@ -698,6 +717,8 @@ public class DashboardService {
                 .title("Review mobile app screens")
                 .priority(TaskPriority.HIGH)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.NOW)
+                .columnOrder(1)
                 .dueDate(today)
                 .build();
         taskRepository.save(nowTask1);
@@ -711,6 +732,8 @@ public class DashboardService {
                 .title("Update homepage content")
                 .priority(TaskPriority.HIGH)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.NOW)
+                .columnOrder(2)
                 .dueDate(today)
                 .build();
         taskRepository.save(nowTask2);
@@ -724,6 +747,8 @@ public class DashboardService {
                 .title("Prepare client presentation")
                 .priority(TaskPriority.MEDIUM)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.NEXT)
+                .columnOrder(1)
                 .dueDate(today.plusDays(1))
                 .build();
         taskRepository.save(nextTask1);
@@ -737,6 +762,8 @@ public class DashboardService {
                 .title("Refine brand colour palette")
                 .priority(TaskPriority.MEDIUM)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.NEXT)
+                .columnOrder(2)
                 .dueDate(today.plusDays(2))
                 .build();
         taskRepository.save(nextTask2);
@@ -751,6 +778,8 @@ public class DashboardService {
                 .title("Set up analytics tracking")
                 .priority(TaskPriority.LOW)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.LATER)
+                .columnOrder(1)
                 .dueDate(today.plusDays(2))
                 .build();
         taskRepository.save(laterTask1);
@@ -763,6 +792,8 @@ public class DashboardService {
                 .title("Write project summary")
                 .priority(TaskPriority.LOW)
                 .status(TaskStatus.TODO)
+                .kanbanColumn(KanbanColumn.LATER)
+                .columnOrder(2)
                 .dueDate(today.plusDays(5))
                 .build();
         taskRepository.save(laterTask2);

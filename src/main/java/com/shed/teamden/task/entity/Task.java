@@ -76,6 +76,15 @@ public class Task {
     @Builder.Default
     private TaskStatus status = TaskStatus.TODO;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "kanban_column", nullable = false, length = 30)
+    @Builder.Default
+    private KanbanColumn kanbanColumn = KanbanColumn.NOW;
+
+    @Column(name = "column_order", nullable = false)
+    @Builder.Default
+    private int columnOrder = 0;
+
     @Column(name = "due_date")
     private LocalDate dueDate;
 
@@ -100,6 +109,9 @@ public class Task {
         }
         if (this.status == null) {
             this.status = TaskStatus.TODO;
+        }
+        if (this.kanbanColumn == null) {
+            this.kanbanColumn = KanbanColumn.NOW;
         }
         if (this.status == TaskStatus.COMPLETED && this.completedAt == null) {
             this.completedAt = Instant.now();

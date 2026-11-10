@@ -152,36 +152,36 @@
 
             <div class="kanban-grid-three">
               <!-- Column NOW -->
-              <div class="kanban-column" id="kanban-col-now">
+              <div class="kanban-column" id="kanban-col-now" data-col="NOW">
                 <div class="kanban-col-header">
                   <span class="col-title">NOW</span>
                   <span class="col-badge" id="badge-count-now">02</span>
                 </div>
-                <div class="kanban-task-list" id="list-tasks-now"></div>
+                <div class="kanban-task-list" id="list-tasks-now" data-col="NOW"></div>
                 <button class="kanban-add-btn" onclick="openAddTaskModal('NOW')">
                   + Add task
                 </button>
               </div>
 
               <!-- Column NEXT -->
-              <div class="kanban-column" id="kanban-col-next">
+              <div class="kanban-column" id="kanban-col-next" data-col="NEXT">
                 <div class="kanban-col-header">
                   <span class="col-title">NEXT</span>
                   <span class="col-badge" id="badge-count-next">02</span>
                 </div>
-                <div class="kanban-task-list" id="list-tasks-next"></div>
+                <div class="kanban-task-list" id="list-tasks-next" data-col="NEXT"></div>
                 <button class="kanban-add-btn" onclick="openAddTaskModal('NEXT')">
                   + Add task
                 </button>
               </div>
 
               <!-- Column LATER -->
-              <div class="kanban-column" id="kanban-col-later">
+              <div class="kanban-column" id="kanban-col-later" data-col="LATER">
                 <div class="kanban-col-header">
                   <span class="col-title">LATER</span>
                   <span class="col-badge" id="badge-count-later">02</span>
                 </div>
-                <div class="kanban-task-list" id="list-tasks-later"></div>
+                <div class="kanban-task-list" id="list-tasks-later" data-col="LATER"></div>
                 <button class="kanban-add-btn" onclick="openAddTaskModal('LATER')">
                   + Add task
                 </button>
