@@ -21,29 +21,35 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Built Spring Boot JPA domain: `CalendarEvent.java`, `CalendarEventRepository.java`, `CalendarService.java`, `CalendarController.java`.
   * REST endpoints (`GET`, `POST`, `PUT`, `DELETE /api/calendar/events`) with tenant isolation and auto-seeding.
   * Added Neo-Editorial Table View (`data-view="table"`) on `calendar.html` with search, category/calendar filters, attendee badges, and CRUD modal triggers.
+- Full Calendar Raw Code Migration to PostgreSQL (Flyway V5):
+  * Flyway V5 (`V5__calendar_full_data_tables.sql`): Extended `calendar_events` with drawer columns (agenda, notes, decision, followups, attendees, meeting URL, organizer, RSVP) and created tables `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`.
+  * Created domain entities, repositories, and DTOs: `CalendarCommitment`, `CalendarNeedsScheduling`, `CalendarSource`, `CalendarTeamAvailability`, and `CalendarPageDataDto`.
+  * Implemented `GET /api/calendar/data` endpoint serving unified page data directly from DB.
+  * Client Hydration: Completely eradicated hardcoded `SEED_EVENTS` and `UPCOMING_COMMITMENTS` static arrays from `calendar.js`. Dynamic hydration across upcoming commitments, next commitment, needs scheduling, team availability, connected calendars, and event details drawer.
+  * Short-event visual fix: Added `.cal-event-card.is-compact` in `calendar.css` ensuring 30-min slots display inline icon and time without vertical text clipping.
 - Full Test Suite Verification:
-  * 29/29 integration tests 100% green across all 7 test suites (`./mvnw test`).
+  * 30/30 integration tests 100% green across all test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Flyway: `V3__kanban_task_columns_and_ordering.sql`, `V4__calendar_events.sql`.
-- Backend Domain & API: `CalendarEvent.java`, `CalendarEventRepository.java`, `CalendarService.java`, `CalendarController.java`, `CalendarEventDto.java`, `SecurityConfig.java`, `ActivityEventType.java`.
-- Frontend UI: `calendar.html`, `calendar.css`, `calendar.js`, `dashboard.html`, `dashboard.css`, `dashboard.js`.
-- Tests: `CalendarIntegrationTest.java` (5 tests), `DashboardKanbanIntegrationTest.java` (6 tests), `MultiOrganizationIsolationTest.java` (3 tests).
+- Database: `V5__calendar_full_data_tables.sql`.
+- Backend Domain & API: `CalendarEvent.java`, `CalendarCommitment.java`, `CalendarNeedsScheduling.java`, `CalendarSource.java`, `CalendarTeamAvailability.java`, repositories, DTOs, `CalendarService.java`, `CalendarController.java`.
+- Frontend: `calendar.html`, `calendar.css`, `calendar.js`.
+- Tests: `CalendarIntegrationTest.java` (6 tests), `DashboardKanbanIntegrationTest.java` (6 tests), `MultiOrganizationIsolationTest.java` (3 tests).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Calendar Persistence & Table View
+Example: Migration of hardcoded raw data in calendar page to relational DB
   [BEFORE - calendar.js]:
-  Stored events purely in browser `localStorage` under `teamden-calendar-events-v2`; no database table; 4 views (Day, Week, Month, Agenda).
+  Contained ~400 lines of hardcoded arrays (`SEED_EVENTS` with 17 static objects, `UPCOMING_COMMITMENTS` with 4 static items, hardcoded sidebar sources & team avatars). 30-min event slots clipped event titles.
 
-  [AFTER - calendar.js, calendar.html & Flyway V4]:
-  Relational PostgreSQL table `calendar_events` with REST sync, plus 5th view mode "Table" (`#pane-table`) rendering a filterable schedule data table.
+  [AFTER - calendar.js, CalendarService & Flyway V5]:
+  0 hardcoded events or commitment arrays in JavaScript. Hydrates from `/api/calendar/data` backed by PostgreSQL tables `calendar_events`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`. Compact 30-min cards display clean inline icon + time.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 29/29 integration tests green (`./mvnw test` passing 100% across all 7 test classes).
-- Multi-Tenant Isolation: Verified cross-organization move, calendar edits, and deletions rejected.
+- Test Suite: 30/30 integration tests passing 100% with 0 errors/failures (`./mvnw test`).
+- Multi-Tenant Isolation: Verified tenant data isolation across all calendar tables.
 - Resource Sync: Synchronized static resources to `target/classes/static`.
 
 ================================================================================
@@ -87,7 +93,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 3 [COMPLETED]: Mobile layout modernization across all 20+ pages & fragments.
 - Phase 4 [COMPLETED]: Interactive Kanban column transitions, drag-and-drop & Flyway V3.
 - Phase 5 [COMPLETED]: Relational Calendar persistence, Flyway V4 & Table view.
-- Phase 6 [SCHEDULED]: Production build verification & asset minification.
+- Phase 6 [COMPLETED]: Full Calendar raw data migration to DB, Flyway V5 & dynamic hydration.
+- Phase 7 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

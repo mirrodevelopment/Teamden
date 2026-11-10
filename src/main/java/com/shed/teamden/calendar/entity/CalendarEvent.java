@@ -84,6 +84,40 @@ public class CalendarEvent {
     @Column(name = "attendees", columnDefinition = "TEXT")
     private String attendees;
 
+    @Column(name = "agenda_text", columnDefinition = "TEXT")
+    private String agendaText;
+
+    @Column(name = "notes_text", columnDefinition = "TEXT")
+    private String notesText;
+
+    @Column(name = "notes_timestamp", length = 50)
+    private String notesTimestamp;
+
+    @Column(name = "decision_title", length = 255)
+    private String decisionTitle;
+
+    @Column(name = "decision_status", length = 255)
+    private String decisionStatus;
+
+    @Column(name = "followups_json", columnDefinition = "TEXT")
+    private String followupsJson;
+
+    @Column(name = "attendees_json", columnDefinition = "TEXT")
+    private String attendeesJson;
+
+    @Column(name = "organizer_name", length = 100)
+    private String organizerName;
+
+    @Column(name = "organizer_role", length = 100)
+    private String organizerRole;
+
+    @Column(name = "meeting_url", length = 255)
+    private String meetingUrl;
+
+    @Column(name = "rsvp_status", length = 50)
+    @Builder.Default
+    private String rsvpStatus = "Accepted";
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

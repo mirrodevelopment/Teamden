@@ -87,6 +87,10 @@ public class CalendarIntegrationTest {
         jdbcTemplate.execute("DELETE FROM tasks");
         jdbcTemplate.execute("DELETE FROM project_milestones");
         jdbcTemplate.execute("DELETE FROM attendance_records");
+        jdbcTemplate.execute("DELETE FROM calendar_commitments");
+        jdbcTemplate.execute("DELETE FROM calendar_needs_scheduling");
+        jdbcTemplate.execute("DELETE FROM calendar_sources");
+        jdbcTemplate.execute("DELETE FROM calendar_team_availability");
         jdbcTemplate.execute("DELETE FROM calendar_events");
         jdbcTemplate.execute("DELETE FROM projects");
         jdbcTemplate.execute("DELETE FROM organization_memberships");
@@ -155,13 +159,35 @@ public class CalendarIntegrationTest {
     void testFetchCalendarEventsAutoSeedsBaseline() throws Exception {
         mockMvc.perform(get("/api/calendar/events").session(sessionAlpha))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(17))))
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(14))))
                 .andExpect(jsonPath("$[0].title", notNullValue()))
                 .andExpect(jsonPath("$[0].date", notNullValue()))
                 .andExpect(jsonPath("$[0].startTime", notNullValue()));
 
         long count = calendarEventRepository.countByOrganizationId(orgAlpha.getId());
-        assertThat(count).isGreaterThanOrEqualTo(17);
+        assertThat(count).isGreaterThanOrEqualTo(14);
+    }
+
+    @Test
+    void testFetchCalendarPageDataReturnsAllSectionsFromDb() throws Exception {
+        mockMvc.perform(get("/api/calendar/data").session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.events", hasSize(greaterThanOrEqualTo(14))))
+                .andExpect(jsonPath("$.events[0].title", notNullValue()))
+                .andExpect(jsonPath("$.events[0].agenda", notNullValue()))
+                .andExpect(jsonPath("$.events[0].notes", notNullValue()))
+                .andExpect(jsonPath("$.events[0].decision.title", notNullValue()))
+                .andExpect(jsonPath("$.events[0].attendeesList", notNullValue()))
+                .andExpect(jsonPath("$.upcomingCommitments", hasSize(4)))
+                .andExpect(jsonPath("$.upcomingCommitments[0].title", is("Project kickoff")))
+                .andExpect(jsonPath("$.nextCommitment.title", is("Design standup")))
+                .andExpect(jsonPath("$.nextCommitment.timeText", is("Today · 09:30 – 10:00")))
+                .andExpect(jsonPath("$.needsScheduling", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$.needsScheduling[0].title", is("Homepage approval")))
+                .andExpect(jsonPath("$.calendars", hasSize(3)))
+                .andExpect(jsonPath("$.calendars[0].name", is("Brick")))
+                .andExpect(jsonPath("$.teamAvailability", hasSize(4)))
+                .andExpect(jsonPath("$.teamAvailability[0].initials", is("PK")));
     }
 
     @Test

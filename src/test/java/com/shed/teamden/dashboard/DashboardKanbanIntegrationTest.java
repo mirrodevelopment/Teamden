@@ -111,6 +111,10 @@ public class DashboardKanbanIntegrationTest {
         jdbcTemplate.execute("DELETE FROM tasks");
         jdbcTemplate.execute("DELETE FROM project_milestones");
         jdbcTemplate.execute("DELETE FROM attendance_records");
+        jdbcTemplate.execute("DELETE FROM calendar_commitments");
+        jdbcTemplate.execute("DELETE FROM calendar_needs_scheduling");
+        jdbcTemplate.execute("DELETE FROM calendar_sources");
+        jdbcTemplate.execute("DELETE FROM calendar_team_availability");
         jdbcTemplate.execute("DELETE FROM calendar_events");
         jdbcTemplate.execute("DELETE FROM projects");
         jdbcTemplate.execute("DELETE FROM organization_memberships");

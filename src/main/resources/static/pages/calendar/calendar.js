@@ -38,405 +38,13 @@
     check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`
   };
 
-  // Seed Data: 17 Events Matching Reference Screenshot Exactly
-  const SEED_EVENTS = [
-    // --- MONDAY (2026-10-26) ---
-    {
-      id: 'evt-mon-1',
-      title: 'Design standup',
-      date: '2026-10-26',
-      dayOfWeek: 0,
-      startTime: '09:30',
-      endTime: '10:00',
-      startMinutes: 570,
-      endMinutes: 600,
-      project: 'Client Application',
-      sub: '',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'meet.google.com/bric-des-sync',
-      attendees: ['Priya Kapoor', 'Alex Rivera', 'Marcus Jones'],
-      desc: 'Quick daily design standup to align on client application tickets and current deliverables.'
-    },
-    {
-      id: 'evt-mon-2',
-      title: 'Homepage work',
-      date: '2026-10-26',
-      dayOfWeek: 0,
-      startTime: '11:00',
-      endTime: '12:30',
-      startMinutes: 660,
-      endMinutes: 750,
-      project: 'Website Redesign',
-      sub: 'Focus session',
-      category: 'focus',
-      colorTheme: 'blue',
-      calendar: 'google',
-      icon: 'document',
-      location: 'Studio Desk 4',
-      attendees: ['Alex Rivera'],
-      desc: 'Dedicated deep work session to build out responsive homepage layouts and hero typography.'
-    },
-    {
-      id: 'evt-mon-3',
-      title: 'Client review',
-      date: '2026-10-26',
-      dayOfWeek: 0,
-      startTime: '14:00',
-      endTime: '15:00',
-      startMinutes: 840,
-      endMinutes: 900,
-      project: 'Website Redesign',
-      sub: 'Website Redesign',
-      category: 'review',
-      colorTheme: 'peach',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'Room 2A & Zoom',
-      attendees: ['Sara Kim', 'Priya Kapoor', 'Client Stakeholders'],
-      desc: 'Present sprint milestone prototypes and collect sign-off on design system tokens.'
-    },
-    {
-      id: 'evt-mon-4',
-      title: 'Marketing sync',
-      date: '2026-10-26',
-      dayOfWeek: 0,
-      startTime: '16:00',
-      endTime: '17:00',
-      startMinutes: 960,
-      endMinutes: 1020,
-      project: 'Marketing',
-      sub: 'Campaign planning',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'microsoft',
-      icon: 'monitor',
-      location: 'meet.google.com/mkt-q4-plan',
-      attendees: ['Alex Rivera', 'Elena Rostova'],
-      desc: 'Campaign planning and creative asset schedule for the upcoming November launch.'
-    },
+  let pageData = null;
 
-    // --- TUESDAY (2026-10-27) ---
-    {
-      id: 'evt-tue-1',
-      title: 'User research',
-      date: '2026-10-27',
-      dayOfWeek: 1,
-      startTime: '09:00',
-      endTime: '10:30',
-      startMinutes: 540,
-      endMinutes: 630,
-      project: 'Client Application',
-      sub: 'Client Application',
-      category: 'focus',
-      colorTheme: 'lime',
-      calendar: 'brick',
-      icon: 'search',
-      location: 'Research Lab 1',
-      attendees: ['Priya Kapoor', 'User Test Group'],
-      desc: 'Usability testing sessions evaluating onboarding flow friction and feedback collection.'
-    },
-    {
-      id: 'evt-tue-2',
-      title: 'Design critique',
-      date: '2026-10-27',
-      dayOfWeek: 1,
-      startTime: '13:00',
-      endTime: '14:00',
-      startMinutes: 780,
-      endMinutes: 840,
-      project: 'Design Team',
-      sub: 'Internal review',
-      category: 'review',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'Main Lounge',
-      attendees: ['Priya Kapoor', 'Marcus Jones', 'Alex Rivera'],
-      desc: 'Constructive review of card corner radii, hover animations, and iconography consistency.'
-    },
-    {
-      id: 'evt-tue-3',
-      title: 'Component work',
-      date: '2026-10-27',
-      dayOfWeek: 1,
-      startTime: '15:30',
-      endTime: '17:00',
-      startMinutes: 930,
-      endMinutes: 1020,
-      project: 'Design Guidelines',
-      sub: 'Focus session',
-      category: 'focus',
-      colorTheme: 'blue',
-      calendar: 'google',
-      icon: 'box',
-      location: 'Workstation',
-      attendees: ['Alex Rivera'],
-      desc: 'Implement and test modular segmented view controls, badges, and calendar cards.'
-    },
-
-    // --- WEDNESDAY (2026-10-28) ---
-    {
-      id: 'evt-wed-1',
-      title: 'Product sync',
-      date: '2026-10-28',
-      dayOfWeek: 2,
-      startTime: '10:00',
-      endTime: '11:00',
-      startMinutes: 600,
-      endMinutes: 660,
-      project: 'Client Application',
-      sub: 'Client Application',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'Conference Room C',
-      attendees: ['Sara Kim', 'Alex Rivera', 'Priya Kapoor'],
-      desc: 'Sprint mid-point status review and blocker resolution for client deliverables.'
-    },
-    {
-      id: 'evt-wed-2',
-      title: 'Homepage development',
-      date: '2026-10-28',
-      dayOfWeek: 2,
-      startTime: '11:30',
-      endTime: '13:00',
-      startMinutes: 690,
-      endMinutes: 780,
-      project: 'Website Redesign',
-      sub: 'Focus session',
-      category: 'task',
-      colorTheme: 'blue',
-      calendar: 'brick',
-      icon: 'document',
-      location: 'Desk',
-      attendees: ['Alex Rivera'],
-      desc: 'Complete responsive CSS grid and micro-interactions for the new homepage header.'
-    },
-    {
-      id: 'evt-wed-3',
-      title: 'Content review',
-      date: '2026-10-28',
-      dayOfWeek: 2,
-      startTime: '14:30',
-      endTime: '15:30',
-      startMinutes: 870,
-      endMinutes: 930,
-      project: 'Design Guidelines',
-      sub: 'Design Guidelines',
-      category: 'review',
-      colorTheme: 'cream',
-      calendar: 'microsoft',
-      icon: 'document',
-      location: 'Room 1B',
-      attendees: ['Elena Rostova', 'Marcus Jones'],
-      desc: 'Review brand copy, microcopy, and help tooltip guidelines.'
-    },
-
-    // --- THURSDAY (2026-10-29) ---
-    {
-      id: 'evt-thu-1',
-      title: 'Team planning',
-      date: '2026-10-29',
-      dayOfWeek: 3,
-      startTime: '09:00',
-      endTime: '10:00',
-      startMinutes: 540,
-      endMinutes: 600,
-      project: 'Product Roadmap',
-      sub: 'Q4 priorities',
-      category: 'meeting',
-      colorTheme: 'blue',
-      calendar: 'microsoft',
-      icon: 'calendar',
-      location: 'meet.google.com/q4-plan',
-      attendees: ['Sara Kim', 'Priya Kapoor', 'Alex Rivera'],
-      desc: 'Quarterly backlog grooming and roadmap prioritization.'
-    },
-    {
-      id: 'evt-thu-2',
-      title: 'Design review',
-      breadcrumb: 'WEBSITE REDESIGN / EVENT 008',
-      date: '2026-10-29',
-      dayOfWeek: 3,
-      startTime: '11:00',
-      endTime: '12:00',
-      startMinutes: 660,
-      endMinutes: 720,
-      project: 'Website Redesign',
-      sub: 'Website Redesign',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'https://meet.acme.co/design-review',
-      meetingUrl: 'https://meet.acme.co/design-review',
-      organizer: { name: 'Alex R.', role: 'Lead Designer' },
-      rsvp: 'Accepted',
-      attendeesList: [
-        { initials: 'PK', name: 'Priya K.', theme: 'avatar-pk', status: 'Accepted' },
-        { initials: 'AR', name: 'Alex R.', theme: 'avatar-ar', status: 'Accepted' },
-        { initials: 'SK', name: 'Sara K.', theme: 'avatar-sk', status: 'Accepted' },
-        { initials: 'MJ', name: 'Marcus J.', theme: 'avatar-mj', status: 'Accepted' }
-      ],
-      agenda: [
-        'Review homepage direction',
-        'Finalise mobile navigation',
-        'Confirm development handoff'
-      ],
-      notes: 'The team reviewed the updated homepage structure and agreed that the simplified navigation provides a clearer user journey.',
-      notesTimestamp: 'Saved 5 min ago',
-      decision: {
-        title: 'Proceed with the revised homepage layout.',
-        status: 'Approved internally · Client confirmation pending'
-      },
-      followups: [
-        { id: 'fu-1', title: 'Refine mobile navigation', assignee: 'Peter K.', due: 'Due 30 Oct', completed: false },
-        { id: 'fu-2', title: 'Prepare design handoff', assignee: 'Maria J.', due: 'Due 30 Oct', completed: false }
-      ],
-      desc: 'Weekly sync with the design and engineering leads to review website redesign prototypes.'
-    },
-    {
-      id: 'evt-thu-3',
-      title: 'Prototype work',
-      date: '2026-10-29',
-      dayOfWeek: 3,
-      startTime: '14:00',
-      endTime: '15:30',
-      startMinutes: 840,
-      endMinutes: 930,
-      project: 'Website Redesign',
-      sub: 'Focus session',
-      category: 'focus',
-      colorTheme: 'blue',
-      calendar: 'google',
-      icon: 'box',
-      location: 'Figma Lab',
-      attendees: ['Alex Rivera'],
-      desc: 'Assemble interactive prototype flows for Friday design handoff.'
-    },
-    {
-      id: 'evt-thu-4',
-      title: 'Engineering sync',
-      date: '2026-10-29',
-      dayOfWeek: 3,
-      startTime: '16:00',
-      endTime: '17:00',
-      startMinutes: 960,
-      endMinutes: 1020,
-      project: 'Client Application',
-      sub: 'Handoff discussion',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'War Room A',
-      attendees: ['Engineering Team'],
-      desc: 'Technical implementation handoff and API contract verification.'
-    },
-
-    // --- FRIDAY (2026-10-30) ---
-    {
-      id: 'evt-fri-1',
-      title: 'Design handoff',
-      date: '2026-10-30',
-      dayOfWeek: 4,
-      startTime: '10:00',
-      endTime: '11:30',
-      startMinutes: 600,
-      endMinutes: 690,
-      project: 'Website Redesign',
-      sub: 'Website Redesign',
-      category: 'milestone',
-      colorTheme: 'lime',
-      calendar: 'brick',
-      icon: 'box',
-      location: 'Main Auditorium',
-      attendees: ['Design & Dev Teams'],
-      desc: 'Final milestone handoff meeting: asset exports, design specs, and component tokens.'
-    },
-    {
-      id: 'evt-fri-2',
-      title: 'Client update',
-      date: '2026-10-30',
-      dayOfWeek: 4,
-      startTime: '13:00',
-      endTime: '14:00',
-      startMinutes: 780,
-      endMinutes: 840,
-      project: 'Client Application',
-      sub: 'Client Application',
-      category: 'meeting',
-      colorTheme: 'lavender',
-      calendar: 'brick',
-      icon: 'team',
-      location: 'meet.google.com/cli-update',
-      attendees: ['Sara Kim', 'Priya Kapoor'],
-      desc: 'Weekly progress summary call with the client leadership team.'
-    },
-    {
-      id: 'evt-fri-3',
-      title: 'Documentation',
-      date: '2026-10-30',
-      dayOfWeek: 4,
-      startTime: '15:00',
-      endTime: '16:00',
-      startMinutes: 900,
-      endMinutes: 960,
-      project: 'General Work',
-      sub: 'Focus session',
-      category: 'focus',
-      colorTheme: 'blue',
-      calendar: 'google',
-      icon: 'document',
-      location: 'Desk',
-      attendees: ['Alex Rivera'],
-      desc: 'Update project knowledge base, wiki notes, and week retrospective log.'
-    }
-  ];
-
-  // Upcoming Commitments (4 cards)
-  const UPCOMING_COMMITMENTS = [
-    {
-      id: 'commit-1',
-      dayText: 'MON 26 OCT',
-      title: 'Project kickoff',
-      sub: 'Client Application',
-      theme: 'lime',
-      icon: 'flag',
-      targetEventId: 'evt-mon-1'
-    },
-    {
-      id: 'commit-2',
-      dayText: 'WED 28 OCT',
-      title: 'Homepage development',
-      sub: 'Task deadline',
-      theme: 'blue',
-      icon: 'check',
-      targetEventId: 'evt-wed-2'
-    },
-    {
-      id: 'commit-3',
-      dayText: 'THU 29 OCT',
-      title: 'Design review',
-      sub: 'Website Redesign',
-      theme: 'lavender',
-      icon: 'team',
-      targetEventId: 'evt-thu-2'
-    },
-    {
-      id: 'commit-4',
-      dayText: 'FRI 30 OCT',
-      title: 'Design handoff',
-      sub: 'Milestone',
-      theme: 'peach',
-      icon: 'box',
-      targetEventId: 'evt-fri-1'
-    }
-  ];
+  const SOURCE_ICONS = {
+    brick: '<span class="cal-source-icon icon-brick">BR</span>',
+    google: '<span class="cal-source-icon icon-google"><svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg></span>',
+    microsoft: '<span class="cal-source-icon icon-microsoft"><svg width="15" height="15" viewBox="0 0 24 24"><path fill="#F25022" d="M1 1h10v10H1z"/><path fill="#7FBA00" d="M13 1h10v10H13z"/><path fill="#00A4EF" d="M1 13h10v10H1z"/><path fill="#FFB900" d="M13 13h10v10H13z"/></svg></span>'
+  };
 
   /**
    * Helper: Load dynamic HTML fragment into mount
@@ -571,23 +179,27 @@
   }
 
   /**
-   * Load stored events from backend API or initialize seed
+   * Load stored events and sidebar metadata from unified backend endpoint /api/calendar/data
    */
   async function loadEvents() {
     try {
-      const resp = await fetch('/api/calendar/events');
+      const resp = await fetch('/api/calendar/data');
       if (resp.ok) {
-        const data = await resp.json();
-        if (Array.isArray(data) && data.length > 0) {
-          events = data.map(normalizeEvent);
+        pageData = await resp.json();
+        if (pageData && pageData.events && pageData.events.length > 0) {
+          events = pageData.events.map(normalizeEvent);
           saveEvents();
-          renderUpcomingCommitments();
+          renderUpcomingCommitments(pageData.upcomingCommitments);
+          renderNextCommitment(pageData.nextCommitment);
+          renderNeedsScheduling(pageData.needsScheduling);
+          renderTeamAvailability(pageData.teamAvailability);
+          renderConnectedCalendars(pageData.calendars);
           switchView(currentView);
           return;
         }
       }
     } catch (err) {
-      console.warn('Backend /api/calendar/events unreachable, falling back to cache', err);
+      console.warn('Backend /api/calendar/data unreachable, falling back to cache', err);
     }
 
     try {
@@ -595,15 +207,103 @@
       if (raw) {
         events = JSON.parse(raw).map(normalizeEvent);
       } else {
-        events = SEED_EVENTS.map(normalizeEvent);
-        saveEvents();
+        events = [];
       }
     } catch (e) {
-      console.warn('Failed to parse stored events, resetting to seed', e);
-      events = SEED_EVENTS.map(normalizeEvent);
+      console.warn('Failed to parse stored events', e);
+      events = [];
     }
     renderUpcomingCommitments();
     switchView(currentView);
+  }
+
+  function renderNextCommitment(item) {
+    if (!item) return;
+    const titleEl = document.getElementById('next-commitment-title');
+    const projEl = document.getElementById('next-commitment-project');
+    const timeEl = document.getElementById('next-commitment-time');
+    const btnMeeting = document.getElementById('btn-open-meeting');
+
+    if (titleEl && item.title) {
+      titleEl.textContent = item.title.endsWith('.') ? item.title : item.title + '.';
+    }
+    if (projEl && item.project) {
+      projEl.textContent = item.project;
+    }
+    if (timeEl && item.timeText) {
+      timeEl.textContent = item.timeText;
+    }
+    if (btnMeeting) {
+      btnMeeting.onclick = () => {
+        if (item.targetEventId) {
+          const targetEvt = events.find(e => e.id === item.targetEventId);
+          if (targetEvt) {
+            openEventDetails(targetEvt);
+            return;
+          }
+        }
+        if (item.meetingUrl) {
+          window.open(item.meetingUrl, '_blank');
+        } else {
+          showToast('Opening scheduled meeting room...');
+        }
+      };
+    }
+  }
+
+  function renderNeedsScheduling(items) {
+    if (!items || items.length === 0) return;
+    const item = items[0];
+    const titleEl = document.getElementById('needs-scheduling-title');
+    const descEl = document.getElementById('needs-scheduling-desc');
+    const btn = document.getElementById('btn-needs-scheduling-action');
+
+    if (titleEl && item.title) titleEl.textContent = item.title;
+    if (descEl && item.description) descEl.textContent = item.description;
+    if (btn && item.actionLabel) {
+      const span = btn.querySelector('span:first-child');
+      if (span) span.textContent = item.actionLabel;
+    }
+  }
+
+  function renderTeamAvailability(members) {
+    const row = document.getElementById('team-avatars-row');
+    if (!row || !members || members.length === 0) return;
+    row.innerHTML = members.map(m => `
+      <div class="team-avatar ${m.avatarTheme || 'avatar-pk'}" title="${escapeHtml(m.name)} (${escapeHtml(m.role || '')}) - ${escapeHtml(m.status || 'Available')}">${escapeHtml(m.initials)}</div>
+    `).join('');
+  }
+
+  function renderConnectedCalendars(list) {
+    const container = document.getElementById('calendar-sources-list');
+    if (!container || !list || list.length === 0) return;
+    container.innerHTML = list.map(src => {
+      const key = (src.sourceKey || src.name || 'brick').toLowerCase();
+      const icon = SOURCE_ICONS[key] || `<span class="cal-source-icon icon-brick">${key.substring(0, 2).toUpperCase()}</span>`;
+      const isChecked = activeCalendars.has(key);
+      return `
+        <label class="cal-source-item" title="Toggle ${escapeHtml(src.name)} Calendar">
+          <input type="checkbox" class="cal-checkbox" data-calendar="${key}" ${isChecked ? 'checked' : ''}>
+          <span class="cal-custom-checkbox">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          ${icon}
+          <div class="cal-source-info">
+            <span class="cal-source-name">${escapeHtml(src.name)}</span>
+            <span class="cal-source-sub">${escapeHtml(src.description || '')}</span>
+          </div>
+        </label>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.cal-checkbox').forEach(chk => {
+      chk.addEventListener('change', () => {
+        const cal = chk.getAttribute('data-calendar');
+        if (chk.checked) activeCalendars.add(cal);
+        else activeCalendars.delete(cal);
+        switchView(currentView);
+      });
+    });
   }
 
   function saveEvents() {
@@ -761,14 +461,20 @@
   /**
    * Render Upcoming Commitments (4 cards above calendar)
    */
-  function renderUpcomingCommitments() {
+  function renderUpcomingCommitments(items) {
     const grid = document.getElementById('upcoming-commitments-grid');
     if (!grid) return;
 
-    grid.innerHTML = UPCOMING_COMMITMENTS.map(item => {
+    const list = items || (pageData && pageData.upcomingCommitments) || [];
+    if (list.length === 0) {
+      grid.innerHTML = '<div class="cal-commitments-empty" style="color: var(--dash-text-muted); padding: 0.5rem 0; font-size: 0.8125rem;">No upcoming commitments scheduled.</div>';
+      return;
+    }
+
+    grid.innerHTML = list.map(item => {
       const iconSvg = ICONS[item.icon] || ICONS.flag;
       return `
-        <div class="commitment-card theme-${item.theme}" data-target-id="${item.targetEventId}">
+        <div class="commitment-card theme-${item.theme || 'lime'}" data-target-id="${item.targetEventId || ''}">
           <div class="commitment-card-icon">${iconSvg}</div>
           <div class="commitment-card-content">
             <span class="commitment-date-eyebrow">${escapeHtml(item.dayText)}</span>
@@ -783,11 +489,12 @@
     grid.querySelectorAll('.commitment-card').forEach(card => {
       card.addEventListener('click', () => {
         const targetId = card.getAttribute('data-target-id');
-        const targetEvt = events.find(e => e.id === targetId);
+        const targetEvt = events.find(e => e.id === targetId || String(e.id).includes(targetId));
         if (targetEvt) {
           openEventDetails(targetEvt);
         } else {
-          showToast(`Commitment: ${card.querySelector('.commitment-title').textContent}`);
+          const t = card.querySelector('.commitment-title');
+          showToast(`Commitment: ${t ? t.textContent : ''}`);
         }
       });
     });
@@ -869,15 +576,17 @@
 
         const topPx = ((startMins - 480) / 60) * 64;
         const heightPx = Math.max(30, ((endMins - startMins) / 60) * 64 - 4);
+        const isCompact = heightPx <= 38;
 
         const iconSvg = ICONS[evt.icon] || ICONS.team;
 
         eventsHtml += `
-          <div class="cal-event-card theme-${evt.colorTheme || 'blue'}" 
+          <div class="cal-event-card theme-${evt.colorTheme || 'blue'} ${isCompact ? 'is-compact' : ''}" 
                style="top: ${topPx}px; height: ${heightPx}px;"
                data-event-id="${evt.id}"
                tabindex="0"
                role="button"
+               title="${escapeHtml(evt.title)} (${evt.startTime} - ${evt.endTime})"
                aria-label="${escapeHtml(evt.title)}, ${evt.startTime} to ${evt.endTime}">
             <div class="event-top-row">
               <span class="event-icon-badge">${iconSvg}</span>
@@ -959,13 +668,15 @@
       const startMins = evt.startMinutes || (parseInt(evt.startTime.split(':')[0]) * 60 + parseInt(evt.startTime.split(':')[1]));
       const endMins = evt.endMinutes || (parseInt(evt.endTime.split(':')[0]) * 60 + parseInt(evt.endTime.split(':')[1]));
       const topPx = ((startMins - 480) / 60) * 64;
-      const heightPx = Math.max(34, ((endMins - startMins) / 60) * 64 - 4);
+      const heightPx = Math.max(30, ((endMins - startMins) / 60) * 64 - 4);
+      const isCompact = heightPx <= 38;
       const iconSvg = ICONS[evt.icon] || ICONS.team;
 
       eventsHtml += `
-        <div class="cal-event-card theme-${evt.colorTheme || 'blue'}" 
+        <div class="cal-event-card theme-${evt.colorTheme || 'blue'} ${isCompact ? 'is-compact' : ''}" 
              style="top: ${topPx}px; height: ${heightPx}px; left: 12px; right: 12px;"
-             data-event-id="${evt.id}">
+             data-event-id="${evt.id}"
+             title="${escapeHtml(evt.title)} (${evt.startTime} - ${evt.endTime})">
           <div class="event-top-row">
             <span class="event-icon-badge">${iconSvg}</span>
             <span class="event-time-range">${evt.startTime} – ${evt.endTime}</span>

@@ -1,6 +1,7 @@
 package com.shed.teamden.calendar.controller;
 
 import com.shed.teamden.calendar.dto.CalendarEventDto;
+import com.shed.teamden.calendar.dto.CalendarPageDataDto;
 import com.shed.teamden.calendar.dto.CreateCalendarEventRequestDto;
 import com.shed.teamden.calendar.dto.UpdateCalendarEventRequestDto;
 import com.shed.teamden.calendar.service.CalendarService;
@@ -17,6 +18,11 @@ import java.util.List;
 public class CalendarController {
 
     private final CalendarService calendarService;
+
+    @GetMapping("/data")
+    public ResponseEntity<CalendarPageDataDto> getCalendarPageData() {
+        return ResponseEntity.ok(calendarService.getCalendarPageData());
+    }
 
     @GetMapping("/events")
     public ResponseEntity<List<CalendarEventDto>> getEvents(

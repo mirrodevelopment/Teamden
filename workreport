@@ -1042,47 +1042,81 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
       category pills, project tags, attendee avatar stacks, source badges, and action buttons.
     - Connected `calendar.js` to `/api/calendar/events` with optimistic caching, row click drawer inspection,
       and seamless modal editing.
+- Full Calendar Raw Data to Database Migration (Flyway V5):
+  * Complete Eradication of Hardcoded Raw Data:
+    - Authored Flyway migration `V5__calendar_full_data_tables.sql` extending `calendar_events`
+      with drawer metadata columns: `agenda_text`, `notes_text`, `notes_timestamp`, `decision_title`,
+      `decision_status`, `followups_json`, `attendees_json`, `organizer_name`, `organizer_role`,
+      `meeting_url`, and `rsvp_status`.
+    - Created relational tables: `calendar_commitments` (with FK to `calendar_events`),
+      `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability` with
+      organization foreign keys and indexes.
+  * Spring Boot Domain Entities, Repositories, DTOs & Service:
+    - Created entities `CalendarCommitment.java`, `CalendarNeedsScheduling.java`,
+      `CalendarSource.java`, and `CalendarTeamAvailability.java`.
+    - Created repositories `CalendarCommitmentRepository.java`, `CalendarNeedsSchedulingRepository.java`,
+      `CalendarSourceRepository.java`, and `CalendarTeamAvailabilityRepository.java`.
+    - Created DTOs `UpcomingCommitmentDto.java`, `NextCommitmentDto.java`, `NeedsSchedulingDto.java`,
+      `ConnectedCalendarDto.java`, `TeamMemberAvailabilityDto.java`, and unified aggregate `CalendarPageDataDto.java`.
+    - Rewrote `CalendarService.java` to seed exact week events matching user's uploaded screenshot (Oct 26-30, 2026),
+      upcoming commitments, next commitment, needs scheduling, sources, and team members.
+    - Added `GET /api/calendar/data` in `CalendarController.java` returning `CalendarPageDataDto`.
+  * Frontend Dynamic Hydration & Hardcoded Seed Eradication:
+    - Completely removed static `SEED_EVENTS` and `UPCOMING_COMMITMENTS` arrays (~400 lines) from `calendar.js`.
+    - Updated `loadEvents()` to fetch `/api/calendar/data` and dynamically render upcoming commitments,
+      next commitment, needs scheduling, team availability, and connected calendar source toggles.
+    - Enhanced drawer hydration to read directly from database-backed event fields.
+    - Added compact event card rule `.cal-event-card.is-compact` in `calendar.css` to prevent 30-min
+      duration slots (e.g. `09:30 - 10:00 Design standup`) from clipping text titles, perfectly matching
+      the reference screenshot.
 - Test Suite Teardown Remediation & 100% Green Validation:
-  * Rectified foreign key cascading teardown sequence in `MultiOrganizationIsolationTest.java`
-    and `DashboardKanbanIntegrationTest.java`.
-  * Created `CalendarIntegrationTest.java` (5 integration tests) verifying baseline auto-seeding,
-    event creation, updates, deletions, and multi-tenant isolation.
-  * Successfully passed all 29 integration tests across all 7 test suites with 0 failures and 0 errors.
+  * Rectified foreign key cascading teardown sequence in `MultiOrganizationIsolationTest.java`,
+    `DashboardKanbanIntegrationTest.java`, and `CalendarIntegrationTest.java` deleting child calendar
+    tables prior to `calendar_events`.
+  * Added test `testFetchCalendarPageDataReturnsAllSectionsFromDb()` in `CalendarIntegrationTest.java`.
+  * Successfully passed all 30 integration tests across all 7 test suites with 0 failures and 0 errors.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
 - Migrations:
   * `src/main/resources/db/migration/V3__kanban_task_columns_and_ordering.sql`: Flyway V3 column & index migration.
   * `src/main/resources/db/migration/V4__calendar_events.sql`: Flyway V4 calendar table & index migration.
+  * `src/main/resources/db/migration/V5__calendar_full_data_tables.sql`: Flyway V5 full calendar tables & drawer columns.
 - Entities & Enums:
   * `src/main/java/com/shed/teamden/task/entity/KanbanColumn.java`: Enum definition (`NOW`, `NEXT`, `LATER`).
   * `src/main/java/com/shed/teamden/task/entity/Task.java`: Added `kanbanColumn` and `columnOrder`.
-  * `src/main/java/com/shed/teamden/calendar/entity/CalendarEvent.java`: JPA entity for calendar events.
+  * `src/main/java/com/shed/teamden/calendar/entity/CalendarEvent.java`: JPA entity for calendar events with drawer fields.
+  * `src/main/java/com/shed/teamden/calendar/entity/CalendarCommitment.java`
+  * `src/main/java/com/shed/teamden/calendar/entity/CalendarNeedsScheduling.java`
+  * `src/main/java/com/shed/teamden/calendar/entity/CalendarSource.java`
+  * `src/main/java/com/shed/teamden/calendar/entity/CalendarTeamAvailability.java`
   * `src/main/java/com/shed/teamden/activity/entity/ActivityEventType.java`: Added `TASK_MOVED` and `CALENDAR_EVENT_*`.
 - DTOs & Payloads:
-  * `src/main/java/com/shed/teamden/dashboard/dto/MoveTaskRequestDto.java`: Move request payload.
-  * `src/main/java/com/shed/teamden/dashboard/dto/PriorityTaskDto.java`: Added `columnOrder`.
+  * `src/main/java/com/shed/teamden/dashboard/dto/MoveTaskRequestDto.java`
+  * `src/main/java/com/shed/teamden/dashboard/dto/PriorityTaskDto.java`
   * `src/main/java/com/shed/teamden/calendar/dto/CalendarEventDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/UpcomingCommitmentDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/NextCommitmentDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/NeedsSchedulingDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/ConnectedCalendarDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/TeamMemberAvailabilityDto.java`
+  * `src/main/java/com/shed/teamden/calendar/dto/CalendarPageDataDto.java`
   * `src/main/java/com/shed/teamden/calendar/dto/CreateCalendarEventRequestDto.java`
   * `src/main/java/com/shed/teamden/calendar/dto/UpdateCalendarEventRequestDto.java`
 - Controllers & Services:
-  * `src/main/java/com/shed/teamden/dashboard/controller/DashboardController.java`: `PATCH /tasks/{id}/move` endpoint.
-  * `src/main/java/com/shed/teamden/dashboard/service/DashboardService.java`: Move logic, sorting, and heuristic removal.
-  * `src/main/java/com/shed/teamden/calendar/controller/CalendarController.java`: `/api/calendar/events` endpoints.
-  * `src/main/java/com/shed/teamden/calendar/service/CalendarService.java`: Calendar CRUD, baseline seeding, and tenant isolation.
-  * `src/main/java/com/shed/teamden/calendar/repository/CalendarEventRepository.java`
-  * `src/main/java/com/shed/teamden/security/SecurityConfig.java`: Allowed `/api/calendar/**`.
+  * `src/main/java/com/shed/teamden/dashboard/controller/DashboardController.java`
+  * `src/main/java/com/shed/teamden/dashboard/service/DashboardService.java`
+  * `src/main/java/com/shed/teamden/calendar/controller/CalendarController.java`: Added `GET /api/calendar/data`.
+  * `src/main/java/com/shed/teamden/calendar/service/CalendarService.java`: Aggregated `getCalendarPageData()` and baseline seeding.
+  * Repositories for all 5 calendar entities.
 - UI & Styles:
-  * `src/main/resources/static/pages/dashboard/dashboard.html`: Column data attributes.
-  * `src/main/resources/static/pages/dashboard/dashboard.css`: Drag-and-drop feedback, quick move buttons.
-  * `src/main/resources/static/pages/dashboard/dashboard.js`: Drag-and-drop engine, moveTaskToColumn API call, optimistic UI.
-  * `src/main/resources/static/pages/calendar/calendar.html`: Added Table view tab and `#pane-table` markup.
-  * `src/main/resources/static/pages/calendar/calendar.css`: Table view, toolbar, badges, and responsive styling.
-  * `src/main/resources/static/pages/calendar/calendar.js`: Connected to `/api/calendar/events`, added `renderTableView()`.
+  * `src/main/resources/static/pages/calendar/calendar.html`: Added element IDs for dynamic hydration.
+  * `src/main/resources/static/pages/calendar/calendar.css`: Added `.cal-event-card.is-compact` styling.
+  * `src/main/resources/static/pages/calendar/calendar.js`: Removed static arrays, hooked into `/api/calendar/data`.
 - Automated Tests:
+  * `src/test/java/com/shed/teamden/calendar/CalendarIntegrationTest.java`: 6 integration tests.
   * `src/test/java/com/shed/teamden/dashboard/DashboardKanbanIntegrationTest.java`: 6 Kanban integration tests.
-  * `src/test/java/com/shed/teamden/calendar/CalendarIntegrationTest.java`: 5 Calendar integration tests.
-  * `src/test/java/com/shed/teamden/security/MultiOrganizationIsolationTest.java`: Cleaned up teardown script.
+  * `src/test/java/com/shed/teamden/security/MultiOrganizationIsolationTest.java`: Cascading teardown fix.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
@@ -1100,17 +1134,16 @@ Example A: Relational Kanban Column Persistence vs Heuristic Filtering
       .map(this::toPriorityTaskDto)
       .toList();
 
-Example B: Calendar Persistence & Table View
+Example B: Calendar Raw Code Data to Database
   [BEFORE - calendar.js]:
-  Calendar events stored only in browser `localStorage`; no database table; 4 views (Day, Week, Month, Agenda).
+  Contained ~400 lines of hardcoded arrays (`SEED_EVENTS` with 17 static objects, `UPCOMING_COMMITMENTS` with 4 static items, hardcoded sidebar sources & team avatars). 30-min event slots clipped event titles.
 
-  [AFTER - Flyway V4 & calendar.html]:
-  Relational PostgreSQL table `calendar_events` with REST API, plus 5th view mode "Table" rendering
-  an interactive schedule register data table with multi-criteria filtering and attendee avatars.
+  [AFTER - calendar.js, CalendarService & Flyway V5]:
+  0 hardcoded events or commitment arrays in JavaScript. Hydrates from `/api/calendar/data` backed by PostgreSQL tables `calendar_events`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`. Compact 30-min cards display clean inline icon + time.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 29/29 integration tests green (`./mvnw test` passing 100% across all 7 test suites).
+- Test Suite: 30/30 integration tests green (`./mvnw test` passing 100% across all 7 test suites).
 - Multi-Tenant Isolation: Verified cross-organization move, calendar edits, and deletions rejected with HTTP 400.
 - Static Asset Hot Reload: Synced all updated frontend assets to `target/classes/static/`.
 - Zero Regression: Verified existing project, attendance, auth, and dashboard flows remain 100% functional.

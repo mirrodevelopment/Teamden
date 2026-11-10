@@ -622,6 +622,22 @@ html.sidebar-collapsed .dash-app-main {
   text-overflow: ellipsis;
 }
 
+/* Compact Card for 30-min or short duration events */
+.cal-event-card.is-compact {
+  padding: 0.25rem 0.5rem;
+  justify-content: center;
+}
+
+.cal-event-card.is-compact .event-top-row {
+  justify-content: flex-start;
+  gap: 0.4rem;
+}
+
+.cal-event-card.is-compact .event-card-title,
+.cal-event-card.is-compact .event-card-sub {
+  display: none;
+}
+
 /* Dimmed event (when filtered out via search/calendar) */
 .cal-event-card.is-hidden {
   display: none !important;

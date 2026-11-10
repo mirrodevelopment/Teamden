@@ -275,8 +275,8 @@
           <!-- CARD 2: 02 / NEEDS SCHEDULING (Soft Warm Peach) -->
           <div class="rail-card needs-scheduling-card" id="card-needs-scheduling">
             <span class="rail-card-label">02 / NEEDS SCHEDULING</span>
-            <h3 class="needs-scheduling-title">Homepage approval</h3>
-            <p class="needs-scheduling-desc">A review is required, but no meeting time has been set.</p>
+            <h3 class="needs-scheduling-title" id="needs-scheduling-title">Homepage approval</h3>
+            <p class="needs-scheduling-desc" id="needs-scheduling-desc">A review is required, but no meeting time has been set.</p>
             <button class="btn-find-time" id="btn-needs-scheduling-action" type="button">
               <span>Find a time</span>
               <span class="btn-arrow">→</span>
@@ -294,7 +294,7 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
               </svg>
             </div>
-            <div class="team-avatars-row">
+            <div class="team-avatars-row" id="team-avatars-row">
               <div class="team-avatar avatar-pk" title="Priya Kapoor (Design Lead)">PK</div>
               <div class="team-avatar avatar-ar" title="Alex Rivera (Frontend Engineer)">AR</div>
               <div class="team-avatar avatar-sk" title="Sara Kim (Product Manager)">SK</div>
@@ -313,7 +313,7 @@
               <span class="calendars-heading">YOUR CALENDARS</span>
               <button class="btn-add-calendar" id="btn-add-calendar" title="Connect calendar" aria-label="Connect calendar" type="button">+</button>
             </div>
-            <div class="calendar-sources-list">
+            <div class="calendar-sources-list" id="calendar-sources-list">
               <!-- Brick Calendar -->
               <label class="cal-source-item" title="Toggle Brick Calendar">
                 <input type="checkbox" class="cal-checkbox" data-calendar="brick" checked>

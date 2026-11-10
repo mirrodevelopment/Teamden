@@ -29,4 +29,16 @@ public class CalendarEventDto {
     private String location;
     private List<String> attendees;
     private String desc;
+
+    // Rich Drawer Metadata
+    private String breadcrumb;
+    private List<String> agenda;
+    private String notes;
+    private String notesTimestamp;
+    private Object decision;
+    private List<Object> followups;
+    private List<Object> attendeesList;
+    private Object organizer;
+    private String meetingUrl;
+    private String rsvp;
 }
