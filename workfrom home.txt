@@ -33,6 +33,8 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Updated `ProjectService.java` (`getProjectActivity`): 100% dynamic DB hydration, date grouping, KPI counts & `sinceLastVisit`.
   * Seeded 2 users (`alex@teamden.com` Owner, `priya@teamden.com` Admin) in org `BRICK` in PostgreSQL.
 - Database Purge Utility Robustness & Cascade Truncation:
+  * Modified `purge_db.bat` to preserve user login data (`users`, `organizations`, `organization_memberships`) while purging all work domain tables.
+  * Added `--all` / `--include-users` optional flag for full wipe; default execution preserves all existing credentials and org memberships.
   * Fixed batch parse expansion bug in `purge_db.bat`; added whitespace-safe confirmation and complete 20-table cascade.
 - Automated Integration Testing & Verification:
   * 45/45 integration tests 100% green across all test suites (`./mvnw test`).

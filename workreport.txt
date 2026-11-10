@@ -1143,10 +1143,11 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
   * Insecure Fallback Eradication:
     - Updated `resolveCurrentOrganization()` and `resolveCurrentUser()` in both `DashboardService.java` and `ProjectService.java` to explicitly throw `ResourceNotFoundException` or `UnauthorizedException` when an authenticated user's organization is not found, eliminating silent cross-customer fallback leaks.
 - Database Purge & Truncation Utility Hardening (`purge_db.bat`):
+  * Preserved User Login Data: Configured `purge_db.bat` to preserve `users`, `organizations`, and `organization_memberships` by default, allowing users to log in immediately post-purge without re-registration, while cleanly resetting all work domain tables (`projects`, `tasks`, `activity_events`, `calendar_events`, `attendance_records`, `project_documents`, etc.).
+  * Added `--all` and `--include-users` command-line flags for full wipes when explicitly requested.
   * Resolved batch parse-time expansion bug where `set /p "CONFIRM=..."` inside parenthesized conditional blocks (`if "%FORCE_MODE%"=="0" (...)`) evaluated `%CONFIRM%` at parse time as empty, causing immediate cancellation even when typing `Y`.
   * Flattened execution flow with `:PROCEED_PURGE` jump and added whitespace removal (`%CONFIRM: =%`) and first-character parsing (`%CLEAN_CONFIRM:~0,1%`) to reliably accept `Y`, `y`, and inputs with accidental trailing spaces.
-  * Extended `TRUNCATE TABLE` cascade coverage across all 20 relational application tables (`task_linked_documents`, `project_document_collaborators`, `project_documents`, `project_decisions`, `project_specifications`, `project_members`, `task_subtasks`, `activity_events`, `tasks`, `project_milestones`, `attendance_records`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, `calendar_team_availability`, `calendar_events`, `projects`, `organization_memberships`, `users`, `organizations`) with `RESTART IDENTITY CASCADE`.
-  * Verified interactive `Y` confirmation and non-interactive `--force` flag execution (13/13 tables verified at 0 rows, Flyway preserved).
+  * Verified interactive `Y` confirmation and non-interactive `--force` flag execution (work tables verified at 0 rows, users verified at 2 preserved, Flyway preserved at 7).
 - Test Suite Expansion & 100% Green Validation:
   * Rectified foreign key cascading teardown sequence in `MultiOrganizationIsolationTest.java`,
     `DashboardKanbanIntegrationTest.java`, and `CalendarIntegrationTest.java` deleting child calendar

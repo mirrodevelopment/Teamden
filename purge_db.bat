@@ -30,12 +30,19 @@ if not defined DB_PASSWORD (
 
 set "PGPASSWORD=%DB_PASSWORD%"
 
-REM Check for non-interactive / force flag
+REM Check flags: non-interactive force flag & optional include-users flag
 set "FORCE_MODE=0"
-if /i "%~1"=="--force" set "FORCE_MODE=1"
-if /i "%~1"=="-f" set "FORCE_MODE=1"
-if /i "%~1"=="/force" set "FORCE_MODE=1"
-if /i "%~1"=="/f" set "FORCE_MODE=1"
+set "PURGE_USERS=0"
+
+for %%A in ("%~1" "%~2") do (
+    if /i "%%~A"=="--force" set "FORCE_MODE=1"
+    if /i "%%~A"=="-f" set "FORCE_MODE=1"
+    if /i "%%~A"=="/force" set "FORCE_MODE=1"
+    if /i "%%~A"=="/f" set "FORCE_MODE=1"
+    if /i "%%~A"=="--all" set "PURGE_USERS=1"
+    if /i "%%~A"=="--include-users" set "PURGE_USERS=1"
+    if /i "%%~A"=="/all" set "PURGE_USERS=1"
+)
 
 REM ---------------------------------------------------------------------------
 REM 2. Locate psql.exe Binary
@@ -111,14 +118,27 @@ if "%FORCE_MODE%"=="1" (
 )
 
 echo -----------------------------------------------------------------------
-echo  WARNING: You are about to PERMANENTLY ERASE ALL DATA from:
-echo  Database: %DB_NAME%
-echo  All user tables [tasks, projects, users, organizations, etc.] will be
-echo  emptied. All table structures and migration history will be preserved.
+if "%PURGE_USERS%"=="1" (
+    echo  WARNING: You are about to PURGE ALL DATA [INCLUDING USERS] from:
+    echo  Database: %DB_NAME%
+    echo.
+    echo  * ALL application tables, projects, tasks, AND user accounts
+    echo    will be completely erased.
+    echo  * Migration history will be preserved.
+) else (
+    echo  WARNING: You are about to PURGE WORK DATA from:
+    echo  Database: %DB_NAME%
+    echo.
+    echo  * All projects, tasks, calendar events, documents, and activities
+    echo    will be completely erased and reset.
+    echo  * User login data [users, passwords, organizations, memberships]
+    echo    will be safely PRESERVED.
+    echo  * Table structures and Flyway migration history will be preserved.
+)
 echo -----------------------------------------------------------------------
 echo.
 set "CONFIRM="
-set /p "CONFIRM=Type Y to confirm and purge all data (or press Enter to cancel): "
+set /p "CONFIRM=Type Y to confirm and purge data (or press Enter to cancel): "
 set "CLEAN_CONFIRM=%CONFIRM: =%"
 if defined CLEAN_CONFIRM (
     set "FIRST_CHAR=%CLEAN_CONFIRM:~0,1%"
@@ -136,18 +156,22 @@ echo.
 :PROCEED_PURGE
 
 REM ---------------------------------------------------------------------------
-REM 5. Execute Dynamic Truncation
+REM 5. Execute Truncation
 REM ---------------------------------------------------------------------------
-echo [2/3] Purging data from all application tables...
-
-"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "TRUNCATE TABLE task_linked_documents, project_document_collaborators, project_documents, project_decisions, project_specifications, project_members, task_subtasks, activity_events, tasks, project_milestones, attendance_records, calendar_commitments, calendar_needs_scheduling, calendar_sources, calendar_team_availability, calendar_events, projects, organization_memberships, users, organizations RESTART IDENTITY CASCADE;"
+if "%PURGE_USERS%"=="1" (
+    echo [2/3] Purging all application data [including user accounts]...
+    "%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "TRUNCATE TABLE task_linked_documents, project_document_collaborators, project_documents, project_decisions, project_specifications, project_members, task_subtasks, activity_events, tasks, project_milestones, attendance_records, calendar_commitments, calendar_needs_scheduling, calendar_sources, calendar_team_availability, calendar_events, projects, organization_memberships, users, organizations RESTART IDENTITY CASCADE;"
+) else (
+    echo [2/3] Purging work data [preserving user accounts and login credentials]...
+    "%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "TRUNCATE TABLE task_linked_documents, project_document_collaborators, project_documents, project_decisions, project_specifications, project_members, task_subtasks, activity_events, tasks, project_milestones, attendance_records, calendar_commitments, calendar_needs_scheduling, calendar_sources, calendar_team_availability, calendar_events, projects RESTART IDENTITY CASCADE;"
+)
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] An error occurred while executing table truncation.
     echo.
     goto :END
 )
-echo [OK] All application tables successfully truncated.
+echo [OK] Truncation completed successfully.
 echo.
 
 REM ---------------------------------------------------------------------------
@@ -156,12 +180,19 @@ REM ---------------------------------------------------------------------------
 echo [3/3] Verifying remaining table rows...
 echo.
 
-"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "SELECT 'activity_events' AS table_name, count(*) AS row_count FROM activity_events UNION ALL SELECT 'attendance_records', count(*) FROM attendance_records UNION ALL SELECT 'calendar_commitments', count(*) FROM calendar_commitments UNION ALL SELECT 'calendar_events', count(*) FROM calendar_events UNION ALL SELECT 'calendar_needs_scheduling', count(*) FROM calendar_needs_scheduling UNION ALL SELECT 'calendar_sources', count(*) FROM calendar_sources UNION ALL SELECT 'calendar_team_availability', count(*) FROM calendar_team_availability UNION ALL SELECT 'organization_memberships', count(*) FROM organization_memberships UNION ALL SELECT 'organizations', count(*) FROM organizations UNION ALL SELECT 'projects', count(*) FROM projects UNION ALL SELECT 'tasks', count(*) FROM tasks UNION ALL SELECT 'users', count(*) FROM users UNION ALL SELECT 'flyway_schema_history (preserved)', count(*) FROM flyway_schema_history;"
+"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "SELECT 'activity_events' AS table_name, count(*) AS row_count FROM activity_events UNION ALL SELECT 'attendance_records', count(*) FROM attendance_records UNION ALL SELECT 'calendar_commitments', count(*) FROM calendar_commitments UNION ALL SELECT 'calendar_events', count(*) FROM calendar_events UNION ALL SELECT 'calendar_needs_scheduling', count(*) FROM calendar_needs_scheduling UNION ALL SELECT 'calendar_sources', count(*) FROM calendar_sources UNION ALL SELECT 'calendar_team_availability', count(*) FROM calendar_team_availability UNION ALL SELECT 'projects', count(*) FROM projects UNION ALL SELECT 'tasks', count(*) FROM tasks UNION ALL SELECT 'users (PRESERVED LOGIN)', count(*) FROM users UNION ALL SELECT 'organizations (PRESERVED)', count(*) FROM organizations UNION ALL SELECT 'organization_memberships (PRESERVED)', count(*) FROM organization_memberships UNION ALL SELECT 'flyway_schema_history (PRESERVED)', count(*) FROM flyway_schema_history;"
 
 echo.
 echo =======================================================================
-echo [SUCCESS] Database purge completed successfully.
-echo All user tables are now empty (0 rows) and ready for fresh data.
+if "%PURGE_USERS%"=="1" (
+    echo [SUCCESS] Database purge completed successfully.
+    echo All application tables are now empty [0 rows].
+) else (
+    echo [SUCCESS] Database work data purge completed successfully.
+    echo All work tables [projects, tasks, activities, calendar] are now empty.
+    echo User login data [users, passwords, organizations] remains PRESERVED.
+    echo Existing user accounts can log in immediately without re-registration.
+)
 echo Table structures, constraints, and Flyway migration history remain intact.
 echo =======================================================================
 echo.
