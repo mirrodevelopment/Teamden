@@ -31,7 +31,7 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Eradicated 179-line `createDefault` from `ProjectActivityDto.java` and 39-line fallback block from `ActivityService.java`.
   * Eradicated 292 lines of hardcoded static mock cards from `project-activity.html` and 166-line mock array from `project-activity.js`.
   * Updated `ProjectService.java` (`getProjectActivity`): 100% dynamic DB hydration, date grouping, KPI counts & `sinceLastVisit`.
-  * Seeded 2 users (`alex@teamden.com` Owner, `priya@teamden.com` Admin) in org `BRICK` in PostgreSQL.
+  * Seeded 4 active users (Alex Rivera Owner, Priya Kapoor Admin, Marcus Vance Member, Sonia Patel Member) in org `BRICK` in PostgreSQL.
 - Database Purge Utility Robustness & Cascade Truncation:
   * Modified `purge_db.bat` to preserve user login data (`users`, `organizations`, `organization_memberships`) while purging all work domain tables.
   * Added `--all` / `--include-users` optional flag for full wipe; default execution preserves all existing credentials and org memberships.

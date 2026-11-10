@@ -1057,7 +1057,7 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
   * Dynamic Backend Hydration & Date-Group Aggregation:
     - Updated `ProjectService.java` (`getProjectActivity`): queries `activityEventRepository.findByOrganizationIdAndProjectIdOrderByEventTimestampDesc`, groups events dynamically by local date (`ActivityDateGroupDto`), dynamically aggregates filter counts (`milestones`, `decisions`, `tasks`, `documents`, `comments`, `files`, `mentions`), and calculates `sinceLastVisit` stats based on `isImportant`.
     - Injected `ActivityEventRepository` and implemented `ensureProjectActivityBaseline` to seed initial chronicle events into PostgreSQL `activity_events` table if project has 0 activity rows.
-    - Added `Alex Rivera` (Owner) and `Priya Kapoor` (Admin) users to PostgreSQL database in organization `BRICK`.
+    - Added active users `Alex Rivera` (Owner), `Priya Kapoor` (Admin), `Marcus Vance` (Member), and `Sonia Patel` (Member) to PostgreSQL database in organization `BRICK`.
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding
