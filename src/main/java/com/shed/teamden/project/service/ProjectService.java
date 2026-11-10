@@ -75,8 +75,6 @@ public class ProjectService {
             Organization organization = resolveCurrentOrganization();
             User currentUser = resolveCurrentUser(organization);
 
-            ensureBaselineProjects(organization, currentUser);
-
             List<Project> allProjects = projectRepository.findByOrganizationIdWithDetails(organization.getId());
 
             LocalDate today = LocalDate.now();
@@ -86,265 +84,113 @@ public class ProjectService {
             String dayNum = String.format("%02d", today.getDayOfMonth());
             String formattedDate = dayOfWeek + ", " + dayNum + " " + month + " " + year;
 
-            long totalCount = Math.max(allProjects.size(), 12L);
+            long totalCount = allProjects.size();
             long activeCount = allProjects.stream().filter(p -> p.getStatus() == ProjectStatus.ACTIVE).count();
-            if (activeCount == 0) activeCount = 8;
-            else activeCount = Math.max(activeCount, 8L);
+            long atRiskCount = allProjects.stream().filter(p -> "AT_RISK".equalsIgnoreCase(p.getHealth())).count();
+            long dueSoonCount = allProjects.stream()
+                    .filter(p -> p.getDueDate() != null && !p.getDueDate().isBefore(today) && p.getDueDate().isBefore(today.plusDays(7)) && p.getStatus() != ProjectStatus.COMPLETED)
+                    .count();
 
-            long atRiskCount = 2;
-            long dueSoonCount = 3;
-
-            // Featured Project ("Website Redesign")
-            ProjectItemDto featured = ProjectItemDto.builder()
-                    .id("featured-01")
-                    .indexNum("01")
-                    .name("Website Redesign")
-                    .description("Deliver a responsive, approved website ready for production.")
-                    .status("ACTIVE")
-                    .statusLabel("ACTIVE")
-                    .statusDotColor("green")
-                    .health("AT_RISK")
-                    .healthLabel("AT RISK")
-                    .healthDotColor("red")
-                    .team("Design Team")
-                    .dueDate("Due 15 Nov 2026")
-                    .priority("High Priority")
-                    .milestonesLabel("06/09")
-                    .milestonesCompleted(6)
-                    .milestonesTotal(9)
-                    .blockersCount(2)
-                    .avatars(List.of("PK", "AR", "SK"))
-                    .avatarOverflow("+2")
-                    .build();
-
-            // Project Cards
+            ProjectItemDto featured = null;
             List<ProjectItemDto> projectDtos = new ArrayList<>();
+            List<DecisionItemDto> decisions = new ArrayList<>();
+            List<ProjectAttentionDto> attention = new ArrayList<>();
+            List<UpcomingMilestoneDto> milestones = new ArrayList<>();
 
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-02")
-                    .indexNum("02")
-                    .name("Client Application")
-                    .description("Develop and launch the patient application with core tracking features.")
-                    .status("ACTIVE")
-                    .statusLabel("ACTIVE")
-                    .statusDotColor("green")
-                    .health("ON_TRACK")
-                    .healthLabel("ON TRACK")
-                    .healthDotColor("green")
-                    .team("Engineering")
-                    .dueDate("Due 18 Oct 2026")
-                    .milestonesLabel("3/5 milestones")
-                    .milestonesCompleted(3)
-                    .milestonesTotal(5)
-                    .avatars(List.of("PK", "AR", "SK"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-03")
-                    .indexNum("03")
-                    .name("Brand Development")
-                    .description("Create a unified brand identity across all products.")
-                    .status("IN_REVIEW")
-                    .statusLabel("IN REVIEW")
-                    .statusDotColor("blue")
-                    .health("ON_TRACK")
-                    .healthLabel("ON TRACK")
-                    .healthDotColor("green")
-                    .team("Design")
-                    .dueDate("Due 30 Oct 2026")
-                    .milestonesLabel("4/6 milestones")
-                    .milestonesCompleted(4)
-                    .milestonesTotal(6)
-                    .avatars(List.of("MJ", "PK", "SD"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-04")
-                    .indexNum("04")
-                    .name("Marketing Campaign")
-                    .description("Plan and execute product launch campaign.")
-                    .status("ACTIVE")
-                    .statusLabel("ACTIVE")
-                    .statusDotColor("green")
-                    .health("AT_RISK")
-                    .healthLabel("AT RISK")
-                    .healthDotColor("red")
-                    .team("Marketing")
-                    .dueDate("Due 27 Oct 2026")
-                    .milestonesLabel("2/4 milestones")
-                    .milestonesCompleted(2)
-                    .milestonesTotal(4)
-                    .avatars(List.of("AR", "SK", "JR"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-05")
-                    .indexNum("05")
-                    .name("Product Roadmap")
-                    .description("Define product strategy for next 12 months.")
-                    .status("PLANNING")
-                    .statusLabel("PLANNING")
-                    .statusDotColor("orange")
-                    .health("ON_TRACK")
-                    .healthLabel("ON TRACK")
-                    .healthDotColor("green")
-                    .team("Product")
-                    .dueDate("Due 10 Nov 2026")
-                    .milestonesLabel("1/4 milestones")
-                    .milestonesCompleted(1)
-                    .milestonesTotal(4)
-                    .avatars(List.of("PB", "MH", "AR"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-06")
-                    .indexNum("06")
-                    .name("Internal Tools")
-                    .description("Improve internal tools for operations and finance.")
-                    .status("ACTIVE")
-                    .statusLabel("ACTIVE")
-                    .statusDotColor("green")
-                    .health("ON_TRACK")
-                    .healthLabel("ON TRACK")
-                    .healthDotColor("green")
-                    .team("Operations")
-                    .dueDate("Due 12 Dec 2026")
-                    .milestonesLabel("2/5 milestones")
-                    .milestonesCompleted(2)
-                    .milestonesTotal(5)
-                    .avatars(List.of("SK", "JR", "MK"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            projectDtos.add(ProjectItemDto.builder()
-                    .id("proj-07")
-                    .indexNum("07")
-                    .name("Content Library")
-                    .description("Build and organize all product content.")
-                    .status("ON_HOLD")
-                    .statusLabel("ON HOLD")
-                    .statusDotColor("gray")
-                    .health("AT_RISK")
-                    .healthLabel("AT RISK")
-                    .healthDotColor("red")
-                    .team("Content")
-                    .dueDate("Due 20 Nov 2026")
-                    .milestonesLabel("3/5 milestones")
-                    .milestonesCompleted(3)
-                    .milestonesTotal(5)
-                    .avatars(List.of("MH", "SD", "AR"))
-                    .avatarOverflow("+2")
-                    .build());
-
-            // Append any user-created custom projects from the DB
-            int customIdx = 8;
+            int pIdx = 1;
             for (Project p : allProjects) {
-                boolean alreadyListed = projectDtos.stream().anyMatch(d -> d.getName().equalsIgnoreCase(p.getName()))
-                        || featured.getName().equalsIgnoreCase(p.getName());
-                if (!alreadyListed) {
-                    String stat = p.getStatus() != null ? p.getStatus().name() : "ACTIVE";
-                    String statLbl = stat.replace("_", " ");
-                    String dueLbl = p.getDueDate() != null ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "Upcoming";
-                    projectDtos.add(ProjectItemDto.builder()
-                            .id(p.getId().toString())
-                            .indexNum(String.format("%02d", customIdx++))
-                            .name(p.getName())
-                            .description(p.getDescription() != null ? p.getDescription() : "Custom project workspace")
-                            .status(stat)
-                            .statusLabel(statLbl)
-                            .statusDotColor(stat.equals("ACTIVE") ? "green" : stat.equals("COMPLETED") ? "blue" : "gray")
-                            .health("ON_TRACK")
-                            .healthLabel("ON TRACK")
-                            .healthDotColor("green")
-                            .team(p.getOwner() != null ? p.getOwner().getFullName() : "Team")
-                            .dueDate(dueLbl)
-                            .milestonesLabel("1/3 milestones")
-                            .milestonesCompleted(1)
-                            .milestonesTotal(3)
-                            .avatars(List.of("TM"))
-                            .avatarOverflow("")
-                            .build());
+                String stat = p.getStatus() != null ? p.getStatus().name() : "ACTIVE";
+                String statLbl = stat.replace("_", " ");
+                String dueLbl = p.getDueDate() != null ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "Upcoming";
+                String health = p.getHealth() != null ? p.getHealth() : "ON_TRACK";
+                String healthLbl = health.replace("_", " ");
+                String healthDot = "AT_RISK".equalsIgnoreCase(health) ? "red" : "green";
+
+                List<ProjectMilestone> pMilestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(p.getId());
+                long completedM = pMilestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
+                String mLabel = pMilestones.isEmpty() ? "0 milestones" : String.format("%02d/%02d", completedM, pMilestones.size());
+
+                List<Task> pTasks = taskRepository.findByProjectIdWithDetails(p.getId());
+                long blockers = pTasks.stream().filter(t -> t != null && t.isBlocked()).count();
+
+                String ownerName = p.getOwner() != null ? p.getOwner().getFullName() : "Team";
+                String[] parts = ownerName.trim().split("\\s+");
+                String initials = parts.length > 1
+                        ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
+                        : (ownerName.length() > 0 ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase() : "TM");
+
+                ProjectItemDto dto = ProjectItemDto.builder()
+                        .id(p.getId().toString())
+                        .indexNum(String.format("%02d", pIdx++))
+                        .name(p.getName())
+                        .description(p.getDescription() != null ? p.getDescription() : "Project workspace")
+                        .status(stat)
+                        .statusLabel(statLbl)
+                        .statusDotColor(stat.equals("ACTIVE") ? "green" : stat.equals("COMPLETED") ? "blue" : "gray")
+                        .health(health)
+                        .healthLabel(healthLbl)
+                        .healthDotColor(healthDot)
+                        .team(ownerName)
+                        .dueDate(dueLbl)
+                        .priority(p.getPriority() != null ? p.getPriority() : "Medium")
+                        .milestonesLabel(mLabel)
+                        .milestonesCompleted((int) completedM)
+                        .milestonesTotal(pMilestones.size())
+                        .blockersCount((int) blockers)
+                        .avatars(List.of(initials))
+                        .avatarOverflow("")
+                        .build();
+
+                if (featured == null) {
+                    featured = dto;
                 }
-            }
+                projectDtos.add(dto);
 
-            // Decisions Required
-            List<DecisionItemDto> decisions = List.of(
-                    DecisionItemDto.builder()
-                            .id("dec-1")
-                            .projectTag("WEBSITE REDESIGN")
-                            .title("Brand Development")
-                            .subTitle("Identity approval")
-                            .dueDate("Due 30 Oct 2026")
-                            .indicatorColor("amber")
-                            .hasAction(true)
-                            .actionLabel("Review →")
-                            .build(),
-                    DecisionItemDto.builder()
-                            .id("dec-2")
-                            .projectTag("MARKETING CAMPAIGN")
-                            .title("Marketing Campaign")
-                            .subTitle("Budget sign-off")
-                            .dueDate("Due 27 Oct 2026")
-                            .indicatorColor("red")
-                            .hasAction(false)
-                            .build(),
-                    DecisionItemDto.builder()
-                            .id("dec-3")
-                            .projectTag("PRODUCT ROADMAP")
-                            .title("Product Roadmap")
-                            .subTitle("Strategy approval")
-                            .dueDate("Due 10 Nov 2026")
-                            .indicatorColor("amber")
-                            .hasAction(false)
-                            .build()
-            );
+                // Decisions
+                List<ProjectDecision> pDecisions = projectDecisionRepository.findByProjectIdWithDecider(p.getId());
+                for (ProjectDecision d : pDecisions) {
+                    if (d.getStatus() == DecisionStatus.PENDING && decisions.size() < 5) {
+                        decisions.add(DecisionItemDto.builder()
+                                .id(d.getId().toString())
+                                .projectTag(p.getName().toUpperCase())
+                                .title(d.getTitle())
+                                .subTitle(d.getSubTitle() != null ? d.getSubTitle() : "Review required")
+                                .dueDate(d.getDueDate() != null ? "Due " + d.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "Pending")
+                                .indicatorColor("amber")
+                                .hasAction(true)
+                                .actionLabel("Review →")
+                                .build());
+                    }
+                }
 
-            // Project Attention
-            List<ProjectAttentionDto> attention = List.of(
-                    ProjectAttentionDto.builder()
-                            .id("att-1")
-                            .indexNum("01")
+                // Blockers attention
+                if (blockers > 0 && attention.size() < 5) {
+                    attention.add(ProjectAttentionDto.builder()
+                            .id("att-" + p.getId().toString().substring(0, 4))
+                            .indexNum(String.format("%02d", attention.size() + 1))
                             .statusType("BLOCKED")
                             .statusDot("red")
-                            .metaLabel("2 blockers")
-                            .projectName("Client Application")
-                            .detail("2 blockers require input")
-                            .dateLabel("Since 18 Oct 2026")
-                            .build(),
-                    ProjectAttentionDto.builder()
-                            .id("att-2")
-                            .indexNum("02")
-                            .statusType("DELAY")
-                            .statusDot("orange")
-                            .metaLabel("At risk")
-                            .projectName("Brand Development")
-                            .detail("Design approval pending")
-                            .dateLabel("Due 30 Oct 2026")
-                            .build(),
-                    ProjectAttentionDto.builder()
-                            .id("att-3")
-                            .indexNum("03")
-                            .statusType("RESOURCE")
-                            .statusDot("blue")
-                            .metaLabel("Needs follow-up")
-                            .projectName("Content Library")
-                            .detail("Delayed by 2 days")
-                            .dateLabel("Due 20 Nov 2026")
-                            .build()
-            );
+                            .metaLabel(blockers + (blockers == 1 ? " blocker" : " blockers"))
+                            .projectName(p.getName())
+                            .detail(blockers + " blockers require input")
+                            .dateLabel(p.getDueDate() != null ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "Active")
+                            .build());
+                }
 
-            // Upcoming Milestones
-            List<UpcomingMilestoneDto> milestones = List.of(
-                    UpcomingMilestoneDto.builder().id("m-1").dateDayMonth("27 OCT").dotColor("green").title("Brand Guidelines").subTitle("Final design review").build(),
-                    UpcomingMilestoneDto.builder().id("m-2").dateDayMonth("30 OCT").dotColor("green").title("Client Application").subTitle("Beta build release").build(),
-                    UpcomingMilestoneDto.builder().id("m-3").dateDayMonth("02 NOV").dotColor("amber").title("Marketing Campaign").subTitle("Campaign assets ready").build(),
-                    UpcomingMilestoneDto.builder().id("m-4").dateDayMonth("05 NOV").dotColor("red").title("Website Redesign").subTitle("Client approval").build(),
-                    UpcomingMilestoneDto.builder().id("m-5").dateDayMonth("10 NOV").dotColor("black").title("Product Roadmap").subTitle("Strategy presentation").build()
-            );
+                // Upcoming milestones
+                for (ProjectMilestone m : pMilestones) {
+                    if (m.getStatus() != MilestoneStatus.COMPLETED && milestones.size() < 5) {
+                        String mDate = m.getDueDate() != null ? m.getDueDate().format(DateTimeFormatter.ofPattern("dd MMM")).toUpperCase() : "TBD";
+                        milestones.add(UpcomingMilestoneDto.builder()
+                                .id(m.getId().toString())
+                                .dateDayMonth(mDate)
+                                .dotColor(m.getStatus() == MilestoneStatus.CURRENT ? "green" : "amber")
+                                .title(p.getName())
+                                .subTitle(m.getName())
+                                .build());
+                    }
+                }
+            }
 
             return ProjectDashboardDto.builder()
                     .workspaceBreadcrumb("YOUR WORKSPACE / 02")
@@ -427,440 +273,6 @@ public class ProjectService {
                 .build();
     }
 
-    @Transactional
-    public void ensureProjectFlowBaseline(Project project, User currentUser) {
-        if (project == null || project.getId() == null) return;
-
-        Organization org = project.getOrganization();
-
-        // 1. Milestones
-        List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
-        if (milestones.isEmpty()) {
-            List<ProjectMilestone> baselineMilestones = List.of(
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(1).code("01").name("Discovery").status(MilestoneStatus.COMPLETED).statusLabel("Completed").dueDate(LocalDate.now().minusDays(30)).completedAt(Instant.now().minusSeconds(86400 * 30)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(2).code("02").name("Design").status(MilestoneStatus.COMPLETED).statusLabel("Completed").dueDate(LocalDate.now().minusDays(20)).completedAt(Instant.now().minusSeconds(86400 * 20)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(3).code("03").name("Development").status(MilestoneStatus.COMPLETED).statusLabel("Completed").dueDate(LocalDate.now().minusDays(15)).completedAt(Instant.now().minusSeconds(86400 * 15)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(4).code("04").name("Testing").status(MilestoneStatus.COMPLETED).statusLabel("Completed").dueDate(LocalDate.now().minusDays(10)).completedAt(Instant.now().minusSeconds(86400 * 10)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(5).code("05").name("Content").status(MilestoneStatus.COMPLETED).statusLabel("Completed").dueDate(LocalDate.now().minusDays(5)).completedAt(Instant.now().minusSeconds(86400 * 5)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(6).code("06").name("Review").status(MilestoneStatus.CURRENT).statusLabel("In Progress").dueDate(LocalDate.now().plusDays(7)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(7).code("07").name("Launch Prep").status(MilestoneStatus.UPCOMING).statusLabel("Upcoming").dueDate(LocalDate.now().plusDays(15)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(8).code("08").name("Go Live").status(MilestoneStatus.UPCOMING).statusLabel("Upcoming").dueDate(LocalDate.now().plusDays(25)).build(),
-                    ProjectMilestone.builder().id(UUID.randomUUID()).organization(org).project(project).seqNum(9).code("09").name("Post Launch").status(MilestoneStatus.UPCOMING).statusLabel("Upcoming").dueDate(LocalDate.now().plusDays(40)).build()
-            );
-            projectMilestoneRepository.saveAll(baselineMilestones);
-            milestones = baselineMilestones;
-        }
-
-        // 2. Specifications
-        if (projectSpecificationRepository.findByProjectId(project.getId()).isEmpty()) {
-            ProjectSpecification spec = ProjectSpecification.builder()
-                    .id(UUID.randomUUID())
-                    .organization(org)
-                    .project(project)
-                    .title("Build a better digital experience.")
-                    .objectives("Improve user experience\nIncrease conversion rate\nStrengthen brand presence")
-                    .deliverables("Responsive website (desktop, tablet, mobile)\nCMS implementation\nContent migration")
-                    .successCriteria("Higher engagement\nIncreased conversion rate\nMeets accessibility standards")
-                    .clientName("Acme Co.")
-                    .focusArea("Brand, performance and growth")
-                    .build();
-            projectSpecificationRepository.save(spec);
-        }
-
-        // 3. Decisions
-        List<ProjectDecision> decisions = projectDecisionRepository.findByProjectIdWithDecider(project.getId());
-        if (decisions.isEmpty()) {
-            List<ProjectDecision> baselineDecisions = List.of(
-                    ProjectDecision.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .decisionCode("DEC-01")
-                            .title("Homepage design approval")
-                            .subTitle("Identity approval")
-                            .description("Final design requires your review before development continues.")
-                            .status(DecisionStatus.PENDING)
-                            .dueDate(LocalDate.now().plusDays(4))
-                            .decider(currentUser)
-                            .actionLabel("Review →")
-                            .actionUrl("#review")
-                            .indicatorColor("amber")
-                            .build(),
-                    ProjectDecision.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .decisionCode("DEC-02")
-                            .title("Marketing Campaign")
-                            .subTitle("Budget sign-off")
-                            .description("Review marketing allocation and asset timeline.")
-                            .status(DecisionStatus.PENDING)
-                            .dueDate(LocalDate.now().plusDays(2))
-                            .decider(currentUser)
-                            .indicatorColor("red")
-                            .build(),
-                    ProjectDecision.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .decisionCode("DEC-03")
-                            .title("Product Roadmap")
-                            .subTitle("Strategy approval")
-                            .description("Quarterly roadmap sign-off.")
-                            .status(DecisionStatus.PENDING)
-                            .dueDate(LocalDate.now().plusDays(14))
-                            .decider(currentUser)
-                            .indicatorColor("amber")
-                            .build()
-            );
-            projectDecisionRepository.saveAll(baselineDecisions);
-        }
-
-        // 4. Documents
-        List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
-        if (docs.isEmpty()) {
-            List<ProjectDocument> baselineDocs = List.of(
-                    ProjectDocument.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .docNumber("DOCUMENT / 003")
-                            .title("Design Review Notes")
-                            .category("Meeting Notes")
-                            .categoryKey("Notes")
-                            .fileType("DOC")
-                            .fileSize("850 KB")
-                            .author(currentUser)
-                            .isPinned(true)
-                            .content("We reviewed the latest homepage designs and discussed the overall structure, navigation and visual direction.")
-                            .build(),
-                    ProjectDocument.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .docNumber("DOCUMENT / 001")
-                            .title("Project Brief")
-                            .category("Foundation")
-                            .categoryKey("Plans")
-                            .fileType("PDF")
-                            .fileSize("1.2 MB")
-                            .author(currentUser)
-                            .content("Project brief and foundation document.")
-                            .build(),
-                    ProjectDocument.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .docNumber("DOCUMENT / 002")
-                            .title("Design Guidelines")
-                            .category("Reference")
-                            .categoryKey("Design")
-                            .fileType("FIGMA")
-                            .fileSize("24 MB")
-                            .author(currentUser)
-                            .content("Brand guidelines and design token references.")
-                            .build()
-            );
-            projectDocumentRepository.saveAll(baselineDocs);
-        }
-
-        // 5. Project Members
-        List<ProjectMember> members = projectMemberRepository.findByProjectIdWithUser(project.getId());
-        if (members.isEmpty()) {
-            projectMemberRepository.save(ProjectMember.builder()
-                    .id(UUID.randomUUID())
-                    .organization(org)
-                    .project(project)
-                    .user(currentUser)
-                    .role("LEAD")
-                    .build());
-        }
-
-        // 6. Baseline Tasks
-        List<Task> existingTasks = taskRepository.findByProjectIdWithDetails(project.getId());
-        if (existingTasks.isEmpty()) {
-            ProjectMilestone currentMilestone = milestones.stream()
-                    .filter(m -> m.getStatus() == MilestoneStatus.CURRENT)
-                    .findFirst()
-                    .orElse(milestones.get(0));
-
-            List<Task> baselineTasks = List.of(
-                    Task.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .milestone(currentMilestone)
-                            .taskCode("T-014")
-                            .title("Homepage development")
-                            .description("Implement homepage responsive layouts and UI components.")
-                            .assignee(currentUser)
-                            .creator(currentUser)
-                            .priority(TaskPriority.HIGH)
-                            .status(TaskStatus.IN_PROGRESS)
-                            .dueDate(LocalDate.now().plusDays(2))
-                            .isBlocked(true)
-                            .blockerReason("Waiting for design approval")
-                            .subtasksCount(3)
-                            .build(),
-                    Task.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .milestone(currentMilestone)
-                            .taskCode("T-026")
-                            .title("Mobile optimisation")
-                            .description("Ensure touch targets and responsiveness across devices.")
-                            .assignee(currentUser)
-                            .creator(currentUser)
-                            .priority(TaskPriority.MEDIUM)
-                            .status(TaskStatus.IN_PROGRESS)
-                            .dueDate(LocalDate.now().plusDays(5))
-                            .isBlocked(false)
-                            .subtasksCount(2)
-                            .build(),
-                    Task.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .milestone(currentMilestone)
-                            .taskCode("T-028")
-                            .title("CMS implementation")
-                            .description("Set up headless CMS and editorial content types.")
-                            .assignee(currentUser)
-                            .creator(currentUser)
-                            .priority(TaskPriority.MEDIUM)
-                            .status(TaskStatus.TODO)
-                            .dueDate(LocalDate.now().plusDays(10))
-                            .isBlocked(false)
-                            .subtasksCount(4)
-                            .build(),
-                    Task.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .milestone(currentMilestone)
-                            .taskCode("T-031")
-                            .title("Analytics setup")
-                            .description("Integrate analytics telemetry and dashboards.")
-                            .assignee(currentUser)
-                            .creator(currentUser)
-                            .priority(TaskPriority.LOW)
-                            .status(TaskStatus.TODO)
-                            .dueDate(LocalDate.now().plusDays(12))
-                            .isBlocked(false)
-                            .subtasksCount(2)
-                            .build(),
-                    Task.builder()
-                            .id(UUID.randomUUID())
-                            .organization(org)
-                            .project(project)
-                            .milestone(currentMilestone)
-                            .taskCode("T-035")
-                            .title("SEO optimisation")
-                            .description("Metadata, OpenGraph tags and sitemap generation.")
-                            .assignee(currentUser)
-                            .creator(currentUser)
-                            .priority(TaskPriority.MEDIUM)
-                            .status(TaskStatus.IN_REVIEW)
-                            .dueDate(LocalDate.now().plusDays(14))
-                            .isBlocked(false)
-                            .subtasksCount(3)
-                            .build()
-            );
-            taskRepository.saveAll(baselineTasks);
-        }
-
-        // 7. Project Chronicle Activity Events
-        if (activityEventRepository.countByOrganizationIdAndProjectId(org.getId(), project.getId()) == 0) {
-            ensureProjectActivityBaseline(project, currentUser);
-        }
-    }
-
-    private void ensureProjectActivityBaseline(Project project, User user) {
-        Organization org = project.getOrganization();
-        Instant now = Instant.now();
-
-        List<ActivityEvent> chronicle = List.of(
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_COMPLETED)
-                        .entityType("MILESTONE")
-                        .title("Design approved.")
-                        .description("Milestone 05 / Design has been completed and work can proceed to the next stage.")
-                        .categoryKey("milestones")
-                        .badgeType("MILESTONE COMPLETED")
-                        .dotColor("lime")
-                        .iconType("flag")
-                        .iconBgClass("icon-bg-lime")
-                        .actionLabel("View milestone ↗")
-                        .actionType("milestone")
-                        .actionTargetId("ms-05")
-                        .isImportant(true)
-                        .isMention(false)
-                        .eventTimestamp(now.minusSeconds(3600 * 3))
-                        .build(),
-
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_CREATED)
-                        .entityType("COMMENT")
-                        .title("Alex R. commented on Design Review Notes.")
-                        .description("\"The navigation direction looks good. Please refine the mobile interaction.\"")
-                        .categoryKey("comments")
-                        .badgeType("COMMENT")
-                        .dotColor("amber")
-                        .iconType("comment")
-                        .iconBgClass("icon-bg-amber")
-                        .actionLabel("Open discussion ↗")
-                        .actionType("comment")
-                        .actionTargetId("doc-01")
-                        .isImportant(true)
-                        .isMention(true)
-                        .eventTimestamp(now.minusSeconds(3600 * 5))
-                        .build(),
-
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_STATUS_CHANGED)
-                        .entityType("TASK")
-                        .title("Homepage development moved to In Progress.")
-                        .description("Status changed from")
-                        .categoryKey("tasks")
-                        .badgeType("TASK UPDATED")
-                        .dotColor("blue")
-                        .iconType("check-circle")
-                        .iconBgClass("icon-bg-blue")
-                        .statusFrom("To Do")
-                        .statusTo("In Progress")
-                        .actionLabel("View task ↗")
-                        .actionType("task")
-                        .actionTargetId("T-014")
-                        .isImportant(true)
-                        .isMention(false)
-                        .eventTimestamp(now.minusSeconds(3600 * 6))
-                        .build(),
-
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.PROJECT_UPDATED)
-                        .entityType("DOCUMENT")
-                        .title("Design Review Notes updated.")
-                        .description("Version 2.3 · 5 changes")
-                        .categoryKey("documents")
-                        .badgeType("DOCUMENT UPDATED")
-                        .dotColor("purple")
-                        .iconType("document")
-                        .iconBgClass("icon-bg-purple")
-                        .actionLabel("View changes ↗")
-                        .actionType("document")
-                        .actionTargetId("doc-01")
-                        .isImportant(true)
-                        .isMention(false)
-                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 2))
-                        .build(),
-
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_COMPLETED)
-                        .entityType("DECISION")
-                        .title("Homepage layout approved (pending client confirmation).")
-                        .description("Awaiting final client sign-off.")
-                        .categoryKey("decisions")
-                        .badgeType("DECISION RECORDED")
-                        .dotColor("amber")
-                        .iconType("decision")
-                        .iconBgClass("icon-bg-amber")
-                        .actionLabel("View decision ↗")
-                        .actionType("decision")
-                        .actionTargetId("dec-01")
-                        .isImportant(true)
-                        .isMention(false)
-                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 6))
-                        .build(),
-
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .project(project)
-                        .actor(user)
-                        .eventType(ActivityEventType.PROJECT_UPDATED)
-                        .entityType("FILE")
-                        .title("Added file to Project Brief.")
-                        .description("homepage-wireframes-v2.fig · 12 MB")
-                        .categoryKey("files")
-                        .badgeType("FILE ADDED")
-                        .dotColor("gray")
-                        .iconType("attachment")
-                        .iconBgClass("icon-bg-gray")
-                        .actionLabel("Open document ↗")
-                        .actionType("file")
-                        .actionTargetId("doc-02")
-                        .isImportant(false)
-                        .isMention(false)
-                        .eventTimestamp(now.minusSeconds(86400 + 3600 * 8))
-                        .build()
-        );
-
-        activityEventRepository.saveAll(chronicle);
-    }
-
-    private void ensureBaselineProjects(Organization org, User user) {
-        List<Project> existing = projectRepository.findByOrganizationIdWithDetails(org.getId());
-        if (existing.size() >= 3) {
-            return;
-        }
-
-        List<String> names = List.of(
-                "Website Redesign",
-                "Client Application",
-                "Brand Development",
-                "Marketing Campaign",
-                "Product Roadmap",
-                "Internal Tools",
-                "Content Library"
-        );
-
-        for (String name : names) {
-            boolean exists = existing.stream().anyMatch(p -> p.getName().equalsIgnoreCase(name));
-            if (!exists) {
-                Project p = Project.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .name(name)
-                        .owner(user)
-                        .status(name.equals("Brand Development") ? ProjectStatus.ACTIVE
-                                : name.equals("Product Roadmap") ? ProjectStatus.PLANNING
-                                : name.equals("Content Library") ? ProjectStatus.ON_HOLD
-                                : ProjectStatus.ACTIVE)
-                        .health(name.equals("Marketing Campaign") || name.equals("Content Library") ? "AT_RISK" : "ON_TRACK")
-                        .priority(name.equals("Website Redesign") ? "HIGH" : "MEDIUM")
-                        .projectType(name.equals("Website Redesign") ? "Design / Development" : "General")
-                        .startDate(LocalDate.now())
-                        .dueDate(LocalDate.now().plusDays(30))
-                        .build();
-                p = projectRepository.save(p);
-                if (name.equals("Website Redesign")) {
-                    ensureProjectFlowBaseline(p, user);
-                }
-            }
-        }
-    }
-
     private Organization resolveCurrentOrganization() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
@@ -921,12 +333,6 @@ public class ProjectService {
         }
 
         List<Project> orgProjects = projectRepository.findByOrganizationIdWithDetails(org.getId());
-        if (orgProjects.isEmpty()) {
-            User currentUser = resolveCurrentUser(org);
-            ensureBaselineProjects(org, currentUser);
-            orgProjects = projectRepository.findByOrganizationIdWithDetails(org.getId());
-        }
-
         if (!orgProjects.isEmpty()) {
             return orgProjects.stream()
                     .filter(p -> p.getName().equalsIgnoreCase("Website Redesign"))
@@ -942,9 +348,6 @@ public class ProjectService {
         if (project == null) {
             return ProjectOverviewDto.createDefault(projectId, "Website Redesign", "Redesign the website into a responsive, modern experience.", "Design Team", "15 Nov 2026", "ACTIVE");
         }
-
-        User currentUser = resolveCurrentUser(project.getOrganization());
-        ensureProjectFlowBaseline(project, currentUser);
 
         // Milestones
         List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
@@ -1118,9 +521,6 @@ public class ProjectService {
             return ProjectTasksDto.createDefault(projectId, "website redesign.", "Design Team", "15 Nov 2026", "ACTIVE");
         }
 
-        User currentUser = resolveCurrentUser(project.getOrganization());
-        ensureProjectFlowBaseline(project, currentUser);
-
         List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
         List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
 
@@ -1267,9 +667,6 @@ public class ProjectService {
             return ProjectDocumentsDto.createDefault(projectId, "website redesign.", "Design Team", "15 Nov 2026", "ACTIVE");
         }
 
-        User currentUser = resolveCurrentUser(project.getOrganization());
-        ensureProjectFlowBaseline(project, currentUser);
-
         List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
         List<ProjectDocumentsDto.DocumentItemDto> docDtos = docs.stream().map(d ->
                 ProjectDocumentsDto.DocumentItemDto.builder()
@@ -1334,8 +731,6 @@ public class ProjectService {
         Project project = resolveProject(projectId);
         if (project == null) {
             Organization organization = resolveCurrentOrganization();
-            User currentUser = resolveCurrentUser(organization);
-            ensureBaselineProjects(organization, currentUser);
             List<Project> projs = projectRepository.findByOrganizationIdWithDetails(organization.getId());
             project = projs.isEmpty() ? null : projs.get(0);
         }
@@ -1344,8 +739,6 @@ public class ProjectService {
         }
 
         Organization org = project.getOrganization();
-        User currentUser = resolveCurrentUser(org);
-        ensureProjectFlowBaseline(project, currentUser);
 
         final String projectName = project.getName() != null ? project.getName() : "Team";
 

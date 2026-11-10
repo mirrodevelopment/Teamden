@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — create task.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=12">
+
+  <!-- Page Specific Styles -->
+  <link rel="stylesheet" href="create.css?v=1">
+</head>
+<body class="dashboard-body task-create-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Content Area -->
+    <div class="dash-main-area">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Canvas -->
+      <main class="create-task-canvas" id="create-task-canvas">
+        <div class="create-task-container">
+
+          <!-- Header / Breadcrumbs -->
+          <header class="create-task-head">
+            <div class="task-head-left">
+              <div class="task-breadcrumb">
+                <a href="/pages/dashboard/dashboard.html" class="task-crumb-link">YOUR WORKSPACE</a>
+                <span class="task-crumb-sep">/</span>
+                <span class="task-crumb-active">TASKS</span>
+                <span class="task-crumb-sep">/</span>
+                <span class="task-crumb-sub">NEW TASK</span>
+              </div>
+              <div class="task-title-row">
+                <h1 class="task-title-main">CREATE TASK<span class="title-square-dot"></span></h1>
+                <span class="task-badge-col" id="target-col-badge">KANBAN / NOW</span>
+              </div>
+            </div>
+
+            <div class="task-head-right">
+              <a href="/pages/dashboard/dashboard.html" class="task-back-link" title="Cancel & Return">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>Back to Dashboard</span>
+              </a>
+            </div>
+          </header>
+
+          <!-- Task Form Card -->
+          <div class="create-card">
+            <form id="standalone-task-form" onsubmit="event.preventDefault(); window.submitStandaloneTask();">
+              
+              <!-- Title -->
+              <div class="form-group">
+                <label for="task-title" class="form-label">
+                  TASK TITLE <span class="required-star">*</span>
+                </label>
+                <input type="text" id="task-title" class="form-input form-input-lg" placeholder="e.g. Design token exports and typography audit" required autofocus autocomplete="off">
+              </div>
+
+              <!-- Description -->
+              <div class="form-group">
+                <label for="task-desc" class="form-label">DESCRIPTION & SCOPE</label>
+                <textarea id="task-desc" class="form-textarea" rows="4" placeholder="Add technical details, deliverables, acceptance criteria, or links..."></textarea>
+              </div>
+
+              <!-- Row: Project & Assignee -->
+              <div class="form-row-two">
+                <div class="form-group">
+                  <label for="task-project" class="form-label">ASSOCIATED PROJECT</label>
+                  <select id="task-project" class="form-select">
+                    <option value="">General Workspace (No Project)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="task-assignee" class="form-label">ASSIGNEE</label>
+                  <select id="task-assignee" class="form-select">
+                    <option value="">Assign to Me</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Row: Column, Priority, Due Date -->
+              <div class="form-row-three">
+                <div class="form-group">
+                  <label for="task-col" class="form-label">KANBAN COLUMN</label>
+                  <select id="task-col" class="form-select">
+                    <option value="NOW" selected>NOW (Immediate / Today)</option>
+                    <option value="NEXT">NEXT (Upcoming)</option>
+                    <option value="LATER">LATER (Future / Backlog)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="task-priority" class="form-label">PRIORITY</label>
+                  <select id="task-priority" class="form-select">
+                    <option value="HIGH" selected>High Priority</option>
+                    <option value="MEDIUM">Medium Priority</option>
+                    <option value="LOW">Low Priority</option>
+                    <option value="URGENT">Urgent (Immediate Blocker)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="task-due" class="form-label">DUE DATE</label>
+                  <input type="date" id="task-due" class="form-input">
+                </div>
+              </div>
+
+              <!-- Error Alert Box -->
+              <div id="form-error-banner" class="form-error-banner" style="display: none;"></div>
+
+              <!-- Footer Actions -->
+              <div class="form-actions-row">
+                <a href="/pages/dashboard/dashboard.html" class="btn-cancel">Cancel</a>
+                <button type="submit" id="btn-save-task" class="btn-primary">
+                  <span>Create Task & Return</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared Fragment Loaders -->
+  <script src="/fragments/sidebar/sidebar.js?v=12"></script>
+  <script src="/fragments/navbar/navbar.js?v=12"></script>
+
+  <!-- Page Logic -->
+  <script src="create.js?v=1"></script>
+</body>
+</html>

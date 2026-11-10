@@ -22,6 +22,9 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.assignee WHERE t.organization.id = :orgId ORDER BY t.createdAt DESC")
     List<Task> findByOrganizationId(@Param("orgId") UUID orgId, Pageable pageable);
 
+    @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.assignee WHERE t.organization.id = :orgId ORDER BY t.createdAt DESC")
+    List<Task> findByOrganizationId(@Param("orgId") UUID orgId);
+
     long countByOrganizationIdAndStatusIn(UUID orgId, Collection<TaskStatus> statuses);
 
     long countByOrganizationIdAndAssigneeIdAndStatusIn(UUID orgId, UUID assigneeId, Collection<TaskStatus> statuses);
@@ -51,4 +54,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.assignee WHERE t.project.id = :projectId AND t.isBlocked = true")
     List<Task> findByProjectIdAndIsBlockedTrueWithAssignee(@Param("projectId") UUID projectId);
+
+    @Query("SELECT COALESCE(MAX(t.columnOrder), 0) FROM Task t WHERE t.organization.id = :orgId AND t.kanbanColumn = :column")
+    int findMaxColumnOrderByOrganizationIdAndKanbanColumn(@Param("orgId") UUID orgId, @Param("column") com.shed.teamden.task.entity.KanbanColumn column);
 }

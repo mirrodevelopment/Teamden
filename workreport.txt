@@ -1315,6 +1315,47 @@ Example: Hero Card and Kanban Columns After DB Purge
 - Database Purge Verification: Verified `activity_events`, `tasks`, and `calendar_events` stay at 0 rows following purge.
 - Automated Testing: Executed full `./mvnw test` suite (46/46 tests green).
 
+--------------------------------------------------------------------------------
+6. TASK CREATION MODAL, DEDICATED PAGE & FULL RELATIONAL PERSISTENCE (2026-11-10)
+--------------------------------------------------------------------------------
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Interactive Task Creation (Modal & Dedicated Page):
+  * Built dual task creation surfaces: an interactive popup modal accessible from the Dashboard ("+ Add task" on NOW, NEXT, LATER columns and universal navbar "+ Create ▾" -> "✓ New Task") and a dedicated standalone page at `/pages/tasks/create.html`.
+  * Dynamic options queried from `GET /api/tasks/options`: projects populated from `projects` table and assignees populated from active `organization_memberships`.
+  * Task creation via `POST /api/tasks` validates input, resolves tenant isolation, assigns next sequential column order, persists to PostgreSQL `tasks` table, and automatically logs a `TASK_CREATED` event into `activity_events`.
+- Complete Eradication of Mock Data & Fallbacks Across Project Views:
+  * Eradicated query-time auto-seeding methods (`ensureProjectFlowBaseline`, `ensureBaselineProjects`, `ensureProjectActivityBaseline`) from `ProjectService.java`.
+  * Replaced 420-line fake task array `defaultTasksData` and removed `mergeWithDefaults()` in `project-tasks.js`.
+  * Removed hardcoded static task rows and placeholder metrics from `project-tasks.html`.
+  * Replaced `defaultOverviewData` in `project-overview.js` with `emptyOverviewData` and removed hardcoded fallbacks (`|| 2`, `|| 'Homepage design approval'`).
+  * Replaced `defaultDocumentsData` in `project-documents.js` with `emptyDocumentsData` and removed fake fallback records.
+  * Corrected `projects.js` to eliminate `totalProjects || 12` and fake catch fallbacks.
+- Automated Testing & Regression Verification:
+  * 49/49 integration tests 100% green across all 10 test suites (`./mvnw test`).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- Backend Services & Controllers: `TaskService.java`, `TaskController.java`, `ProjectService.java`, `ActivityService.java`, `DashboardService.java`.
+- DTOs & Entities: `CreateTaskRequestDto.java`, `TaskOptionsDto.java`, `TaskRepository.java`.
+- Frontend Task Creation: `create.html`, `create.css`, `create.js`, `dashboard.js`, `navbar.js`.
+- Project Views: `project-tasks.js`, `project-tasks.html`, `project-overview.js`, `project-documents.js`, `projects.js`.
+- Test Suites: `TaskIntegrationTest.java` (3 integration tests added, 49/49 tests total passing green).
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Task Creation & Database Persistence Across Views
+  [BEFORE]:
+  Opening Project Tasks or Overview displayed hardcoded mockup data ("Homepage development", "Review.", "18 tasks", "12 Movements") even when the database was purged or had 0 records. Creating tasks relied on simulated client state without PostgreSQL persistence.
+  [AFTER]:
+  Task creation submits directly to `POST /api/tasks`, persisting relational records to PostgreSQL `tasks` and `activity_events`. Project tasks, overview, and documents render 100% real database state with 0-safe metrics and clean empty states.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Database Verification: Verified `tasks` and `activity_events` receive real rows and remain at 0 upon purge.
+- UI Verification: Confirmed dashboard modal and `/pages/tasks/create.html` load dynamic DB options and create real tasks.
+- Test Suite: 49/49 integration tests passing 100% green (`./mvnw test`).
+
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================

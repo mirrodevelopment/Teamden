@@ -25,438 +25,40 @@
       .replace(/'/g, '&#39;');
   }
 
-  // Baseline data strictly adhering to ProjectTasksDto.java and reference screenshot
-  const defaultTasksData = {
-    id: 'featured-01',
-    breadcrumb: 'PROJECTS / 02 / WEBSITE REDESIGN',
-    title: 'website redesign.',
-    owner: 'Design Team',
-    dueDate: '15 Nov 2026',
+  // Empty state baseline data
+  const emptyTasksData = {
+    id: '',
+    breadcrumb: 'PROJECTS',
+    title: 'Project Tasks',
+    owner: 'Team',
+    dueDate: '',
     status: 'Active',
     workStatus: {
-      totalTasks: 18,
-      todoCount: 8,
-      todoPercent: '44%',
-      inProgressCount: 5,
-      inProgressPercent: '28%',
-      inReviewCount: 3,
-      inReviewPercent: '17%',
-      completedCount: 2,
-      completedPercent: '11%',
-      blockedCount: 2,
-      blockedSubtitle: 'of 18 tasks'
+      totalTasks: 0,
+      todoCount: 0,
+      todoPercent: '0%',
+      inProgressCount: 0,
+      inProgressPercent: '0%',
+      inReviewCount: 0,
+      inReviewPercent: '0%',
+      completedCount: 0,
+      completedPercent: '0%',
+      blockedCount: 0,
+      blockedSubtitle: 'of 0 tasks'
     },
-    taskGroups: [
-      {
-        key: 'IN_PROGRESS',
-        label: 'IN PROGRESS',
-        count: 5,
-        dotColor: '#F59E0B',
-        isExpanded: true,
-        tasks: [
-          {
-            id: 'T-014',
-            title: 'Homepage development',
-            milestone: 'Milestone 06',
-            subtasksCount: 3,
-            linkedDocsCount: 2,
-            assigneeInitials: 'MJ',
-            assigneeName: 'Maria J.',
-            assigneeColor: '#3B82F6',
-            priority: 'High',
-            priorityStyle: 'high',
-            dueDate: '28 Oct',
-            dueDateColor: '#DC2626',
-            attachmentsCount: 2,
-            isBlocked: true,
-            blockerReason: 'Waiting for design approval',
-            description: 'Implement the approved homepage design, ensuring consistent responsive behaviour and accessibility across supported devices.',
-            startDate: '12 Oct 2026',
-            fullDueDate: '28 Oct 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '12h',
-            subtasks: [
-              { id: 'sub-1', title: 'Implement desktop layout', completed: true, assignee: 'MJ', date: '20 Oct' },
-              { id: 'sub-2', title: 'Complete responsive behaviour', completed: false, assignee: 'PK', date: '24 Oct' },
-              { id: 'sub-3', title: 'Verify accessibility', completed: false, assignee: 'SK', date: '28 Oct' }
-            ],
-            dependencies: [
-              {
-                type: 'WAITING_ON',
-                tag: 'WAITING ON',
-                title: 'Homepage design approval',
-                subtext: 'T-009 · Awaiting review',
-                actionLabel: 'Open task ↗',
-                actionHref: '#task-T-009'
-              },
-              {
-                type: 'BLOCKER',
-                tag: 'BLOCKER',
-                title: 'CMS content not finalised',
-                subtext: 'Content team to confirm final copy and assets.',
-                actionLabel: 'Resolve ↗',
-                actionHref: '#resolve'
-              }
-            ]
-          },
-          {
-            id: 'T-026',
-            title: 'Mobile optimisation',
-            milestone: 'Milestone 06',
-            subtasksCount: 2,
-            linkedDocsCount: 1,
-            assigneeInitials: 'PK',
-            assigneeName: 'Paul K.',
-            assigneeColor: '#F97316',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '2 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 1,
-            isBlocked: false,
-            description: 'Refactor breakpoint queries and touch interaction targets to optimize mobile performance and responsiveness.',
-            startDate: '15 Oct 2026',
-            fullDueDate: '2 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '8h',
-            subtasks: [
-              { id: 'sub-26-1', title: 'Touch target ergonomics review', completed: true, assignee: 'PK', date: '26 Oct' },
-              { id: 'sub-26-2', title: 'Viewport rendering test on iOS/Android', completed: false, assignee: 'PK', date: '2 Nov' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-028',
-            title: 'CMS implementation',
-            milestone: 'Milestone 06',
-            subtasksCount: 4,
-            linkedDocsCount: 0,
-            assigneeInitials: 'AR',
-            assigneeName: 'Alex R.',
-            assigneeColor: '#8B5CF6',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '5 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 0,
-            isBlocked: false,
-            description: 'Integrate the headless CMS schema and setup API endpoints for dynamic hero banners and case studies.',
-            startDate: '18 Oct 2026',
-            fullDueDate: '5 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '16h',
-            subtasks: [
-              { id: 'sub-28-1', title: 'Schema setup', completed: true, assignee: 'AR', date: '22 Oct' },
-              { id: 'sub-28-2', title: 'Content model migrations', completed: true, assignee: 'AR', date: '27 Oct' },
-              { id: 'sub-28-3', title: 'Preview webhook integration', completed: false, assignee: 'AR', date: '2 Nov' },
-              { id: 'sub-28-4', title: 'Editor access permissions setup', completed: false, assignee: 'AR', date: '5 Nov' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-031',
-            title: 'Analytics setup',
-            milestone: 'Milestone 06',
-            subtasksCount: 2,
-            linkedDocsCount: 1,
-            assigneeInitials: 'SK',
-            assigneeName: 'Sara K.',
-            assigneeColor: '#14B8A6',
-            priority: 'Low',
-            priorityStyle: 'low',
-            dueDate: '7 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 1,
-            isBlocked: false,
-            description: 'Configure event tracking tags for primary user conversion funnels, outbound links, and navigation engagement.',
-            startDate: '20 Oct 2026',
-            fullDueDate: '7 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '6h',
-            subtasks: [
-              { id: 'sub-31-1', title: 'Define custom events taxonomy', completed: true, assignee: 'SK', date: '25 Oct' },
-              { id: 'sub-31-2', title: 'Verify tag firing in GTM preview', completed: false, assignee: 'SK', date: '7 Nov' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-035',
-            title: 'SEO optimisation',
-            milestone: 'Milestone 06',
-            subtasksCount: 3,
-            linkedDocsCount: 0,
-            assigneeInitials: 'MJ',
-            assigneeName: 'Maya J.',
-            assigneeColor: '#3B82F6',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '10 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 0,
-            isBlocked: false,
-            description: 'Ensure OpenGraph tags, semantic hierarchy, dynamic sitemap XML generation, and structured microdata are compliant.',
-            startDate: '22 Oct 2026',
-            fullDueDate: '10 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '10h',
-            subtasks: [
-              { id: 'sub-35-1', title: 'Metadata audit on top 10 templates', completed: true, assignee: 'MJ', date: '28 Oct' },
-              { id: 'sub-35-2', title: 'Schema.org JSON-LD generation', completed: false, assignee: 'MJ', date: '4 Nov' },
-              { id: 'sub-35-3', title: 'Canonical URL validation', completed: false, assignee: 'MJ', date: '10 Nov' }
-            ],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        key: 'IN_REVIEW',
-        label: 'IN REVIEW',
-        count: 3,
-        dotColor: '#3B82F6',
-        isExpanded: false,
-        tasks: [
-          {
-            id: 'T-019',
-            title: 'Design system review',
-            milestone: 'Milestone 06',
-            subtasksCount: 2,
-            linkedDocsCount: 1,
-            assigneeInitials: 'SK',
-            assigneeName: 'Sara K.',
-            assigneeColor: '#14B8A6',
-            priority: 'High',
-            priorityStyle: 'high',
-            dueDate: '29 Oct',
-            dueDateColor: '#DC2626',
-            attachmentsCount: 3,
-            isBlocked: false,
-            description: 'Cross-functional review of all typography tokens, button variants, and spacing systems.',
-            startDate: '10 Oct 2026',
-            fullDueDate: '29 Oct 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '8h',
-            subtasks: [
-              { id: 'sub-19-1', title: 'Component audit', completed: true, assignee: 'SK', date: '20 Oct' },
-              { id: 'sub-19-2', title: 'Accessibility contrast verification', completed: false, assignee: 'SK', date: '29 Oct' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-022',
-            title: 'User feedback collation',
-            milestone: 'Milestone 06',
-            subtasksCount: 1,
-            linkedDocsCount: 2,
-            assigneeInitials: 'AR',
-            assigneeName: 'Alex R.',
-            assigneeColor: '#8B5CF6',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '1 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 1,
-            isBlocked: false,
-            description: 'Synthesizing qualitative feedback from user testing sessions on the prototype checkout flow.',
-            startDate: '15 Oct 2026',
-            fullDueDate: '1 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '6h',
-            subtasks: [
-              { id: 'sub-22-1', title: 'Tagging session highlights', completed: true, assignee: 'AR', date: '28 Oct' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-025',
-            title: 'Staging QA accessibility check',
-            milestone: 'Milestone 06',
-            subtasksCount: 3,
-            linkedDocsCount: 0,
-            assigneeInitials: 'PK',
-            assigneeName: 'Paul K.',
-            assigneeColor: '#F97316',
-            priority: 'Low',
-            priorityStyle: 'low',
-            dueDate: '4 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 0,
-            isBlocked: false,
-            description: 'Screen reader audit and keyboard tab-index flow validation on staging environment.',
-            startDate: '18 Oct 2026',
-            fullDueDate: '4 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '8h',
-            subtasks: [
-              { id: 'sub-25-1', title: 'Keyboard focus indicators check', completed: true, assignee: 'PK', date: '25 Oct' },
-              { id: 'sub-25-2', title: 'Aria labels verification', completed: true, assignee: 'PK', date: '30 Oct' },
-              { id: 'sub-25-3', title: 'VoiceOver smoke test', completed: false, assignee: 'PK', date: '4 Nov' }
-            ],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        key: 'TODO',
-        label: 'TO DO',
-        count: 8,
-        dotColor: '#9CA3AF',
-        isExpanded: false,
-        tasks: [
-          {
-            id: 'T-008',
-            title: 'Prepare responsive tablet layouts',
-            milestone: 'Milestone 06',
-            subtasksCount: 2,
-            linkedDocsCount: 1,
-            assigneeInitials: 'AR',
-            assigneeName: 'Alex R.',
-            assigneeColor: '#8B5CF6',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '12 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 1,
-            isBlocked: false,
-            description: 'Design specific intermediate breakpoints for 768px-1024px viewport widths.',
-            startDate: '25 Oct 2026',
-            fullDueDate: '12 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '10h',
-            subtasks: [
-              { id: 'sub-08-1', title: 'Wireframe iPad layout', completed: false, assignee: 'AR', date: '5 Nov' },
-              { id: 'sub-08-2', title: 'Review flex wrapping points', completed: false, assignee: 'AR', date: '12 Nov' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-010',
-            title: 'Cookie consent banner implementation',
-            milestone: 'Milestone 06',
-            subtasksCount: 1,
-            linkedDocsCount: 0,
-            assigneeInitials: 'MJ',
-            assigneeName: 'Maya J.',
-            assigneeColor: '#3B82F6',
-            priority: 'Low',
-            priorityStyle: 'low',
-            dueDate: '14 Nov',
-            dueDateColor: '#111111',
-            attachmentsCount: 0,
-            isBlocked: false,
-            description: 'Implement GDPR-compliant banner with category toggles and local storage preference caching.',
-            startDate: '28 Oct 2026',
-            fullDueDate: '14 Nov 2026',
-            milestoneFull: '06 / Review',
-            timeEstimate: '5h',
-            subtasks: [
-              { id: 'sub-10-1', title: 'Build consent modal UI', completed: false, assignee: 'MJ', date: '14 Nov' }
-            ],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        key: 'COMPLETED',
-        label: 'COMPLETED',
-        count: 2,
-        dotColor: '#10B981',
-        isCheckIcon: true,
-        isExpanded: false,
-        tasks: [
-          {
-            id: 'T-001',
-            title: 'Brand audit & color token definition',
-            milestone: 'Milestone 05',
-            subtasksCount: 4,
-            linkedDocsCount: 3,
-            assigneeInitials: 'MJ',
-            assigneeName: 'Maya J.',
-            assigneeColor: '#3B82F6',
-            priority: 'High',
-            priorityStyle: 'high',
-            dueDate: '20 Oct',
-            dueDateColor: '#666666',
-            attachmentsCount: 2,
-            isBlocked: false,
-            description: 'Comprehensive audit of legacy brand assets and synthesis into modern design tokens.',
-            startDate: '1 Oct 2026',
-            fullDueDate: '20 Oct 2026',
-            milestoneFull: '05 / Content',
-            timeEstimate: '18h',
-            subtasks: [
-              { id: 'sub-01-1', title: 'Export color palette', completed: true, assignee: 'MJ', date: '10 Oct' },
-              { id: 'sub-01-2', title: 'Define CSS variables', completed: true, assignee: 'MJ', date: '15 Oct' },
-              { id: 'sub-01-3', title: 'Document usage guidelines', completed: true, assignee: 'MJ', date: '18 Oct' },
-              { id: 'sub-01-4', title: 'Team sign-off', completed: true, assignee: 'MJ', date: '20 Oct' }
-            ],
-            dependencies: []
-          },
-          {
-            id: 'T-004',
-            title: 'User persona research synthesis',
-            milestone: 'Milestone 05',
-            subtasksCount: 3,
-            linkedDocsCount: 2,
-            assigneeInitials: 'SK',
-            assigneeName: 'Sara K.',
-            assigneeColor: '#14B8A6',
-            priority: 'Medium',
-            priorityStyle: 'medium',
-            dueDate: '24 Oct',
-            dueDateColor: '#666666',
-            attachmentsCount: 1,
-            isBlocked: false,
-            description: 'Synthesis of 15 user interviews into 3 target enterprise personas.',
-            startDate: '5 Oct 2026',
-            fullDueDate: '24 Oct 2026',
-            milestoneFull: '05 / Content',
-            timeEstimate: '12h',
-            subtasks: [
-              { id: 'sub-04-1', title: 'Collate interview recordings', completed: true, assignee: 'SK', date: '12 Oct' },
-              { id: 'sub-04-2', title: 'Draft persona decks', completed: true, assignee: 'SK', date: '18 Oct' },
-              { id: 'sub-04-3', title: 'Stakeholder presentation', completed: true, assignee: 'SK', date: '24 Oct' }
-            ],
-            dependencies: []
-          }
-        ]
-      }
-    ],
-    currentMilestone: {
-      number: '06',
-      name: 'Review.',
-      activeTasksCount: 5,
-      blockedTasksCount: 2,
-      progressPercent: 80
-    },
-    blockedTasks: [
-      { id: 'T-014', title: 'Homepage development', reason: 'Waiting for design approval' },
-      { id: 'T-026', title: 'Content migration', reason: 'Dependent on CMS access' }
-    ],
-    tasksByMilestone: [
-      { num: '03', title: 'Development', count: 5, isActive: false },
-      { num: '04', title: 'Testing', count: 4, isActive: false },
-      { num: '05', title: 'Content', count: 3, isActive: false },
-      { num: '06', title: 'Review', count: 5, isActive: true },
-      { num: '07', title: 'Launch Prep', count: 1, isActive: false }
-    ],
-    linkedKnowledge: [
-      { title: 'Homepage Design Brief', linkedTasksCount: 3, icon: 'file' },
-      { title: 'Content Strategy', linkedTasksCount: 2, icon: 'file' },
-      { title: 'Brand Guidelines', linkedTasksCount: 1, icon: 'link' }
-    ],
-    quickActions: [
-      { actionKey: 'create_task', title: 'Create new task', icon: 'plus' },
-      { actionKey: 'import_doc', title: 'Import from document', icon: 'file-text' },
-      { actionKey: 'manage_deps', title: 'Manage dependencies', icon: 'workflow' }
-    ]
+    taskGroups: [],
+    blockedTasks: [],
+    tasksByMilestone: [],
+    linkedKnowledge: [],
+    quickActions: []
   };
 
   /**
    * State Management Object
    */
   const State = {
-    data: defaultTasksData,
-    selectedTaskId: 'T-014',
+    data: emptyTasksData,
+    selectedTaskId: null,
     isDrawerOpen: false,
     activeRailView: 'widgets', // 'widgets' or 'drawer'
     activeDrawerTab: 'details',
@@ -564,19 +166,19 @@
         contentContainer.classList.remove('drawer-closed');
       }
 
-      // 2. Fetch live project tasks data or use default
-      let data = defaultTasksData;
+      // 2. Fetch live project tasks data or use empty baseline
+      let data = emptyTasksData;
       if (this.projectId) {
         try {
           const res = await fetch(`/api/projects/${encodeURIComponent(this.projectId)}/tasks`);
           if (res.ok) {
             const apiData = await res.json();
-            if (apiData && apiData.taskGroups && apiData.taskGroups.length > 0) {
-              data = this.mergeWithDefaults(apiData);
+            if (apiData) {
+              data = apiData;
             }
           }
         } catch (netErr) {
-          console.warn(`Could not fetch /api/projects/${this.projectId}/tasks, using default tasks:`, netErr);
+          console.warn(`Could not fetch /api/projects/${this.projectId}/tasks:`, netErr);
         }
       }
 
@@ -595,8 +197,8 @@
       this.renderTaskGroups(data.taskGroups);
 
       // 6. Set initial right rail view (restore drawer if it was open, or show widgets)
-      if (options.showDrawer) {
-        this.selectTask(options.selectedTaskId || State.selectedTaskId || 'T-014');
+      if (options.showDrawer && (options.selectedTaskId || State.selectedTaskId)) {
+        this.selectTask(options.selectedTaskId || State.selectedTaskId);
       } else if (options.selectedTaskId) {
         this.selectTask(options.selectedTaskId);
       } else if (State.isDrawerOpen && State.selectedTaskId) {
@@ -609,71 +211,36 @@
       this.bindEvents();
     },
 
-    mergeWithDefaults(apiData) {
-      // Keep rich subtasks and description from defaults if API returns standard DTO
-      const defaultTasksMap = new Map();
-      defaultTasksData.taskGroups.forEach(g => {
-        g.tasks.forEach(t => defaultTasksMap.set(t.id, t));
-      });
-
-      const mergedGroups = apiData.taskGroups.map(group => {
-        const tasks = (group.tasks || []).map(task => {
-          const def = defaultTasksMap.get(task.id) || {};
-          return {
-            ...def,
-            ...task,
-            subtasks: def.subtasks || task.subtasks || [],
-            dependencies: def.dependencies || task.dependencies || [],
-            description: def.description || task.description || 'Task specification and acceptance criteria.',
-            startDate: def.startDate || task.startDate || '12 Oct 2026',
-            fullDueDate: def.fullDueDate || task.fullDueDate || (task.dueDate ? `${task.dueDate} 2026` : '28 Oct 2026'),
-            milestoneFull: def.milestoneFull || (task.milestone ? `${task.milestone.replace('Milestone ', '')} / Review` : '06 / Review'),
-            timeEstimate: def.timeEstimate || '12h'
-          };
-        });
-        return {
-          ...group,
-          tasks
-        };
-      });
-
-      return {
-        ...defaultTasksData,
-        ...apiData,
-        taskGroups: mergedGroups
-      };
-    },
-
     /**
      * Populate 01 / WORK STATUS Summary Cards
      */
     populateWorkStatus(ws) {
       if (!ws) return;
       const totalEl = document.getElementById('work-status-total-val');
-      if (totalEl) totalEl.textContent = ws.totalTasks || 18;
+      if (totalEl) totalEl.textContent = ws.totalTasks != null ? ws.totalTasks : 0;
 
       const todoCount = document.getElementById('count-todo');
       const todoPct = document.getElementById('pct-todo');
-      if (todoCount) todoCount.textContent = String(ws.todoCount).padStart(2, '0');
-      if (todoPct) todoPct.textContent = ws.todoPercent || '44%';
+      if (todoCount) todoCount.textContent = String(ws.todoCount != null ? ws.todoCount : 0).padStart(2, '0');
+      if (todoPct) todoPct.textContent = ws.todoPercent || '0%';
 
       const inprogCount = document.getElementById('count-inprogress');
       const inprogPct = document.getElementById('pct-inprogress');
-      if (inprogCount) inprogCount.textContent = String(ws.inProgressCount).padStart(2, '0');
-      if (inprogPct) inprogPct.textContent = ws.inProgressPercent || '28%';
+      if (inprogCount) inprogCount.textContent = String(ws.inProgressCount != null ? ws.inProgressCount : 0).padStart(2, '0');
+      if (inprogPct) inprogPct.textContent = ws.inProgressPercent || '0%';
 
       const inrevCount = document.getElementById('count-inreview');
       const inrevPct = document.getElementById('pct-inreview');
-      if (inrevCount) inrevCount.textContent = String(ws.inReviewCount).padStart(2, '0');
-      if (inrevPct) inrevPct.textContent = ws.inReviewPercent || '17%';
+      if (inrevCount) inrevCount.textContent = String(ws.inReviewCount != null ? ws.inReviewCount : 0).padStart(2, '0');
+      if (inrevPct) inrevPct.textContent = ws.inReviewPercent || '0%';
 
       const compCount = document.getElementById('count-completed');
       const compPct = document.getElementById('pct-completed');
-      if (compCount) compCount.textContent = String(ws.completedCount).padStart(2, '0');
-      if (compPct) compPct.textContent = ws.completedPercent || '11%';
+      if (compCount) compCount.textContent = String(ws.completedCount != null ? ws.completedCount : 0).padStart(2, '0');
+      if (compPct) compPct.textContent = ws.completedPercent || '0%';
 
       const blockCount = document.getElementById('count-blocked');
-      if (blockCount) blockCount.textContent = String(ws.blockedCount).padStart(2, '0');
+      if (blockCount) blockCount.textContent = String(ws.blockedCount != null ? ws.blockedCount : 0).padStart(2, '0');
     },
 
     /**
@@ -683,58 +250,90 @@
       if (!data) return;
 
       // 1. Current Milestone
-      const cm = data.currentMilestone || defaultTasksData.currentMilestone;
+      const cm = data.currentMilestone;
+      const titleEl = document.getElementById('rail-milestone-title');
+      const activeEl = document.getElementById('rail-active-tasks-count');
+      const blockedEl = document.getElementById('rail-blocked-tasks-stat');
       if (cm) {
-        const titleEl = document.getElementById('rail-milestone-title');
-        const activeEl = document.getElementById('rail-active-tasks-count');
-        const blockedEl = document.getElementById('rail-blocked-tasks-stat');
-        if (titleEl) titleEl.textContent = cm.name || 'Review.';
-        if (activeEl) activeEl.textContent = `${cm.activeTasksCount || 5} active tasks`;
+        if (titleEl) titleEl.textContent = cm.name || '—';
+        if (activeEl) activeEl.textContent = `${cm.activeTasksCount || 0} active tasks`;
         if (blockedEl) {
-          const bCount = cm.blockedTasksCount != null ? cm.blockedTasksCount : 2;
+          const bCount = cm.blockedTasksCount != null ? cm.blockedTasksCount : 0;
           blockedEl.innerHTML = `${bCount} blocked <svg class="triangle-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M7.134 2.5a1 1 0 0 1 1.732 0l6.062 10.5A1 1 0 0 1 14.062 14H1.938a1 1 0 0 1-.866-1.5L7.134 2.5z" fill="#EF4444"/><path d="M8 6v3.5M8 11.5v.5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        }
+      } else {
+        if (titleEl) titleEl.textContent = '—';
+        if (activeEl) activeEl.textContent = '0 active tasks';
+        if (blockedEl) blockedEl.textContent = '0 blocked';
+      }
+
+      // 2. Blocked Tasks Count & List
+      const blocked = data.blockedTasks || [];
+      const countEl = document.getElementById('rail-blocked-huge-count');
+      if (countEl) {
+        countEl.textContent = String(blocked.length).padStart(2, '0');
+      }
+      const bListEl = document.getElementById('rail-blocked-tasks-list');
+      if (bListEl) {
+        if (blocked.length > 0) {
+          bListEl.innerHTML = blocked.map(b => `
+            <div class="blocked-task-item" data-task-id="${escapeHtml(b.id)}" tabindex="0">
+              <svg class="blocked-doc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <div class="blocked-item-info">
+                <h5 class="blocked-item-title">${escapeHtml(b.title)}</h5>
+                <span class="blocked-item-sub">${escapeHtml(b.sub || b.reason || 'Blocked')}</span>
+              </div>
+              <span class="blocked-item-arrow">→</span>
+            </div>
+          `).join('');
+        } else {
+          bListEl.innerHTML = '';
         }
       }
 
-      // 2. Blocked Tasks Count
-      const blocked = data.blockedTasks || defaultTasksData.blockedTasks;
-      const countEl = document.getElementById('rail-blocked-huge-count');
-      if (countEl && blocked) {
-        countEl.textContent = String(blocked.length).padStart(2, '0');
-      }
-
       // 3. Tasks by Milestone
-      const milestones = data.tasksByMilestone || defaultTasksData.tasksByMilestone;
+      const milestones = data.tasksByMilestone || [];
       const mListEl = document.getElementById('rail-milestones-list');
-      if (mListEl && milestones && milestones.length > 0) {
-        mListEl.innerHTML = milestones.map(m => `
-          <div class="milestone-table-row ${m.isActive ? 'current-active' : ''}" tabindex="0" role="button" aria-label="Milestone ${escapeHtml(m.num)} ${escapeHtml(m.title)}" data-milestone-num="${escapeHtml(m.num)}" data-milestone-title="${escapeHtml(m.title)}" data-milestone-count="${m.count}">
-            <span class="m-seq">${escapeHtml(m.num)}</span>
-            <span class="m-status-circle ${m.isActive ? 'active-lime' : ''}"></span>
-            <span class="m-name">${escapeHtml(m.title)}</span>
-            <span class="m-count">${m.count} ${m.count === 1 ? 'task' : 'tasks'}</span>
-            <span class="m-arrow">→</span>
-          </div>
-        `).join('');
+      if (mListEl) {
+        if (milestones.length > 0) {
+          mListEl.innerHTML = milestones.map(m => `
+            <div class="milestone-table-row ${m.isActive ? 'current-active' : ''}" tabindex="0" role="button" aria-label="Milestone ${escapeHtml(m.num)} ${escapeHtml(m.title)}" data-milestone-num="${escapeHtml(m.num)}" data-milestone-title="${escapeHtml(m.title)}" data-milestone-count="${m.count}">
+              <span class="m-seq">${escapeHtml(m.num)}</span>
+              <span class="m-status-circle ${m.isActive ? 'active-lime' : ''}"></span>
+              <span class="m-name">${escapeHtml(m.title)}</span>
+              <span class="m-count">${m.count} ${m.count === 1 ? 'task' : 'tasks'}</span>
+              <span class="m-arrow">→</span>
+            </div>
+          `).join('');
+        } else {
+          mListEl.innerHTML = '';
+        }
       }
 
       // 4. Linked Knowledge
-      const knowledge = data.linkedKnowledge || defaultTasksData.linkedKnowledge;
+      const knowledge = data.linkedKnowledge || [];
       const kListEl = document.getElementById('rail-knowledge-list');
-      if (kListEl && knowledge && knowledge.length > 0) {
-        kListEl.innerHTML = knowledge.map(k => `
-          <div class="knowledge-link-item">
-            <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            <div class="knowledge-item-info">
-              <span class="knowledge-title">${escapeHtml(k.title)}</span>
-              <span class="knowledge-meta">${k.linkedTasksCount} tasks linked</span>
+      if (kListEl) {
+        if (knowledge.length > 0) {
+          kListEl.innerHTML = knowledge.map(k => `
+            <div class="knowledge-link-item">
+              <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <div class="knowledge-item-info">
+                <span class="knowledge-title">${escapeHtml(k.title)}</span>
+                <span class="knowledge-meta">${k.linkedTasksCount} tasks linked</span>
+              </div>
+              <span class="knowledge-arrow">→</span>
             </div>
-            <span class="knowledge-arrow">→</span>
-          </div>
-        `).join('');
+          `).join('');
+        } else {
+          kListEl.innerHTML = '';
+        }
       }
     },
 
@@ -787,51 +386,28 @@
      * Render Groups and Rows into Accordion Cards
      */
     renderTaskGroups(groups) {
-      if (!groups) return;
+      const gList = groups || [];
 
-      // Group 1: IN PROGRESS
-      const inProgressGroup = groups.find(g => g.key === 'IN_PROGRESS');
-      if (inProgressGroup) {
-        const countPill = document.getElementById('group-count-inprogress');
-        if (countPill) countPill.textContent = String(inProgressGroup.count).padStart(2, '0');
-        const listEl = document.getElementById('list-in-progress');
-        if (listEl && inProgressGroup.tasks && inProgressGroup.tasks.length > 0) {
-          listEl.innerHTML = inProgressGroup.tasks.map(t => this.renderTaskRowHtml(t)).join('');
+      // Helper to update each group cleanly
+      const updateGroup = (key, countId, listId) => {
+        const group = gList.find(g => g.key === key);
+        const countPill = document.getElementById(countId);
+        const listEl = document.getElementById(listId);
+        const count = group ? (group.count || 0) : 0;
+        if (countPill) countPill.textContent = String(count).padStart(2, '0');
+        if (listEl) {
+          if (group && group.tasks && group.tasks.length > 0) {
+            listEl.innerHTML = group.tasks.map(t => this.renderTaskRowHtml(t)).join('');
+          } else {
+            listEl.innerHTML = '<div style="padding: 0.85rem 1rem; font-size: 0.8125rem; color: var(--dash-text-muted); font-style: italic;">No tasks in this group.</div>';
+          }
         }
-      }
+      };
 
-      // Group 2: IN REVIEW
-      const inReviewGroup = groups.find(g => g.key === 'IN_REVIEW');
-      if (inReviewGroup) {
-        const countPill = document.getElementById('group-count-inreview');
-        if (countPill) countPill.textContent = String(inReviewGroup.count).padStart(2, '0');
-        const listEl = document.getElementById('list-in-review');
-        if (listEl && inReviewGroup.tasks && inReviewGroup.tasks.length > 0) {
-          listEl.innerHTML = inReviewGroup.tasks.map(t => this.renderTaskRowHtml(t)).join('');
-        }
-      }
-
-      // Group 3: TO DO
-      const todoGroup = groups.find(g => g.key === 'TODO');
-      if (todoGroup) {
-        const countPill = document.getElementById('group-count-todo');
-        if (countPill) countPill.textContent = String(todoGroup.count).padStart(2, '0');
-        const listEl = document.getElementById('list-to-do');
-        if (listEl && todoGroup.tasks && todoGroup.tasks.length > 0) {
-          listEl.innerHTML = todoGroup.tasks.map(t => this.renderTaskRowHtml(t)).join('');
-        }
-      }
-
-      // Group 4: COMPLETED
-      const compGroup = groups.find(g => g.key === 'COMPLETED');
-      if (compGroup) {
-        const countPill = document.getElementById('group-count-completed');
-        if (countPill) countPill.textContent = String(compGroup.count).padStart(2, '0');
-        const listEl = document.getElementById('list-completed');
-        if (listEl && compGroup.tasks && compGroup.tasks.length > 0) {
-          listEl.innerHTML = compGroup.tasks.map(t => this.renderTaskRowHtml(t)).join('');
-        }
-      }
+      updateGroup('IN_PROGRESS', 'group-count-inprogress', 'list-in-progress');
+      updateGroup('IN_REVIEW', 'group-count-inreview', 'list-in-review');
+      updateGroup('TODO', 'group-count-todo', 'list-to-do');
+      updateGroup('COMPLETED', 'group-count-completed', 'list-completed');
     },
 
     renderTaskRowHtml(task) {
@@ -1068,10 +644,7 @@
       const cardWaiting = document.getElementById('dep-card-waiting');
       const cardBlocker = document.getElementById('dep-card-blocker');
 
-      if (task.id === 'T-014') {
-        if (cardWaiting) cardWaiting.style.display = 'flex';
-        if (cardBlocker) cardBlocker.style.display = 'flex';
-      } else if (task.isBlocked) {
+      if (task.isBlocked) {
         if (cardWaiting) cardWaiting.style.display = 'none';
         if (cardBlocker) {
           cardBlocker.style.display = 'flex';

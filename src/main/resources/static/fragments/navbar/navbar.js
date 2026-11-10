@@ -91,6 +91,10 @@ const Navbar = (() => {
           createMenu.classList.remove('show');
           if (typeof window.triggerAddTaskPrompt === 'function') {
             window.triggerAddTaskPrompt('NOW');
+          } else if (typeof window.openAddTaskModal === 'function') {
+            window.openAddTaskModal('NOW');
+          } else {
+            window.location.href = '/pages/tasks/create.html';
           }
         });
       }

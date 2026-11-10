@@ -23,80 +23,38 @@
       .replace(/'/g, '&#39;');
   }
 
-  const defaultOverviewData = {
-    id: 'featured-01',
-    breadcrumb: 'PROJECTS / 02 / WEBSITE REDESIGN',
-    title: 'Website Redesign',
-    description: 'Redesign the website into a responsive, modern experience with clearer navigation, stronger visual identity and an intuitive customer journey.',
-    owner: 'Design Team',
-    dueDate: '15 Nov 2026',
-    projectType: 'Design / Development',
-    health: 'At Risk',
-    healthDotColor: 'orange',
+  const emptyOverviewData = {
+    id: '',
+    breadcrumb: 'PROJECTS',
+    title: 'Project Overview',
+    description: '',
+    owner: 'Team',
+    dueDate: '',
+    projectType: 'General',
+    health: 'Active',
+    healthDotColor: 'green',
     status: 'Active',
     statusDotColor: 'green',
     specification: {
-      title: 'Build a better digital experience.',
-      objectives: [
-        'Improve user experience',
-        'Increase conversion rate',
-        'Strengthen brand presence'
-      ],
-      deliverables: [
-        'Responsive website (desktop, tablet, mobile)',
-        'CMS implementation',
-        'Content migration'
-      ],
-      successCriteria: [
-        'Higher engagement',
-        'Increased conversion rate',
-        'Meets accessibility standards'
-      ],
-      projectContext: {
-        'Client': 'Acme Co.',
-        'Type': 'Design / Development',
-        'Focus': 'Brand, performance and growth'
-      }
+      title: 'Project specification',
+      objectives: [],
+      deliverables: [],
+      successCriteria: [],
+      projectContext: {}
     },
-    milestonesSummary: '06/09 COMPLETED',
-    milestonesCompleted: 6,
-    milestonesTotal: 9,
-    milestonesList: [
-      { id: 'm-1', seqNum: '01', name: 'Discovery', status: 'COMPLETED' },
-      { id: 'm-2', seqNum: '02', name: 'Design', status: 'COMPLETED' },
-      { id: 'm-3', seqNum: '03', name: 'Development', status: 'COMPLETED' },
-      { id: 'm-4', seqNum: '04', name: 'Testing', status: 'COMPLETED' },
-      { id: 'm-5', seqNum: '05', name: 'Content', status: 'COMPLETED' },
-      { id: 'm-6', seqNum: '06', name: 'Review', status: 'CURRENT', statusLabel: 'In Progress' },
-      { id: 'm-7', seqNum: '07', name: 'Launch Prep', status: 'UPCOMING' },
-      { id: 'm-8', seqNum: '08', name: 'Go Live', status: 'UPCOMING' },
-      { id: 'm-9', seqNum: '09', name: 'Post Launch', status: 'UPCOMING' }
-    ],
-    workInMotion: [
-      { statusKey: 'TODO', statusLabel: 'TO DO', dotColor: 'gray', count: '08', exampleTask: 'Prepare responsive layouts', assigneeAvatar: 'AR' },
-      { statusKey: 'IN_PROGRESS', statusLabel: 'IN PROGRESS', dotColor: 'amber', count: '05', exampleTask: 'Homepage development', assigneeAvatar: 'MJ' },
-      { statusKey: 'IN_REVIEW', statusLabel: 'IN REVIEW', dotColor: 'blue', count: '03', exampleTask: 'Design system review', assigneeAvatar: 'SK' },
-      { statusKey: 'BLOCKED', statusLabel: 'BLOCKED', dotColor: 'red', count: '02', exampleTask: 'Client copy approval', assigneeAvatar: 'PK' }
-    ],
-    knowledgeDocuments: [
-      { name: 'Project Brief', fileType: 'PDF', fileSize: '1.2 MB', iconType: 'pdf' },
-      { name: 'Design Review Notes', fileType: 'DOC', fileSize: '850 KB', iconType: 'doc' },
-      { name: 'Design References', fileType: 'Figma', fileSize: '24 MB', iconType: 'figma' }
-    ],
-    unresolvedBlockersCount: 2,
-    healthHeading: 'Unresolved blockers',
-    healthDescription: 'Two issues need attention before the next milestone.',
-    pendingDecision: {
-      statusLabel: 'Awaiting Your Review',
-      dueDateLabel: 'DUE 30 OCT',
-      title: 'Homepage design approval',
-      description: 'Final design requires your review before development continues.',
-      ownerName: 'Alex R.',
-      ownerInitials: 'AR'
-    },
-    moreDecisionsCount: 2,
-    teamMemberInitials: ['PK', 'AR', 'SK', 'MJ'],
-    totalTeamMembers: 4
+    milestonesSummary: '00/00 COMPLETED',
+    milestonesCompleted: 0,
+    milestonesTotal: 0,
+    milestonesList: [],
+    workInMotion: [],
+    knowledgeDocuments: [],
+    unresolvedBlockersCount: 0,
+    healthHeading: 'No active blockers',
+    healthDescription: 'All project milestones and tasks are on track.',
+    pendingDecision: null,
+    moreDecisionsCount: 0,
+    teamMemberInitials: [],
+    totalTeamMembers: 0
   };
 
   /**
@@ -122,7 +80,7 @@
       }
 
       // 2. Fetch live project overview data or fallback
-      let data = defaultOverviewData;
+      let data = emptyOverviewData;
       if (projectId) {
         try {
           const res = await fetch(`/api/projects/${encodeURIComponent(projectId)}/overview`);
@@ -296,43 +254,53 @@
       // --- Right Column: Health ---
       const blockersCount = query('#health-blockers-count');
       if (blockersCount) {
-        blockersCount.textContent = String(data.unresolvedBlockersCount ?? 2).padStart(2, '0');
+        blockersCount.textContent = String(data.unresolvedBlockersCount != null ? data.unresolvedBlockersCount : 0).padStart(2, '0');
       }
 
       const healthHeading = query('#health-heading');
       if (healthHeading) {
-        healthHeading.textContent = data.healthHeading || 'Unresolved blockers';
+        healthHeading.textContent = data.healthHeading || (data.unresolvedBlockersCount > 0 ? 'Unresolved blockers' : 'No active blockers');
       }
 
       const healthDesc = query('#health-description');
       if (healthDesc) {
-        healthDesc.textContent = data.healthDescription || 'Two issues need attention before the next milestone.';
+        healthDesc.textContent = data.healthDescription || (data.unresolvedBlockersCount > 0 ? `${data.unresolvedBlockersCount} issue(s) need attention.` : 'All project milestones and tasks are on track.');
       }
 
       // --- Right Column: Decision Register ---
+      const decCard = query('#overview-decision-card');
       if (data.pendingDecision) {
+        if (decCard) decCard.style.display = 'block';
         const decStatus = query('#decision-status-label');
-        if (decStatus) decStatus.textContent = data.pendingDecision.statusLabel || 'Awaiting Your Review';
+        if (decStatus) decStatus.textContent = data.pendingDecision.statusLabel || 'Awaiting Review';
 
         const decDue = query('#decision-due-str');
-        if (decDue) decDue.textContent = data.pendingDecision.dueDateLabel || 'DUE 30 OCT';
+        if (decDue) decDue.textContent = data.pendingDecision.dueDateLabel || '';
 
         const decTitle = query('#decision-title');
-        if (decTitle) decTitle.textContent = data.pendingDecision.title || 'Homepage design approval';
+        if (decTitle) decTitle.textContent = data.pendingDecision.title || 'Decision';
 
         const decDesc = query('#decision-desc');
-        if (decDesc) decDesc.textContent = data.pendingDecision.description || 'Final design requires your review before development continues.';
+        if (decDesc) decDesc.textContent = data.pendingDecision.description || '';
 
         const decOwner = query('#decision-owner-name');
-        if (decOwner) decOwner.textContent = data.pendingDecision.ownerName || 'Alex R.';
+        if (decOwner) decOwner.textContent = data.pendingDecision.ownerName || 'Team';
 
         const decAvatar = query('#decision-owner-avatar');
-        if (decAvatar) decAvatar.textContent = data.pendingDecision.ownerInitials || 'AR';
+        if (decAvatar) decAvatar.textContent = data.pendingDecision.ownerInitials || 'TD';
+      } else {
+        const decStatus = query('#decision-status-label');
+        if (decStatus) decStatus.textContent = 'Decisions on Track';
+        const decTitle = query('#decision-title');
+        if (decTitle) decTitle.textContent = 'No pending decisions';
+        const decDesc = query('#decision-desc');
+        if (decDesc) decDesc.textContent = 'All project architecture and specifications are up to date.';
       }
 
       const moreLink = query('#decision-more-link');
       if (moreLink) {
-        moreLink.innerHTML = `<span>+ ${data.moreDecisionsCount || 2} more decisions</span><span>→</span>`;
+        const moreCount = data.moreDecisionsCount || 0;
+        moreLink.innerHTML = `<span>+ ${moreCount} more decisions</span><span>→</span>`;
       }
 
       // --- Right Column: Project Team ---

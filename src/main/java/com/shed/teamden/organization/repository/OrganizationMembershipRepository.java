@@ -23,5 +23,8 @@ public interface OrganizationMembershipRepository extends JpaRepository<Organiza
     @Query("SELECT m FROM OrganizationMembership m JOIN FETCH m.organization WHERE m.organization.id = :orgId AND m.user.id = :userId")
     Optional<OrganizationMembership> findByOrganizationIdAndUserId(@Param("orgId") UUID orgId, @Param("userId") UUID userId);
 
+    @Query("SELECT m FROM OrganizationMembership m JOIN FETCH m.user WHERE m.organization.id = :orgId AND m.status = :status")
+    List<OrganizationMembership> findByOrganizationIdAndStatusWithUser(@Param("orgId") UUID orgId, @Param("status") MembershipStatus status);
+
     long countByOrganizationIdAndStatus(UUID organizationId, MembershipStatus status);
 }

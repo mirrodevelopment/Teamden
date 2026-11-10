@@ -14,7 +14,7 @@
     <section class="tasks-work-status-card" aria-label="Work Status Summary">
       <div class="work-status-top-row">
         <span class="status-card-section-tag">01 / WORK STATUS</span>
-        <span class="status-card-total-badge">Total tasks <strong id="work-status-total-val">18</strong></span>
+        <span class="status-card-total-badge">Total tasks <strong id="work-status-total-val">0</strong></span>
       </div>
 
       <!-- 5 Evenly-spaced Status Metrics -->
@@ -26,8 +26,8 @@
             <span class="metric-label">TO DO</span>
           </div>
           <div class="metric-value-row">
-            <span class="metric-count" id="count-todo">08</span>
-            <span class="metric-sub" id="pct-todo">44%</span>
+            <span class="metric-count" id="count-todo">00</span>
+            <span class="metric-sub" id="pct-todo">0%</span>
           </div>
         </div>
 
@@ -38,8 +38,8 @@
             <span class="metric-label">IN PROGRESS</span>
           </div>
           <div class="metric-value-row">
-            <span class="metric-count" id="count-inprogress">05</span>
-            <span class="metric-sub" id="pct-inprogress">28%</span>
+            <span class="metric-count" id="count-inprogress">00</span>
+            <span class="metric-sub" id="pct-inprogress">0%</span>
           </div>
         </div>
 
@@ -50,8 +50,8 @@
             <span class="metric-label">IN REVIEW</span>
           </div>
           <div class="metric-value-row">
-            <span class="metric-count" id="count-inreview">03</span>
-            <span class="metric-sub" id="pct-inreview">17%</span>
+            <span class="metric-count" id="count-inreview">00</span>
+            <span class="metric-sub" id="pct-inreview">0%</span>
           </div>
         </div>
 
@@ -62,8 +62,8 @@
             <span class="metric-label">COMPLETED</span>
           </div>
           <div class="metric-value-row">
-            <span class="metric-count" id="count-completed">02</span>
-            <span class="metric-sub" id="pct-completed">11%</span>
+            <span class="metric-count" id="count-completed">00</span>
+            <span class="metric-sub" id="pct-completed">0%</span>
           </div>
         </div>
 
@@ -76,8 +76,8 @@
             <span class="metric-label label-blocked">BLOCKED (FLAG)</span>
           </div>
           <div class="metric-value-row">
-            <span class="metric-count" id="count-blocked">02</span>
-            <span class="metric-sub" id="sub-blocked">of 18 tasks <span class="info-circle-glyph" title="Blocked tasks">ⓘ</span></span>
+            <span class="metric-count" id="count-blocked">00</span>
+            <span class="metric-sub" id="sub-blocked">0 blocked <span class="info-circle-glyph" title="Blocked tasks">ⓘ</span></span>
           </div>
         </div>
       </div>
@@ -168,13 +168,13 @@
            =================================================================== -->
       <div class="task-groups-container" id="task-groups-container">
 
-        <!-- GROUP 1: IN PROGRESS 05 (Expanded by default) -->
+        <!-- GROUP 1: IN PROGRESS (Expanded by default) -->
         <div class="task-group-card expanded" id="group-in-progress" data-group-status="IN_PROGRESS">
           <div class="group-header-row" role="button" tabindex="0" aria-expanded="true">
             <div class="group-header-left">
               <span class="group-status-dot dot-amber"></span>
               <span class="group-title">IN PROGRESS</span>
-              <span class="group-count-pill" id="group-count-inprogress">05</span>
+              <span class="group-count-pill" id="group-count-inprogress">00</span>
             </div>
             <button class="group-toggle-btn" aria-label="Toggle In Progress Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -196,176 +196,7 @@
             </div>
 
             <!-- Task Rows -->
-            <div class="task-rows-list" id="list-in-progress">
-              <!-- Row 1: Homepage development (SELECTED) -->
-              <div class="task-row selected" data-task-id="T-014" tabindex="0">
-                <div class="td-col td-select">
-                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Homepage development">
-                </div>
-                <div class="td-col td-task">
-                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <div class="task-name-desc-wrap">
-                    <span class="task-title-text">Homepage development</span>
-                    <span class="task-sub-meta">Milestone 06 · 3 subtasks · 2 linked documents</span>
-                  </div>
-                </div>
-                <div class="td-col td-assignee">
-                  <span class="assignee-avatar avatar-mj" title="Maya J. (MJ)">MJ</span>
-                </div>
-                <div class="td-col td-priority">
-                  <span class="priority-pill pill-high">High</span>
-                </div>
-                <div class="td-col td-due">
-                  <span class="due-text due-urgent">28 Oct</span>
-                </div>
-                <div class="td-col td-links">
-                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                  </svg>
-                  <span>2</span>
-                </div>
-                <div class="td-col td-actions">
-                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
-                </div>
-              </div>
-
-              <!-- Row 2: Mobile optimisation -->
-              <div class="task-row" data-task-id="T-026" tabindex="0">
-                <div class="td-col td-select">
-                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Mobile optimisation">
-                </div>
-                <div class="td-col td-task">
-                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <div class="task-name-desc-wrap">
-                    <span class="task-title-text">Mobile optimisation</span>
-                    <span class="task-sub-meta">Milestone 06 · 2 subtasks · 1 linked document</span>
-                  </div>
-                </div>
-                <div class="td-col td-assignee">
-                  <span class="assignee-avatar avatar-pk" title="Paul K. (PK)">PK</span>
-                </div>
-                <div class="td-col td-priority">
-                  <span class="priority-pill pill-medium">Medium</span>
-                </div>
-                <div class="td-col td-due">
-                  <span class="due-text">2 Nov</span>
-                </div>
-                <div class="td-col td-links">
-                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                  </svg>
-                  <span>1</span>
-                </div>
-                <div class="td-col td-actions">
-                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
-                </div>
-              </div>
-
-              <!-- Row 3: CMS implementation -->
-              <div class="task-row" data-task-id="T-028" tabindex="0">
-                <div class="td-col td-select">
-                  <input type="checkbox" class="task-row-checkbox" aria-label="Select CMS implementation">
-                </div>
-                <div class="td-col td-task">
-                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <div class="task-name-desc-wrap">
-                    <span class="task-title-text">CMS implementation</span>
-                    <span class="task-sub-meta">Milestone 06 · 4 subtasks</span>
-                  </div>
-                </div>
-                <div class="td-col td-assignee">
-                  <span class="assignee-avatar avatar-ar" title="Alex R. (AR)">AR</span>
-                </div>
-                <div class="td-col td-priority">
-                  <span class="priority-pill pill-medium">Medium</span>
-                </div>
-                <div class="td-col td-due">
-                  <span class="due-text">5 Nov</span>
-                </div>
-                <div class="td-col td-links">
-                  <span>0</span>
-                </div>
-                <div class="td-col td-actions">
-                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
-                </div>
-              </div>
-
-              <!-- Row 4: Analytics setup -->
-              <div class="task-row" data-task-id="T-031" tabindex="0">
-                <div class="td-col td-select">
-                  <input type="checkbox" class="task-row-checkbox" aria-label="Select Analytics setup">
-                </div>
-                <div class="td-col td-task">
-                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <div class="task-name-desc-wrap">
-                    <span class="task-title-text">Analytics setup</span>
-                    <span class="task-sub-meta">Milestone 06 · 2 subtasks · 1 linked document</span>
-                  </div>
-                </div>
-                <div class="td-col td-assignee">
-                  <span class="assignee-avatar avatar-sk" title="Sara K. (SK)">SK</span>
-                </div>
-                <div class="td-col td-priority">
-                  <span class="priority-pill pill-low">Low</span>
-                </div>
-                <div class="td-col td-due">
-                  <span class="due-text">7 Nov</span>
-                </div>
-                <div class="td-col td-links">
-                  <svg class="paperclip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                  </svg>
-                  <span>1</span>
-                </div>
-                <div class="td-col td-actions">
-                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
-                </div>
-              </div>
-
-              <!-- Row 5: SEO optimisation -->
-              <div class="task-row" data-task-id="T-035" tabindex="0">
-                <div class="td-col td-select">
-                  <input type="checkbox" class="task-row-checkbox" aria-label="Select SEO optimisation">
-                </div>
-                <div class="td-col td-task">
-                  <svg class="task-doc-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <div class="task-name-desc-wrap">
-                    <span class="task-title-text">SEO optimisation</span>
-                    <span class="task-sub-meta">Milestone 06 · 3 subtasks</span>
-                  </div>
-                </div>
-                <div class="td-col td-assignee">
-                  <span class="assignee-avatar avatar-mj" title="Maya J. (MJ)">MJ</span>
-                </div>
-                <div class="td-col td-priority">
-                  <span class="priority-pill pill-medium">Medium</span>
-                </div>
-                <div class="td-col td-due">
-                  <span class="due-text">10 Nov</span>
-                </div>
-                <div class="td-col td-links">
-                  <span>0</span>
-                </div>
-                <div class="td-col td-actions">
-                  <button class="row-more-btn" title="More options" aria-label="Row options">•••</button>
-                </div>
-              </div>
-            </div>
+            <div class="task-rows-list" id="list-in-progress"></div>
 
             <!-- Add Task Row -->
             <button class="btn-group-add-task" id="btn-add-task-inprogress">
@@ -375,13 +206,13 @@
           </div>
         </div>
 
-        <!-- GROUP 2: IN REVIEW 03 (Collapsed) -->
+        <!-- GROUP 2: IN REVIEW (Collapsed) -->
         <div class="task-group-card collapsed" id="group-in-review" data-group-status="IN_REVIEW">
           <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
             <div class="group-header-left">
               <span class="group-status-dot dot-blue"></span>
               <span class="group-title">IN REVIEW</span>
-              <span class="group-count-pill" id="group-count-inreview">03</span>
+              <span class="group-count-pill" id="group-count-inreview">00</span>
             </div>
             <button class="group-toggle-btn" aria-label="Toggle In Review Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -394,13 +225,13 @@
           </div>
         </div>
 
-        <!-- GROUP 3: TO DO 08 (Collapsed) -->
+        <!-- GROUP 3: TO DO (Collapsed) -->
         <div class="task-group-card collapsed" id="group-to-do" data-group-status="TODO">
           <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
             <div class="group-header-left">
               <span class="group-status-dot dot-gray"></span>
               <span class="group-title">TO DO</span>
-              <span class="group-count-pill" id="group-count-todo">08</span>
+              <span class="group-count-pill" id="group-count-todo">00</span>
             </div>
             <button class="group-toggle-btn" aria-label="Toggle To Do Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -413,7 +244,7 @@
           </div>
         </div>
 
-        <!-- GROUP 4: COMPLETED 02 (Collapsed) -->
+        <!-- GROUP 4: COMPLETED (Collapsed) -->
         <div class="task-group-card collapsed" id="group-completed" data-group-status="COMPLETED">
           <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
             <div class="group-header-left">
@@ -423,7 +254,7 @@
                 </svg>
               </span>
               <span class="group-title">COMPLETED</span>
-              <span class="group-count-pill" id="group-count-completed">02</span>
+              <span class="group-count-pill" id="group-count-completed">00</span>
             </div>
             <button class="group-toggle-btn" aria-label="Toggle Completed Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -455,19 +286,19 @@
     <!-- 1. CURRENT MILESTONE CARD (Matte Obsidian) -->
     <div class="tasks-milestone-dark-card" id="widget-current-milestone">
       <div class="milestone-card-top">
-        <span class="milestone-tag">CURRENT MILESTONE / 06</span>
+        <span class="milestone-tag">CURRENT MILESTONE</span>
         <div class="milestone-progress-ring-wrap">
           <svg class="progress-ring-svg" width="34" height="34" viewBox="0 0 36 36" aria-label="Milestone Progress Ring">
             <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--dash-border)" stroke-width="3.6" />
-            <path class="ring-fg" stroke-dasharray="28, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--dash-accent-lime)" stroke-width="3.6" stroke-linecap="round" />
+            <path class="ring-fg" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--dash-accent-lime)" stroke-width="3.6" stroke-linecap="round" />
           </svg>
         </div>
       </div>
 
       <div class="milestone-middle-row">
-        <h3 class="milestone-title" id="rail-milestone-title">Review.</h3>
+        <h3 class="milestone-title" id="rail-milestone-title">—</h3>
         <div class="milestone-dots-row" aria-label="Milestone progress dots">
-          <span class="m-dot active"></span>
+          <span class="m-dot"></span>
           <span class="m-dot"></span>
           <span class="m-dot"></span>
           <span class="m-dot"></span>
@@ -475,9 +306,9 @@
       </div>
 
       <div class="milestone-stats-row">
-        <span class="milestone-active-tasks" id="rail-active-tasks-count">5 active tasks</span>
+        <span class="milestone-active-tasks" id="rail-active-tasks-count">0 active tasks</span>
         <span class="milestone-sep">·</span>
-        <span class="milestone-blocked-tasks" id="rail-blocked-tasks-stat">2 blocked <svg class="triangle-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M7.134 2.5a1 1 0 0 1 1.732 0l6.062 10.5A1 1 0 0 1 14.062 14H1.938a1 1 0 0 1-.866-1.5L7.134 2.5z" fill="var(--dash-status-urgent)"/><path d="M8 6v3.5M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+        <span class="milestone-blocked-tasks" id="rail-blocked-tasks-stat">0 blocked</span>
       </div>
 
       <div class="milestone-card-divider"></div>
@@ -495,36 +326,10 @@
           <h4 class="rail-card-title">BLOCKED TASKS</h4>
           <p class="rail-card-desc">Tasks in progress that require resolution.</p>
         </div>
-        <span class="blocked-tasks-huge-count" id="rail-blocked-huge-count">02</span>
+        <span class="blocked-tasks-huge-count" id="rail-blocked-huge-count">00</span>
       </div>
 
-      <div class="blocked-tasks-list" id="rail-blocked-tasks-list">
-        <!-- Item 1: Homepage development -->
-        <div class="blocked-task-item" data-task-id="T-014" tabindex="0">
-          <svg class="blocked-doc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          <div class="blocked-item-info">
-            <h5 class="blocked-item-title">Homepage development</h5>
-            <span class="blocked-item-sub">T-014 · Waiting for design approval</span>
-          </div>
-          <span class="blocked-item-arrow">→</span>
-        </div>
-
-        <!-- Item 2: Content migration -->
-        <div class="blocked-task-item" data-task-id="T-026" tabindex="0">
-          <svg class="blocked-doc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          <div class="blocked-item-info">
-            <h5 class="blocked-item-title">Content migration</h5>
-            <span class="blocked-item-sub">T-026 · Dependent on CMS access</span>
-          </div>
-          <span class="blocked-item-arrow">→</span>
-        </div>
-      </div>
+      <div class="blocked-tasks-list" id="rail-blocked-tasks-list"></div>
 
       <div class="rail-card-divider"></div>
 
@@ -541,52 +346,7 @@
         <a href="#milestones" class="rail-header-action" id="action-milestones-view-all">View all →</a>
       </div>
 
-      <div class="milestones-table-list" id="rail-milestones-list">
-        <!-- 03 Development -->
-        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 03 Development" data-milestone-num="03" data-milestone-title="Development" data-milestone-count="5">
-          <span class="m-seq">03</span>
-          <span class="m-status-circle"></span>
-          <span class="m-name">Development</span>
-          <span class="m-count">5 tasks</span>
-          <span class="m-arrow">→</span>
-        </div>
-
-        <!-- 04 Testing -->
-        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 04 Testing" data-milestone-num="04" data-milestone-title="Testing" data-milestone-count="4">
-          <span class="m-seq">04</span>
-          <span class="m-status-circle"></span>
-          <span class="m-name">Testing</span>
-          <span class="m-count">4 tasks</span>
-          <span class="m-arrow">→</span>
-        </div>
-
-        <!-- 05 Content -->
-        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 05 Content" data-milestone-num="05" data-milestone-title="Content" data-milestone-count="3">
-          <span class="m-seq">05</span>
-          <span class="m-status-circle"></span>
-          <span class="m-name">Content</span>
-          <span class="m-count">3 tasks</span>
-          <span class="m-arrow">→</span>
-        </div>
-
-        <!-- 06 Review (ACTIVE CURRENT HIGHLIGHT - Neon Green) -->
-        <div class="milestone-table-row current-active" tabindex="0" role="button" aria-label="Milestone 06 Review" data-milestone-num="06" data-milestone-title="Review" data-milestone-count="5">
-          <span class="m-seq">06</span>
-          <span class="m-status-circle active-lime"></span>
-          <span class="m-name">Review</span>
-          <span class="m-count">5 tasks</span>
-          <span class="m-arrow">→</span>
-        </div>
-
-        <!-- 07 Launch Prep -->
-        <div class="milestone-table-row" tabindex="0" role="button" aria-label="Milestone 07 Launch Prep" data-milestone-num="07" data-milestone-title="Launch Prep" data-milestone-count="1">
-          <span class="m-seq">07</span>
-          <span class="m-status-circle"></span>
-          <span class="m-name">Launch Prep</span>
-          <span class="m-count">1 task</span>
-          <span class="m-arrow">→</span>
-        </div>
-      </div>
+      <div class="milestones-table-list" id="rail-milestones-list"></div>
     </div>
 
     <!-- 4. LINKED FROM PROJECT KNOWLEDGE CARD -->
@@ -595,47 +355,7 @@
         <h4 class="rail-card-title">LINKED FROM PROJECT KNOWLEDGE</h4>
       </div>
 
-      <div class="knowledge-links-list" id="rail-knowledge-list">
-        <!-- Item 1: Homepage Design Brief -->
-        <div class="knowledge-link-item">
-          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          <div class="knowledge-item-info">
-            <span class="knowledge-title">Homepage Design Brief</span>
-            <span class="knowledge-meta">3 tasks linked</span>
-          </div>
-          <span class="knowledge-arrow">→</span>
-        </div>
-
-        <!-- Item 2: Content Strategy -->
-        <div class="knowledge-link-item">
-          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          <div class="knowledge-item-info">
-            <span class="knowledge-title">Content Strategy</span>
-            <span class="knowledge-meta">2 tasks linked</span>
-          </div>
-          <span class="knowledge-arrow">→</span>
-        </div>
-
-        <!-- Item 3: Brand Guidelines -->
-        <div class="knowledge-link-item">
-          <svg class="knowledge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-          </svg>
-          <div class="knowledge-item-info">
-            <span class="knowledge-title">Brand Guidelines</span>
-            <span class="knowledge-meta">1 task linked</span>
-          </div>
-          <span class="knowledge-arrow">→</span>
-        </div>
-      </div>
+      <div class="knowledge-links-list" id="rail-knowledge-list"></div>
 
       <div class="rail-card-divider"></div>
 

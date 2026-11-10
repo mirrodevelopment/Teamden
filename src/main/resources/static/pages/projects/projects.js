@@ -71,10 +71,10 @@
     const atRiskEl = document.getElementById('stat-at-risk-projects');
     const dueSoonEl = document.getElementById('stat-due-soon-projects');
 
-    if (totalEl) totalEl.textContent = String(data.totalProjects || 12).padStart(2, '0');
-    if (activeEl) activeEl.textContent = String(data.activeCount || 8).padStart(2, '0');
-    if (atRiskEl) atRiskEl.textContent = String(data.atRiskCount || 2).padStart(2, '0');
-    if (dueSoonEl) dueSoonEl.textContent = String(data.dueSoonCount || 3).padStart(2, '0');
+    if (totalEl) totalEl.textContent = String(data.totalProjects != null ? data.totalProjects : 0).padStart(2, '0');
+    if (activeEl) activeEl.textContent = String(data.activeCount != null ? data.activeCount : 0).padStart(2, '0');
+    if (atRiskEl) atRiskEl.textContent = String(data.atRiskCount != null ? data.atRiskCount : 0).padStart(2, '0');
+    if (dueSoonEl) dueSoonEl.textContent = String(data.dueSoonCount != null ? data.dueSoonCount : 0).padStart(2, '0');
   }
 
   /**
@@ -490,131 +490,19 @@
         throw new Error(`HTTP ${res.status}`);
       }
     } catch (err) {
-      console.warn('Could not load from /api/projects/data, using rich seed structure:', err);
+      console.warn('Could not load from /api/projects/data:', err);
       currentProjectData = {
         workspaceBreadcrumb: 'YOUR WORKSPACE / 02',
-        currentDateLabel: 'SUN, 25 OCT 2026',
-        totalProjects: 12,
-        activeCount: 8,
-        atRiskCount: 2,
-        dueSoonCount: 3,
-        featuredProject: {
-          id: 'feat-01',
-          indexNum: '01',
-          name: 'Website Redesign',
-          description: 'Deliver a responsive, approved website ready for production.',
-          status: 'ACTIVE',
-          statusLabel: 'ACTIVE',
-          statusDotColor: 'green',
-          health: 'AT_RISK',
-          healthLabel: 'AT RISK',
-          healthDotColor: 'red',
-          team: 'Design Team',
-          dueDate: 'Due 15 Nov 2026',
-          priority: 'High Priority',
-          milestonesLabel: '06/09',
-          milestonesCompleted: 6,
-          milestonesTotal: 9,
-          blockersCount: 2
-        },
-        projects: [
-          {
-            id: 'proj-02',
-            indexNum: '02',
-            name: 'Client Application',
-            description: 'Develop and launch the patient application with core tracking features.',
-            status: 'ACTIVE',
-            statusLabel: 'ACTIVE',
-            statusDotColor: 'green',
-            health: 'ON_TRACK',
-            healthLabel: 'ON TRACK',
-            healthDotColor: 'green',
-            dueDate: 'Due 18 Oct 2026',
-            milestonesLabel: '3/5 milestones',
-            avatars: ['PK', 'AR', 'SK'],
-            avatarOverflow: '+2'
-          },
-          {
-            id: 'proj-03',
-            indexNum: '03',
-            name: 'Brand Development',
-            description: 'Create a unified brand identity across all products.',
-            status: 'IN_REVIEW',
-            statusLabel: 'IN REVIEW',
-            statusDotColor: 'blue',
-            health: 'ON_TRACK',
-            healthLabel: 'ON TRACK',
-            healthDotColor: 'green',
-            dueDate: 'Due 30 Oct 2026',
-            milestonesLabel: '4/6 milestones',
-            avatars: ['MJ', 'PK', 'SD'],
-            avatarOverflow: '+2'
-          },
-          {
-            id: 'proj-04',
-            indexNum: '04',
-            name: 'Marketing Campaign',
-            description: 'Plan and execute product launch campaign.',
-            status: 'ACTIVE',
-            statusLabel: 'ACTIVE',
-            statusDotColor: 'green',
-            health: 'AT_RISK',
-            healthLabel: 'AT RISK',
-            healthDotColor: 'red',
-            dueDate: 'Due 27 Oct 2026',
-            milestonesLabel: '2/4 milestones',
-            avatars: ['AR', 'SK', 'JR'],
-            avatarOverflow: '+2'
-          },
-          {
-            id: 'proj-05',
-            indexNum: '05',
-            name: 'Product Roadmap',
-            description: 'Define product strategy for next 12 months.',
-            status: 'PLANNING',
-            statusLabel: 'PLANNING',
-            statusDotColor: 'orange',
-            health: 'ON_TRACK',
-            healthLabel: 'ON TRACK',
-            healthDotColor: 'green',
-            dueDate: 'Due 10 Nov 2026',
-            milestonesLabel: '1/4 milestones',
-            avatars: ['PB', 'MH', 'AR'],
-            avatarOverflow: '+2'
-          },
-          {
-            id: 'proj-06',
-            indexNum: '06',
-            name: 'Internal Tools',
-            description: 'Improve internal tools for operations and finance.',
-            status: 'ACTIVE',
-            statusLabel: 'ACTIVE',
-            statusDotColor: 'green',
-            health: 'ON_TRACK',
-            healthLabel: 'ON TRACK',
-            healthDotColor: 'green',
-            dueDate: 'Due 12 Dec 2026',
-            milestonesLabel: '2/5 milestones',
-            avatars: ['SK', 'JR', 'MK'],
-            avatarOverflow: '+2'
-          },
-          {
-            id: 'proj-07',
-            indexNum: '07',
-            name: 'Content Library',
-            description: 'Build and organize all product content.',
-            status: 'ON_HOLD',
-            statusLabel: 'ON HOLD',
-            statusDotColor: 'gray',
-            health: 'AT_RISK',
-            healthLabel: 'AT RISK',
-            healthDotColor: 'red',
-            dueDate: 'Due 20 Nov 2026',
-            milestonesLabel: '3/5 milestones',
-            avatars: ['MH', 'SD', 'AR'],
-            avatarOverflow: '+2'
-          }
-        ]
+        currentDateLabel: '',
+        totalProjects: 0,
+        activeCount: 0,
+        atRiskCount: 0,
+        dueSoonCount: 0,
+        featuredProject: null,
+        projects: [],
+        decisions: [],
+        projectAttention: [],
+        upcomingMilestones: []
       };
     }
 

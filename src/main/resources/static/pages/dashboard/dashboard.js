@@ -760,94 +760,198 @@
   };
 
   /**
-   * Interactive Add Task Modal
+   * Cached Task Options (Projects, Assignees, Columns, Priorities)
    */
-  window.openAddTaskModal = function (column) {
-    const colName = column || 'NOW';
+  let cachedTaskOptions = null;
+  async function fetchTaskOptions() {
+    if (cachedTaskOptions) return cachedTaskOptions;
+    try {
+      const res = await fetch('/api/tasks/options');
+      if (res.ok) {
+        cachedTaskOptions = await res.json();
+        return cachedTaskOptions;
+      }
+    } catch (e) {
+      console.warn('Could not load task options:', e);
+    }
+    return { projects: [], assignees: [], columns: ['NOW', 'NEXT', 'LATER'], priorities: ['HIGH', 'MEDIUM', 'LOW', 'URGENT'] };
+  }
+
+  /**
+   * Interactive Add Task Modal with Database Persistence
+   */
+  window.openAddTaskModal = async function (column) {
+    const colName = (column || 'NOW').toUpperCase();
+    const options = await fetchTaskOptions();
+
+    // Smart default due date
+    const today = new Date();
+    let defaultDueDate = today.toISOString().split('T')[0];
+    if (colName === 'NEXT') {
+      const tomorrow = new Date(today.getTime() + 86400000);
+      defaultDueDate = tomorrow.toISOString().split('T')[0];
+    } else if (colName === 'LATER') {
+      const nextWeek = new Date(today.getTime() + 7 * 86400000);
+      defaultDueDate = nextWeek.toISOString().split('T')[0];
+    }
+
+    const projectOptionsHtml = (options.projects || []).map(p => 
+      `<option value="${p.id}">${escapeHtml(p.name)}</option>`
+    ).join('');
+
+    const assigneeOptionsHtml = (options.assignees || []).map(a => 
+      `<option value="${a.id}">${escapeHtml(a.name)} (${escapeHtml(a.role)})</option>`
+    ).join('');
+
     const content = `
-      <div style="display:flex; flex-direction:column; gap:1rem;">
+      <form id="create-task-form" onsubmit="event.preventDefault(); window.submitNewTask();" style="display:flex; flex-direction:column; gap:0.9rem;">
         <div>
-          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem;">Task Title</label>
-          <input type="text" id="add-task-title" placeholder="e.g. Prepare client presentation" style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">TASK TITLE <span style="color:#E53935;">*</span></label>
+          <input type="text" id="add-task-title" placeholder="e.g. Prepare client onboarding deck" required autofocus
+                 style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff; color:var(--dash-text-primary);">
         </div>
+
         <div>
-          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem;">Project / Tag</label>
-          <input type="text" id="add-task-tag" value="Website Redesign" placeholder="e.g. Client Application" style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">DESCRIPTION / NOTES</label>
+          <textarea id="add-task-desc" rows="2" placeholder="Brief outline, specifications, or deliverables..."
+                    style="width:100%; padding:0.5rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff; color:var(--dash-text-primary); resize:vertical; font-family:inherit;"></textarea>
         </div>
-        <div>
-          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem;">Priority Column</label>
-          <select id="add-task-col" style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff;">
-            <option value="NOW" ${colName === 'NOW' ? 'selected' : ''}>NOW (Immediate / Due Today)</option>
-            <option value="NEXT" ${colName === 'NEXT' ? 'selected' : ''}>NEXT (Upcoming Work Period)</option>
-            <option value="LATER" ${colName === 'LATER' ? 'selected' : ''}>LATER (Future Tasks)</option>
-          </select>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">PROJECT</label>
+            <select id="add-task-project" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="">General Workspace (No Project)</option>
+              ${projectOptionsHtml}
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">ASSIGNEE</label>
+            <select id="add-task-assignee" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="">Assign to Me</option>
+              ${assigneeOptionsHtml}
+            </select>
+          </div>
         </div>
-      </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.65rem;">
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">KANBAN COLUMN</label>
+            <select id="add-task-col" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="NOW" ${colName === 'NOW' ? 'selected' : ''}>NOW</option>
+              <option value="NEXT" ${colName === 'NEXT' ? 'selected' : ''}>NEXT</option>
+              <option value="LATER" ${colName === 'LATER' ? 'selected' : ''}>LATER</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">PRIORITY</label>
+            <select id="add-task-priority" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="HIGH" ${colName === 'NOW' ? 'selected' : ''}>High</option>
+              <option value="MEDIUM" ${colName === 'NEXT' ? 'selected' : ''}>Medium</option>
+              <option value="LOW" ${colName === 'LATER' ? 'selected' : ''}>Low</option>
+              <option value="URGENT">Urgent</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">DUE DATE</label>
+            <input type="date" id="add-task-due" value="${defaultDueDate}"
+                   style="width:100%; padding:0.5rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+          </div>
+        </div>
+
+        <div id="add-task-error" style="display:none; color:#E53935; font-size:0.75rem; font-weight:600; padding:0.4rem 0.6rem; background:rgba(229,57,53,0.08); border-radius:4px;"></div>
+      </form>
     `;
 
     const footer = `
-      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Cancel</button>
-      <button onclick="window.submitNewTask()" style="padding:0.45rem 0.95rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Create Task</button>
+      <button type="button" onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Cancel</button>
+      <button type="button" id="btn-submit-task" onclick="window.submitNewTask()" style="padding:0.45rem 1.15rem; background:var(--dash-hero-bg, #111); color:var(--dash-text-white, #fff); border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Create Task</button>
     `;
 
-    window.openModal(`Add Task to ${colName}`, content, footer);
+    window.openModal(`Create New Task (${colName})`, content, footer);
     setTimeout(() => {
       const input = document.getElementById('add-task-title');
       if (input) input.focus();
     }, 100);
   };
 
+  // Global bridge for universal navbar "+ Create" -> "✓ New Task"
+  window.triggerAddTaskPrompt = window.openAddTaskModal;
+
+  /**
+   * Submit New Task to Database and Reload Dashboard
+   */
   window.submitNewTask = async function () {
     const titleInput = document.getElementById('add-task-title');
-    const tagInput = document.getElementById('add-task-tag');
+    const descInput = document.getElementById('add-task-desc');
+    const projSelect = document.getElementById('add-task-project');
+    const assigneeSelect = document.getElementById('add-task-assignee');
     const colSelect = document.getElementById('add-task-col');
+    const prioritySelect = document.getElementById('add-task-priority');
+    const dueInput = document.getElementById('add-task-due');
+    const errorDiv = document.getElementById('add-task-error');
+    const submitBtn = document.getElementById('btn-submit-task');
 
     if (!titleInput || !titleInput.value.trim()) {
-      alert('Please enter a task title');
+      if (errorDiv) {
+        errorDiv.textContent = 'Please enter a task title.';
+        errorDiv.style.display = 'block';
+      } else {
+        alert('Please enter a task title');
+      }
+      if (titleInput) titleInput.focus();
       return;
     }
 
-    const title = titleInput.value.trim();
-    const tag = tagInput ? tagInput.value.trim() : 'General';
-    const col = colSelect ? colSelect.value : 'NOW';
-
-    const newTask = {
-      id: 'task-' + Date.now(),
-      column: col,
-      indexNum: String((currentDashboardData?.nowTasks?.length || 0) + (currentDashboardData?.nextTasks?.length || 0) + 1).padStart(2, '0'),
-      title: title,
-      tag: tag || 'General',
-      dueDateLabel: col === 'NOW' ? 'Today' : (col === 'NEXT' ? 'Tomorrow' : 'Fri, 27 Oct'),
-      dotColor: col === 'NOW' ? 'red' : (col === 'NEXT' ? 'orange' : 'blue'),
-      completed: false
+    const payload = {
+      title: titleInput.value.trim(),
+      description: descInput ? descInput.value.trim() : '',
+      projectId: projSelect && projSelect.value ? projSelect.value : null,
+      assigneeId: assigneeSelect && assigneeSelect.value ? assigneeSelect.value : null,
+      column: colSelect ? colSelect.value : 'NOW',
+      priority: prioritySelect ? prioritySelect.value : 'MEDIUM',
+      dueDate: dueInput && dueInput.value ? dueInput.value : null
     };
 
-    if (currentDashboardData) {
-      if (col === 'NEXT') {
-        currentDashboardData.nextTasks = currentDashboardData.nextTasks || [];
-        currentDashboardData.nextTasks.push(newTask);
-      } else if (col === 'LATER') {
-        currentDashboardData.laterTasks = currentDashboardData.laterTasks || [];
-        currentDashboardData.laterTasks.push(newTask);
-      } else {
-        currentDashboardData.nowTasks = currentDashboardData.nowTasks || [];
-        currentDashboardData.nowTasks.push(newTask);
-      }
-      renderAllColumns();
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating...';
     }
 
-    window.closeModal();
-    window.showToast(`Task added: "${title}"`);
-
-    // Synchronize with API
     try {
-      await fetch('/api/dashboard/tasks', {
+      const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ column: col, title: title, tag: tag })
+        body: JSON.stringify(payload)
       });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server responded with ${res.status}`);
+      }
+
+      window.closeModal();
+      window.showToast(`✓ Task created: "${payload.title}"`);
+
+      // Refresh dashboard data dynamically from DB
+      if (typeof window.refreshDashboardData === 'function') {
+        await window.refreshDashboardData();
+      }
     } catch (err) {
-      console.warn('Backend task create notification:', err);
+      console.error('Task creation failed:', err);
+      if (errorDiv) {
+        errorDiv.textContent = 'Failed to create task: ' + err.message;
+        errorDiv.style.display = 'block';
+      } else {
+        alert('Failed to create task: ' + err.message);
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Task';
+      }
     }
   };
 
@@ -1246,32 +1350,9 @@
       attentionItems: []
     };
 
-    // 5. Fetch Dashboard Data from Backend API
-    try {
-      const res = await fetch('/api/dashboard/data');
-      if (res.ok) {
-        const apiData = await res.json();
-        if (apiData) {
-          currentDashboardData = {
-            ...currentDashboardData,
-            ...apiData,
-            nowTasks: apiData.nowTasks || [],
-            nextTasks: apiData.nextTasks || [],
-            laterTasks: apiData.laterTasks || [],
-            activities: apiData.activities || [],
-            schedule: apiData.schedule || [],
-            attentionItems: apiData.attentionItems || [],
-            heroPriority: apiData.heroPriority || null
-          };
-        }
-      }
-    } catch (err) {
-      console.warn('API data fetch notice:', err);
-    }
-
-    // 6. Populate DOM Elements
-    if (currentDashboardData) {
-      // Hero Card
+    // 5. Hero Card Rendering Helper
+    function renderHeroCard() {
+      if (!currentDashboardData) return;
       const hero = currentDashboardData.heroPriority;
       const heroTitle = document.getElementById('hero-title');
       const heroProj = document.getElementById('hero-project-tag');
@@ -1303,19 +1384,43 @@
         if (dueDay) dueDay.textContent = '--';
         if (dueMy) dueMy.innerHTML = `<span class="due-month">--</span><span class="due-year">----</span>`;
       }
-
-      // Kanban Columns with Drag and Drop
-      renderAllColumns();
-
-      // Activities
-      renderActivityTimeline(currentDashboardData.activities || []);
-
-      // Schedule
-      renderSchedule(currentDashboardData.schedule || []);
-
-      // Attention
-      renderAttention(currentDashboardData.attentionItems || []);
     }
+
+    // 6. Global Rehydration from PostgreSQL DB
+    window.refreshDashboardData = async function () {
+      try {
+        const res = await fetch('/api/dashboard/data');
+        if (res.ok) {
+          const apiData = await res.json();
+          if (apiData) {
+            currentDashboardData = {
+              ...currentDashboardData,
+              ...apiData,
+              nowTasks: apiData.nowTasks || [],
+              nextTasks: apiData.nextTasks || [],
+              laterTasks: apiData.laterTasks || [],
+              activities: apiData.activities || [],
+              schedule: apiData.schedule || [],
+              attentionItems: apiData.attentionItems || [],
+              heroPriority: apiData.heroPriority || null
+            };
+          }
+        }
+      } catch (err) {
+        console.warn('API data fetch notice:', err);
+      }
+
+      if (currentDashboardData) {
+        renderHeroCard();
+        renderAllColumns();
+        renderActivityTimeline(currentDashboardData.activities || []);
+        renderSchedule(currentDashboardData.schedule || []);
+        renderAttention(currentDashboardData.attentionItems || []);
+      }
+    };
+
+    // Initial Hydration
+    await window.refreshDashboardData();
 
     // 7. Start Real Time and Date Live Clock
     startLiveDateTimeClock();

@@ -25,186 +25,31 @@
       .replace(/'/g, '&#39;');
   }
 
-  // Baseline data adhering strictly to the user prompt and Brick reference screenshot
-  const defaultDocumentsData = {
-    id: 'featured-01',
-    breadcrumb: 'PROJECTS / 02 / WEBSITE REDESIGN',
-    title: 'website redesign.',
-    owner: 'Design Team',
-    dueDate: '15 Nov 2026',
+  // Baseline empty state data
+  const emptyDocumentsData = {
+    id: '',
+    breadcrumb: 'PROJECTS',
+    title: 'Project Documents',
+    owner: 'Team',
+    dueDate: '',
     status: 'Active',
     library: {
       title: 'PROJECT LIBRARY',
       categories: ['All', 'Notes', 'Plans', 'Design', 'Other'],
       activeCategory: 'All',
-      documents: [
-        {
-          id: 'doc-01',
-          title: 'Design Review Notes',
-          category: 'Meeting Notes',
-          categoryKey: 'Notes',
-          updatedAt: 'Updated today',
-          docNumber: 'DOCUMENT / 003',
-          isSelected: true,
-          date: '25 Oct 2026',
-          team: 'Design Team',
-          savedStatus: 'Saved 2 minutes ago',
-          p1: 'We reviewed the latest homepage designs and discussed the overall structure, navigation and visual direction.',
-          highlighted: 'We also agreed to simplify the mobile navigation and reduce unnecessary interface controls.',
-          p2Remainder: ' The revised approach will improve usability and content strategy.'
-        },
-        {
-          id: 'doc-02',
-          title: 'Project Brief',
-          category: 'Foundation',
-          categoryKey: 'Plans',
-          updatedAt: 'Updated 2 days ago',
-          docNumber: 'DOCUMENT / 001',
-          isSelected: false,
-          date: '12 Oct 2026',
-          team: 'Product Team',
-          savedStatus: 'Saved 2 days ago',
-          p1: 'Comprehensive goals and project scope definitions for the multi-phase brand redesign.',
-          highlighted: 'All deliverables must align with the revised Q4 digital roadmap.',
-          p2Remainder: ' Milestone 06 requires synchronized frontend deployment.'
-        },
-        {
-          id: 'doc-03',
-          title: 'Design Guidelines',
-          category: 'Reference',
-          categoryKey: 'Design',
-          updatedAt: 'Updated 4 days ago',
-          docNumber: 'DOCUMENT / 002',
-          isSelected: false,
-          date: '21 Oct 2026',
-          team: 'Design Team',
-          savedStatus: 'Saved 4 days ago',
-          p1: 'Color palette, typographic hierarchy, and token definitions for dark and light SaaS surfaces.',
-          highlighted: 'Typography should prioritize Inter Tight and Montserrat across all dashboard cards.',
-          p2Remainder: ' Accent lime #C9F34A is reserved for primary actions.'
-        },
-        {
-          id: 'doc-04',
-          title: 'Research & References',
-          category: 'Research',
-          categoryKey: 'Other',
-          updatedAt: 'Updated 1 week ago',
-          docNumber: 'DOCUMENT / 004',
-          isSelected: false,
-          date: '18 Oct 2026',
-          team: 'UX Research',
-          savedStatus: 'Saved 1 week ago',
-          p1: 'User feedback and competitive usability benchmarks on navigation patterns.',
-          highlighted: 'Users reported high satisfaction with contextual task creation drawers.',
-          p2Remainder: ' Further validation scheduled for upcoming client sessions.'
-        },
-        {
-          id: 'doc-05',
-          title: 'Client Feedback',
-          category: 'Meeting Notes',
-          categoryKey: 'Notes',
-          updatedAt: 'Updated 1 week ago',
-          docNumber: 'DOCUMENT / 005',
-          isSelected: false,
-          date: '19 Oct 2026',
-          team: 'Client Services',
-          savedStatus: 'Saved 1 week ago',
-          p1: 'Consolidated notes from the stakeholder design walk-through.',
-          highlighted: 'Client requested reduced clutter in mobile headers and faster load benchmarks.',
-          p2Remainder: ' Prototype review is slated for next Monday.'
-        },
-        {
-          id: 'doc-06',
-          title: 'Technical Requirements',
-          category: 'Specification',
-          categoryKey: 'Plans',
-          updatedAt: 'Updated 1 week ago',
-          docNumber: 'DOCUMENT / 006',
-          isSelected: false,
-          date: '17 Oct 2026',
-          team: 'Engineering',
-          savedStatus: 'Saved 1 week ago',
-          p1: 'API specifications, responsive breakpoints, and authentication token handling.',
-          highlighted: 'Backend endpoints must respond within 120ms for project queries.',
-          p2Remainder: ' Offline caching strategy to be confirmed in architecture review.'
-        },
-        {
-          id: 'doc-07',
-          title: 'Content Strategy',
-          category: 'Plan',
-          categoryKey: 'Plans',
-          updatedAt: 'Updated 2 weeks ago',
-          docNumber: 'DOCUMENT / 007',
-          isSelected: false,
-          date: '10 Oct 2026',
-          team: 'Content Team',
-          savedStatus: 'Saved 2 weeks ago',
-          p1: 'Copy guidelines, micro-interactions, and messaging hierarchy for homepage modules.',
-          highlighted: 'Headlines must remain concise and punchy without corporate jargon.',
-          p2Remainder: ' Content drafts ready for localization review.'
-        }
-      ]
+      documents: []
     },
-    activeDocument: {
-      docNumber: 'DOCUMENT / 003',
-      title: 'Design review notes.',
-      category: 'Meeting Notes',
-      date: '25 Oct 2026',
-      team: 'Design Team',
-      savedStatus: 'Saved 2 minutes ago',
-      collaborators: [
-        { initials: 'MJ', name: 'Maria J.', colorClass: 'avatar-mj' },
-        { initials: 'PK', name: 'Peter K.', colorClass: 'avatar-pk' },
-        { initials: 'AR', name: 'Alex R.', colorClass: 'avatar-ar' }
-      ],
-      attendees: [
-        { initials: 'MJ', name: 'Maria J.', colorClass: 'avatar-mj' },
-        { initials: 'PK', name: 'Peter K.', colorClass: 'avatar-pk' },
-        { initials: 'AR', name: 'Alex R.', colorClass: 'avatar-ar' },
-        { initials: 'SK', name: 'Sarah K.', colorClass: 'avatar-sk' }
-      ],
-      discussionParagraph1: 'We reviewed the latest homepage designs and discussed the overall structure, navigation and visual direction.',
-      discussionHighlighted: 'We also agreed to simplify the mobile navigation and reduce unnecessary interface controls.',
-      discussionParagraph2Remainder: ' The revised approach will improve usability and content strategy.',
-      linkedTask: {
-        title: 'Create linked task',
-        description: 'Simplify the mobile navigation and reduce unnecessary interface controls.',
-        assigneeName: 'Peter K.',
-        assigneeInitials: 'PK',
-        dueDate: '28 Oct 2026'
-      },
-      decisions: [
-        {
-          id: 'DEC-01',
-          status: 'APPROVED',
-          statusLabel: 'Approved by team',
-          title: 'Proceed with the revised homepage design.',
-          date: '25 Oct 2026',
-          metadata: 'Approved by team · 25 Oct 2026',
-          linkedTaskId: 'T-021'
-        },
-        {
-          id: 'DEC-02',
-          status: 'AWAITING_REVIEW',
-          statusLabel: 'Awaiting review',
-          title: 'Review mobile navigation after prototype development.',
-          date: '28 Oct 2026',
-          ownerInitials: 'PK',
-          metadata: 'Awaiting review · Owner: PK · Due 28 Oct 2026'
-        }
-      ],
-      nextSteps: [
-        { id: 'ns-01', text: 'Develop the revised mobile navigation prototype.', completed: false },
-        { id: 'ns-02', text: 'Review with the client for final feedback.', completed: false },
-        { id: 'ns-03', text: 'Prepare implementation tasks for development phase.', completed: false }
-      ]
-    }
+    activeDocument: null,
+    collaborators: [],
+    linkedTasks: [],
+    recordedDecisions: [],
+    nextSteps: []
   };
 
   const State = {
-    projectId: 'featured-01',
-    data: defaultDocumentsData,
-    selectedDocId: 'doc-01',
+    projectId: '',
+    data: emptyDocumentsData,
+    selectedDocId: null,
     activeCategory: 'All',
     searchQuery: '',
     isLibraryCollapsed: false,
@@ -216,7 +61,7 @@
    */
   const ProjectDocuments = {
     container: null,
-    projectId: 'featured-01',
+    projectId: '',
 
     /**
      * Mounts the Project Documents component into target DOM container
@@ -224,7 +69,7 @@
     async mount(container, projectId, options = {}) {
       if (!container) return;
       this.container = container;
-      this.projectId = projectId || 'featured-01';
+      this.projectId = projectId || '';
       State.projectId = this.projectId;
 
       // 1. Load HTML fragment if not already injected
@@ -242,18 +87,18 @@
       }
 
       // 2. Fetch live data from /api/projects/{id}/documents or fallback
-      let data = defaultDocumentsData;
+      let data = emptyDocumentsData;
       if (this.projectId) {
         try {
           const res = await fetch(`/api/projects/${encodeURIComponent(this.projectId)}/documents`);
           if (res.ok) {
             const apiData = await res.json();
-            if (apiData && apiData.library && apiData.library.documents && apiData.library.documents.length > 0) {
+            if (apiData) {
               data = apiData;
             }
           }
         } catch (netErr) {
-          console.warn(`Could not fetch /api/projects/${this.projectId}/documents, using default documents data:`, netErr);
+          console.warn(`Could not fetch /api/projects/${this.projectId}/documents:`, netErr);
         }
       }
 
@@ -281,7 +126,7 @@
       const listEl = document.getElementById('docs-library-list');
       if (!listEl) return;
 
-      const docs = State.data.library?.documents || defaultDocumentsData.library.documents;
+      const docs = State.data.library?.documents || [];
       const q = State.searchQuery.toLowerCase().trim();
       const cat = State.activeCategory;
 
@@ -296,8 +141,8 @@
 
       if (filtered.length === 0) {
         listEl.innerHTML = `
-          <div style="padding: 1.5rem 0.5rem; text-align: center; color: #888888; font-size: 0.78125rem;">
-            No documents found matching "${escapeHtml(State.searchQuery)}"
+          <div style="padding: 1.5rem 0.5rem; text-align: center; color: var(--dash-text-muted); font-size: 0.78125rem;">
+            ${State.searchQuery ? `No documents found matching "${escapeHtml(State.searchQuery)}"` : 'No documents in this project library'}
           </div>
         `;
         return;
@@ -351,7 +196,7 @@
       }
 
       // Find doc data
-      const docs = State.data.library?.documents || defaultDocumentsData.library.documents;
+      const docs = State.data.library?.documents || [];
       const targetDoc = docs.find(d => d.id === docId);
 
       if (targetDoc) {
@@ -363,7 +208,7 @@
      * Renders the active document inside the Document Viewer card
      */
     renderActiveDocument(doc) {
-      const activeDoc = doc || State.data.activeDocument || defaultDocumentsData.activeDocument;
+      const activeDoc = doc || State.data.activeDocument;
 
       const numEl = document.getElementById('doc-viewer-number');
       const titleEl = document.getElementById('doc-viewer-title');
@@ -375,12 +220,25 @@
       const highlightEl = document.getElementById('doc-selected-highlight');
       const taskDescEl = document.getElementById('linked-task-description');
 
-      if (numEl) numEl.textContent = activeDoc.docNumber || 'DOCUMENT / 003';
-      if (titleEl) titleEl.textContent = (activeDoc.title ? activeDoc.title : 'Design review notes.');
-      if (metaCatEl) metaCatEl.textContent = activeDoc.category || 'Meeting Notes';
-      if (metaDateEl) metaDateEl.textContent = activeDoc.date || '25 Oct 2026';
-      if (metaTeamEl) metaTeamEl.textContent = activeDoc.team || 'Design Team';
-      if (savedTextEl) savedTextEl.textContent = activeDoc.savedStatus || 'Saved 2 minutes ago';
+      if (!activeDoc) {
+        if (numEl) numEl.textContent = 'DOCUMENT / —';
+        if (titleEl) titleEl.textContent = 'No document selected';
+        if (metaCatEl) metaCatEl.textContent = 'Library';
+        if (metaDateEl) metaDateEl.textContent = '—';
+        if (metaTeamEl) metaTeamEl.textContent = '—';
+        if (savedTextEl) savedTextEl.textContent = '';
+        if (p1El) p1El.textContent = 'Select or create a document from the project library to view its contents, decisions, and linked tasks.';
+        if (highlightEl) highlightEl.textContent = '';
+        if (taskDescEl) taskDescEl.value = '';
+        return;
+      }
+
+      if (numEl) numEl.textContent = activeDoc.docNumber || 'DOCUMENT / 001';
+      if (titleEl) titleEl.textContent = activeDoc.title || 'Untitled Document';
+      if (metaCatEl) metaCatEl.textContent = activeDoc.category || 'General';
+      if (metaDateEl) metaDateEl.textContent = activeDoc.date || '';
+      if (metaTeamEl) metaTeamEl.textContent = activeDoc.team || 'Team';
+      if (savedTextEl) savedTextEl.textContent = activeDoc.savedStatus || '';
 
       if (p1El && activeDoc.p1) p1El.textContent = activeDoc.p1;
       if (highlightEl && activeDoc.highlighted) {
