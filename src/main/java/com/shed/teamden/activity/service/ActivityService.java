@@ -31,6 +31,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@SuppressWarnings("unused")
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -41,8 +42,10 @@ public class ActivityService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
 
-    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-    private static final DateTimeFormatter DATE_LABEL_FMT = DateTimeFormatter.ofPattern("d MMM").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
+            .withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter DATE_LABEL_FMT = DateTimeFormatter.ofPattern("d MMM")
+            .withZone(ZoneId.systemDefault());
 
     @Transactional
     public ActivityEvent recordEvent(
@@ -52,8 +55,7 @@ public class ActivityService {
             String entityType,
             UUID entityId,
             String title,
-            String description
-    ) {
+            String description) {
         return recordEvent(
                 organization,
                 actor,
@@ -68,8 +70,7 @@ public class ActivityService {
                 null,
                 null,
                 null,
-                null
-        );
+                null);
     }
 
     @Transactional
@@ -87,8 +88,7 @@ public class ActivityService {
             String infoText,
             String quotePreview,
             String badgeType,
-            String dotColor
-    ) {
+            String dotColor) {
         ActivityEvent event = ActivityEvent.builder()
                 .id(UUID.randomUUID())
                 .organization(organization)
@@ -113,7 +113,8 @@ public class ActivityService {
     }
 
     @Transactional
-    public ActivityPageDataDto getActivityPageData(String range, LocalDate startDate, LocalDate endDate, String type, String query) {
+    public ActivityPageDataDto getActivityPageData(String range, LocalDate startDate, LocalDate endDate, String type,
+            String query) {
         Organization organization = resolveCurrentOrganization();
         User currentUser = resolveCurrentUser(organization);
 
@@ -146,7 +147,8 @@ public class ActivityService {
         if (start != null && end != null) {
             events = activityEventRepository.findFilteredByOrganizationId(organization.getId(), start, end);
         } else if (start != null) {
-            events = activityEventRepository.findFilteredByOrganizationId(organization.getId(), start, Instant.now().plusSeconds(86400));
+            events = activityEventRepository.findFilteredByOrganizationId(organization.getId(), start,
+                    Instant.now().plusSeconds(86400));
         } else if (end != null) {
             events = activityEventRepository.findFilteredByOrganizationId(organization.getId(), Instant.EPOCH, end);
         } else {
@@ -176,10 +178,14 @@ public class ActivityService {
             items.add(dto);
 
             String badge = dto.getBadgeType();
-            if ("COMPLETED".equalsIgnoreCase(badge)) completedCount++;
-            else if ("DOCUMENT".equalsIgnoreCase(badge)) documentCount++;
-            else if ("ASSIGNED".equalsIgnoreCase(badge)) assignedCount++;
-            else if ("COMMENT".equalsIgnoreCase(badge)) commentCount++;
+            if ("COMPLETED".equalsIgnoreCase(badge))
+                completedCount++;
+            else if ("DOCUMENT".equalsIgnoreCase(badge))
+                documentCount++;
+            else if ("ASSIGNED".equalsIgnoreCase(badge))
+                assignedCount++;
+            else if ("COMMENT".equalsIgnoreCase(badge))
+                commentCount++;
         }
 
         DateTimeFormatter breadcrumbFmt = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
@@ -226,28 +232,43 @@ public class ActivityService {
             return event.getBadgeType().equalsIgnoreCase(filterType);
         }
         if ("COMPLETED".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.TASK_COMPLETED || event.getEventType() == ActivityEventType.ATTENDANCE_CHECKIN;
+            return event.getEventType() == ActivityEventType.TASK_COMPLETED
+                    || event.getEventType() == ActivityEventType.ATTENDANCE_CHECKIN;
         } else if ("DOCUMENT".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED;
+            return event.getEventType() == ActivityEventType.PROJECT_UPDATED
+                    || event.getEventType() == ActivityEventType.PROJECT_CREATED;
         } else if ("ASSIGNED".equals(filterType)) {
             return event.getEventType() == ActivityEventType.TASK_ASSIGNED;
         } else if ("COMMENT".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.TASK_CREATED || event.getEventType() == ActivityEventType.TASK_STATUS_CHANGED;
+            return event.getEventType() == ActivityEventType.TASK_CREATED
+                    || event.getEventType() == ActivityEventType.TASK_STATUS_CHANGED;
         }
         return true;
     }
 
     private boolean matchesTextQuery(ActivityEvent event, String q) {
-        if (event.getTitle() != null && event.getTitle().toLowerCase().contains(q)) return true;
-        if (event.getDescription() != null && event.getDescription().toLowerCase().contains(q)) return true;
-        if (event.getTargetTitle() != null && event.getTargetTitle().toLowerCase().contains(q)) return true;
-        if (event.getActionText() != null && event.getActionText().toLowerCase().contains(q)) return true;
-        if (event.getSubMeta() != null && event.getSubMeta().toLowerCase().contains(q)) return true;
-        if (event.getInfoText() != null && event.getInfoText().toLowerCase().contains(q)) return true;
-        if (event.getQuotePreview() != null && event.getQuotePreview().toLowerCase().contains(q)) return true;
-        if (event.getBadgeType() != null && event.getBadgeType().toLowerCase().contains(q)) return true;
-        if (event.getActor() != null && event.getActor().getFullName() != null && event.getActor().getFullName().toLowerCase().contains(q)) return true;
-        if (event.getProject() != null && event.getProject().getName() != null && event.getProject().getName().toLowerCase().contains(q)) return true;
+        if (event.getTitle() != null && event.getTitle().toLowerCase().contains(q))
+            return true;
+        if (event.getDescription() != null && event.getDescription().toLowerCase().contains(q))
+            return true;
+        if (event.getTargetTitle() != null && event.getTargetTitle().toLowerCase().contains(q))
+            return true;
+        if (event.getActionText() != null && event.getActionText().toLowerCase().contains(q))
+            return true;
+        if (event.getSubMeta() != null && event.getSubMeta().toLowerCase().contains(q))
+            return true;
+        if (event.getInfoText() != null && event.getInfoText().toLowerCase().contains(q))
+            return true;
+        if (event.getQuotePreview() != null && event.getQuotePreview().toLowerCase().contains(q))
+            return true;
+        if (event.getBadgeType() != null && event.getBadgeType().toLowerCase().contains(q))
+            return true;
+        if (event.getActor() != null && event.getActor().getFullName() != null
+                && event.getActor().getFullName().toLowerCase().contains(q))
+            return true;
+        if (event.getProject() != null && event.getProject().getName() != null
+                && event.getProject().getName().toLowerCase().contains(q))
+            return true;
         return false;
     }
 
@@ -273,10 +294,14 @@ public class ActivityService {
         String infoText = event.getInfoText();
         String quotePreview = event.getQuotePreview();
 
-        if (dot == null || dot.isBlank()) dot = "purple";
-        if (badge == null || badge.isBlank()) badge = event.getEventType() != null ? event.getEventType().name() : "ACTIVITY";
-        if (actionText == null || actionText.isBlank()) actionText = event.getTitle() != null ? event.getTitle() : "updated";
-        if (targetTitle == null || targetTitle.isBlank()) targetTitle = event.getDescription() != null ? event.getDescription() : "Activity item";
+        if (dot == null || dot.isBlank())
+            dot = "purple";
+        if (badge == null || badge.isBlank())
+            badge = event.getEventType() != null ? event.getEventType().name() : "ACTIVITY";
+        if (actionText == null || actionText.isBlank())
+            actionText = event.getTitle() != null ? event.getTitle() : "updated";
+        if (targetTitle == null || targetTitle.isBlank())
+            targetTitle = event.getDescription() != null ? event.getDescription() : "Activity item";
         if (subMeta == null || subMeta.isBlank()) {
             subMeta = event.getProject() != null ? event.getProject().getName() + " / Team" : "Workspace / General";
         }
@@ -301,7 +326,8 @@ public class ActivityService {
         if (userOpt.isPresent()) {
             if (userOpt.get().getActiveOrganizationId() != null) {
                 return organizationRepository.findById(userOpt.get().getActiveOrganizationId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Active organization not found: " + userOpt.get().getActiveOrganizationId()));
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Active organization not found: " + userOpt.get().getActiveOrganizationId()));
             }
             throw new UnauthorizedException("User has no active organization");
         }
@@ -335,229 +361,5 @@ public class ActivityService {
                 .status(UserStatus.ACTIVE)
                 .build();
         return userRepository.save(defaultUser);
-    }
-
-    @Transactional
-    public void ensureBaselineActivityRecords(Organization org, User user) {
-        long count = activityEventRepository.findRecentByOrganizationId(org.getId(), PageRequest.of(0, 10)).size();
-        if (count >= 10) {
-            return;
-        }
-
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1);
-        java.time.ZonedDateTime todayZoned = today.atStartOfDay(ZoneId.systemDefault());
-        java.time.ZonedDateTime yestZoned = yesterday.atStartOfDay(ZoneId.systemDefault());
-
-        List<ActivityEvent> baseline = new ArrayList<>();
-
-        // --- TODAY EVENTS (matching exact reference screenshot: 12:46, 12:04, 10:30, 09:15, 08:30) ---
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_COMPLETED)
-                .entityType("TASK")
-                .title("completed")
-                .description("Set up staging environment")
-                .actionText("completed")
-                .targetTitle("Set up staging environment")
-                .subMeta("Client Application / Engineering")
-                .infoText("Task marked complete")
-                .badgeType("COMPLETED")
-                .dotColor("green")
-                .eventTimestamp(todayZoned.plusHours(12).plusMinutes(46).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.PROJECT_UPDATED)
-                .entityType("PROJECT")
-                .title("Product brief")
-                .description("Version 1.2 · 3 pages")
-                .actionText("was updated")
-                .targetTitle("Product brief")
-                .subMeta("Product / Workspace")
-                .infoText("Version 1.2 · 3 pages")
-                .badgeType("DOCUMENT")
-                .dotColor("silver")
-                .eventTimestamp(todayZoned.plusHours(12).plusMinutes(4).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_ASSIGNED)
-                .entityType("TASK")
-                .title("assigned a task to")
-                .description("Client feedback session · Tomorrow, 2:00 PM")
-                .actionText("assigned a task to")
-                .targetTitle("Priya")
-                .subMeta("Website Redesign / Design Team")
-                .infoText("Client feedback session\nTomorrow, 2:00 PM")
-                .badgeType("ASSIGNED")
-                .dotColor("blue")
-                .eventTimestamp(todayZoned.plusHours(10).plusMinutes(30).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_CREATED)
-                .entityType("TASK")
-                .title("commented on")
-                .description("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
-                .actionText("commented on")
-                .targetTitle("Design review notes")
-                .subMeta("Website Redesign / Design Team")
-                .quotePreview("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
-                .badgeType("COMMENT")
-                .dotColor("purple")
-                .eventTimestamp(todayZoned.plusHours(9).plusMinutes(15).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.ATTENDANCE_CHECKIN)
-                .entityType("ATTENDANCE")
-                .title("checked in")
-                .description("Checked in on-time for morning engineering standup")
-                .actionText("checked in for standup")
-                .targetTitle("Morning Engineering Standup")
-                .subMeta("Engineering / Daily")
-                .infoText("Checked in on-time for morning engineering standup")
-                .badgeType("COMPLETED")
-                .dotColor("green")
-                .eventTimestamp(todayZoned.plusHours(8).plusMinutes(30).toInstant())
-                .build());
-
-        // --- YESTERDAY EVENTS ---
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.PROJECT_UPDATED)
-                .entityType("PROJECT")
-                .title("Design guidelines")
-                .description("Version 1.0 released · 12 core UI components approved")
-                .actionText("published release")
-                .targetTitle("Design guidelines")
-                .subMeta("Design System / Workspace")
-                .infoText("Version 1.0 released · 12 core UI components approved")
-                .badgeType("DOCUMENT")
-                .dotColor("silver")
-                .eventTimestamp(yestZoned.plusHours(16).plusMinutes(20).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_ASSIGNED)
-                .entityType("TASK")
-                .title("assigned a task to")
-                .description("Database connection pooling tuning · Engineering")
-                .actionText("assigned a task to")
-                .targetTitle("Alex")
-                .subMeta("Infrastructure / Backend")
-                .infoText("Database connection pooling tuning · High priority")
-                .badgeType("ASSIGNED")
-                .dotColor("blue")
-                .eventTimestamp(yestZoned.plusHours(14).plusMinutes(15).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_COMPLETED)
-                .entityType("TASK")
-                .title("completed")
-                .description("Website service card deliverable")
-                .actionText("completed")
-                .targetTitle("Website service card deliverable")
-                .subMeta("Marketing / Web Team")
-                .infoText("Deliverable submitted and accepted")
-                .badgeType("COMPLETED")
-                .dotColor("green")
-                .eventTimestamp(yestZoned.plusHours(11).plusMinutes(45).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_CREATED)
-                .entityType("TASK")
-                .title("commented on")
-                .description("Agreed on streamlining PR review turnaround times in sprint retro.")
-                .actionText("commented on")
-                .targetTitle("Sprint Retrospective Notes")
-                .subMeta("Engineering / Team Cadence")
-                .quotePreview("Agreed on streamlining PR review turnaround times in sprint retro.")
-                .badgeType("COMMENT")
-                .dotColor("purple")
-                .eventTimestamp(yestZoned.plusHours(10).toInstant())
-                .build());
-
-        // --- LAST WEEK EVENTS (3 - 6 days ago) ---
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_COMPLETED)
-                .entityType("TASK")
-                .title("completed")
-                .description("Wireframes & Copy Approval milestone achieved")
-                .actionText("completed milestone")
-                .targetTitle("Wireframes & Copy Approval")
-                .subMeta("Product Design / Core")
-                .infoText("All client stakeholders signed off")
-                .badgeType("COMPLETED")
-                .dotColor("green")
-                .eventTimestamp(today.minusDays(3).atStartOfDay(ZoneId.systemDefault()).plusHours(14).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.PROJECT_CREATED)
-                .entityType("PROJECT")
-                .title("Architecture specification")
-                .description("Initial architecture diagram and database migration plan published")
-                .actionText("created document")
-                .targetTitle("Architecture specification")
-                .subMeta("Architecture / Technical")
-                .infoText("Initial architecture diagram and database migration plan published")
-                .badgeType("DOCUMENT")
-                .dotColor("silver")
-                .eventTimestamp(today.minusDays(4).atStartOfDay(ZoneId.systemDefault()).plusHours(11).toInstant())
-                .build());
-
-        baseline.add(ActivityEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .actor(user)
-                .eventType(ActivityEventType.TASK_CREATED)
-                .entityType("TASK")
-                .title("commented on")
-                .description("Kick-off meeting notes and scope definition approved by stakeholders")
-                .actionText("commented on")
-                .targetTitle("Kick-off Meeting Scope")
-                .subMeta("Strategy / Planning")
-                .quotePreview("Kick-off meeting notes and scope definition approved by stakeholders")
-                .badgeType("COMMENT")
-                .dotColor("purple")
-                .eventTimestamp(today.minusDays(6).atStartOfDay(ZoneId.systemDefault()).plusHours(15).toInstant())
-                .build());
-
-        activityEventRepository.saveAll(baseline);
     }
 }

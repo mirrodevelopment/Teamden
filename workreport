@@ -1278,6 +1278,43 @@ Example E: Filter Pill Active State Color Overlay & Contrast Remediation
 - Static Asset Hot Reload: Synced all updated frontend assets to `target/classes/static/`.
 - Zero Regression: Verified existing project, attendance, auth, calendar, and dashboard flows remain 100% functional.
 
+--------------------------------------------------------------------------------
+5. PERSISTENCE INTEGRITY & COMPLETE IN-CODE SEED ERADICATION (2026-11-10)
+--------------------------------------------------------------------------------
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Eradication of Query-Time Auto-Reseeding Trap:
+  * Diagnosed and eliminated auto-seeding routines in `ActivityService` and `DashboardService` that re-populated tables whenever row counts were low.
+  * Deleted 224 lines of static baseline records from `ActivityService.java`.
+  * Deleted `ensureBaselineRecords` from `DashboardService.java`.
+  * Production code is now 100% read-only on query requests; purged databases stay genuinely empty.
+- Dashboard Frontend & Backend Dynamic Hydration:
+  * Replaced hardcoded default seed structure in `dashboard.js` (`currentDashboardData`) with clean empty defaults (`nowTasks: []`, `nextTasks: []`, `laterTasks: []`, `schedule: []`, `attentionItems: []`, `heroPriority: null`).
+  * Removed fallback mock arrays from `renderSchedule` and `renderAttention` in `dashboard.js`.
+  * Updated `dashboard.html` to display "00 TASKS", badges "00", and neutral empty states for the Hero task card.
+  * Dynamic schedule queries against `calendar_events` table; dynamic attention item counts against `tasks` table.
+- Automated Integration Testing:
+  * 46/46 integration tests green across all 9 test suites (`./mvnw test`).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- Backend Services: `DashboardService.java`, `ActivityService.java`.
+- Frontend Files: `dashboard.js`, `dashboard.html`.
+- Test Suites: `ActivityIntegrationTest.java`, `DashboardKanbanIntegrationTest.java`.
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Hero Card and Kanban Columns After DB Purge
+  [BEFORE]:
+  Wiping the database with `purge_db.bat` caused `ensureBaselineRecords()` to secretly re-insert tasks into PostgreSQL, while `dashboard.js` had fallback arrays displaying "Review mobile app screens", "Prepare client presentation", "Team standup", and "Blocked tasks (02)".
+  [AFTER]:
+  Backend and frontend contain 0 mock fallbacks or auto-seeding hooks. Following database purge, `getDashboardData()` returns empty arrays, and the UI cleanly renders "00 TASKS", "No priority task assigned", "No events scheduled today", and "No recent movements recorded".
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Database Purge Verification: Verified `activity_events`, `tasks`, and `calendar_events` stay at 0 rows following purge.
+- Automated Testing: Executed full `./mvnw test` suite (46/46 tests green).
+
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================

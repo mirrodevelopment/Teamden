@@ -277,13 +277,11 @@
     const container = document.getElementById('rail-schedule-list');
     if (!container) return;
 
-    const items = scheduleItems && scheduleItems.length > 0 ? scheduleItems : [
-      { id: 'sch-1', time: '09:00', title: 'Team standup', subMeta: 'Engineering · 30 min', dotColor: 'green' },
-      { id: 'sch-2', time: '10:00', title: 'Design review', subMeta: 'Website Redesign · 1 hr', dotColor: 'purple' },
-      { id: 'sch-3', time: '12:00', title: 'Lunch break', subMeta: '', dotColor: 'gray' },
-      { id: 'sch-4', time: '14:00', title: 'Client feedback session', subMeta: 'Acme Co. · 1 hr', dotColor: 'blue' },
-      { id: 'sch-5', time: '16:00', title: 'Focus time', subMeta: 'No meetings', dotColor: 'gray' }
-    ];
+    const items = scheduleItems || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="schedule-empty-notice" style="padding: 0.75rem 0; font-size: 0.8125rem; color: var(--dash-text-muted);">No events scheduled today</div>`;
+      return;
+    }
 
     container.innerHTML = items.map(item => `
       <div class="schedule-item" onclick="window.openCalendarEvent('${item.id}')" style="cursor: pointer;">
@@ -306,11 +304,11 @@
     const container = document.getElementById('rail-attention-list');
     if (!container) return;
 
-    const items = attentionItems && attentionItems.length > 0 ? attentionItems : [
-      { id: 'att-1', count: '02', title: 'Blocked tasks', subtitle: 'Require your input', bgType: 'peach' },
-      { id: 'att-2', count: '03', title: 'Tasks waiting for others', subtitle: 'No update in 2+ days', bgType: 'neutral' },
-      { id: 'att-3', count: '01', title: 'Unread mention', subtitle: 'In Website Redesign', bgType: 'neutral-light' }
-    ];
+    const items = attentionItems || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="attention-empty-notice" style="padding: 0.75rem 0; font-size: 0.8125rem; color: var(--dash-text-muted);">No alerts requiring attention</div>`;
+      return;
+    }
 
     container.innerHTML = items.map((item, idx) => {
       let clickHandler = `window.openAttentionCard('${item.id}', '${escapeHtml(item.title)}')`;
@@ -649,10 +647,20 @@
    * Hero Task Details Drawer / Modal ("Continue task →")
    */
   window.openHeroTaskDrawer = function () {
-    const heroTitle = document.getElementById('hero-title')?.innerText?.replace(/\n/g, ' ') || 'Finalise the website service card';
-    const heroProject = document.getElementById('hero-project-tag')?.innerText || 'Website Redesign';
-    const heroTeam = document.getElementById('hero-team-tag')?.innerText || 'Design Team';
-    const heroDesc = document.getElementById('hero-desc')?.innerText || 'Update the content, refine the visuals and get approval from the client.';
+    const hero = currentDashboardData?.heroPriority;
+    if (!hero) {
+      window.openModal(
+        'Next Priority',
+        `<div style="padding:1.5rem 0; text-align:center; color:var(--dash-text-muted); font-size:0.8125rem;">No priority task currently assigned. Create a high-priority task from any column to pin it here.</div>`,
+        `<button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;">Close</button>`
+      );
+      return;
+    }
+
+    const heroTitle = hero.title || 'Next Priority Task';
+    const heroProject = hero.projectTag || 'Workspace';
+    const heroTeam = hero.teamTag || 'General';
+    const heroDesc = hero.description || 'No description provided.';
 
     const content = `
       <div style="display:flex; flex-direction:column; gap:1.15rem;">
@@ -740,7 +748,7 @@
           <span style="font-size:0.75rem; color:var(--dash-text-muted);">Synchronized from Workspace Assets</span>
         </div>
         <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body); line-height:1.45;">
-          This resource is linked to the <strong>Finalise the website service card</strong> deliverable. Verified by Design Team.
+          This resource is linked to the active workspace project.
         </p>
       </div>
     `;
@@ -918,15 +926,23 @@
    */
   window.openCalendarView = function (e) {
     if (e) e.preventDefault();
+    const schedule = currentDashboardData?.schedule || [];
+    let itemsHtml = '';
+    if (schedule.length === 0) {
+      itemsHtml = '<div style="padding:1rem 0; font-size:0.8125rem; color:var(--dash-text-muted); text-align:center;">No events scheduled for today in the database calendar.</div>';
+    } else {
+      itemsHtml = schedule.map(s => `
+        <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">
+          <strong>${escapeHtml(s.time)}</strong> · ${escapeHtml(s.title)} ${s.subMeta ? `(${escapeHtml(s.subMeta)})` : ''}
+        </div>
+      `).join('');
+    }
+
     const content = `
       <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">Your scheduled events for today are synchronized with Google Calendar and Workspace Meeting Services.</p>
+        <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">Your scheduled events for today are synchronized with the database calendar.</p>
         <div style="display:flex; flex-direction:column; gap:0.4rem;">
-          <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">09:00 · Team standup (Engineering · 30 min)</div>
-          <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">10:00 · Design review (Website Redesign · 1 hr)</div>
-          <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">12:00 · Lunch break</div>
-          <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">14:00 · Client feedback session (Acme Co. · 1 hr)</div>
-          <div style="padding:0.6rem 0.8rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem;">16:00 · Focus time (No meetings)</div>
+          ${itemsHtml}
         </div>
       </div>
     `;
@@ -934,14 +950,8 @@
   };
 
   window.openCalendarEvent = function (eventId) {
-    const titles = {
-      'sch-1': { title: 'Team standup', time: '09:00 - 09:30', meta: 'Engineering Team · Video Call', link: 'https://meet.google.com' },
-      'sch-2': { title: 'Design review', time: '10:00 - 11:00', meta: 'Website Redesign · Room 3A', link: 'https://meet.google.com' },
-      'sch-3': { title: 'Lunch break', time: '12:00 - 13:00', meta: 'Personal time', link: '' },
-      'sch-4': { title: 'Client feedback session', time: '14:00 - 15:00', meta: 'Acme Co. Presentation', link: 'https://meet.google.com' },
-      'sch-5': { title: 'Focus time', time: '16:00 - 17:30', meta: 'Deep work · Notifications muted', link: '' }
-    };
-    const ev = titles[eventId] || { title: 'Calendar Event', time: 'Today', meta: 'Meeting room' };
+    const item = (currentDashboardData?.schedule || []).find(s => s.id === eventId);
+    const ev = item ? { title: item.title, time: item.time, meta: item.subMeta || 'Workspace Event' } : { title: 'Calendar Event', time: 'Today', meta: 'Meeting room' };
 
     const content = `
       <div style="display:flex; flex-direction:column; gap:1rem;">
@@ -962,88 +972,86 @@
   /**
    * Needs Attention Modals
    */
-  window.openBlockedTasksModal = function (e) {
+  window.openBlockedTasksModal = async function (e) {
     if (e) e.preventDefault();
-    const content = `
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">2 tasks are currently blocked and require your input to proceed:</p>
-        <div style="display:flex; flex-direction:column; gap:0.5rem;">
-          <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-              <strong style="font-size:0.8125rem;">API Key Approval</strong>
-              <span style="font-size:0.65rem; color:#E53935; font-weight:700;">Blocked</span>
+    try {
+      const res = await fetch('/api/tasks');
+      let blockedTasks = [];
+      if (res.ok) {
+        const tasks = await res.json();
+        blockedTasks = tasks.filter(t => t.status === 'BLOCKED');
+      }
+      let content = '';
+      if (blockedTasks.length === 0) {
+        content = `<div style="padding:1.5rem 0; text-align:center; color:var(--dash-text-muted); font-size:0.8125rem;">No tasks are currently blocked. Everything is running smoothly.</div>`;
+      } else {
+        content = `
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">${blockedTasks.length} task(s) currently blocked and require your input:</p>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+              ${blockedTasks.map(t => `
+                <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
+                  <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                    <strong style="font-size:0.8125rem;">${escapeHtml(t.title)}</strong>
+                    <span style="font-size:0.65rem; color:#E53935; font-weight:700;">Blocked</span>
+                  </div>
+                  <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">${escapeHtml(t.projectName || 'General')} · ${escapeHtml(t.description || 'Blocked')}</p>
+                </div>
+              `).join('')}
             </div>
-            <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">Client Application · Waiting on Staging Environment Token</p>
           </div>
-          <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-              <strong style="font-size:0.8125rem;">Brand Asset Signoff</strong>
-              <span style="font-size:0.65rem; color:#E53935; font-weight:700;">Blocked</span>
-            </div>
-            <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">Website Redesign · Client design feedback pending</p>
-          </div>
-        </div>
-      </div>
-    `;
-    const footer = `
-      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>
-      <button onclick="window.showToast('Unblock requests sent'); window.closeModal();" style="padding:0.45rem 0.95rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Resolve Blockers</button>
-    `;
-    window.openModal('Blocked Tasks (02)', content, footer);
+        `;
+      }
+      const footer = `<button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>`;
+      window.openModal(`Blocked Tasks (${String(blockedTasks.length).padStart(2, '0')})`, content, footer);
+    } catch (err) {
+      window.openModal('Blocked Tasks (00)', '<div style="padding:1rem 0; color:var(--dash-text-muted); font-size:0.8125rem;">No blocked tasks found.</div>');
+    }
   };
 
-  window.openWaitingTasksModal = function (e) {
+  window.openWaitingTasksModal = async function (e) {
     if (e) e.preventDefault();
-    const content = `
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">3 assigned tasks have had no updates in 2+ days:</p>
-        <div style="display:flex; flex-direction:column; gap:0.5rem;">
-          <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
-            <strong style="font-size:0.8125rem;">Homepage Wireframes Review</strong>
-            <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">Assigned to Marcus · 3 days ago</p>
+    try {
+      const res = await fetch('/api/tasks');
+      let waitingTasks = [];
+      if (res.ok) {
+        const tasks = await res.json();
+        waitingTasks = tasks.filter(t => t.status === 'IN_REVIEW');
+      }
+      let content = '';
+      if (waitingTasks.length === 0) {
+        content = `<div style="padding:1.5rem 0; text-align:center; color:var(--dash-text-muted); font-size:0.8125rem;">No tasks waiting for review or input.</div>`;
+      } else {
+        content = `
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-body);">${waitingTasks.length} task(s) currently in review / waiting for others:</p>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+              ${waitingTasks.map(t => `
+                <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
+                  <strong style="font-size:0.8125rem;">${escapeHtml(t.title)}</strong>
+                  <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">${escapeHtml(t.projectName || 'General')} · ${escapeHtml(t.status)}</p>
+                </div>
+              `).join('')}
+            </div>
           </div>
-          <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
-            <strong style="font-size:0.8125rem;">Staging Server Migration</strong>
-            <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">Assigned to DevOps · 2 days ago</p>
-          </div>
-          <div style="padding:0.75rem; background:#fff; border:1px solid var(--dash-border); border-radius:6px;">
-            <strong style="font-size:0.8125rem;">Color Palette Feedback</strong>
-            <p style="margin:0.25rem 0 0 0; font-size:0.75rem; color:var(--dash-text-muted);">Assigned to Client · 4 days ago</p>
-          </div>
-        </div>
-      </div>
-    `;
-    const footer = `
-      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>
-      <button onclick="window.showToast('Gentle ping sent to assignees'); window.closeModal();" style="padding:0.45rem 0.95rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Ping Assignees</button>
-    `;
-    window.openModal('Tasks Waiting for Others (03)', content, footer);
+        `;
+      }
+      const footer = `<button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>`;
+      window.openModal(`Tasks Waiting for Others (${String(waitingTasks.length).padStart(2, '0')})`, content, footer);
+    } catch (err) {
+      window.openModal('Tasks Waiting (00)', '<div style="padding:1rem 0; color:var(--dash-text-muted); font-size:0.8125rem;">No waiting tasks found.</div>');
+    }
   };
 
   window.openUnreadMentionModal = function (e) {
     if (e) e.preventDefault();
     const content = `
-      <div style="display:flex; flex-direction:column; gap:1rem;">
-        <div style="background:#fff; border:1px solid var(--dash-border); border-radius:8px; padding:1rem;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.35rem;">
-            <strong style="font-size:0.875rem;">Sonia mentioned you in Website Redesign</strong>
-            <span style="font-size:0.7rem; color:var(--dash-text-muted);">09:42 Today</span>
-          </div>
-          <p style="margin:0; font-size:0.8125rem; font-style:italic; color:var(--dash-text-body); background:rgba(0,0,0,0.03); padding:0.65rem; border-radius:6px;">
-            "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing."
-          </p>
-        </div>
-        <div>
-          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem;">Quick Reply</label>
-          <input type="text" id="mention-reply-input" placeholder="Type your reply..." style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff;">
-        </div>
+      <div style="padding:1.5rem 0; text-align:center; color:var(--dash-text-muted); font-size:0.8125rem;">
+        No unread mentions at this time. All discussions are caught up.
       </div>
     `;
-    const footer = `
-      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>
-      <button onclick="window.showToast('Reply posted'); window.closeModal();" style="padding:0.45rem 0.95rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Send Reply</button>
-    `;
-    window.openModal('Unread Mention (01)', content, footer);
+    const footer = `<button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Close</button>`;
+    window.openModal('Unread Mentions (00)', content, footer);
   };
 
   window.openAttentionSummaryModal = function (e) {
@@ -1217,97 +1225,83 @@
       Navbar.init(currentUser);
     }
 
-    // 4. Default Seed Structure (matching screenshot exactly)
+    // 4. Default Empty Structure (hydrates dynamically from DB)
+    const today = new Date();
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const dows = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
     currentDashboardData = {
       workspaceBreadcrumb: 'YOUR WORKSPACE / 01',
-      currentDateLabel: 'SUN, 25 OCT 2026',
-      dayNumber: '25',
-      month: 'OCT',
-      year: '2026',
-      dayOfWeek: 'SUNDAY',
-      heroPriority: {
-        prefix: '01 / NEXT PRIORITY',
-        title: 'Finalise the website service card',
-        projectTag: 'Website Redesign',
-        teamTag: 'Design Team',
-        priorityLabel: 'High',
-        description: 'Update the content, refine the visuals and get approval from the client.',
-        attachments: ['Design File', 'Client Brief', 'References', '+2'],
-        dueDayNum: '25',
-        dueMonthYear: 'OCT 2026',
-        ctaText: 'Continue task →'
-      },
-      nowTasks: [
-        { id: 'task-01', column: 'NOW', indexNum: '01', title: 'Review mobile app screens', tag: 'Client Application', dueDateLabel: 'Today', dotColor: 'red', completed: false },
-        { id: 'task-02', column: 'NOW', indexNum: '02', title: 'Update homepage content', tag: 'Website Redesign', dueDateLabel: 'Today', dotColor: 'red', completed: false }
-      ],
-      nextTasks: [
-        { id: 'task-03', column: 'NEXT', indexNum: '03', title: 'Prepare client presentation', tag: 'Acme Co.', dueDateLabel: 'Tomorrow', dotColor: 'orange', completed: false },
-        { id: 'task-04', column: 'NEXT', indexNum: '04', title: 'Refine brand colour palette', tag: 'Brand Development', dueDateLabel: 'Fri, 27 Oct', dotColor: 'blue', completed: false }
-      ],
-      laterTasks: [
-        { id: 'task-05', column: 'LATER', indexNum: '05', title: 'Set up analytics tracking', tag: 'Website Redesign', dueDateLabel: 'Fri, 27 Oct', dotColor: 'blue', completed: false },
-        { id: 'task-06', column: 'LATER', indexNum: '06', title: 'Write project summary', tag: 'Acme Co.', dueDateLabel: 'Mon, 30 Oct', dotColor: 'gray', completed: false }
-      ],
+      currentDateLabel: `${dows[today.getDay()].substring(0,3)}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`,
+      dayNumber: String(today.getDate()).padStart(2, '0'),
+      month: months[today.getMonth()],
+      year: String(today.getFullYear()),
+      dayOfWeek: dows[today.getDay()],
+      heroPriority: null,
+      nowTasks: [],
+      nextTasks: [],
+      laterTasks: [],
       activities: [],
-      schedule: [
-        { id: 'sch-1', time: '09:00', title: 'Team standup', subMeta: 'Engineering · 30 min', dotColor: 'green' },
-        { id: 'sch-2', time: '10:00', title: 'Design review', subMeta: 'Website Redesign · 1 hr', dotColor: 'purple' },
-        { id: 'sch-3', time: '12:00', title: 'Lunch break', subMeta: '', dotColor: 'gray' },
-        { id: 'sch-4', time: '14:00', title: 'Client feedback session', subMeta: 'Acme Co. · 1 hr', dotColor: 'blue' },
-        { id: 'sch-5', time: '16:00', title: 'Focus time', subMeta: 'No meetings', dotColor: 'gray' }
-      ],
-      attentionItems: [
-        { id: 'att-1', count: '02', title: 'Blocked tasks', subtitle: 'Require your input', bgType: 'peach' },
-        { id: 'att-2', count: '03', title: 'Tasks waiting for others', subtitle: 'No update in 2+ days', bgType: 'neutral' },
-        { id: 'att-3', count: '01', title: 'Unread mention', subtitle: 'In Website Redesign', bgType: 'neutral-light' }
-      ]
+      schedule: [],
+      attentionItems: []
     };
 
-    // 5. Fetch Dashboard Data from Backend API if reachable
+    // 5. Fetch Dashboard Data from Backend API
     try {
       const res = await fetch('/api/dashboard/data');
       if (res.ok) {
         const apiData = await res.json();
         if (apiData) {
-          if (apiData.nowTasks && apiData.nowTasks.length > 0) currentDashboardData.nowTasks = apiData.nowTasks;
-          if (apiData.nextTasks && apiData.nextTasks.length > 0) currentDashboardData.nextTasks = apiData.nextTasks;
-          if (apiData.laterTasks && apiData.laterTasks.length > 0) currentDashboardData.laterTasks = apiData.laterTasks;
-          if (apiData.activities && apiData.activities.length > 0) currentDashboardData.activities = apiData.activities;
-          if (apiData.schedule && apiData.schedule.length > 0) currentDashboardData.schedule = apiData.schedule;
-          if (apiData.attentionItems && apiData.attentionItems.length > 0) currentDashboardData.attentionItems = apiData.attentionItems;
-          if (apiData.heroPriority) currentDashboardData.heroPriority = apiData.heroPriority;
+          currentDashboardData = {
+            ...currentDashboardData,
+            ...apiData,
+            nowTasks: apiData.nowTasks || [],
+            nextTasks: apiData.nextTasks || [],
+            laterTasks: apiData.laterTasks || [],
+            activities: apiData.activities || [],
+            schedule: apiData.schedule || [],
+            attentionItems: apiData.attentionItems || [],
+            heroPriority: apiData.heroPriority || null
+          };
         }
       }
     } catch (err) {
-      console.warn('API data fetch notice, using verified dashboard state:', err);
+      console.warn('API data fetch notice:', err);
     }
 
     // 6. Populate DOM Elements
     if (currentDashboardData) {
       // Hero Card
       const hero = currentDashboardData.heroPriority;
-      if (hero) {
-        const heroTitle = document.getElementById('hero-title');
-        const heroProj = document.getElementById('hero-project-tag');
-        const heroTeam = document.getElementById('hero-team-tag');
-        const heroPriority = document.getElementById('hero-priority-label');
-        const heroDesc = document.getElementById('hero-desc');
-        const dueDay = document.getElementById('hero-due-day');
-        const dueMy = document.getElementById('hero-due-my');
+      const heroTitle = document.getElementById('hero-title');
+      const heroProj = document.getElementById('hero-project-tag');
+      const heroTeam = document.getElementById('hero-team-tag');
+      const heroPriority = document.getElementById('hero-priority-label');
+      const heroDesc = document.getElementById('hero-desc');
+      const dueDay = document.getElementById('hero-due-day');
+      const dueMy = document.getElementById('hero-due-my');
 
+      if (hero) {
         if (heroTitle) heroTitle.innerHTML = (hero.title || '').includes('\n') || (hero.title || '').includes('<br>') ? hero.title : (hero.title || '').replace(' the ', ' the<br>');
-        if (heroProj) heroProj.textContent = hero.projectTag;
-        if (heroTeam) heroTeam.textContent = hero.teamTag;
-        if (heroPriority) heroPriority.textContent = hero.priorityLabel;
-        if (heroDesc) heroDesc.textContent = hero.description;
-        if (dueDay) dueDay.textContent = String(hero.dueDayNum || '25').padStart(2, '0');
+        if (heroProj) heroProj.textContent = hero.projectTag || 'Workspace';
+        if (heroTeam) heroTeam.textContent = hero.teamTag || 'General';
+        if (heroPriority) heroPriority.textContent = hero.priorityLabel || 'Normal';
+        if (heroDesc) heroDesc.textContent = hero.description || '';
+        if (dueDay) dueDay.textContent = String(hero.dueDayNum || '--').padStart(2, '0');
         if (dueMy) {
-          const parts = (hero.dueMonthYear || 'OCT 2026').trim().split(/\s+/);
-          const m = parts[0] || 'OCT';
-          const y = parts[1] || '2026';
+          const parts = (hero.dueMonthYear || '-- ----').trim().split(/\s+/);
+          const m = parts[0] || '--';
+          const y = parts[1] || '----';
           dueMy.innerHTML = `<span class="due-month">${m}</span><span class="due-year">${y}</span>`;
         }
+      } else {
+        if (heroTitle) heroTitle.innerHTML = 'No priority task<br>assigned';
+        if (heroProj) heroProj.textContent = 'Workspace';
+        if (heroTeam) heroTeam.textContent = 'General';
+        if (heroPriority) heroPriority.textContent = 'None';
+        if (heroDesc) heroDesc.textContent = 'All tasks are on track. Create a high priority task to pin it here.';
+        if (dueDay) dueDay.textContent = '--';
+        if (dueMy) dueMy.innerHTML = `<span class="due-month">--</span><span class="due-year">----</span>`;
       }
 
       // Kanban Columns with Drag and Drop

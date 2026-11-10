@@ -19,6 +19,8 @@ import com.shed.teamden.task.entity.TaskPriority;
 import com.shed.teamden.task.entity.TaskStatus;
 import com.shed.teamden.task.repository.TaskRepository;
 import com.shed.teamden.user.entity.User;
+import com.shed.teamden.calendar.entity.CalendarEvent;
+import com.shed.teamden.calendar.repository.CalendarEventRepository;
 import com.shed.teamden.common.exception.BadRequestException;
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
@@ -47,7 +49,7 @@ public class DashboardService {
     private final ActivityEventRepository activityEventRepository;
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
-    private final ActivityService activityService;
+    private final CalendarEventRepository calendarEventRepository;
 
     @Transactional
     public DashboardDataDto getDashboardData() {
@@ -55,183 +57,179 @@ public class DashboardService {
             Organization organization = resolveCurrentOrganization();
             User currentUser = resolveCurrentUser(organization);
 
-        // Ensure baseline database records exist in PostgreSQL
-        ensureBaselineRecords(organization, currentUser);
+            LocalDate today = LocalDate.now();
+            String dayOfWeek = today.getDayOfWeek().name();
+            String month = today.getMonth().name().substring(0, 3);
+            String year = String.valueOf(today.getYear());
+            String dayNum = String.format("%02d", today.getDayOfMonth());
+            String shortDow = dayOfWeek.substring(0, 3);
+            String formattedDate = shortDow + ", " + dayNum + " " + month + " " + year;
 
-        LocalDate today = LocalDate.now();
-        String dayOfWeek = today.getDayOfWeek().name();
-        String month = today.getMonth().name().substring(0, 3);
-        String year = String.valueOf(today.getYear());
-        String dayNum = String.format("%02d", today.getDayOfMonth());
-        String shortDow = dayOfWeek.substring(0, 3);
-        String formattedDate = shortDow + ", " + dayNum + " " + month + " " + year;
+            // Fetch real tasks for current organization from PostgreSQL
+            List<Task> allTasks = taskRepository.findByOrganizationId(organization.getId(), PageRequest.of(0, 100));
 
-        // Fetch real tasks for current organization from PostgreSQL
-        List<Task> allTasks = taskRepository.findByOrganizationId(organization.getId(), PageRequest.of(0, 100));
+            // Group tasks into NOW, NEXT, LATER based on priority and due date rules
+            List<PriorityTaskDto> nowTasks = new ArrayList<>();
+            List<PriorityTaskDto> nextTasks = new ArrayList<>();
+            List<PriorityTaskDto> laterTasks = new ArrayList<>();
 
-        // Group tasks into NOW, NEXT, LATER based on priority and due date rules
-        List<PriorityTaskDto> nowTasks = new ArrayList<>();
-        List<PriorityTaskDto> nextTasks = new ArrayList<>();
-        List<PriorityTaskDto> laterTasks = new ArrayList<>();
-
-        // 1. Identify Hero Priority Task (prefer "Finalise the website service card" or highest open priority)
-        Task heroCandidate = allTasks.stream()
-                .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getStatus() != TaskStatus.CANCELLED)
-                .filter(t -> t.getTitle().contains("Finalise the website"))
-                .findFirst()
-                .orElse(null);
-
-        if (heroCandidate == null) {
-            heroCandidate = allTasks.stream()
+            // 1. Identify Hero Priority Task (highest open priority task)
+            Task heroCandidate = allTasks.stream()
                     .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getStatus() != TaskStatus.CANCELLED)
                     .max((a, b) -> isHigherPriority(a, b) ? 1 : -1)
                     .orElse(null);
-        }
 
-        final UUID heroId = heroCandidate != null ? heroCandidate.getId() : null;
+            final UUID heroId = heroCandidate != null ? heroCandidate.getId() : null;
 
-        // 2. Populate Kanban Columns (NOW, NEXT, LATER) excluding the hero card from column tasks
-        List<Task> openTasks = allTasks.stream()
-                .filter(t -> t.getStatus() != TaskStatus.CANCELLED)
-                .filter(t -> heroId == null || !t.getId().equals(heroId))
-                .sorted(Comparator.comparingInt(Task::getColumnOrder)
-                        .thenComparing(Task::getCreatedAt))
-                .collect(Collectors.toList());
+            // 2. Populate Kanban Columns (NOW, NEXT, LATER) excluding the hero card from column tasks
+            List<Task> openTasks = allTasks.stream()
+                    .filter(t -> t.getStatus() != TaskStatus.CANCELLED)
+                    .filter(t -> heroId == null || !t.getId().equals(heroId))
+                    .sorted(Comparator.comparingInt(Task::getColumnOrder)
+                            .thenComparing(Task::getCreatedAt))
+                    .collect(Collectors.toList());
 
-        List<Task> nowColTasks = openTasks.stream()
-                .filter(t -> (t.getKanbanColumn() == null || t.getKanbanColumn() == KanbanColumn.NOW))
-                .collect(Collectors.toList());
+            List<Task> nowColTasks = openTasks.stream()
+                    .filter(t -> (t.getKanbanColumn() == null || t.getKanbanColumn() == KanbanColumn.NOW))
+                    .collect(Collectors.toList());
 
-        List<Task> nextColTasks = openTasks.stream()
-                .filter(t -> t.getKanbanColumn() == KanbanColumn.NEXT)
-                .collect(Collectors.toList());
+            List<Task> nextColTasks = openTasks.stream()
+                    .filter(t -> t.getKanbanColumn() == KanbanColumn.NEXT)
+                    .collect(Collectors.toList());
 
-        List<Task> laterColTasks = openTasks.stream()
-                .filter(t -> t.getKanbanColumn() == KanbanColumn.LATER)
-                .collect(Collectors.toList());
+            List<Task> laterColTasks = openTasks.stream()
+                    .filter(t -> t.getKanbanColumn() == KanbanColumn.LATER)
+                    .collect(Collectors.toList());
 
-        int seqCounter = 1;
-        for (Task task : nowColTasks) {
-            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
-            nowTasks.add(dto);
-        }
-        for (Task task : nextColTasks) {
-            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
-            nextTasks.add(dto);
-        }
-        for (Task task : laterColTasks) {
-            PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
-            laterTasks.add(dto);
-        }
-
-        // Hero Priority DTO from real database task
-        HeroPriorityDto hero = null;
-        if (heroCandidate != null) {
-            String dueDay = "25";
-            String dueMonth = "OCT";
-            String dueYear = "2026";
-            if (heroCandidate.getDueDate() != null && !heroCandidate.getTitle().contains("Finalise the website service card")) {
-                dueDay = String.format("%02d", heroCandidate.getDueDate().getDayOfMonth());
-                dueMonth = heroCandidate.getDueDate().getMonth().name().substring(0, 3);
-                dueYear = String.valueOf(heroCandidate.getDueDate().getYear());
+            int seqCounter = 1;
+            for (Task task : nowColTasks) {
+                PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+                nowTasks.add(dto);
+            }
+            for (Task task : nextColTasks) {
+                PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+                nextTasks.add(dto);
+            }
+            for (Task task : laterColTasks) {
+                PriorityTaskDto dto = toPriorityTaskDto(task, String.format("%02d", seqCounter++));
+                laterTasks.add(dto);
             }
 
-            hero = HeroPriorityDto.builder()
-                    .prefix("01 / NEXT PRIORITY")
-                    .title(heroCandidate.getTitle())
-                    .projectTag(heroCandidate.getProject() != null ? heroCandidate.getProject().getName() : "Website Redesign")
-                    .teamTag("Design Team")
-                    .priorityLabel(heroCandidate.getPriority().name().substring(0, 1) + heroCandidate.getPriority().name().substring(1).toLowerCase())
-                    .description(heroCandidate.getDescription() != null && !heroCandidate.getDescription().isBlank()
-                            ? heroCandidate.getDescription()
-                            : "Update the content, refine the visuals and get approval from the client.")
-                    .attachments(List.of("Design File", "Client Brief", "References", "+2"))
-                    .dueDayNum(dueDay)
-                    .dueMonthYear(dueMonth + " " + dueYear)
-                    .ctaText("Continue task →")
-                    .build();
-        }
-
-        // Fetch real activity events from PostgreSQL
-        List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
-        List<ActivityItemDto> activities = new ArrayList<>();
-        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-
-        Instant lastTimestamp = null;
-        for (ActivityEvent event : activityEvents) {
-            String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
-            String dot = event.getDotColor() != null ? event.getDotColor() : "purple";
-            String badge = event.getBadgeType() != null ? event.getBadgeType() : "COMMENT";
-            String actionText = event.getActionText() != null ? event.getActionText() : (event.getTitle() != null ? event.getTitle() : "updated");
-            String targetTitle = event.getTargetTitle() != null ? event.getTargetTitle() : (event.getDescription() != null ? event.getDescription() : "Activity");
-            String subMeta = event.getSubMeta() != null ? event.getSubMeta() : (event.getProject() != null ? event.getProject().getName() + " / Team" : "Workspace / General");
-            String quotePreview = event.getQuotePreview();
-            String infoText = event.getInfoText();
-
-            Instant eventInstant = event.getEventTimestamp();
-            if (eventInstant != null) {
-                if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
-                    eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
+            // Hero Priority DTO from real database task
+            HeroPriorityDto hero = null;
+            if (heroCandidate != null) {
+                String dueDay = "--";
+                String dueMonth = "";
+                String dueYear = "";
+                if (heroCandidate.getDueDate() != null) {
+                    dueDay = String.format("%02d", heroCandidate.getDueDate().getDayOfMonth());
+                    dueMonth = heroCandidate.getDueDate().getMonth().name().substring(0, 3);
+                    dueYear = String.valueOf(heroCandidate.getDueDate().getYear());
                 }
-                lastTimestamp = eventInstant;
+
+                hero = HeroPriorityDto.builder()
+                        .prefix("01 / NEXT PRIORITY")
+                        .title(heroCandidate.getTitle())
+                        .projectTag(heroCandidate.getProject() != null ? heroCandidate.getProject().getName() : "General")
+                        .teamTag(heroCandidate.getAssignee() != null ? heroCandidate.getAssignee().getFullName() : "Team")
+                        .priorityLabel(heroCandidate.getPriority().name().substring(0, 1) + heroCandidate.getPriority().name().substring(1).toLowerCase())
+                        .description(heroCandidate.getDescription() != null ? heroCandidate.getDescription() : "")
+                        .attachments(List.of())
+                        .dueDayNum(dueDay)
+                        .dueMonthYear((dueMonth + " " + dueYear).trim())
+                        .ctaText("Continue task →")
+                        .build();
             }
 
-            activities.add(ActivityItemDto.builder()
-                    .id("act-" + event.getId().toString().substring(0, 8))
-                    .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
-                    .dayLabel("TODAY")
-                    .dotColor(dot)
-                    .badgeType(badge)
-                    .author(authorName)
-                    .actionText(actionText)
-                    .targetTitle(targetTitle)
-                    .subMeta(subMeta)
-                    .quotePreview(quotePreview)
-                    .infoText(infoText)
-                    .build());
-        }
+            // Fetch real activity events from PostgreSQL
+            List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
+            List<ActivityItemDto> activities = new ArrayList<>();
+            DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
 
-        // Real Attention Counts calculated from PostgreSQL database
-        long blockedCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.BLOCKED));
-        long inReviewCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.IN_REVIEW));
-        long waitingCount = inReviewCount > 0 ? inReviewCount : 3; // Documented waiting tasks rule
-        long unreadMentionCount = 1;
+            Instant lastTimestamp = null;
+            for (ActivityEvent event : activityEvents) {
+                String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
+                String dot = event.getDotColor() != null ? event.getDotColor() : "purple";
+                String badge = event.getBadgeType() != null ? event.getBadgeType() : "COMMENT";
+                String actionText = event.getActionText() != null ? event.getActionText() : (event.getTitle() != null ? event.getTitle() : "updated");
+                String targetTitle = event.getTargetTitle() != null ? event.getTargetTitle() : (event.getDescription() != null ? event.getDescription() : "Activity");
+                String subMeta = event.getSubMeta() != null ? event.getSubMeta() : (event.getProject() != null ? event.getProject().getName() + " / Team" : "Workspace / General");
+                String quotePreview = event.getQuotePreview();
+                String infoText = event.getInfoText();
 
-        List<AttentionAlertDto> attention = List.of(
-                AttentionAlertDto.builder()
-                        .id("att-1")
-                        .count(String.format("%02d", Math.max(blockedCount, 2)))
-                        .title("Blocked tasks")
-                        .subtitle("Require your input")
-                        .bgType("peach")
-                        .url("#blocked-tasks")
-                        .build(),
-                AttentionAlertDto.builder()
-                        .id("att-2")
-                        .count(String.format("%02d", waitingCount))
-                        .title("Tasks waiting for others")
-                        .subtitle("No update in 2+ days")
-                        .bgType("neutral")
-                        .url("#waiting-tasks")
-                        .build(),
-                AttentionAlertDto.builder()
-                        .id("att-3")
-                        .count(String.format("%02d", unreadMentionCount))
-                        .title("Unread mention")
-                        .subtitle("In Website Redesign")
-                        .bgType("neutral")
-                        .url("#mentions")
-                        .build()
-        );
+                Instant eventInstant = event.getEventTimestamp();
+                if (eventInstant != null) {
+                    if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
+                        eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
+                    }
+                    lastTimestamp = eventInstant;
+                }
 
-        // Schedule items (YOUR DAY)
-        List<ScheduleItemDto> schedule = List.of(
-                ScheduleItemDto.builder().id("sch-1").time("09:00").title("Team standup").subMeta("Engineering · 30 min").dotColor("green").build(),
-                ScheduleItemDto.builder().id("sch-2").time("10:00").title("Design review").subMeta("Website Redesign · 1 hr").dotColor("purple").build(),
-                ScheduleItemDto.builder().id("sch-3").time("12:00").title("Lunch break").subMeta("").dotColor("gray").build(),
-                ScheduleItemDto.builder().id("sch-4").time("14:00").title("Client feedback session").subMeta("Acme Co. · 1 hr").dotColor("blue").build(),
-                ScheduleItemDto.builder().id("sch-5").time("16:00").title("Focus time").subMeta("No meetings").dotColor("gray").build()
-        );
+                activities.add(ActivityItemDto.builder()
+                        .id("act-" + event.getId().toString().substring(0, 8))
+                        .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
+                        .dayLabel("TODAY")
+                        .dotColor(dot)
+                        .badgeType(badge)
+                        .author(authorName)
+                        .actionText(actionText)
+                        .targetTitle(targetTitle)
+                        .subMeta(subMeta)
+                        .quotePreview(quotePreview)
+                        .infoText(infoText)
+                        .build());
+            }
+
+            // Real Attention Counts calculated from PostgreSQL database
+            long blockedCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.BLOCKED));
+            long inReviewCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.IN_REVIEW));
+
+            List<AttentionAlertDto> attention = List.of(
+                    AttentionAlertDto.builder()
+                            .id("att-1")
+                            .count(String.format("%02d", blockedCount))
+                            .title("Blocked tasks")
+                            .subtitle("Require your input")
+                            .bgType("peach")
+                            .url("#blocked-tasks")
+                            .build(),
+                    AttentionAlertDto.builder()
+                            .id("att-2")
+                            .count(String.format("%02d", inReviewCount))
+                            .title("Tasks waiting for others")
+                            .subtitle("In review / waiting")
+                            .bgType("neutral")
+                            .url("#waiting-tasks")
+                            .build(),
+                    AttentionAlertDto.builder()
+                            .id("att-3")
+                            .count("00")
+                            .title("Unread mentions")
+                            .subtitle("No unread mentions")
+                            .bgType("neutral")
+                            .url("#mentions")
+                            .build()
+            );
+
+            // Schedule items (YOUR DAY) queried from PostgreSQL Calendar
+            List<CalendarEvent> todayEvents = calendarEventRepository
+                    .findByOrganizationIdAndEventDateBetweenOrderByEventDateAscStartTimeAsc(organization.getId(), today, today);
+            List<ScheduleItemDto> schedule = new ArrayList<>();
+            for (CalendarEvent event : todayEvents) {
+                String subMeta = event.getSubtitle() != null && !event.getSubtitle().isBlank() 
+                        ? event.getSubtitle() 
+                        : (event.getProject() != null ? event.getProject() : "");
+                String dotColor = event.getColorTheme() != null && !event.getColorTheme().isBlank()
+                        ? event.getColorTheme()
+                        : "green";
+                schedule.add(ScheduleItemDto.builder()
+                        .id(event.getId().toString())
+                        .time(event.getStartTime() != null ? event.getStartTime().toString() : "09:00")
+                        .title(event.getTitle())
+                        .subMeta(subMeta)
+                        .dotColor(dotColor)
+                        .build());
+            }
 
         return DashboardDataDto.builder()
                 .workspaceBreadcrumb("YOUR WORKSPACE / 01")
@@ -575,159 +573,5 @@ public class DashboardService {
                 .status(UserStatus.ACTIVE)
                 .build();
         return userRepository.save(defaultUser);
-    }
-
-    private void ensureBaselineRecords(Organization org, User user) {
-        long taskCount = taskRepository.findByOrganizationId(org.getId(), PageRequest.of(0, 1)).size();
-        if (taskCount > 0) {
-            return;
-        }
-
-        // Create initial Project
-        Project project = Project.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .name("Website Redesign")
-                .description("Core website revamp and service card system")
-                .owner(user)
-                .status(ProjectStatus.ACTIVE)
-                .startDate(LocalDate.now())
-                .dueDate(LocalDate.now().plusDays(30))
-                .build();
-        project = projectRepository.save(project);
-
-        Project clientApp = Project.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .name("Client Application")
-                .description("Mobile client dashboard application")
-                .owner(user)
-                .status(ProjectStatus.ACTIVE)
-                .startDate(LocalDate.now())
-                .dueDate(LocalDate.now().plusDays(45))
-                .build();
-        clientApp = projectRepository.save(clientApp);
-
-        Project brandDev = Project.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .name("Brand Development")
-                .description("Identity and colour palette")
-                .owner(user)
-                .status(ProjectStatus.ACTIVE)
-                .startDate(LocalDate.now())
-                .build();
-        brandDev = projectRepository.save(brandDev);
-
-        LocalDate today = LocalDate.now();
-
-        // 1. Next Priority Hero Task (High priority, due today)
-        Task heroTask = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .project(project)
-                .creator(user)
-                .assignee(user)
-                .title("Finalise the website service card")
-                .description("Update the content, refine the visuals and get approval from the client.")
-                .priority(TaskPriority.HIGH)
-                .status(TaskStatus.TODO)
-                .dueDate(LocalDate.of(2026, java.time.Month.OCTOBER, 25))
-                .build();
-        taskRepository.save(heroTask);
-
-        // 2. NOW Tasks
-        Task nowTask1 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .project(clientApp)
-                .creator(user)
-                .assignee(user)
-                .title("Review mobile app screens")
-                .priority(TaskPriority.HIGH)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.NOW)
-                .columnOrder(1)
-                .dueDate(today)
-                .build();
-        taskRepository.save(nowTask1);
-
-        Task nowTask2 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .project(project)
-                .creator(user)
-                .assignee(user)
-                .title("Update homepage content")
-                .priority(TaskPriority.HIGH)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.NOW)
-                .columnOrder(2)
-                .dueDate(today)
-                .build();
-        taskRepository.save(nowTask2);
-
-        // 3. NEXT Tasks
-        Task nextTask1 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .creator(user)
-                .assignee(user)
-                .title("Prepare client presentation")
-                .priority(TaskPriority.MEDIUM)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.NEXT)
-                .columnOrder(1)
-                .dueDate(today.plusDays(1))
-                .build();
-        taskRepository.save(nextTask1);
-
-        Task nextTask2 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .project(brandDev)
-                .creator(user)
-                .assignee(user)
-                .title("Refine brand colour palette")
-                .priority(TaskPriority.MEDIUM)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.NEXT)
-                .columnOrder(2)
-                .dueDate(today.plusDays(2))
-                .build();
-        taskRepository.save(nextTask2);
-
-        // 4. LATER Tasks
-        Task laterTask1 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .project(project)
-                .creator(user)
-                .assignee(user)
-                .title("Set up analytics tracking")
-                .priority(TaskPriority.LOW)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.LATER)
-                .columnOrder(1)
-                .dueDate(today.plusDays(2))
-                .build();
-        taskRepository.save(laterTask1);
-
-        Task laterTask2 = Task.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .creator(user)
-                .assignee(user)
-                .title("Write project summary")
-                .priority(TaskPriority.LOW)
-                .status(TaskStatus.TODO)
-                .kanbanColumn(KanbanColumn.LATER)
-                .columnOrder(2)
-                .dueDate(today.plusDays(5))
-                .build();
-        taskRepository.save(laterTask2);
-
-        // 5. Baseline Activity Events in PostgreSQL
-        activityService.ensureBaselineActivityRecords(org, user);
     }
 }

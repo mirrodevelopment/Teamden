@@ -30,6 +30,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,9 +61,6 @@ public class ActivityIntegrationTest {
 
     @Autowired
     private ActivityEventRepository activityEventRepository;
-
-    @Autowired
-    private com.shed.teamden.activity.service.ActivityService activityService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -160,8 +159,226 @@ public class ActivityIntegrationTest {
         sessionAlpha = loginAndGetSession("alpha_" + sA + "@activitytest.org", "Secret123!");
         sessionBeta = loginAndGetSession("beta_" + sB + "@activitytest.org", "Secret123!");
 
-        // Explicitly seed orgAlpha with baseline activity records for filter testing
-        activityService.ensureBaselineActivityRecords(orgAlpha, userAlpha);
+        // Explicitly seed orgAlpha with test activity records for filter testing
+        seedTestActivityEvents(orgAlpha, userAlpha);
+    }
+
+    private void seedTestActivityEvents(Organization org, User user) {
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+        java.time.ZonedDateTime todayZoned = today.atStartOfDay(java.time.ZoneId.systemDefault());
+        java.time.ZonedDateTime yestZoned = yesterday.atStartOfDay(java.time.ZoneId.systemDefault());
+
+        List<ActivityEvent> testEvents = new ArrayList<>();
+
+        // TODAY EVENTS
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_COMPLETED)
+                .entityType("TASK")
+                .title("completed")
+                .description("Set up staging environment")
+                .actionText("completed")
+                .targetTitle("Set up staging environment")
+                .subMeta("Client Application / Engineering")
+                .infoText("Task marked complete")
+                .badgeType("COMPLETED")
+                .dotColor("green")
+                .eventTimestamp(todayZoned.plusHours(12).plusMinutes(46).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.PROJECT_UPDATED)
+                .entityType("PROJECT")
+                .title("Product brief")
+                .description("Version 1.2 · 3 pages")
+                .actionText("was updated")
+                .targetTitle("Product brief")
+                .subMeta("Product / Workspace")
+                .infoText("Version 1.2 · 3 pages")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
+                .eventTimestamp(todayZoned.plusHours(12).plusMinutes(4).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_ASSIGNED)
+                .entityType("TASK")
+                .title("assigned a task to")
+                .description("Client feedback session · Tomorrow, 2:00 PM")
+                .actionText("assigned a task to")
+                .targetTitle("Priya")
+                .subMeta("Website Redesign / Design Team")
+                .infoText("Client feedback session\nTomorrow, 2:00 PM")
+                .badgeType("ASSIGNED")
+                .dotColor("blue")
+                .eventTimestamp(todayZoned.plusHours(10).plusMinutes(30).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_CREATED)
+                .entityType("TASK")
+                .title("commented on")
+                .description("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
+                .actionText("commented on")
+                .targetTitle("Design review notes")
+                .subMeta("Website Redesign / Design Team")
+                .quotePreview("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
+                .badgeType("COMMENT")
+                .dotColor("purple")
+                .eventTimestamp(todayZoned.plusHours(9).plusMinutes(15).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.ATTENDANCE_CHECKIN)
+                .entityType("ATTENDANCE")
+                .title("checked in")
+                .description("Checked in on-time for morning engineering standup")
+                .actionText("checked in for standup")
+                .targetTitle("Morning Engineering Standup")
+                .subMeta("Engineering / Daily")
+                .infoText("Checked in on-time for morning engineering standup")
+                .badgeType("COMPLETED")
+                .dotColor("green")
+                .eventTimestamp(todayZoned.plusHours(8).plusMinutes(30).toInstant())
+                .build());
+
+        // YESTERDAY EVENTS
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.PROJECT_UPDATED)
+                .entityType("PROJECT")
+                .title("Design guidelines")
+                .description("Version 1.0 released · 12 core UI components approved")
+                .actionText("published release")
+                .targetTitle("Design guidelines")
+                .subMeta("Design System / Workspace")
+                .infoText("Version 1.0 released · 12 core UI components approved")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
+                .eventTimestamp(yestZoned.plusHours(16).plusMinutes(20).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_ASSIGNED)
+                .entityType("TASK")
+                .title("assigned a task to")
+                .description("Database connection pooling tuning · Engineering")
+                .actionText("assigned a task to")
+                .targetTitle("Alex")
+                .subMeta("Infrastructure / Backend")
+                .infoText("Database connection pooling tuning · High priority")
+                .badgeType("ASSIGNED")
+                .dotColor("blue")
+                .eventTimestamp(yestZoned.plusHours(14).plusMinutes(15).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_COMPLETED)
+                .entityType("TASK")
+                .title("completed")
+                .description("Website service card deliverable")
+                .actionText("completed")
+                .targetTitle("Website service card deliverable")
+                .subMeta("Marketing / Web Team")
+                .infoText("Deliverable submitted and accepted")
+                .badgeType("COMPLETED")
+                .dotColor("green")
+                .eventTimestamp(yestZoned.plusHours(11).plusMinutes(45).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_CREATED)
+                .entityType("TASK")
+                .title("commented on")
+                .description("Agreed on streamlining PR review turnaround times in sprint retro.")
+                .actionText("commented on")
+                .targetTitle("Sprint Retrospective Notes")
+                .subMeta("Engineering / Team Cadence")
+                .quotePreview("Agreed on streamlining PR review turnaround times in sprint retro.")
+                .badgeType("COMMENT")
+                .dotColor("purple")
+                .eventTimestamp(yestZoned.plusHours(10).toInstant())
+                .build());
+
+        // LAST WEEK EVENTS
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_COMPLETED)
+                .entityType("TASK")
+                .title("completed")
+                .description("Wireframes & Copy Approval milestone achieved")
+                .actionText("completed milestone")
+                .targetTitle("Wireframes & Copy Approval")
+                .subMeta("Product Design / Core")
+                .infoText("All client stakeholders signed off")
+                .badgeType("COMPLETED")
+                .dotColor("green")
+                .eventTimestamp(today.minusDays(3).atStartOfDay(java.time.ZoneId.systemDefault()).plusHours(14).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.PROJECT_CREATED)
+                .entityType("PROJECT")
+                .title("Architecture specification")
+                .description("Initial architecture diagram and database migration plan published")
+                .actionText("created document")
+                .targetTitle("Architecture specification")
+                .subMeta("Architecture / Technical")
+                .infoText("Initial architecture diagram and database migration plan published")
+                .badgeType("DOCUMENT")
+                .dotColor("silver")
+                .eventTimestamp(today.minusDays(4).atStartOfDay(java.time.ZoneId.systemDefault()).plusHours(11).toInstant())
+                .build());
+
+        testEvents.add(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(org)
+                .actor(user)
+                .eventType(ActivityEventType.TASK_CREATED)
+                .entityType("TASK")
+                .title("commented on")
+                .description("Kick-off meeting notes and scope definition approved by stakeholders")
+                .actionText("commented on")
+                .targetTitle("Kick-off Meeting Scope")
+                .subMeta("Strategy / Planning")
+                .quotePreview("Kick-off meeting notes and scope definition approved by stakeholders")
+                .badgeType("COMMENT")
+                .dotColor("purple")
+                .eventTimestamp(today.minusDays(6).atStartOfDay(java.time.ZoneId.systemDefault()).plusHours(15).toInstant())
+                .build());
+
+        activityEventRepository.saveAll(testEvents);
     }
 
     private MockHttpSession loginAndGetSession(String email, String password) throws Exception {
