@@ -1,5 +1,8 @@
 package com.shed.teamden.project.service;
 
+import com.shed.teamden.common.exception.BadRequestException;
+import com.shed.teamden.common.exception.ResourceNotFoundException;
+import com.shed.teamden.common.exception.UnauthorizedException;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationRepository;
@@ -704,11 +707,12 @@ public class ProjectService {
 
     private Organization resolveCurrentOrganization() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
-        if (userOpt.isPresent() && userOpt.get().getActiveOrganizationId() != null) {
-            Optional<Organization> orgOpt = organizationRepository.findById(userOpt.get().getActiveOrganizationId());
-            if (orgOpt.isPresent()) {
-                return orgOpt.get();
+        if (userOpt.isPresent()) {
+            if (userOpt.get().getActiveOrganizationId() != null) {
+                return organizationRepository.findById(userOpt.get().getActiveOrganizationId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Active organization not found: " + userOpt.get().getActiveOrganizationId()));
             }
+            throw new UnauthorizedException("User has no active organization");
         }
         List<Organization> orgs = organizationRepository.findAll();
         if (!orgs.isEmpty()) {
@@ -725,10 +729,8 @@ public class ProjectService {
     private User resolveCurrentUser(Organization org) {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
-            Optional<User> uOpt = userRepository.findById(userOpt.get().getId());
-            if (uOpt.isPresent()) {
-                return uOpt.get();
-            }
+            return userRepository.findById(userOpt.get().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userOpt.get().getId()));
         }
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
@@ -745,17 +747,30 @@ public class ProjectService {
     }
 
     private Project resolveProject(String projectId) {
-        if (projectId != null && !projectId.isBlank() && !projectId.equalsIgnoreCase("featured-01")) {
-            try {
-                UUID uuid = UUID.fromString(projectId);
-                Optional<Project> pOpt = projectRepository.findById(uuid);
-                if (pOpt.isPresent()) {
-                    return pOpt.get();
-                }
-            } catch (Exception ignored) {}
-        }
         Organization org = resolveCurrentOrganization();
+        if (projectId != null && !projectId.isBlank() && !projectId.equalsIgnoreCase("featured-01")) {
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(projectId.trim());
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Invalid project ID format: " + projectId);
+            }
+            Project project = projectRepository.findById(uuid)
+                    .orElseThrow(() -> new ResourceNotFoundException("Project not found: " + projectId));
+
+            if (!project.getOrganization().getId().equals(org.getId())) {
+                throw new BadRequestException("Project not found in this organization");
+            }
+            return project;
+        }
+
         List<Project> orgProjects = projectRepository.findByOrganizationIdWithDetails(org.getId());
+        if (orgProjects.isEmpty()) {
+            User currentUser = resolveCurrentUser(org);
+            ensureBaselineProjects(org, currentUser);
+            orgProjects = projectRepository.findByOrganizationIdWithDetails(org.getId());
+        }
+
         if (!orgProjects.isEmpty()) {
             return orgProjects.stream()
                     .filter(p -> p.getName().equalsIgnoreCase("Website Redesign"))
@@ -1158,6 +1173,7 @@ public class ProjectService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ProjectActivityDto getProjectActivity(String projectId) {
         String projectName = "website redesign.";
         String projectOwner = "Design Team";
@@ -1167,7 +1183,13 @@ public class ProjectService {
         Project project = resolveProject(projectId);
         if (project != null) {
             if (project.getName() != null) projectName = project.getName();
-            if (project.getOwner() != null) projectOwner = project.getOwner().getFullName();
+            try {
+                if (project.getOwner() != null && project.getOwner().getFullName() != null) {
+                    projectOwner = project.getOwner().getFullName();
+                }
+            } catch (Exception e) {
+                log.debug("Could not resolve project owner name: {}", e.getMessage());
+            }
             if (project.getDueDate() != null) dueDate = project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"));
             if (project.getStatus() != null) status = project.getStatus().name();
         }

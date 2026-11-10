@@ -36,9 +36,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -86,6 +88,9 @@ public class MultiOrganizationIsolationTest {
 
     private Project projectAlpha;
     private Project projectBeta;
+
+    private Task taskAlpha;
+    private Task taskBeta;
 
     private MockHttpSession sessionAlpha;
     private MockHttpSession sessionBeta;
@@ -196,7 +201,7 @@ public class MultiOrganizationIsolationTest {
                 .status(ProjectStatus.ACTIVE)
                 .build());
 
-        taskRepository.save(Task.builder()
+        taskAlpha = taskRepository.save(Task.builder()
                 .organization(orgAlpha)
                 .project(projectAlpha)
                 .creator(userAlpha)
@@ -214,7 +219,7 @@ public class MultiOrganizationIsolationTest {
                 .status(ProjectStatus.ACTIVE)
                 .build());
 
-        taskRepository.save(Task.builder()
+        taskBeta = taskRepository.save(Task.builder()
                 .organization(orgBeta)
                 .project(projectBeta)
                 .creator(userBeta)
@@ -282,5 +287,76 @@ public class MultiOrganizationIsolationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message", containsString("Project not found in this organization")));
+    }
+
+    @Test
+    @DisplayName("User Alpha cannot view Project Beta overview, tasks, documents, or activity")
+    void testCrossOrganizationProjectAccessRejected() throws Exception {
+        mockMvc.perform(get("/api/projects/" + projectBeta.getId() + "/overview")
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Project not found in this organization")));
+
+        mockMvc.perform(get("/api/projects/" + projectBeta.getId() + "/tasks")
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Project not found in this organization")));
+
+        mockMvc.perform(get("/api/projects/" + projectBeta.getId() + "/documents")
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Project not found in this organization")));
+
+        mockMvc.perform(get("/api/projects/" + projectBeta.getId() + "/activity")
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Project not found in this organization")));
+    }
+
+    @Test
+    @DisplayName("User Alpha cannot toggle completion of Task Beta belonging to another organization")
+    void testCrossOrganizationTaskToggleRejected() throws Exception {
+        mockMvc.perform(patch("/api/dashboard/tasks/" + taskBeta.getId() + "/toggle")
+                        .with(csrf())
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Task does not belong to the active organization")));
+
+        Task unchanged = taskRepository.findById(taskBeta.getId()).orElseThrow();
+        assertThat(unchanged.getStatus()).isEqualTo(TaskStatus.TODO);
+    }
+
+    @Test
+    @DisplayName("User Alpha cannot move Task Beta belonging to another organization")
+    void testCrossOrganizationTaskMoveRejected() throws Exception {
+        mockMvc.perform(patch("/api/dashboard/tasks/" + taskBeta.getId() + "/move")
+                        .with(csrf())
+                        .session(sessionAlpha)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"targetColumn\":\"NEXT\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Task does not belong to the active organization")));
+    }
+
+    @Test
+    @DisplayName("User Alpha can view own project overview, tasks, documents, and activity")
+    void testOwnOrganizationProjectAccessAllowed() throws Exception {
+        mockMvc.perform(get("/api/projects/" + projectAlpha.getId() + "/overview")
+                        .session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(projectAlphaName));
+
+        mockMvc.perform(get("/api/projects/" + projectAlpha.getId() + "/tasks")
+                        .session(sessionAlpha))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/projects/" + projectAlpha.getId() + "/documents")
+                        .session(sessionAlpha))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/projects/" + projectAlpha.getId() + "/activity")
+                        .session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(projectAlphaName));
     }
 }

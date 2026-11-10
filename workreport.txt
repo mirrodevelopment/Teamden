@@ -1069,15 +1069,36 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Added compact event card rule `.cal-event-card.is-compact` in `calendar.css` to prevent 30-min
       duration slots (e.g. `09:30 - 10:00 Design standup`) from clipping text titles, perfectly matching
       the reference screenshot.
-- Test Suite Teardown Remediation & 100% Green Validation:
+- Multi-Tenant Isolation Hardening & Security Remediation:
+  * Strict Organization Checks on Task Toggling (`DashboardService.java`):
+    - Added active organization boundary checks to `toggleTask(taskId)`.
+    - Enforced that `task.getOrganization().getId().equals(organization.getId())`; rejects cross-tenant toggling with HTTP 400 Bad Request.
+    - Validated UUID format (`BadRequestException("Invalid task ID format")`) and non-existent tasks (`ResourceNotFoundException("Task not found")`).
+    - Fixed activity event logging to link directly to current organization and active actor.
+  * Project Endpoints Multi-Tenant Boundary Enforcement (`ProjectService.java`):
+    - Fixed critical cross-tenant data leak in `resolveProject(projectId)`.
+    - Replaced unchecked `projectRepository.findById(uuid)` with strict active organization verification (`p.getOrganization().getId().equals(org.getId())`), throwing HTTP 400 Bad Request when an authenticated user attempts to access a project belonging to another organization.
+    - Protected `GET /api/projects/{id}/overview`, `GET /api/projects/{id}/tasks`, `GET /api/projects/{id}/documents`, and `GET /api/projects/{id}/activity`.
+    - Added `@Transactional(readOnly = true)` to `getProjectActivity()` and wrapped owner name access in defensive try-catch to resolve lazy Hibernate proxy initialization exceptions.
+  * Insecure Fallback Eradication:
+    - Updated `resolveCurrentOrganization()` and `resolveCurrentUser()` in both `DashboardService.java` and `ProjectService.java` to explicitly throw `ResourceNotFoundException` or `UnauthorizedException` when an authenticated user's organization is not found, eliminating silent cross-customer fallback leaks.
+- Test Suite Expansion & 100% Green Validation:
   * Rectified foreign key cascading teardown sequence in `MultiOrganizationIsolationTest.java`,
     `DashboardKanbanIntegrationTest.java`, and `CalendarIntegrationTest.java` deleting child calendar
     tables prior to `calendar_events`.
-  * Added test `testFetchCalendarPageDataReturnsAllSectionsFromDb()` in `CalendarIntegrationTest.java`.
-  * Successfully passed all 30 integration tests across all 7 test suites with 0 failures and 0 errors.
+  * Expanded `DashboardKanbanIntegrationTest.java`: Added `testToggleTaskMultiTenantIsolation()`, `testToggleTaskInvalidId()`, and `testToggleTaskNotFound()`.
+  * Expanded `MultiOrganizationIsolationTest.java`: Added `testCrossOrganizationProjectAccessRejected()`, `testCrossOrganizationTaskToggleRejected()`, `testCrossOrganizationTaskMoveRejected()`, and `testOwnOrganizationProjectAccessAllowed()`.
+  * Successfully passed all 37 integration tests across all 7 test suites with 0 failures and 0 errors.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
+- Services & Security:
+  * `src/main/java/com/shed/teamden/dashboard/service/DashboardService.java`: `toggleTask` multi-tenant validation, fallback hardening.
+  * `src/main/java/com/shed/teamden/project/service/ProjectService.java`: `resolveProject` tenant isolation, transactional activity.
+- Automated Tests:
+  * `src/test/java/com/shed/teamden/calendar/CalendarIntegrationTest.java`: 6 integration tests.
+  * `src/test/java/com/shed/teamden/dashboard/DashboardKanbanIntegrationTest.java`: 9 Kanban integration tests (including toggle isolation, invalid UUID, and not-found tests).
+  * `src/test/java/com/shed/teamden/security/MultiOrganizationIsolationTest.java`: 7 isolation tests (including cross-org project overview/tasks/docs/activity rejection, cross-org toggle/move rejection, and own org access verification).
 - Migrations:
   * `src/main/resources/db/migration/V3__kanban_task_columns_and_ordering.sql`: Flyway V3 column & index migration.
   * `src/main/resources/db/migration/V4__calendar_events.sql`: Flyway V4 calendar table & index migration.
@@ -1141,10 +1162,17 @@ Example B: Calendar Raw Code Data to Database
   [AFTER - calendar.js, CalendarService & Flyway V5]:
   0 hardcoded events or commitment arrays in JavaScript. Hydrates from `/api/calendar/data` backed by PostgreSQL tables `calendar_events`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`. Compact 30-min cards display clean inline icon + time.
 
+Example C: Multi-Tenant Project Resolution and Task Toggling
+  [BEFORE - ProjectService & DashboardService]:
+  `resolveProject()` retrieved by UUID with no org check; User Alpha could view Beta's overview, tasks, and documents. `toggleTask()` toggled any task by ID across tenants without checking active organization.
+
+  [AFTER - ProjectService & DashboardService]:
+  `resolveProject()` and `toggleTask()` enforce `p.getOrganization().getId().equals(org.getId())`. Any cross-organization request immediately throws `BadRequestException("Project not found in this organization")` or `BadRequestException("Task does not belong to the active organization")` returning HTTP 400.
+
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 30/30 integration tests green (`./mvnw test` passing 100% across all 7 test suites).
-- Multi-Tenant Isolation: Verified cross-organization move, calendar edits, and deletions rejected with HTTP 400.
+- Test Suite: 37/37 integration tests green (`./mvnw test` passing 100% across all 7 test suites).
+- Multi-Tenant Isolation: Verified cross-organization project inspection (overview, tasks, documents, activity), task toggle, move, and calendar actions are strictly rejected with HTTP 400 Bad Request.
 - Static Asset Hot Reload: Synced all updated frontend assets to `target/classes/static/`.
 - Zero Regression: Verified existing project, attendance, auth, and dashboard flows remain 100% functional.
 

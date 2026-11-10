@@ -310,6 +310,39 @@ public class DashboardKanbanIntegrationTest {
     }
 
     @Test
+    @DisplayName("User Alpha cannot toggle a task belonging to Organization Beta (Multi-Tenant Isolation)")
+    void testToggleTaskMultiTenantIsolation() throws Exception {
+        mockMvc.perform(patch("/api/dashboard/tasks/" + taskBetaNow.getId() + "/toggle")
+                        .with(csrf())
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Task does not belong to the active organization")));
+
+        Task unchanged = taskRepository.findById(taskBetaNow.getId()).orElseThrow();
+        assertThat(unchanged.getStatus()).isEqualTo(TaskStatus.TODO);
+    }
+
+    @Test
+    @DisplayName("Toggle task with invalid ID format should return 400 Bad Request")
+    void testToggleTaskInvalidId() throws Exception {
+        mockMvc.perform(patch("/api/dashboard/tasks/not-a-valid-uuid/toggle")
+                        .with(csrf())
+                        .session(sessionAlpha))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Invalid task ID format")));
+    }
+
+    @Test
+    @DisplayName("Toggle non-existent task should return 404 Not Found")
+    void testToggleTaskNotFound() throws Exception {
+        mockMvc.perform(patch("/api/dashboard/tasks/" + UUID.randomUUID() + "/toggle")
+                        .with(csrf())
+                        .session(sessionAlpha))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", containsString("Task not found")));
+    }
+
+    @Test
     @DisplayName("Should add new task to specified Kanban column")
     void testAddTaskToSpecificColumn() throws Exception {
         String addPayload = "{\"column\":\"LATER\",\"title\":\"Performance Benchmarking\",\"tag\":\"General\"}";

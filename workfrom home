@@ -12,73 +12,66 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Interactive Kanban Workflow (Track 2):
-  * Relational task persistence for columns (NOW, NEXT, LATER) and ordering via Flyway V3.
-  * Backend transition endpoint `PATCH /api/dashboard/tasks/{id}/move` with multi-tenant isolation.
-  * HTML5 Drag & Drop for Kanban boards, plus quick-transition action buttons for mobile/touch.
-- Relational Calendar Table & Interactive Table View (Track 3):
-  * Authored Flyway V4 migration (`V4__calendar_events.sql`) for PostgreSQL schedule persistence.
-  * Built Spring Boot JPA domain: `CalendarEvent.java`, `CalendarEventRepository.java`, `CalendarService.java`, `CalendarController.java`.
-  * REST endpoints (`GET`, `POST`, `PUT`, `DELETE /api/calendar/events`) with tenant isolation and auto-seeding.
-  * Added Neo-Editorial Table View (`data-view="table"`) on `calendar.html` with search, category/calendar filters, attendee badges, and CRUD modal triggers.
 - Full Calendar Raw Code Migration to PostgreSQL (Flyway V5):
-  * Flyway V5 (`V5__calendar_full_data_tables.sql`): Extended `calendar_events` with drawer columns (agenda, notes, decision, followups, attendees, meeting URL, organizer, RSVP) and created tables `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`.
-  * Created domain entities, repositories, and DTOs: `CalendarCommitment`, `CalendarNeedsScheduling`, `CalendarSource`, `CalendarTeamAvailability`, and `CalendarPageDataDto`.
-  * Implemented `GET /api/calendar/data` endpoint serving unified page data directly from DB.
-  * Client Hydration: Completely eradicated hardcoded `SEED_EVENTS` and `UPCOMING_COMMITMENTS` static arrays from `calendar.js`. Dynamic hydration across upcoming commitments, next commitment, needs scheduling, team availability, connected calendars, and event details drawer.
-  * Short-event visual fix: Added `.cal-event-card.is-compact` in `calendar.css` ensuring 30-min slots display inline icon and time without vertical text clipping.
+  * Authored Flyway V5 migration (`V5__calendar_full_data_tables.sql`) adding 4 relational tables and drawer columns.
+  * Created JPA domain entities, repositories, DTOs, and `/api/calendar/data` unified hydration endpoint.
+  * Eradicated hardcoded `SEED_EVENTS` and `UPCOMING_COMMITMENTS` static arrays from `calendar.js`.
+  * Added `.cal-event-card.is-compact` in `calendar.css` preventing vertical text clipping on 30-min slots.
+- Multi-Tenant Isolation & Security Hardening:
+  * `DashboardService.java`: Enforced active tenant boundary checks on `toggleTask()`; rejected cross-tenant toggling and invalid UUID formats with 400 Bad Request. Scoped activity events to active org.
+  * `ProjectService.java`: Fixed critical data leak in `resolveProject(id)`. Enforced active organization verification for project overview, tasks, documents, and activity endpoints.
+  * Fixed lazy initialization on `getProjectActivity()` by adding `@Transactional(readOnly = true)`.
+  * Eliminated unsafe tenant resolution fallbacks for authenticated users.
+- Security Integration Test Expansion:
+  * Expanded `DashboardKanbanIntegrationTest.java`: Added multi-tenant isolation for task toggling, invalid UUID rejection, and non-existent task handling (404).
+  * Expanded `MultiOrganizationIsolationTest.java`: Added cross-org protection for `/api/projects/{id}/overview`, `tasks`, `documents`, `activity`, and task toggle/move mutations.
 - Full Test Suite Verification:
-  * 30/30 integration tests 100% green across all test suites (`./mvnw test`).
+  * 37/37 integration tests 100% green across all test suites (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Database: `V5__calendar_full_data_tables.sql`.
-- Backend Domain & API: `CalendarEvent.java`, `CalendarCommitment.java`, `CalendarNeedsScheduling.java`, `CalendarSource.java`, `CalendarTeamAvailability.java`, repositories, DTOs, `CalendarService.java`, `CalendarController.java`.
-- Frontend: `calendar.html`, `calendar.css`, `calendar.js`.
-- Tests: `CalendarIntegrationTest.java` (6 tests), `DashboardKanbanIntegrationTest.java` (6 tests), `MultiOrganizationIsolationTest.java` (3 tests).
+- Dashboard Service: `DashboardService.java` (toggle multi-tenancy, fallback hardening).
+- Project Service: `ProjectService.java` (project endpoint multi-tenancy, transactional activity).
+- Integration Tests: `DashboardKanbanIntegrationTest.java` (9 tests), `MultiOrganizationIsolationTest.java` (7 tests).
+- Calendar Database & Frontend: `V5__calendar_full_data_tables.sql`, `calendar.js`, `calendar.css`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Migration of hardcoded raw data in calendar page to relational DB
-  [BEFORE - calendar.js]:
-  Contained ~400 lines of hardcoded arrays (`SEED_EVENTS` with 17 static objects, `UPCOMING_COMMITMENTS` with 4 static items, hardcoded sidebar sources & team avatars). 30-min event slots clipped event titles.
+Example: Multi-tenant protection for project endpoints and task toggles
+  [BEFORE - ProjectService & DashboardService]:
+  `resolveProject()` fetched by UUID without verifying active organization; User Alpha could view Beta's overview, tasks, and documents. `toggleTask()` toggled tasks across tenants without checks.
 
-  [AFTER - calendar.js, CalendarService & Flyway V5]:
-  0 hardcoded events or commitment arrays in JavaScript. Hydrates from `/api/calendar/data` backed by PostgreSQL tables `calendar_events`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, and `calendar_team_availability`. Compact 30-min cards display clean inline icon + time.
+  [AFTER - ProjectService & DashboardService]:
+  `resolveProject()` and `toggleTask()` enforce `p.getOrganization().getId().equals(org.getId())`. Unauthorized cross-tenant queries and mutations reject with 400 Bad Request.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Test Suite: 30/30 integration tests passing 100% with 0 errors/failures (`./mvnw test`).
-- Multi-Tenant Isolation: Verified tenant data isolation across all calendar tables.
-- Resource Sync: Synchronized static resources to `target/classes/static`.
+- Test Suite: 37/37 integration tests passing 100% with 0 errors/failures (`./mvnw test`).
+- Multi-Tenant Isolation: Verified cross-organization rejection for tasks, projects, calendar, and dashboards.
 
-================================================================================
+===============================================================================
 DAY 2 - 2026-11-04 (WEDNESDAY)
 ================================================================================
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
 - Full Mobile Layout Modernization (320px - 768px):
-  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops (transparent
-    click-dismiss on mobile sidebar drawer and calendar event drawers).
-  * Zero Overlap: Eliminated negative margins causing header/text collisions
-    in projects, dashboard, and team views.
+  * Zero Overlay: Eradicated dark screen-dimming overlay backdrops across drawers.
+  * Zero Overlap: Eliminated negative margins causing header/text collisions.
   * Resolved topbar grid overflow: collapsed to flex row, hid shortcut keys & live date.
   * Mobile drawer: touch scroll locking, auto-close on nav tap, capped width (min(260px, 80vw)).
   * Dashboard & Kanban: collapsed 2-col split to 1-col, horizontal scroll-snap on Kanban.
   * Projects & Team Suites: fluid headline clamps, stacked cards, responsive tables/tabs.
   * Workspace, Calendar & Auth: responsive 7-day grid scroll, 44px touch targets, 16px inputs.
 - Chrome DevTools Protocol Verification:
-  * Simulated 375x812 mobile viewport and captured full-fidelity live page screenshots.
-  * Visually inspected & verified Dashboard, Projects, Team, Calendar, Overview, Login, Register.
+  * Simulated 375x812 mobile viewport and verified Dashboard, Projects, Team, Calendar, Overview, Login.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
 - Shell & Tokens: `theme.css`, `navbar.css`, `sidebar.css`, `sidebar.js`.
 - Core Views: `dashboard.css`, `overview.css`, `insights.css`.
-- Projects Suite: `projects.css`, `project-detail.css`, `project-overview.css`, `project-tasks.css`, `project-documents.css`, `project-activity.css`.
-- Team Suite: `team.css`, `team-detail.css`, `team-overview.css`, `team-people.css`, `team-work.css`, `team-knowledge.css`.
-- Workspace, Calendar & Auth: `workspace.css`, `team-libraries.css`, `calendar.css`, `login.css`, `register.css`.
+- Projects & Team Suites: `projects.css`, `project-detail.css`, `team.css`, `team-detail.css`.
+- Workspace, Calendar & Auth: `workspace.css`, `calendar.css`, `login.css`, `register.css`.
 
 3. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
@@ -94,7 +87,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 4 [COMPLETED]: Interactive Kanban column transitions, drag-and-drop & Flyway V3.
 - Phase 5 [COMPLETED]: Relational Calendar persistence, Flyway V4 & Table view.
 - Phase 6 [COMPLETED]: Full Calendar raw data migration to DB, Flyway V5 & dynamic hydration.
-- Phase 7 [SCHEDULED]: Production build verification & asset minification.
+- Phase 7 [COMPLETED]: Multi-tenant security isolation across project, dashboard, and task APIs.
+- Phase 8 [SCHEDULED]: Production build verification & asset minification.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

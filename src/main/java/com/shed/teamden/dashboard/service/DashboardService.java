@@ -337,35 +337,46 @@ public class DashboardService {
 
     @Transactional
     public PriorityTaskDto toggleTask(String taskId) {
-        try {
-            UUID id = UUID.fromString(taskId);
-            Optional<Task> optTask = taskRepository.findById(id);
-            if (optTask.isPresent()) {
-                Task task = optTask.get();
-                boolean willBeCompleted = (task.getStatus() != TaskStatus.COMPLETED);
-                task.setStatus(willBeCompleted ? TaskStatus.COMPLETED : TaskStatus.TODO);
-                task.setCompletedAt(willBeCompleted ? Instant.now() : null);
-                taskRepository.save(task);
-
-                // Record activity event
-                ActivityEvent event = ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(task.getOrganization())
-                        .actor(task.getAssignee() != null ? task.getAssignee() : task.getCreator())
-                        .eventType(willBeCompleted ? ActivityEventType.TASK_COMPLETED : ActivityEventType.TASK_STATUS_CHANGED)
-                        .entityType("TASK")
-                        .entityId(task.getId())
-                        .title(willBeCompleted ? "completed" : "reopened")
-                        .description(task.getTitle())
-                        .build();
-                activityEventRepository.save(event);
-
-                return toPriorityTaskDto(task, "01");
-            }
-        } catch (IllegalArgumentException e) {
-            log.warn("Invalid task UUID for toggle: {}", taskId);
+        if (taskId == null || taskId.isBlank()) {
+            throw new BadRequestException("Task ID is required");
         }
-        return null;
+
+        UUID taskUuid;
+        try {
+            taskUuid = UUID.fromString(taskId.trim());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid task ID format");
+        }
+
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser(organization);
+
+        Task task = taskRepository.findById(taskUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        if (!task.getOrganization().getId().equals(organization.getId())) {
+            throw new BadRequestException("Task does not belong to the active organization");
+        }
+
+        boolean willBeCompleted = (task.getStatus() != TaskStatus.COMPLETED);
+        task.setStatus(willBeCompleted ? TaskStatus.COMPLETED : TaskStatus.TODO);
+        task.setCompletedAt(willBeCompleted ? Instant.now() : null);
+        taskRepository.save(task);
+
+        // Record activity event
+        ActivityEvent event = ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .actor(currentUser != null ? currentUser : (task.getAssignee() != null ? task.getAssignee() : task.getCreator()))
+                .eventType(willBeCompleted ? ActivityEventType.TASK_COMPLETED : ActivityEventType.TASK_STATUS_CHANGED)
+                .entityType("TASK")
+                .entityId(task.getId())
+                .title(willBeCompleted ? "completed" : "reopened")
+                .description(task.getTitle())
+                .build();
+        activityEventRepository.save(event);
+
+        return toPriorityTaskDto(task, "01");
     }
 
     @Transactional
@@ -608,11 +619,12 @@ public class DashboardService {
 
     private Organization resolveCurrentOrganization() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
-        if (userOpt.isPresent() && userOpt.get().getActiveOrganizationId() != null) {
-            Optional<Organization> orgOpt = organizationRepository.findById(userOpt.get().getActiveOrganizationId());
-            if (orgOpt.isPresent()) {
-                return orgOpt.get();
+        if (userOpt.isPresent()) {
+            if (userOpt.get().getActiveOrganizationId() != null) {
+                return organizationRepository.findById(userOpt.get().getActiveOrganizationId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Active organization not found: " + userOpt.get().getActiveOrganizationId()));
             }
+            throw new UnauthorizedException("User has no active organization");
         }
         List<Organization> orgs = organizationRepository.findAll();
         if (!orgs.isEmpty()) {
@@ -629,10 +641,8 @@ public class DashboardService {
     private User resolveCurrentUser(Organization org) {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
-            Optional<User> uOpt = userRepository.findById(userOpt.get().getId());
-            if (uOpt.isPresent()) {
-                return uOpt.get();
-            }
+            return userRepository.findById(userOpt.get().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userOpt.get().getId()));
         }
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
