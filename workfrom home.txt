@@ -6,9 +6,9 @@ File: workfrom home.txt (and workfrom home)
 Tracking Standard: Every day entry strictly begins with "DAY X - [Date]"
 ================================================================================
 
-===============================================================================
+================================================================================
 DAY 3 - 2026-11-10 (TUESDAY - TODAY)
-===============================================================================
+================================================================================
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
@@ -29,7 +29,12 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * Seeded 12 complete reference movements into database across Today, Yesterday, and Last Week.
   * Built dual-mode View Switcher (`[Timeline]` / `[Table View]`) in `activity.html` with `#pane-timeline` and `#pane-table`.
   * Styled responsive `.act-data-table` in `activity.css` adhering strictly to Neo-Editorial theme design tokens (Zero Hex Standard).
-  * Implemented `renderTable()` and view toggling with `localStorage` persistence in `activity.js`. Eradicated `fallbackActivities` mock array.
+  * Implemented `renderTable()` and view toggling with `localStorage` persistence in `activity.js`.
+- Complete Seed Value Eradication across Activity & Dashboard:
+  * Removed hardcoded fallback object in `activity.js` (`window.openActivityDrawer`); now fetches asynchronously from `/api/activity/{id}` database API if not cached.
+  * Replaced hardcoded demo content in `activity.html` drawer with clean initial empty tags (`-`).
+  * Injected `ActivityService` into `DashboardService.java` to guarantee PostgreSQL baseline records, removing all in-code activity mock arrays and hardcoded string branching.
+  * Removed hardcoded fallback activity arrays from `dashboard.js`.
 - Multi-Tenant Isolation & Security Hardening:
   * `DashboardService.java`: Enforced active tenant boundary checks on `toggleTask()`; rejected cross-tenant toggling and invalid UUID formats with 400 Bad Request. Scoped activity events to active org.
   * `ProjectService.java`: Fixed critical data leak in `resolveProject(id)`. Enforced active organization verification for project overview, tasks, documents, and activity endpoints.
@@ -43,19 +48,20 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
 - Activity Persistence & Table View: `V6__activity_events_full_data.sql`, `ActivityEvent.java`, `ActivityService.java`, `activity.html`, `activity.css`, `activity.js`, `ActivityIntegrationTest.java`.
+- Dashboard & Activity Synchronization: `DashboardService.java`, `dashboard.js`.
 - Activity Suite: `ActivityController.java`, `ActivityPageDataDto.java`, `ActivityEventRepository.java`.
-- Dashboard & Project Services: `DashboardService.java`, `ProjectService.java`.
+- Project Service: `ProjectService.java`.
 - Calendar Database & Frontend: `V5__calendar_full_data_tables.sql`, `calendar.js`, `calendar.css`.
 - Security & Test Fixtures: `SecurityConfig.java`, `AuthenticationIntegrationTest.java`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Activity events stored in PostgreSQL and displayed in Table View
-  [BEFORE - Heuristic Synthesis & Timeline-Only]:
-  Rich UI strings ("Marcus completed Set up staging environment", "Version 1.2 · 3 pages") were synthesized in code; database table only had basic event_type/title; only a timeline view existed.
+Example: Full eradication of code seed values in favor of database persistence
+  [BEFORE - Hardcoded Fallback Seed Objects]:
+  `activity.js` and `dashboard.js` had fallback mock arrays (`Marcus`, `Set up staging environment`, `Product brief`); `DashboardService.java` had fallback `activities.add(...)` and string branches if DB was empty.
 
-  [AFTER - Relational Persistence & Dual View Modes]:
-  Flyway V6 stores full movement data directly in `activity_events`; frontend provides dual modes (`[Timeline]` and `[Table View]`) with segmented controls, sorting, search, responsive layout, and drawer inspection.
+  [AFTER - 100% Database-Driven Hydration]:
+  All seed activities are persisted in PostgreSQL table `activity_events` via Flyway/JPA. `activity.js`, `dashboard.js`, and `DashboardService.java` fetch directly from database APIs with zero in-code seed fallbacks.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------

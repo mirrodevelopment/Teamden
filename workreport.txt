@@ -1040,6 +1040,11 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Built responsive `.act-data-table` in `activity.css` adhering strictly to Neo-Editorial design tokens (`--dash-*`), displaying Time & Date, Type, Actor, Movement & Target, Workspace / Project, Details, and Inspect (`↗`).
     - Implemented `renderTable()` and view toggling in `activity.js` with `localStorage.getItem('teamden-activity-view')` persistence.
     - Eradicated `fallbackActivities` mock array from `activity.js`.
+  * Complete In-Code Seed Value Eradication across Activity & Dashboard:
+    - Removed hardcoded fallback object in `activity.js` (`window.openActivityDrawer`); now fetches asynchronously from `/api/activity/{id}` database API if not cached.
+    - Replaced hardcoded demo content in `activity.html` drawer with clean initial empty tags (`-`).
+    - Injected `ActivityService` into `DashboardService.java` to guarantee PostgreSQL baseline records, removing all in-code activity mock arrays and hardcoded string branching.
+    - Removed hardcoded fallback activity arrays from `dashboard.js` (`renderActivityTimeline` and fallback structure).
 - Interactive Kanban Workflow Architecture (Track 2):
   * Relational Database Persistence for Kanban Columns & Ordering:
     - Authored Flyway migration `V3__kanban_task_columns_and_ordering.sql` adding

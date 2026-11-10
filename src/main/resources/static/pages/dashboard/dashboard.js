@@ -190,56 +190,11 @@
     const container = document.getElementById('activity-timeline-list');
     if (!container) return;
 
-    const allActivities = activities && activities.length > 0 ? activities : [
-      {
-        id: 'act-01',
-        time: '09:42',
-        dayLabel: 'TODAY',
-        badgeType: 'COMMENT',
-        dotColor: 'purple',
-        author: 'Sonia',
-        actionText: 'commented on',
-        targetTitle: 'Design review notes',
-        subMeta: 'Website Redesign / Design Team',
-        quotePreview: "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing."
-      },
-      {
-        id: 'act-02',
-        time: '08:15',
-        dayLabel: 'TODAY',
-        badgeType: 'COMPLETED',
-        dotColor: 'green',
-        author: 'Marcus',
-        actionText: 'completed',
-        targetTitle: 'Set up staging environment',
-        subMeta: 'Client Application / Engineering',
-        infoText: 'Task marked complete'
-      },
-      {
-        id: 'act-03',
-        time: '07:30',
-        dayLabel: 'TODAY',
-        badgeType: 'DOCUMENT',
-        dotColor: 'silver',
-        author: '',
-        actionText: 'was updated',
-        targetTitle: 'Product brief',
-        subMeta: 'Product / Workspace',
-        infoText: 'Version 1.2 · 3 pages'
-      },
-      {
-        id: 'act-04',
-        time: '06:12',
-        dayLabel: 'TODAY',
-        badgeType: 'ASSIGNED',
-        dotColor: 'blue',
-        author: 'You',
-        actionText: 'assigned a task to',
-        targetTitle: 'Priya',
-        subMeta: 'Website Redesign / Design Team',
-        infoText: 'Client feedback session\nTomorrow, 2:00 PM'
-      }
-    ];
+    const allActivities = activities || [];
+    if (allActivities.length === 0) {
+      container.innerHTML = `<div class="activity-empty-notice" style="padding: 1rem 0; font-size: 0.8125rem; color: var(--dash-text-muted);">No recent movements recorded.</div>`;
+      return;
+    }
 
     const displayList = showAllActivities ? allActivities : allActivities.slice(0, 4);
 
@@ -1294,56 +1249,7 @@
         { id: 'task-05', column: 'LATER', indexNum: '05', title: 'Set up analytics tracking', tag: 'Website Redesign', dueDateLabel: 'Fri, 27 Oct', dotColor: 'blue', completed: false },
         { id: 'task-06', column: 'LATER', indexNum: '06', title: 'Write project summary', tag: 'Acme Co.', dueDateLabel: 'Mon, 30 Oct', dotColor: 'gray', completed: false }
       ],
-      activities: [
-        {
-          id: 'act-01',
-          time: '09:42',
-          dayLabel: 'TODAY',
-          badgeType: 'COMMENT',
-          dotColor: 'purple',
-          author: 'Sonia',
-          actionText: 'commented on',
-          targetTitle: 'Design review notes',
-          subMeta: 'Website Redesign / Design Team',
-          quotePreview: "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing."
-        },
-        {
-          id: 'act-02',
-          time: '08:15',
-          dayLabel: 'TODAY',
-          badgeType: 'COMPLETED',
-          dotColor: 'green',
-          author: 'Marcus',
-          actionText: 'completed',
-          targetTitle: 'Set up staging environment',
-          subMeta: 'Client Application / Engineering',
-          infoText: 'Task marked complete'
-        },
-        {
-          id: 'act-03',
-          time: '07:30',
-          dayLabel: 'TODAY',
-          badgeType: 'DOCUMENT',
-          dotColor: 'silver',
-          author: '',
-          actionText: 'was updated',
-          targetTitle: 'Product brief',
-          subMeta: 'Product / Workspace',
-          infoText: 'Version 1.2 · 3 pages'
-        },
-        {
-          id: 'act-04',
-          time: '06:12',
-          dayLabel: 'TODAY',
-          badgeType: 'ASSIGNED',
-          dotColor: 'blue',
-          author: 'You',
-          actionText: 'assigned a task to',
-          targetTitle: 'Priya',
-          subMeta: 'Website Redesign / Design Team',
-          infoText: 'Client feedback session\nTomorrow, 2:00 PM'
-        }
-      ],
+      activities: [],
       schedule: [
         { id: 'sch-1', time: '09:00', title: 'Team standup', subMeta: 'Engineering · 30 min', dotColor: 'green' },
         { id: 'sch-2', time: '10:00', title: 'Design review', subMeta: 'Website Redesign · 1 hr', dotColor: 'purple' },

@@ -377,7 +377,8 @@ public class ActivityService {
         return userRepository.save(defaultUser);
     }
 
-    private void ensureBaselineActivityRecords(Organization org, User user) {
+    @Transactional
+    public void ensureBaselineActivityRecords(Organization org, User user) {
         long count = activityEventRepository.findRecentByOrganizationId(org.getId(), PageRequest.of(0, 10)).size();
         if (count >= 10) {
             return;

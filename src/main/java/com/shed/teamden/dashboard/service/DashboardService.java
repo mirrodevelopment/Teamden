@@ -3,6 +3,7 @@ package com.shed.teamden.dashboard.service;
 import com.shed.teamden.activity.entity.ActivityEvent;
 import com.shed.teamden.activity.entity.ActivityEventType;
 import com.shed.teamden.activity.repository.ActivityEventRepository;
+import com.shed.teamden.activity.service.ActivityService;
 import com.shed.teamden.dashboard.dto.*;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.entity.OrganizationStatus;
@@ -46,6 +47,7 @@ public class DashboardService {
     private final ActivityEventRepository activityEventRepository;
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
+    private final ActivityService activityService;
 
     @Transactional
     public DashboardDataDto getDashboardData() {
@@ -150,126 +152,46 @@ public class DashboardService {
                     .build();
         }
 
+        // Ensure baseline activity records are seeded in PostgreSQL if needed
+        activityService.ensureBaselineActivityRecords(organization, currentUser);
+
         // Fetch real activity events from PostgreSQL
         List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
         List<ActivityItemDto> activities = new ArrayList<>();
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
 
-        if (activityEvents.isEmpty()) {
-            activities.add(ActivityItemDto.builder()
-                    .id("act-01")
-                    .time("09:42")
-                    .dayLabel("TODAY")
-                    .dotColor("purple")
-                    .badgeType("COMMENT")
-                    .author("Sonia")
-                    .actionText("commented on")
-                    .targetTitle("Design review notes")
-                    .subMeta("Website Redesign / Design Team")
-                    .quotePreview("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
-                    .build());
-            activities.add(ActivityItemDto.builder()
-                    .id("act-02")
-                    .time("08:15")
-                    .dayLabel("TODAY")
-                    .dotColor("green")
-                    .badgeType("COMPLETED")
-                    .author("Marcus")
-                    .actionText("completed")
-                    .targetTitle("Set up staging environment")
-                    .subMeta("Client Application / Engineering")
-                    .infoText("Task marked complete")
-                    .build());
-            activities.add(ActivityItemDto.builder()
-                    .id("act-03")
-                    .time("07:30")
-                    .dayLabel("TODAY")
-                    .dotColor("silver")
-                    .badgeType("DOCUMENT")
-                    .author("")
-                    .actionText("was updated")
-                    .targetTitle("Product brief")
-                    .subMeta("Product / Workspace")
-                    .infoText("Version 1.2 · 3 pages")
-                    .build());
-            activities.add(ActivityItemDto.builder()
-                    .id("act-04")
-                    .time("06:12")
-                    .dayLabel("TODAY")
-                    .dotColor("blue")
-                    .badgeType("ASSIGNED")
-                    .author("You")
-                    .actionText("assigned a task to")
-                    .targetTitle("Priya")
-                    .subMeta("Website Redesign / Design Team")
-                    .infoText("Client feedback session\nTomorrow, 2:00 PM")
-                    .build());
-        } else {
-            Instant lastTimestamp = null;
-            for (ActivityEvent event : activityEvents) {
-                String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
-                String dot = "purple";
-                String badge = "COMMENT";
-                String actionText = event.getTitle() != null ? event.getTitle() : "updated";
-                String targetTitle = "Design review notes";
-                String subMeta = "Website Redesign / Design Team";
-                String quotePreview = null;
-                String infoText = null;
+        Instant lastTimestamp = null;
+        for (ActivityEvent event : activityEvents) {
+            String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
+            String dot = event.getDotColor() != null ? event.getDotColor() : "purple";
+            String badge = event.getBadgeType() != null ? event.getBadgeType() : "COMMENT";
+            String actionText = event.getActionText() != null ? event.getActionText() : (event.getTitle() != null ? event.getTitle() : "updated");
+            String targetTitle = event.getTargetTitle() != null ? event.getTargetTitle() : (event.getDescription() != null ? event.getDescription() : "Activity");
+            String subMeta = event.getSubMeta() != null ? event.getSubMeta() : (event.getProject() != null ? event.getProject().getName() + " / Team" : "Workspace / General");
+            String quotePreview = event.getQuotePreview();
+            String infoText = event.getInfoText();
 
-                if (event.getEventType() == ActivityEventType.TASK_COMPLETED) {
-                    dot = "green";
-                    badge = "COMPLETED";
-                    authorName = "Marcus";
-                    actionText = "completed";
-                    targetTitle = "Set up staging environment";
-                    subMeta = "Client Application / Engineering";
-                    infoText = "Task marked complete";
-                } else if (event.getEventType() == ActivityEventType.PROJECT_UPDATED || event.getEventType() == ActivityEventType.PROJECT_CREATED) {
-                    dot = "silver";
-                    badge = "DOCUMENT";
-                    authorName = "";
-                    actionText = "was updated";
-                    targetTitle = "Product brief";
-                    subMeta = "Product / Workspace";
-                    infoText = "Version 1.2 · 3 pages";
-                } else if (event.getEventType() == ActivityEventType.TASK_ASSIGNED) {
-                    dot = "blue";
-                    badge = "ASSIGNED";
-                    authorName = "You";
-                    actionText = "assigned a task to";
-                    targetTitle = "Priya";
-                    subMeta = "Website Redesign / Design Team";
-                    infoText = "Client feedback session\nTomorrow, 2:00 PM";
-                } else {
-                    authorName = "Sonia";
-                    actionText = "commented on";
-                    targetTitle = "Design review notes";
-                    subMeta = "Website Redesign / Design Team";
-                    quotePreview = "The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.";
+            Instant eventInstant = event.getEventTimestamp();
+            if (eventInstant != null) {
+                if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
+                    eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
                 }
-
-                Instant eventInstant = event.getEventTimestamp();
-                if (eventInstant != null) {
-                    if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
-                        eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
-                    }
-                    lastTimestamp = eventInstant;
-                }
-
-                activities.add(ActivityItemDto.builder()
-                        .id("act-" + event.getId().toString().substring(0, 8))
-                        .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
-                        .dayLabel("TODAY")
-                        .dotColor(dot)
-                        .badgeType(badge)
-                        .author(authorName)
-                        .actionText(actionText)
-                        .targetTitle(targetTitle)
-                        .subMeta(subMeta)
-                        .quotePreview(quotePreview)
-                        .infoText(infoText)
-                        .build());
+                lastTimestamp = eventInstant;
             }
+
+            activities.add(ActivityItemDto.builder()
+                    .id("act-" + event.getId().toString().substring(0, 8))
+                    .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
+                    .dayLabel("TODAY")
+                    .dotColor(dot)
+                    .badgeType(badge)
+                    .author(authorName)
+                    .actionText(actionText)
+                    .targetTitle(targetTitle)
+                    .subMeta(subMeta)
+                    .quotePreview(quotePreview)
+                    .infoText(infoText)
+                    .build());
         }
 
         // Real Attention Counts calculated from PostgreSQL database
@@ -809,48 +731,6 @@ public class DashboardService {
         taskRepository.save(laterTask2);
 
         // 5. Baseline Activity Events in PostgreSQL
-        List<ActivityEvent> baselineEvents = List.of(
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_CREATED)
-                        .entityType("TASK")
-                        .title("commented on")
-                        .description("The new visual direction looks great. Let's make a few minor adjustments to the icon spacing.")
-                        .eventTimestamp(Instant.now().minusSeconds(3600 * 3))
-                        .build(),
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_COMPLETED)
-                        .entityType("TASK")
-                        .title("completed")
-                        .description("Task marked complete")
-                        .eventTimestamp(Instant.now().minusSeconds(3600 * 5))
-                        .build(),
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .actor(user)
-                        .eventType(ActivityEventType.PROJECT_UPDATED)
-                        .entityType("PROJECT")
-                        .title("was updated")
-                        .description("Version 1.2 · 3 pages")
-                        .eventTimestamp(Instant.now().minusSeconds(3600 * 6))
-                        .build(),
-                ActivityEvent.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .actor(user)
-                        .eventType(ActivityEventType.TASK_ASSIGNED)
-                        .entityType("TASK")
-                        .title("assigned a task to")
-                        .description("Client feedback session · Tomorrow, 2:00 PM")
-                        .eventTimestamp(Instant.now().minusSeconds(3600 * 7))
-                        .build()
-        );
-        activityEventRepository.saveAll(baselineEvents);
+        activityService.ensureBaselineActivityRecords(org, user);
     }
 }

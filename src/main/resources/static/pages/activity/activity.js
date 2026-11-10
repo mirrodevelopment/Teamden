@@ -538,18 +538,25 @@
     }
   }
 
-  window.openActivityDrawer = function (id) {
-    const item = currentActivities.find(a => a.id === id) || {
-      id: id,
-      time: '12:46',
-      dayLabel: 'TODAY',
-      badgeType: 'COMPLETED',
-      author: 'Marcus',
-      actionText: 'completed',
-      targetTitle: 'Set up staging environment',
-      subMeta: 'Client Application / Engineering',
-      infoText: 'Task marked complete'
-    };
+  window.openActivityDrawer = async function (id) {
+    if (!id) return;
+
+    let item = currentActivities.find(a => a.id === id);
+    if (!item) {
+      try {
+        const res = await fetch(`/api/activity/${encodeURIComponent(id)}`);
+        if (res.ok) {
+          item = await res.json();
+        }
+      } catch (err) {
+        console.warn('Could not fetch activity details from database:', err);
+      }
+    }
+
+    if (!item) {
+      console.warn('Activity not found in database:', id);
+      return;
+    }
 
     if (drawerBadge) {
       drawerBadge.textContent = item.badgeType || 'ACTIVITY';
