@@ -218,7 +218,12 @@
   }
 
   function renderNextCommitment(item) {
-    if (!item) return;
+    const card = document.getElementById('card-next-commitment');
+    if (!item) {
+      if (card) card.style.display = 'none';
+      return;
+    }
+    if (card) card.style.display = 'block';
     const titleEl = document.getElementById('next-commitment-title');
     const projEl = document.getElementById('next-commitment-project');
     const timeEl = document.getElementById('next-commitment-time');
@@ -252,7 +257,12 @@
   }
 
   function renderNeedsScheduling(items) {
-    if (!items || items.length === 0) return;
+    const card = document.getElementById('card-needs-scheduling');
+    if (!items || items.length === 0) {
+      if (card) card.style.display = 'none';
+      return;
+    }
+    if (card) card.style.display = 'block';
     const item = items[0];
     const titleEl = document.getElementById('needs-scheduling-title');
     const descEl = document.getElementById('needs-scheduling-desc');
@@ -268,7 +278,11 @@
 
   function renderTeamAvailability(members) {
     const row = document.getElementById('team-avatars-row');
-    if (!row || !members || members.length === 0) return;
+    if (!row) return;
+    if (!members || members.length === 0) {
+      row.innerHTML = '<span style="font-size: 11px; opacity: 0.6;">No team availability data</span>';
+      return;
+    }
     row.innerHTML = members.map(m => `
       <div class="team-avatar ${m.avatarTheme || 'avatar-pk'}" title="${escapeHtml(m.name)} (${escapeHtml(m.role || '')}) - ${escapeHtml(m.status || 'Available')}">${escapeHtml(m.initials)}</div>
     `).join('');
@@ -276,7 +290,11 @@
 
   function renderConnectedCalendars(list) {
     const container = document.getElementById('calendar-sources-list');
-    if (!container || !list || list.length === 0) return;
+    if (!container) return;
+    if (!list || list.length === 0) {
+      container.innerHTML = '<span style="font-size: 11px; opacity: 0.6; padding: 4px 8px;">No calendars connected</span>';
+      return;
+    }
     container.innerHTML = list.map(src => {
       const key = (src.sourceKey || src.name || 'brick').toLowerCase();
       const icon = SOURCE_ICONS[key] || `<span class="cal-source-icon icon-brick">${key.substring(0, 2).toUpperCase()}</span>`;

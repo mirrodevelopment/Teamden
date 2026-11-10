@@ -156,38 +156,49 @@ public class CalendarIntegrationTest {
     }
 
     @Test
-    void testFetchCalendarEventsAutoSeedsBaseline() throws Exception {
+    void testFetchCalendarEventsReturnsEmptyWhenNoEvents() throws Exception {
         mockMvc.perform(get("/api/calendar/events").session(sessionAlpha))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(14))))
-                .andExpect(jsonPath("$[0].title", notNullValue()))
-                .andExpect(jsonPath("$[0].date", notNullValue()))
-                .andExpect(jsonPath("$[0].startTime", notNullValue()));
+                .andExpect(jsonPath("$", hasSize(0)));
 
         long count = calendarEventRepository.countByOrganizationId(orgAlpha.getId());
-        assertThat(count).isGreaterThanOrEqualTo(14);
+        assertThat(count).isEqualTo(0);
     }
 
     @Test
-    void testFetchCalendarPageDataReturnsAllSectionsFromDb() throws Exception {
+    void testFetchCalendarPageDataReturnsDbState() throws Exception {
+        calendarEventRepository.save(CalendarEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .user(userAlpha)
+                .title("Design standup")
+                .eventDate(LocalDate.now())
+                .dayOfWeek(0)
+                .startTime("09:30")
+                .endTime("10:00")
+                .startMinutes(570)
+                .endMinutes(600)
+                .project("Client Application")
+                .subtitle("Daily standup")
+                .category("meeting")
+                .colorTheme("lavender")
+                .calendarSource("brick")
+                .icon("team")
+                .location("meet.google.com/bric-des-sync")
+                .attendees("Priya Kapoor, Alex Rivera")
+                .description("Quick daily design standup")
+                .agendaText("Review tickets")
+                .notesText("Notes")
+                .decisionTitle("Proceed with sprint plan")
+                .build());
+
         mockMvc.perform(get("/api/calendar/data").session(sessionAlpha))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.events", hasSize(greaterThanOrEqualTo(14))))
-                .andExpect(jsonPath("$.events[0].title", notNullValue()))
-                .andExpect(jsonPath("$.events[0].agenda", notNullValue()))
-                .andExpect(jsonPath("$.events[0].notes", notNullValue()))
-                .andExpect(jsonPath("$.events[0].decision.title", notNullValue()))
-                .andExpect(jsonPath("$.events[0].attendeesList", notNullValue()))
-                .andExpect(jsonPath("$.upcomingCommitments", hasSize(4)))
-                .andExpect(jsonPath("$.upcomingCommitments[0].title", is("Project kickoff")))
-                .andExpect(jsonPath("$.nextCommitment.title", is("Design standup")))
-                .andExpect(jsonPath("$.nextCommitment.timeText", is("Today · 09:30 – 10:00")))
-                .andExpect(jsonPath("$.needsScheduling", hasSize(greaterThanOrEqualTo(1))))
-                .andExpect(jsonPath("$.needsScheduling[0].title", is("Homepage approval")))
-                .andExpect(jsonPath("$.calendars", hasSize(3)))
-                .andExpect(jsonPath("$.calendars[0].name", is("Brick")))
-                .andExpect(jsonPath("$.teamAvailability", hasSize(4)))
-                .andExpect(jsonPath("$.teamAvailability[0].initials", is("PK")));
+                .andExpect(jsonPath("$.events", hasSize(1)))
+                .andExpect(jsonPath("$.events[0].title", is("Design standup")))
+                .andExpect(jsonPath("$.events[0].agenda", hasItem("Review tickets")))
+                .andExpect(jsonPath("$.events[0].notes", is("Notes")))
+                .andExpect(jsonPath("$.events[0].decision.title", is("Proceed with sprint plan")));
     }
 
     @Test

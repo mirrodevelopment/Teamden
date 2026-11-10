@@ -43,7 +43,6 @@ public class CalendarService {
     public CalendarPageDataDto getCalendarPageData() {
         Organization org = resolveCurrentOrganization();
         User user = resolveCurrentUser(org);
-        ensureBaselineRecords(org, user);
 
         List<CalendarEvent> events = calendarEventRepository.findByOrganizationIdOrderByEventDateAscStartTimeAsc(org.getId());
         List<CalendarEventDto> eventDtos = events.stream().map(this::toDto).collect(Collectors.toList());
@@ -95,22 +94,14 @@ public class CalendarService {
                 .findFirst()
                 .orElse(events.isEmpty() ? null : events.get(0));
 
-        NextCommitmentDto nextDto;
+        NextCommitmentDto nextDto = null;
         if (nextEvt != null) {
             nextDto = NextCommitmentDto.builder()
                     .title(nextEvt.getTitle())
-                    .project(nextEvt.getProject() != null ? nextEvt.getProject() : "Website Redesign")
+                    .project(nextEvt.getProject() != null ? nextEvt.getProject() : "Workspace")
                     .timeText(String.format("Today · %s – %s", nextEvt.getStartTime(), nextEvt.getEndTime()))
                     .targetEventId(nextEvt.getId().toString())
-                    .meetingUrl(nextEvt.getMeetingUrl() != null ? nextEvt.getMeetingUrl() : "https://meet.google.com/bric-des-sync")
-                    .build();
-        } else {
-            nextDto = NextCommitmentDto.builder()
-                    .title("Design review.")
-                    .project("Website Redesign")
-                    .timeText("Today · 11:00 – 12:00")
-                    .targetEventId("")
-                    .meetingUrl("https://meet.google.com/bric-des-sync")
+                    .meetingUrl(nextEvt.getMeetingUrl() != null ? nextEvt.getMeetingUrl() : "")
                     .build();
         }
 
@@ -128,7 +119,6 @@ public class CalendarService {
     public List<CalendarEventDto> getCalendarEvents(String startDateStr, String endDateStr) {
         Organization org = resolveCurrentOrganization();
         User user = resolveCurrentUser(org);
-        ensureBaselineRecords(org, user);
 
         List<CalendarEvent> events;
         if (startDateStr != null && !startDateStr.isBlank() && endDateStr != null && !endDateStr.isBlank()) {
@@ -427,274 +417,6 @@ public class CalendarService {
         } catch (Exception ex) {
             return 9 * 60;
         }
-    }
-
-    public void ensureBaselineRecords(Organization org, User user) {
-        long count = calendarEventRepository.countByOrganizationId(org.getId());
-        if (count > 0) {
-            return;
-        }
-
-        // 1. EXACT REFERENCE EVENTS (from user's uploaded screenshot)
-        List<CalendarEvent> seeds = List.of(
-                // --- MONDAY 2026-10-26 ---
-                buildSeed(org, user, "Design standup", "2026-10-26", 0, "09:30", "10:00", 570, 600,
-                        "Client Application", "Daily standup", "meeting", "lavender", "brick", "team",
-                        "meet.google.com/bric-des-sync", "Priya Kapoor, Alex Rivera, Marcus Jones",
-                        "Quick daily design standup to align on client application tickets and current deliverables."),
-                buildSeed(org, user, "Homepage work", "2026-10-26", 0, "11:00", "12:30", 660, 750,
-                        "Website Redesign", "Focus session", "focus", "blue", "google", "document",
-                        "Studio Desk 4", "Alex Rivera",
-                        "Dedicated deep work session to build out responsive homepage layouts and hero typography."),
-                buildSeed(org, user, "Client review", "2026-10-26", 0, "14:00", "15:00", 840, 900,
-                        "Website Redesign", "Website Redesign", "review", "peach", "brick", "team",
-                        "Room 2A & Zoom", "Sara Kim, Priya Kapoor, Client Stakeholders",
-                        "Present sprint milestone prototypes and collect sign-off on design system tokens."),
-
-                // --- TUESDAY 2026-10-27 ---
-                buildSeed(org, user, "User research", "2026-10-27", 1, "09:00", "10:30", 540, 630,
-                        "Client Application", "Client Application", "focus", "lime", "brick", "search",
-                        "Research Lab 1", "Priya Kapoor, User Test Group",
-                        "Usability testing sessions evaluating onboarding flow friction and feedback collection."),
-                buildSeed(org, user, "Design critique", "2026-10-27", 1, "13:00", "14:00", 780, 840,
-                        "Design Team", "Internal review", "review", "lavender", "brick", "team",
-                        "Design Loft 3", "Priya Kapoor, Marcus Jones, Alex Rivera",
-                        "Cross-disciplinary critique covering the mobile drawer navigation and fluid font clamps."),
-
-                // --- WEDNESDAY 2026-10-28 ---
-                buildSeed(org, user, "Product sync", "2026-10-28", 2, "10:00", "11:00", 600, 660,
-                        "Client Application", "Client Application", "meeting", "lavender", "brick", "team",
-                        "Executive Boardroom", "Sara Kim, Alex Rivera",
-                        "Product sync reviewing scope, timeline, and Sprint 42 client deliverables."),
-                buildSeed(org, user, "Homepage dev", "2026-10-28", 2, "11:30", "13:00", 690, 780,
-                        "Website Redesign", "Focus session", "focus", "blue", "google", "document",
-                        "Studio Desk 4", "Alex Rivera",
-                        "Engineering implementation of responsive grid layouts and font clamps."),
-                buildSeed(org, user, "Content review", "2026-10-28", 2, "14:30", "15:30", 870, 930,
-                        "Design Guidelines", "Design Guidelines", "review", "peach", "microsoft", "document",
-                        "Coffee Corner", "Marcus Jones, Alex Rivera",
-                        "Review brand tone, typography hierarchy, and content guidelines."),
-
-                // --- THURSDAY 2026-10-29 ---
-                buildSeed(org, user, "Team planning", "2026-10-29", 3, "09:00", "10:00", 540, 600,
-                        "Q4 priorities", "Q4 priorities", "meeting", "blue", "microsoft", "calendar",
-                        "meet.google.com/team-plan", "Full Teamden Team",
-                        "Align priorities, review capacity, and set sprint targets."),
-                buildSeed(org, user, "Design review", "2026-10-29", 3, "11:00", "12:00", 660, 720,
-                        "Website Redesign", "Website Redesign", "review", "lavender", "brick", "team",
-                        "Executive Boardroom", "Priya Kapoor, Alex Rivera, Sara Kim",
-                        "Review high-fidelity components with leadership team ahead of engineering handoff."),
-                buildSeed(org, user, "Prototype work", "2026-10-29", 3, "14:00", "15:30", 840, 930,
-                        "Website Redesign", "Focus session", "focus", "blue", "google", "box",
-                        "Studio Desk 4", "Alex Rivera",
-                        "Figma interactive prototyping for mobile gestures and drawer interactions."),
-
-                // --- FRIDAY 2026-10-30 ---
-                buildSeed(org, user, "Design handoff", "2026-10-30", 4, "10:00", "11:30", 600, 690,
-                        "Website Redesign", "Website Redesign", "focus", "lime", "brick", "box",
-                        "Dev Lab", "Alex Rivera, Front-end Team",
-                        "Engineering handoff covering CSS custom properties and theme tokens."),
-                buildSeed(org, user, "Client update", "2026-10-30", 4, "13:00", "14:00", 780, 840,
-                        "Client Application", "Client Application", "meeting", "lavender", "brick", "team",
-                        "Room 1A & Livestream", "Sara Kim, Alex Rivera, Client Team",
-                        "Weekly progress update and demo of completed sprint milestone."),
-                buildSeed(org, user, "Documentation", "2026-10-30", 4, "15:00", "16:00", 900, 960,
-                        "Design System", "Design System", "focus", "blue", "google", "document",
-                        "Library Desk 2", "Alex Rivera",
-                        "Write technical specifications, migration notes, and developer guides.")
-        );
-
-        List<CalendarEvent> savedEvents = calendarEventRepository.saveAll(seeds);
-        CalendarEvent kickoffEvent = savedEvents.get(0);
-        CalendarEvent devEvent = savedEvents.size() > 6 ? savedEvents.get(6) : kickoffEvent;
-        CalendarEvent reviewEvent = savedEvents.size() > 9 ? savedEvents.get(9) : kickoffEvent;
-        CalendarEvent handoffEvent = savedEvents.size() > 11 ? savedEvents.get(11) : kickoffEvent;
-
-        // 2. UPCOMING COMMITMENTS (4 cards)
-        List<CalendarCommitment> commitments = List.of(
-                CalendarCommitment.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .dayText("MON 26 OCT")
-                        .title("Project kickoff")
-                        .subtitle("Client Application")
-                        .theme("lime")
-                        .icon("flag")
-                        .targetEvent(kickoffEvent)
-                        .commitmentDate(LocalDate.parse("2026-10-26"))
-                        .displayOrder(0)
-                        .build(),
-                CalendarCommitment.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .dayText("WED 28 OCT")
-                        .title("Homepage development")
-                        .subtitle("Task deadline")
-                        .theme("blue")
-                        .icon("check")
-                        .targetEvent(devEvent)
-                        .commitmentDate(LocalDate.parse("2026-10-28"))
-                        .displayOrder(1)
-                        .build(),
-                CalendarCommitment.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .dayText("THU 29 OCT")
-                        .title("Design review")
-                        .subtitle("Website Redesign")
-                        .theme("lavender")
-                        .icon("team")
-                        .targetEvent(reviewEvent)
-                        .commitmentDate(LocalDate.parse("2026-10-29"))
-                        .displayOrder(2)
-                        .build(),
-                CalendarCommitment.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .dayText("FRI 30 OCT")
-                        .title("Design handoff")
-                        .subtitle("Milestone")
-                        .theme("peach")
-                        .icon("box")
-                        .targetEvent(handoffEvent)
-                        .commitmentDate(LocalDate.parse("2026-10-30"))
-                        .displayOrder(3)
-                        .build()
-        );
-        calendarCommitmentRepository.saveAll(commitments);
-
-        // 3. NEEDS SCHEDULING CARD
-        CalendarNeedsScheduling needsSched = CalendarNeedsScheduling.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .title("Homepage approval")
-                .description("A review is required, but no meeting time has been set.")
-                .project("Website Redesign")
-                .actionLabel("Find a time")
-                .isResolved(false)
-                .build();
-        calendarNeedsSchedulingRepository.save(needsSched);
-
-        // 4. CONNECTED CALENDARS
-        List<CalendarSource> sources = List.of(
-                CalendarSource.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .code("brick")
-                        .name("Brick")
-                        .accountEmail("alex@brick.design")
-                        .colorDot("lime")
-                        .isActive(true)
-                        .isDefault(true)
-                        .build(),
-                CalendarSource.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .code("google")
-                        .name("Google Calendar")
-                        .accountEmail("alex.rivera@acme.com")
-                        .colorDot("blue")
-                        .isActive(true)
-                        .isDefault(false)
-                        .build(),
-                CalendarSource.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .code("microsoft")
-                        .name("Microsoft 365")
-                        .accountEmail("alex.rivera@enterprise.com")
-                        .colorDot("peach")
-                        .isActive(true)
-                        .isDefault(false)
-                        .build()
-        );
-        calendarSourceRepository.saveAll(sources);
-
-        // 5. TEAM AVAILABILITY MATRIX
-        List<CalendarTeamAvailability> team = List.of(
-                CalendarTeamAvailability.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .user(user)
-                        .memberInitials("PK")
-                        .memberName("Priya Kapoor")
-                        .memberRole("Design Lead")
-                        .avatarTheme("avatar-pk")
-                        .availabilityStatus("Available")
-                        .displayOrder(0)
-                        .build(),
-                CalendarTeamAvailability.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .user(user)
-                        .memberInitials("AR")
-                        .memberName("Alex Rivera")
-                        .memberRole("Frontend Engineer")
-                        .avatarTheme("avatar-ar")
-                        .availabilityStatus("Available")
-                        .displayOrder(1)
-                        .build(),
-                CalendarTeamAvailability.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .user(user)
-                        .memberInitials("SK")
-                        .memberName("Sara Kim")
-                        .memberRole("Product Manager")
-                        .avatarTheme("avatar-sk")
-                        .availabilityStatus("In a meeting")
-                        .displayOrder(2)
-                        .build(),
-                CalendarTeamAvailability.builder()
-                        .id(UUID.randomUUID())
-                        .organization(org)
-                        .user(user)
-                        .memberInitials("MJ")
-                        .memberName("Marcus Jones")
-                        .memberRole("Brand Designer")
-                        .avatarTheme("avatar-mj")
-                        .availabilityStatus("Focus time")
-                        .displayOrder(3)
-                        .build()
-        );
-        calendarTeamAvailabilityRepository.saveAll(team);
-    }
-
-    private CalendarEvent buildSeed(Organization org, User user, String title, String dateStr, int dayOfWeek,
-                                    String start, String end, int startMin, int endMin,
-                                    String project, String sub, String category, String colorTheme,
-                                    String calendarSource, String icon, String location, String attendees,
-                                    String desc) {
-        return CalendarEvent.builder()
-                .id(UUID.randomUUID())
-                .organization(org)
-                .user(user)
-                .title(title)
-                .eventDate(LocalDate.parse(dateStr))
-                .dayOfWeek(dayOfWeek)
-                .startTime(start)
-                .endTime(end)
-                .startMinutes(startMin)
-                .endMinutes(endMin)
-                .project(project)
-                .subtitle(sub)
-                .category(category)
-                .colorTheme(colorTheme)
-                .calendarSource(calendarSource)
-                .icon(icon)
-                .location(location)
-                .meetingUrl(location.startsWith("http") ? location : "https://" + location)
-                .attendees(attendees)
-                .description(desc)
-                .organizerName("Alex R.")
-                .organizerRole("Lead Designer")
-                .rsvpStatus("Accepted")
-                .agendaText("Review project milestone direction\nConfirm team deliverables\nConfirm development handoff")
-                .notesText(desc)
-                .notesTimestamp("Saved 5 min ago")
-                .decisionTitle(String.format("Proceed with %s sprint plan.", title))
-                .decisionStatus("Approved internally · Client confirmation pending")
-                .build();
     }
 
     private Organization resolveCurrentOrganization() {

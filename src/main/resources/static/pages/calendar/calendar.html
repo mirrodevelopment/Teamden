@@ -259,12 +259,12 @@
         <aside class="calendar-right-rail" aria-label="Contextual Calendar Information">
 
           <!-- CARD 1: 01 / NEXT COMMITMENT (Matte Charcoal Black) -->
-          <div class="rail-card next-commitment-card" id="card-next-commitment">
+          <div class="rail-card next-commitment-card" id="card-next-commitment" style="display: none;">
             <span class="rail-card-label">01 / NEXT COMMITMENT</span>
-            <h3 class="next-commitment-title" id="next-commitment-title">Design review.</h3>
+            <h3 class="next-commitment-title" id="next-commitment-title">-</h3>
             <div class="next-commitment-meta">
-              <span class="commitment-project" id="next-commitment-project">Website Redesign</span>
-              <span class="commitment-time" id="next-commitment-time">Today · 11:00 – 12:00</span>
+              <span class="commitment-project" id="next-commitment-project">-</span>
+              <span class="commitment-time" id="next-commitment-time">-</span>
             </div>
             <button class="btn-open-meeting" id="btn-open-meeting" type="button">
               <span>Open meeting</span>
@@ -273,10 +273,10 @@
           </div>
 
           <!-- CARD 2: 02 / NEEDS SCHEDULING (Soft Warm Peach) -->
-          <div class="rail-card needs-scheduling-card" id="card-needs-scheduling">
+          <div class="rail-card needs-scheduling-card" id="card-needs-scheduling" style="display: none;">
             <span class="rail-card-label">02 / NEEDS SCHEDULING</span>
-            <h3 class="needs-scheduling-title" id="needs-scheduling-title">Homepage approval</h3>
-            <p class="needs-scheduling-desc" id="needs-scheduling-desc">A review is required, but no meeting time has been set.</p>
+            <h3 class="needs-scheduling-title" id="needs-scheduling-title">-</h3>
+            <p class="needs-scheduling-desc" id="needs-scheduling-desc">-</p>
             <button class="btn-find-time" id="btn-needs-scheduling-action" type="button">
               <span>Find a time</span>
               <span class="btn-arrow">→</span>
@@ -295,10 +295,7 @@
               </svg>
             </div>
             <div class="team-avatars-row" id="team-avatars-row">
-              <div class="team-avatar avatar-pk" title="Priya Kapoor (Design Lead)">PK</div>
-              <div class="team-avatar avatar-ar" title="Alex Rivera (Frontend Engineer)">AR</div>
-              <div class="team-avatar avatar-sk" title="Sara Kim (Product Manager)">SK</div>
-              <div class="team-avatar avatar-mj" title="Marcus Jones (Brand Designer)">MJ</div>
+              <!-- Dynamically populated from database -->
             </div>
             <p class="team-avail-desc">Check shared availability before scheduling.</p>
             <button class="btn-find-available-time" id="btn-team-avail-action" type="button">
@@ -314,58 +311,7 @@
               <button class="btn-add-calendar" id="btn-add-calendar" title="Connect calendar" aria-label="Connect calendar" type="button">+</button>
             </div>
             <div class="calendar-sources-list" id="calendar-sources-list">
-              <!-- Brick Calendar -->
-              <label class="cal-source-item" title="Toggle Brick Calendar">
-                <input type="checkbox" class="cal-checkbox" data-calendar="brick" checked>
-                <span class="cal-custom-checkbox">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-                <span class="cal-source-icon icon-brick">BR</span>
-                <div class="cal-source-info">
-                  <span class="cal-source-name">Brick</span>
-                  <span class="cal-source-sub">Your work and team events</span>
-                </div>
-              </label>
-
-              <!-- Google Calendar -->
-              <label class="cal-source-item" title="Toggle Google Calendar">
-                <input type="checkbox" class="cal-checkbox" data-calendar="google" checked>
-                <span class="cal-custom-checkbox">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-                <span class="cal-source-icon icon-google">
-                  <svg width="15" height="15" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                  </svg>
-                </span>
-                <div class="cal-source-info">
-                  <span class="cal-source-name">Google Calendar</span>
-                  <span class="cal-source-sub">Personal calendar</span>
-                </div>
-              </label>
-
-              <!-- Microsoft 365 -->
-              <label class="cal-source-item" title="Toggle Microsoft 365 Calendar">
-                <input type="checkbox" class="cal-checkbox" data-calendar="microsoft" checked>
-                <span class="cal-custom-checkbox">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-                <span class="cal-source-icon icon-microsoft">
-                  <svg width="15" height="15" viewBox="0 0 24 24">
-                    <path fill="#F25022" d="M1 1h10v10H1z"/>
-                    <path fill="#7FBA00" d="M13 1h10v10H13z"/>
-                    <path fill="#00A4EF" d="M1 13h10v10H1z"/>
-                    <path fill="#FFB900" d="M13 13h10v10H13z"/>
-                  </svg>
-                </span>
-                <div class="cal-source-info">
-                  <span class="cal-source-name">Microsoft 365</span>
-                  <span class="cal-source-sub">Work calendar</span>
-                </div>
-              </label>
+              <!-- Dynamically populated from database -->
             </div>
 
             <button class="btn-manage-calendars" id="btn-manage-calendars" type="button">
