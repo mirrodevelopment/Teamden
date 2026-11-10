@@ -104,33 +104,43 @@ echo.
 REM ---------------------------------------------------------------------------
 REM 4. User Confirmation Safety Gate
 REM ---------------------------------------------------------------------------
-if "%FORCE_MODE%"=="0" (
-    echo -----------------------------------------------------------------------
-    echo  WARNING: You are about to PERMANENTLY ERASE ALL DATA from:
-    echo  Database: %DB_NAME%
-    echo  All user tables [tasks, projects, users, organizations, etc.] will be
-    echo  emptied. All table structures and migration history will be preserved.
-    echo -----------------------------------------------------------------------
-    echo.
-    set /p "CONFIRM=Type Y to confirm and purge all data (or press Enter to cancel): "
-    if /i not "%CONFIRM%"=="Y" (
-        echo.
-        echo [ABORTED] Database purge cancelled by user. No data was modified.
-        echo.
-        goto :END
-    )
-    echo.
-) else (
+if "%FORCE_MODE%"=="1" (
     echo [INFO] Force flag detected. Proceeding without interactive prompt...
     echo.
+    goto :PROCEED_PURGE
 )
+
+echo -----------------------------------------------------------------------
+echo  WARNING: You are about to PERMANENTLY ERASE ALL DATA from:
+echo  Database: %DB_NAME%
+echo  All user tables [tasks, projects, users, organizations, etc.] will be
+echo  emptied. All table structures and migration history will be preserved.
+echo -----------------------------------------------------------------------
+echo.
+set "CONFIRM="
+set /p "CONFIRM=Type Y to confirm and purge all data (or press Enter to cancel): "
+set "CLEAN_CONFIRM=%CONFIRM: =%"
+if defined CLEAN_CONFIRM (
+    set "FIRST_CHAR=%CLEAN_CONFIRM:~0,1%"
+) else (
+    set "FIRST_CHAR="
+)
+if /i not "%FIRST_CHAR%"=="Y" (
+    echo.
+    echo [ABORTED] Database purge cancelled by user. No data was modified.
+    echo.
+    goto :END
+)
+echo.
+
+:PROCEED_PURGE
 
 REM ---------------------------------------------------------------------------
 REM 5. Execute Dynamic Truncation
 REM ---------------------------------------------------------------------------
 echo [2/3] Purging data from all application tables...
 
-"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "TRUNCATE TABLE activity_events, attendance_records, tasks, projects, organization_memberships, users, organizations RESTART IDENTITY CASCADE;"
+"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "TRUNCATE TABLE task_linked_documents, project_document_collaborators, project_documents, project_decisions, project_specifications, project_members, task_subtasks, activity_events, tasks, project_milestones, attendance_records, calendar_commitments, calendar_needs_scheduling, calendar_sources, calendar_team_availability, calendar_events, projects, organization_memberships, users, organizations RESTART IDENTITY CASCADE;"
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] An error occurred while executing table truncation.
@@ -146,7 +156,7 @@ REM ---------------------------------------------------------------------------
 echo [3/3] Verifying remaining table rows...
 echo.
 
-"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "SELECT 'activity_events' AS table_name, count(*) AS row_count FROM activity_events UNION ALL SELECT 'attendance_records', count(*) FROM attendance_records UNION ALL SELECT 'organization_memberships', count(*) FROM organization_memberships UNION ALL SELECT 'organizations', count(*) FROM organizations UNION ALL SELECT 'projects', count(*) FROM projects UNION ALL SELECT 'tasks', count(*) FROM tasks UNION ALL SELECT 'users', count(*) FROM users UNION ALL SELECT 'flyway_schema_history (preserved)', count(*) FROM flyway_schema_history;"
+"%PSQL_CMD%" -h %DB_HOST% -p %DB_PORT% -U %DB_USERNAME% -d %DB_NAME% -c "SELECT 'activity_events' AS table_name, count(*) AS row_count FROM activity_events UNION ALL SELECT 'attendance_records', count(*) FROM attendance_records UNION ALL SELECT 'calendar_commitments', count(*) FROM calendar_commitments UNION ALL SELECT 'calendar_events', count(*) FROM calendar_events UNION ALL SELECT 'calendar_needs_scheduling', count(*) FROM calendar_needs_scheduling UNION ALL SELECT 'calendar_sources', count(*) FROM calendar_sources UNION ALL SELECT 'calendar_team_availability', count(*) FROM calendar_team_availability UNION ALL SELECT 'organization_memberships', count(*) FROM organization_memberships UNION ALL SELECT 'organizations', count(*) FROM organizations UNION ALL SELECT 'projects', count(*) FROM projects UNION ALL SELECT 'tasks', count(*) FROM tasks UNION ALL SELECT 'users', count(*) FROM users UNION ALL SELECT 'flyway_schema_history (preserved)', count(*) FROM flyway_schema_history;"
 
 echo.
 echo =======================================================================

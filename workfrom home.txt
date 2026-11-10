@@ -40,6 +40,11 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
   * `ProjectService.java`: Fixed critical data leak in `resolveProject(id)`. Enforced active organization verification for project overview, tasks, documents, and activity endpoints.
   * Fixed lazy initialization on `getProjectActivity()` by adding `@Transactional(readOnly = true)`.
   * Eliminated unsafe tenant resolution fallbacks for authenticated users.
+- Database Purge Utility Robustness & Cascade Truncation:
+  * Eliminated Windows batch parse-time expansion bug on `set /p` inside parenthesized block in `purge_db.bat`.
+  * Added whitespace removal and first-character matching (`Y`/`y`) handling trailing space inputs.
+  * Extended truncation list to all 20 relational application tables with `RESTART IDENTITY CASCADE`.
+  * Preserved `flyway_schema_history` while verifying 0 rows across all user data tables.
 - Automated Integration Testing & Verification:
   * Added `ActivityIntegrationTest.java` (8 tests) covering all date filters, event types, search queries, and multi-tenant isolation.
   * Expanded `DashboardKanbanIntegrationTest.java` and `MultiOrganizationIsolationTest.java` with cross-tenant mutation assertions.
@@ -47,6 +52,7 @@ DAY 3 - 2026-11-10 (TUESDAY - TODAY)
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
+- Database Purge Utility: `purge_db.bat`.
 - Activity Persistence & Table View: `V6__activity_events_full_data.sql`, `ActivityEvent.java`, `ActivityService.java`, `activity.html`, `activity.css`, `activity.js`, `ActivityIntegrationTest.java`.
 - Dashboard & Activity Synchronization: `DashboardService.java`, `dashboard.js`.
 - Activity Suite: `ActivityController.java`, `ActivityPageDataDto.java`, `ActivityEventRepository.java`.
@@ -65,6 +71,7 @@ Example: Full eradication of code seed values in favor of database persistence
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
+- Database Purge: Tested interactive confirmation with trailing whitespace and `--force` flag; verified 0 rows across 13 monitored table categories with Flyway preserved at 6.
 - Test Suite: 45/45 integration tests passing 100% with 0 errors/failures (`./mvnw test`).
 - Multi-Tenant Isolation: Verified cross-organization rejection for activity, tasks, projects, calendar, and dashboards.
 

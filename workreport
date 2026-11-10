@@ -1129,16 +1129,23 @@ DAY 7 - 2026-11-10 (TUESDAY - TODAY)
     - Added `@Transactional(readOnly = true)` to `getProjectActivity()` and wrapped owner name access in defensive try-catch to resolve lazy Hibernate proxy initialization exceptions.
   * Insecure Fallback Eradication:
     - Updated `resolveCurrentOrganization()` and `resolveCurrentUser()` in both `DashboardService.java` and `ProjectService.java` to explicitly throw `ResourceNotFoundException` or `UnauthorizedException` when an authenticated user's organization is not found, eliminating silent cross-customer fallback leaks.
+- Database Purge & Truncation Utility Hardening (`purge_db.bat`):
+  * Resolved batch parse-time expansion bug where `set /p "CONFIRM=..."` inside parenthesized conditional blocks (`if "%FORCE_MODE%"=="0" (...)`) evaluated `%CONFIRM%` at parse time as empty, causing immediate cancellation even when typing `Y`.
+  * Flattened execution flow with `:PROCEED_PURGE` jump and added whitespace removal (`%CONFIRM: =%`) and first-character parsing (`%CLEAN_CONFIRM:~0,1%`) to reliably accept `Y`, `y`, and inputs with accidental trailing spaces.
+  * Extended `TRUNCATE TABLE` cascade coverage across all 20 relational application tables (`task_linked_documents`, `project_document_collaborators`, `project_documents`, `project_decisions`, `project_specifications`, `project_members`, `task_subtasks`, `activity_events`, `tasks`, `project_milestones`, `attendance_records`, `calendar_commitments`, `calendar_needs_scheduling`, `calendar_sources`, `calendar_team_availability`, `calendar_events`, `projects`, `organization_memberships`, `users`, `organizations`) with `RESTART IDENTITY CASCADE`.
+  * Verified interactive `Y` confirmation and non-interactive `--force` flag execution (13/13 tables verified at 0 rows, Flyway preserved).
 - Test Suite Expansion & 100% Green Validation:
   * Rectified foreign key cascading teardown sequence in `MultiOrganizationIsolationTest.java`,
     `DashboardKanbanIntegrationTest.java`, and `CalendarIntegrationTest.java` deleting child calendar
     tables prior to `calendar_events`.
   * Expanded `DashboardKanbanIntegrationTest.java`: Added `testToggleTaskMultiTenantIsolation()`, `testToggleTaskInvalidId()`, and `testToggleTaskNotFound()`.
   * Expanded `MultiOrganizationIsolationTest.java`: Added `testCrossOrganizationProjectAccessRejected()`, `testCrossOrganizationTaskToggleRejected()`, `testCrossOrganizationTaskMoveRejected()`, and `testOwnOrganizationProjectAccessAllowed()`.
-  * Successfully passed all 37 integration tests across all 7 test suites with 0 failures and 0 errors.
+  * Successfully passed all 45 integration tests across all 8 test suites with 0 failures and 0 errors.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
+- Database Purge Utility:
+  * `purge_db.bat`: Eliminated parse-time parenthesis expansion trap, added whitespace-safe confirmation and complete 20-table truncation cascade.
 - Activity Suite (Dedicated Page & Range Filtering):
   * `src/main/resources/static/pages/activity/activity.html`: Master markup with timeline, range filters, KPI chips, and drawer.
   * `src/main/resources/static/pages/activity/activity.css`: Responsive design tokens, continuous hairline timeline, and drawer styles.
