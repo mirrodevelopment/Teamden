@@ -13,37 +13,38 @@ DAY 4 - 2026-11-12 (THURSDAY - TODAY)
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
 - Diagnosed & Resolved "Your Priorities Always Empty" Defect in Dashboard Kanban:
-  * Removed `filter(t -> heroId == null || !t.getId().equals(heroId))` from `DashboardService.java`.
-  * Verified all user tasks populate NOW, NEXT, and LATER while spotlighting hero candidate.
+  * Removed hero exclusion filter from `DashboardService.java` so all tasks populate columns.
 - Implemented Unassigned Projects Attention Card on Today Dashboard per Reference Mockup:
-  * Replaced hardcoded unread mentions alert (Card 3) with dynamic PostgreSQL unassigned projects counter.
-  * Added `countByOrganizationIdAndOwnerIsNull` and `findUnassignedByOrganizationId` to `ProjectRepository`.
-  * Built `GET /api/projects/unassigned` and `PATCH /api/projects/{id}/assign` endpoints in `ProjectController`.
-  * Wired interactive `openUnassignedProjectsModal()` in `dashboard.js` with inline lead assignment dropdown.
-  * Updated `create-project.js` and `projects.js` to allow creating unassigned projects (`owner = null`).
-  * Added dynamic card styling (`card-peach` when unassigned > 0, `card-neutral` when 0).
-  * 100% green tests: 58/58 passing integration tests across entire test suite (`./mvnw test`).
+  * Replaced hardcoded unread mentions alert (Card 3) with dynamic PostgreSQL unassigned counter.
+  * Built `GET /api/projects/unassigned` and `PATCH /api/projects/{id}/assign` endpoints.
+  * Wired interactive `openUnassignedProjectsModal()` in `dashboard.js` with lead dropdown.
+- Eradicated Recent Activity Seed Data & Enabled Live Real-Time Movement Feeds:
+  * Purged dummy test artifacts (`sdfervfxc`, `sdddddddddd`) from PostgreSQL tables.
+  * Removed artificial time-shifting (`-42m`) and hardcoded "TODAY" labels in `DashboardService`.
+  * Implemented dynamic day label computation (`TODAY`, `YESTERDAY`, or `d MMM`).
+  * Enforced full activity metadata on task toggle, move, and add operations.
+  * 100% green tests: 59/59 passing integration tests across entire test suite (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Backend Services & Repositories: `ProjectRepository.java`, `ProjectService.java`, `DashboardService.java`.
+- Backend Services: `DashboardService.java`, `ProjectService.java`, `ProjectRepository.java`.
 - Controllers & DTOs: `ProjectController.java`, `AssignLeadRequestDto.java`.
-- Frontend Controllers & UI: `dashboard.js`, `create-project.js`, `projects.js`.
-- Automated Tests: `ProjectIntegrationTest.java`, `DashboardKanbanIntegrationTest.java`.
+- Automated Tests: `DashboardKanbanIntegrationTest.java`, `ProjectIntegrationTest.java`.
+- Database State: Purged test dummy rows in `activity_events`, `tasks`, and `projects`.
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Needs Attention Card 3 on Today Page
+Example: Recent Activity Timeline on Today Dashboard
   [BEFORE]:
-  Card 3 displayed static dummy counter `00 Unread mentions / No unread mentions`, completely disconnected from database.
+  Displayed dummy test items (`sdfervfxc`, `sdddddddddd`) with hardcoded "TODAY" even for past dates and artificial time offsets.
   [AFTER]:
-  Card 3 dynamically reflects PostgreSQL unassigned projects (`0X Unassigned projects / Require project lead` with peach tint). Clicking card opens interactive assignment modal allowing direct project lead allocation and real-time dashboard refresh.
+  Displays authentic real-world workspace actions with exact timestamps, calculated day labels, and complete action/target/badge metadata.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Live Server Verification: Tested `/api/projects/unassigned` and `/api/dashboard/data` on port 8080.
-- Database Verification: Verified project lead assignment updates PostgreSQL `projects` and logs `ActivityEvent`.
-- Automated Test Suite: 58/58 integration tests passing 100% green (`./mvnw test`).
+- Database Verification: Confirmed 0 dummy rows; real actions update `activity_events`.
+- Live API Verification: Verified `GET /api/dashboard/data` outputs live movements in real time.
+- Automated Test Suite: 59/59 integration tests passing 100% green (`./mvnw test`).
 
 ===============================================================================
 DAY 3 - 2026-11-10 (TUESDAY)
@@ -81,6 +82,7 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 12 [COMPLETED]: Dedicated Project Creation page (`/pages/projects/create-project/`), modal, options API & DB persistence.
 - Phase 13 [COMPLETED]: Fixed Kanban column task exclusion bug in `DashboardService` (retained all column tasks).
 - Phase 14 [COMPLETED]: Unassigned projects attention card, lead assignment modal & persistence (Card 3 in NEEDS ATTENTION).
+- Phase 15 [COMPLETED]: Eradicated Recent Activity dummy seed records & implemented dynamic movement feeds.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

@@ -144,8 +144,8 @@ public class DashboardService {
             List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
             List<ActivityItemDto> activities = new ArrayList<>();
             DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
+            DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("d MMM").withZone(ZoneId.systemDefault());
 
-            Instant lastTimestamp = null;
             for (ActivityEvent event : activityEvents) {
                 String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
                 String dot = event.getDotColor() != null ? event.getDotColor() : "purple";
@@ -157,17 +157,24 @@ public class DashboardService {
                 String infoText = event.getInfoText();
 
                 Instant eventInstant = event.getEventTimestamp();
+                String timeStr = "09:42";
+                String dayLabel = "TODAY";
                 if (eventInstant != null) {
-                    if (lastTimestamp != null && Math.abs(java.time.Duration.between(lastTimestamp, eventInstant).toMinutes()) < 2) {
-                        eventInstant = lastTimestamp.minus(java.time.Duration.ofMinutes(42));
+                    timeStr = timeFmt.format(eventInstant);
+                    LocalDate eventDate = eventInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+                    if (eventDate.equals(today)) {
+                        dayLabel = "TODAY";
+                    } else if (eventDate.equals(today.minusDays(1))) {
+                        dayLabel = "YESTERDAY";
+                    } else {
+                        dayLabel = dateFmt.format(eventInstant).toUpperCase();
                     }
-                    lastTimestamp = eventInstant;
                 }
 
                 activities.add(ActivityItemDto.builder()
                         .id("act-" + event.getId().toString().substring(0, 8))
-                        .time(eventInstant != null ? timeFmt.format(eventInstant) : "09:42")
-                        .dayLabel("TODAY")
+                        .time(timeStr)
+                        .dayLabel(dayLabel)
                         .dotColor(dot)
                         .badgeType(badge)
                         .author(authorName)
@@ -288,8 +295,14 @@ public class DashboardService {
                 .eventType(willBeCompleted ? ActivityEventType.TASK_COMPLETED : ActivityEventType.TASK_STATUS_CHANGED)
                 .entityType("TASK")
                 .entityId(task.getId())
-                .title(willBeCompleted ? "completed" : "reopened")
+                .title(willBeCompleted ? "completed task" : "reopened task")
                 .description(task.getTitle())
+                .actionText(willBeCompleted ? "completed" : "reopened")
+                .targetTitle(task.getTitle())
+                .subMeta(task.getProject() != null ? task.getProject().getName() + " / Tasks" : "Workspace / General")
+                .badgeType(willBeCompleted ? "COMPLETED" : "ASSIGNED")
+                .dotColor(willBeCompleted ? "green" : "orange")
+                .eventTimestamp(Instant.now())
                 .build();
         activityEventRepository.save(event);
 
@@ -340,8 +353,14 @@ public class DashboardService {
                 .eventType(ActivityEventType.TASK_MOVED)
                 .entityType("TASK")
                 .entityId(task.getId())
-                .title("moved task to " + newColumn.name())
+                .title("moved task")
                 .description(String.format("Moved '%s' from %s to %s", task.getTitle(), oldColumn.name(), newColumn.name()))
+                .actionText("moved task to " + newColumn.name())
+                .targetTitle(task.getTitle())
+                .subMeta(task.getProject() != null ? task.getProject().getName() + " / Kanban" : "Workspace / General")
+                .badgeType("ASSIGNED")
+                .dotColor("blue")
+                .eventTimestamp(Instant.now())
                 .build();
         activityEventRepository.save(event);
 
@@ -429,6 +448,12 @@ public class DashboardService {
                 .entityId(newTask.getId())
                 .title("created task")
                 .description(newTask.getTitle())
+                .actionText("created task")
+                .targetTitle(newTask.getTitle())
+                .subMeta(newTask.getProject() != null ? newTask.getProject().getName() + " / Workspace" : "Workspace / General")
+                .badgeType("ASSIGNED")
+                .dotColor("orange")
+                .eventTimestamp(Instant.now())
                 .build();
         activityEventRepository.save(event);
 

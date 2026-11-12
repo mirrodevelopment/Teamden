@@ -1542,6 +1542,44 @@ Example: Needs Attention Card 3 on Today Page
 - Database Verification: Verified project lead assignment updates PostgreSQL `projects` and logs `ActivityEvent`.
 - Automated Test Suite: 58/58 integration tests passing 100% green (`./mvnw test`).
 
+--------------------------------------------------------------------------------
+11. RECENT ACTIVITY SEED ERADICATION & DYNAMIC MOVEMENTS (2026-11-12)
+--------------------------------------------------------------------------------
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Purge of Artifactual Test Seeds from Database:
+  * Removed test dummy rows (`sdfervfxc`, `sdddddddddd`) from PostgreSQL `activity_events`, `tasks`, and `projects`.
+- Eradication of Synthetic Offsets & Hardcoded Date Labels:
+  * Removed artificial time-shifting logic (`-42m`) in `DashboardService.java`.
+  * Implemented dynamic day label computation (`TODAY`, `YESTERDAY`, `d MMM`) by matching `eventTimestamp` with `today`.
+  * Enforced complete metadata (`actionText`, `targetTitle`, `subMeta`, `badgeType`, `dotColor`, `eventTimestamp`) across all dashboard mutations (`toggleTask`, `moveTask`, `addTask`).
+- Live Movement Feed Synchronization:
+  * Verified live task creation and task completion instantly prepend authentic movements to the Recent Activity timeline.
+  * Verified empty state renders cleanly when no movements exist.
+- Automated Testing & Regression Verification:
+  * Added test `testDashboardDataReturnsLiveActivities` in `DashboardKanbanIntegrationTest.java`.
+  * All 59 integration tests passing 100% green across all suites (`./mvnw test`).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- Backend Services: `DashboardService.java`.
+- Automated Tests: `DashboardKanbanIntegrationTest.java`.
+- Database State: Purged test dummy rows in PostgreSQL.
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Recent Activity Timeline on Today Dashboard
+  [BEFORE]:
+  Rendered old test records (`sdfervfxc`, `sdddddddddd`) with hardcoded "TODAY" labels and synthetic 42-minute time alterations.
+  [AFTER]:
+  Renders genuine user and workspace actions with exact real-world timestamps, computed day labels, and rich metadata pills.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Database Verification: Verified `sdfervfxc` and `sdddddddddd` are purged from PostgreSQL.
+- Live API Verification: Verified `GET /api/dashboard/data` displays live movements.
+- Automated Test Suite: 59/59 integration tests passing 100% green (`./mvnw test`).
+
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================
@@ -1596,7 +1634,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Strict adherence to `fragments/theme/theme.css` `--dash-*` tokens platform-wide.
 - [x] Universal dual-theme (Light and Dark mode) support across all application views.
 - [x] Multi-tenant organization isolation and security validation in backend controller & service.
-- [x] 100% green test suite across all 58 integration test cases.
+- [x] 100% green test suite across all 59 integration test cases.
 - [x] Target directory hot-reload synchronization (`target/classes/static`).
 - [x] Interactive task completion & state transition tests on Kanban board.
 - [x] Full Calendar raw data migration to PostgreSQL (Flyway V5) and Table view.
@@ -1606,6 +1644,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Interactive Project Creation modal, dedicated page (`/pages/projects/create-project/create-project.html`), and DB persistence.
 - [x] Fixed Kanban column task exclusion defect in `DashboardService.java` (all columns retain tasks).
 - [x] Unassigned projects attention card (Card 3), interactive lead assignment modal & PostgreSQL persistence.
+- [x] Eradicated Recent Activity dummy seed records and enabled live authentic movement feeds with dynamic date labels.
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------

@@ -388,4 +388,31 @@ public class DashboardKanbanIntegrationTest {
                 .andExpect(jsonPath("$.attentionItems[2].subtitle").value("Require project lead"))
                 .andExpect(jsonPath("$.attentionItems[2].count").value(not("00")));
     }
+
+    @Test
+    @DisplayName("Should return live activity events with accurate day labels and metadata")
+    void testDashboardDataReturnsLiveActivities() throws Exception {
+        activityEventRepository.save(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .actor(userAlpha)
+                .eventType(ActivityEventType.TASK_CREATED)
+                .entityType("TASK")
+                .title("created task")
+                .actionText("created task")
+                .targetTitle("Authentication Audit")
+                .subMeta("Security / Engineering")
+                .badgeType("ASSIGNED")
+                .dotColor("orange")
+                .eventTimestamp(java.time.Instant.now())
+                .build());
+
+        mockMvc.perform(get("/api/dashboard/data").session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activities").isArray())
+                .andExpect(jsonPath("$.activities[0].dayLabel").value("TODAY"))
+                .andExpect(jsonPath("$.activities[0].actionText").value("created task"))
+                .andExpect(jsonPath("$.activities[0].targetTitle").value("Authentication Audit"))
+                .andExpect(jsonPath("$.activities[0].author").value(userAlpha.getFullName()));
+    }
 }
