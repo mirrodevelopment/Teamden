@@ -81,10 +81,9 @@ public class DashboardService {
 
             final UUID heroId = heroCandidate != null ? heroCandidate.getId() : null;
 
-            // 2. Populate Kanban Columns (NOW, NEXT, LATER) excluding the hero card from column tasks
+            // 2. Populate Kanban Columns (NOW, NEXT, LATER) with all active tasks
             List<Task> openTasks = allTasks.stream()
                     .filter(t -> t.getStatus() != TaskStatus.CANCELLED)
-                    .filter(t -> heroId == null || !t.getId().equals(heroId))
                     .sorted(Comparator.comparingInt(Task::getColumnOrder)
                             .thenComparing(Task::getCreatedAt))
                     .collect(Collectors.toList());

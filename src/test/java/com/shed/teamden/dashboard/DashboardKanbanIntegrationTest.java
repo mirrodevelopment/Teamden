@@ -238,8 +238,10 @@ public class DashboardKanbanIntegrationTest {
                 .andExpect(jsonPath("$.nowTasks").isArray())
                 .andExpect(jsonPath("$.nextTasks").isArray())
                 .andExpect(jsonPath("$.laterTasks").isArray())
-                .andExpect(jsonPath("$.nowTasks[0].title").value("Alpha Kanban Task"))
-                .andExpect(jsonPath("$.nowTasks[0].column").value("NOW"));
+                .andExpect(jsonPath("$.nowTasks", hasSize(2)))
+                .andExpect(jsonPath("$.nowTasks[0].title").value("Finalise the website service card"))
+                .andExpect(jsonPath("$.nowTasks[1].title").value("Alpha Kanban Task"))
+                .andExpect(jsonPath("$.nowTasks[1].column").value("NOW"));
     }
 
     @Test

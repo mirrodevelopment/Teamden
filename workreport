@@ -1457,6 +1457,44 @@ Example: Project Creation & Zero-Mock Database Persistence
 - Database Verification: Verified project insertion and activity event generation in PostgreSQL.
 - Test Suite: 53/53 integration tests passing 100% green (`./mvnw test`).
 
+--------------------------------------------------------------------------------
+9. RESOLUTION OF "YOUR PRIORITIES ALWAYS EMPTY" DEFECT (2026-11-12)
+--------------------------------------------------------------------------------
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Root Cause Investigation of Empty Kanban Columns:
+  * Analyzed `DashboardService.java` query logic for the Kanban priorities block ("YOUR PRIORITIES").
+  * Identified line 87: `openTasks.stream().filter(t -> heroId == null || !t.getId().equals(heroId))`.
+  * This filter was originally designed when 7 synthetic baseline tasks existed, intentionally leaving the top priority task out of the column to avoid duplicate rendering with the hero card.
+  * Following seed eradication, when a workspace has only 1 or 2 genuine user tasks, the single task was selected as `heroCandidate` and dropped from `openTasks`, leaving `NOW`, `NEXT`, and `LATER` columns completely empty (`00`).
+  * In addition, the headline counter (`dash-total-tasks-count`) calculated the sum of column tasks, displaying `00 TASKS →`.
+- Architectural Rectification:
+  * Removed `.filter(t -> heroId == null || !t.getId().equals(heroId))` from `DashboardService.java`.
+  * All non-cancelled tasks now properly populate their respective Kanban columns (`NOW`, `NEXT`, `LATER`), allowing users to view, check off, and drag-and-drop all tasks.
+  * The top priority task remains spotlighted in the hero card above while simultaneously appearing in its designated column.
+- Automated Testing & Regression Verification:
+  * Updated `DashboardKanbanIntegrationTest.java` to verify that both `taskHero` and column tasks are retained in `nowTasks`.
+  * All 53 integration tests passing 100% green across all 11 test suites (`./mvnw test`).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- Backend Services: `DashboardService.java`.
+- Integration Tests: `DashboardKanbanIntegrationTest.java`.
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Kanban Column Task Population
+  [BEFORE]:
+  Creating a task in column `NEXT` resulted in `NOW 00`, `NEXT 00`, `LATER 00`, and `00 TASKS →` on the dashboard because `DashboardService` removed the hero priority task from the Kanban list.
+  [AFTER]:
+  Tasks appear immediately in their chosen Kanban column (`NEXT 01`, `01 TASKS →`) while the top priority task is highlighted in the hero card above.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Live Server Verification: Tested `/api/dashboard/data` on port 8080 confirming `nextTasks` contains task `sdddddddddd`.
+- Database Verification: Verified PostgreSQL `tasks` row with `kanban_column = 'NEXT'` renders in UI.
+- Automated Test Suite: 53/53 integration tests passing 100% green (`./mvnw test`).
+
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================
@@ -1519,6 +1557,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Activity full database persistence (Flyway V6) and dual Table / Timeline views.
 - [x] Interactive Task Creation modal, dedicated page (`/pages/tasks/create.html`), and DB persistence.
 - [x] Interactive Project Creation modal, dedicated page (`/pages/projects/create-project/create-project.html`), and DB persistence.
+- [x] Fixed Kanban column task exclusion defect in `DashboardService.java` (all columns retain tasks).
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------
