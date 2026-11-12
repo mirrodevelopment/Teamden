@@ -438,6 +438,10 @@ public class ProjectService {
         String statusDotColor = (p.getStatus() == ProjectStatus.ACTIVE) ? "green"
                 : (p.getStatus() == ProjectStatus.PLANNING ? "blue" : (p.getStatus() == ProjectStatus.ON_HOLD ? "red" : "orange"));
 
+        List<ProjectMilestone> pMilestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(p.getId());
+        long completedM = pMilestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
+        String mLabel = pMilestones.isEmpty() ? "0/0 milestones" : String.format("%02d/%02d", completedM, pMilestones.size());
+
         return ProjectItemDto.builder()
                 .id(p.getId().toString())
                 .indexNum(indexNum)
@@ -452,9 +456,9 @@ public class ProjectService {
                 .team(ownerName)
                 .dueDate(dueLbl)
                 .priority(priorityLabel)
-                .milestonesLabel("0/0 milestones")
-                .milestonesCompleted(0)
-                .milestonesTotal(0)
+                .milestonesLabel(mLabel)
+                .milestonesCompleted((int) completedM)
+                .milestonesTotal(pMilestones.size())
                 .blockersCount(0)
                 .avatars(avatars)
                 .avatarOverflow("")

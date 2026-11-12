@@ -1,13 +1,13 @@
 /**
  * Teamden / Brick — Project Overview Tab Component Controller (project-overview.js)
- * Path: pages/project/project-overview/project-overview.js
+ * Path: pages/projects/project-detail/project-overview/project-overview.js
  *
  * Responsibilities:
  * 1. Loads and binds the Project Overview Tab UI inside the parent Project Tab System
  * 2. Fetches live data from /api/projects/{id}/overview with full resilient fallback
- * 3. Populates 01 Specification, 02 Milestones Timeline, 03 Work in Motion, 04 Project Knowledge
+ * 3. Populates 01 Specification, 02 Milestones (Timeline & Table view), 03 Work in Motion, 04 Project Knowledge
  * 4. Populates Right Column: Project Health, Decision Register, Project Team
- * 5. Binds all interaction handlers (task card filtering, brief viewer, decision reviewer, team modal)
+ * 5. Supports full Milestones CRUD, Template Initialization, and View Switching
  */
 
 (function (window) {
@@ -22,6 +22,11 @@
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
+
+  let currentProjectId = null;
+  let currentMilestones = [];
+  let activeMilestoneView = 'timeline';
+  let activeRootElement = null;
 
   const emptyOverviewData = {
     id: '',
@@ -66,6 +71,8 @@
      */
     async mount(container, projectId) {
       if (!container) return;
+      currentProjectId = projectId;
+      activeRootElement = container;
 
       // 1. Fetch template fragment if not already in container
       if (!container.querySelector('.overview-tab-root')) {
@@ -101,6 +108,7 @@
 
     populate(root, data) {
       if (!root || !data) return;
+      activeRootElement = root;
 
       const query = (sel) => root.querySelector(sel) || document.querySelector(sel);
 
@@ -140,69 +148,26 @@
         `).join('');
       }
 
-      // --- 02. Milestones Timeline ---
-      const ratioLabel = root.querySelector('#milestones-ratio-label');
-      if (ratioLabel) {
-        ratioLabel.textContent = data.milestonesSummary || '06/09 COMPLETED';
-      }
-
-      const progressBar = root.querySelector('#milestones-track-progress');
-      if (progressBar && data.milestonesTotal > 0) {
-        const pct = Math.min(100, Math.round((data.milestonesCompleted / data.milestonesTotal) * 100));
-        progressBar.style.width = `${pct}%`;
-      }
-
-      // Render Milestone Nodes if provided
-      const trackContainer = root.querySelector('#milestones-track-container');
-      if (trackContainer && Array.isArray(data.milestonesList) && data.milestonesList.length > 0) {
-        const line = '<div class="milestones-track-line"></div>';
-        const pct = data.milestonesTotal > 0 ? Math.min(100, Math.round((data.milestonesCompleted / data.milestonesTotal) * 100)) : 62.5;
-        const progress = `<div class="milestones-track-line-progress" style="width: ${pct}%;"></div>`;
-
-        const nodesHtml = data.milestonesList.map(m => {
-          const st = (m.status || 'UPCOMING').toUpperCase();
-          let cls = 'milestone-node upcoming';
-          let circleContent = escapeHtml(m.seqNum || '00');
-          let subtagHtml = m.statusLabel ? `<span class="node-subtag">${escapeHtml(m.statusLabel)}</span>` : '';
-
-          if (st === 'COMPLETED') {
-            cls = 'milestone-node completed';
-            circleContent = '<svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-          } else if (st === 'CURRENT') {
-            cls = 'milestone-node current';
-            circleContent = escapeHtml(m.seqNum ? parseInt(m.seqNum, 10) : '6');
-          }
-
-          return `
-            <div class="${cls}" data-milestone-id="${escapeHtml(m.id || '')}" title="${escapeHtml(m.name)} (${escapeHtml(st)})">
-              <div class="node-circle">${circleContent}</div>
-              <div class="node-text-wrap">
-                <span class="node-num">${escapeHtml(m.seqNum)}</span>
-                <span class="node-label">${escapeHtml(m.name)}</span>
-                ${subtagHtml}
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        trackContainer.innerHTML = line + progress + nodesHtml;
-      }
+      // --- 02. Milestones Management ---
+      currentMilestones = Array.isArray(data.milestonesList) ? [...data.milestonesList] : [];
+      this.renderMilestonesUI(root);
 
       // --- 03. Work in Motion Cards ---
       const workGrid = root.querySelector('#work-cards-grid');
       if (workGrid && Array.isArray(data.workInMotion) && data.workInMotion.length > 0) {
         workGrid.innerHTML = data.workInMotion.map(card => {
           const avCls = 'avatar-' + (card.assigneeAvatar || 'ar').toLowerCase();
+          const dotCls = 'dot-' + (card.dotColor || 'gray');
           return `
-            <article class="work-card" data-status-filter="${escapeHtml(card.statusKey)}" tabindex="0">
+            <article class="work-card" data-status-filter="${escapeHtml(card.statusFilter || card.status)}" tabindex="0">
               <div class="work-card-top">
-                <span class="work-dot dot-${escapeHtml(card.dotColor || 'gray')}"></span>
-                <span class="work-status-label">${escapeHtml(card.statusLabel)}</span>
+                <span class="work-dot ${dotCls}"></span>
+                <span class="work-status-label">${escapeHtml(card.status)}</span>
               </div>
               <span class="work-count-huge">${escapeHtml(card.count)}</span>
-              <p class="work-task-sample">${escapeHtml(card.exampleTask)}</p>
+              <p class="work-task-sample">${escapeHtml(card.sampleTaskTitle || '')}</p>
               <div class="work-card-bottom">
-                <span class="work-avatar ${avCls}" title="${escapeHtml(card.assigneeAvatar)}">${escapeHtml(card.assigneeAvatar)}</span>
+                <span class="work-avatar ${avCls}" title="${escapeHtml(card.assigneeName || '')}">${escapeHtml(card.assigneeAvatar || '')}</span>
                 <span class="work-link-text">View all →</span>
               </div>
             </article>
@@ -211,57 +176,47 @@
       }
 
       // --- 04. Knowledge Documents ---
-      const docsGrid = query('#knowledge-cards-grid');
-      if (docsGrid && Array.isArray(data.knowledgeDocuments) && data.knowledgeDocuments.length > 0) {
-        docsGrid.innerHTML = data.knowledgeDocuments.map(doc => {
-          const iconType = (doc.iconType || 'pdf').toLowerCase();
-          let iconSvg = '';
-
-          if (iconType === 'figma') {
-            iconSvg = `
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path>
-                <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"></path>
-                <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"></path>
-                <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"></path>
-                <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"></path>
-              </svg>
-            `;
-          } else {
-            iconSvg = `
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                ${iconType === 'doc' ? '<line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>' : ''}
-              </svg>
-            `;
-          }
-
+      const docGrid = root.querySelector('#knowledge-docs-grid');
+      if (docGrid && Array.isArray(data.knowledgeDocuments) && data.knowledgeDocuments.length > 0) {
+        docGrid.innerHTML = data.knowledgeDocuments.map(doc => {
+          const avCls = 'avatar-' + (doc.authorAvatar || 'pk').toLowerCase();
           return `
-            <a href="#doc-${escapeHtml(doc.name.toLowerCase().replace(/\\s+/g, '-'))}" class="doc-card">
-              <div class="doc-icon-box doc-${iconType}">
-                ${iconSvg}
+            <article class="doc-card" data-doc-id="${escapeHtml(doc.id)}" tabindex="0">
+              <div class="doc-top-row">
+                <div class="doc-title-group">
+                  <span class="doc-badge-type">${escapeHtml(doc.typeBadge)}</span>
+                  <h4 class="doc-name">${escapeHtml(doc.title)}</h4>
+                </div>
+                <button class="doc-arrow-btn" aria-label="Open document" title="Open document">
+                  <svg viewBox="0 0 24 24" fill="none"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                </button>
               </div>
-              <div class="doc-content">
-                <h4 class="doc-name">${escapeHtml(doc.name)}</h4>
-                <span class="doc-meta">${escapeHtml(doc.fileType)} · ${escapeHtml(doc.fileSize)}</span>
+              <p class="doc-description">${escapeHtml(doc.description || '')}</p>
+              <div class="doc-bottom-row">
+                <div class="doc-author-lockup">
+                  <span class="work-avatar ${avCls}">${escapeHtml(doc.authorAvatar || '')}</span>
+                  <span class="doc-author-name">${escapeHtml(doc.authorName)}</span>
+                </div>
+                <span class="doc-time">${escapeHtml(doc.updatedTime)}</span>
               </div>
-            </a>
+            </article>
           `;
         }).join('');
       }
 
-      // --- Right Column: Health ---
-      const blockersCount = query('#health-blockers-count');
-      if (blockersCount) {
-        blockersCount.textContent = String(data.unresolvedBlockersCount != null ? data.unresolvedBlockersCount : 0).padStart(2, '0');
+      // --- Right Column: Health Status ---
+      const healthDot = query('#health-status-dot');
+      if (healthDot && data.healthDotColor) {
+        healthDot.className = `health-status-dot dot-${data.healthDotColor}`;
       }
-
-      const healthHeading = query('#health-heading');
-      if (healthHeading) {
-        healthHeading.textContent = data.healthHeading || (data.unresolvedBlockersCount > 0 ? 'Unresolved blockers' : 'No active blockers');
+      const healthVal = query('#health-status-value');
+      if (healthVal) {
+        healthVal.textContent = data.health || 'Active';
       }
-
+      const healthHead = query('#health-heading');
+      if (healthHead) {
+        healthHead.textContent = data.healthHeading || (data.unresolvedBlockersCount > 0 ? `${data.unresolvedBlockersCount} Blockers` : 'No active blockers');
+      }
       const healthDesc = query('#health-description');
       if (healthDesc) {
         healthDesc.textContent = data.healthDescription || (data.unresolvedBlockersCount > 0 ? `${data.unresolvedBlockersCount} issue(s) need attention.` : 'All project milestones and tasks are on track.');
@@ -270,12 +225,8 @@
       // --- Right Column: Decision Register ---
       const decCard = query('#overview-decision-card');
       if (data.pendingDecision) {
-        if (decCard) decCard.style.display = 'block';
-        const decStatus = query('#decision-status-label');
-        if (decStatus) decStatus.textContent = data.pendingDecision.statusLabel || 'Awaiting Review';
-
-        const decDue = query('#decision-due-str');
-        if (decDue) decDue.textContent = data.pendingDecision.dueDateLabel || '';
+        const decStatus = query('#decision-status-badge');
+        if (decStatus) decStatus.textContent = data.pendingDecision.statusBadge || 'PENDING';
 
         const decTitle = query('#decision-title');
         if (decTitle) decTitle.textContent = data.pendingDecision.title || 'Decision';
@@ -283,75 +234,423 @@
         const decDesc = query('#decision-desc');
         if (decDesc) decDesc.textContent = data.pendingDecision.description || '';
 
-        const decOwner = query('#decision-owner-name');
-        if (decOwner) decOwner.textContent = data.pendingDecision.ownerName || 'Team';
+        const decDue = query('#decision-due');
+        if (decDue) decDue.textContent = data.pendingDecision.dueLabel ? `Due ${data.pendingDecision.dueLabel}` : 'Due Soon';
 
-        const decAvatar = query('#decision-owner-avatar');
-        if (decAvatar) decAvatar.textContent = data.pendingDecision.ownerInitials || 'TD';
-      } else {
-        const decStatus = query('#decision-status-label');
-        if (decStatus) decStatus.textContent = 'Decisions on Track';
-        const decTitle = query('#decision-title');
-        if (decTitle) decTitle.textContent = 'No pending decisions';
-        const decDesc = query('#decision-desc');
-        if (decDesc) decDesc.textContent = 'All project architecture and specifications are up to date.';
-      }
-
-      const moreLink = query('#decision-more-link');
-      if (moreLink) {
-        const moreCount = data.moreDecisionsCount || 0;
-        moreLink.innerHTML = `<span>+ ${moreCount} more decisions</span><span>→</span>`;
+        const moreDec = query('#more-decisions-count');
+        if (moreDec) moreDec.textContent = data.moreDecisionsCount ? `+${data.moreDecisionsCount} more decisions` : '';
       }
 
       // --- Right Column: Project Team ---
-      const avatarsRow = query('#team-avatars-row');
-      if (avatarsRow && Array.isArray(data.teamMemberInitials)) {
-        const avatarsHtml = data.teamMemberInitials.map(initials => {
-          const avClass = 'avatar-' + initials.toLowerCase();
-          return `<span class="team-avatar-circle ${avClass}" title="${escapeHtml(initials)}">${escapeHtml(initials)}</span>`;
+      const teamAvatars = query('#team-avatars-row');
+      if (teamAvatars && Array.isArray(data.teamMemberInitials)) {
+        teamAvatars.innerHTML = data.teamMemberInitials.map(m => {
+          const cls = 'avatar-' + (m.initials || 'u').toLowerCase();
+          return `<span class="team-avatar-circle ${cls}" title="${escapeHtml(m.name || '')}">${escapeHtml(m.initials || '')}</span>`;
         }).join('');
-        avatarsRow.innerHTML = avatarsHtml + `
-          <button class="team-add-btn" id="btn-add-team-member" title="Add project member" aria-label="Add project member">+</button>
-        `;
+      }
+      const teamCount = query('#team-count-label');
+      if (teamCount) {
+        teamCount.textContent = data.totalTeamMembers ? `${data.totalTeamMembers} members` : '4 members';
+      }
+    },
+
+    /**
+     * Renders Milestones Section (Timeline vs Table vs Empty State)
+     */
+    renderMilestonesUI(root) {
+      const query = (sel) => (root || activeRootElement || document).querySelector(sel);
+      const ratioLabel = query('#milestones-ratio-label');
+      const timelineView = query('#milestones-timeline-view');
+      const tableView = query('#milestones-table-view');
+      const emptyBox = query('#milestones-empty-container');
+      const btnTimeline = query('#btn-milestones-view-timeline');
+      const btnTable = query('#btn-milestones-view-table');
+      const progressBar = query('#milestones-track-progress');
+
+      const total = currentMilestones.length;
+      const completed = currentMilestones.filter(m => (m.status || '').toUpperCase() === 'COMPLETED').length;
+
+      if (ratioLabel) {
+        ratioLabel.textContent = `${String(completed).padStart(2, '0')}/${String(total).padStart(2, '0')}`;
       }
 
-      const teamFooter = query('#team-count-footer');
-      if (teamFooter) {
-        teamFooter.textContent = `${data.totalTeamMembers || 4} project members`;
+      if (progressBar) {
+        const pct = total > 0 ? Math.min(100, Math.round((completed / total) * 100)) : 0;
+        progressBar.style.width = `${pct}%`;
+      }
+
+      if (total === 0) {
+        if (timelineView) timelineView.style.display = 'none';
+        if (tableView) tableView.style.display = 'none';
+        if (emptyBox) emptyBox.style.display = 'flex';
+        return;
+      }
+
+      if (emptyBox) emptyBox.style.display = 'none';
+
+      if (activeMilestoneView === 'timeline') {
+        if (timelineView) timelineView.style.display = 'block';
+        if (tableView) tableView.style.display = 'none';
+        if (btnTimeline) {
+          btnTimeline.classList.add('is-active');
+          btnTimeline.setAttribute('aria-selected', 'true');
+        }
+        if (btnTable) {
+          btnTable.classList.remove('is-active');
+          btnTable.setAttribute('aria-selected', 'false');
+        }
+        this.renderTimelineNodes(root, completed, total);
+      } else {
+        if (timelineView) timelineView.style.display = 'none';
+        if (tableView) tableView.style.display = 'block';
+        if (btnTimeline) {
+          btnTimeline.classList.remove('is-active');
+          btnTimeline.setAttribute('aria-selected', 'false');
+        }
+        if (btnTable) {
+          btnTable.classList.add('is-active');
+          btnTable.setAttribute('aria-selected', 'true');
+        }
+        this.renderTableRows(root);
+      }
+    },
+
+    renderTimelineNodes(root, completed, total) {
+      const query = (sel) => (root || activeRootElement || document).querySelector(sel);
+      const trackContainer = query('#milestones-track-container');
+      if (!trackContainer) return;
+
+      const line = '<div class="milestones-track-line"></div>';
+      const pct = total > 0 ? Math.min(100, Math.round((completed / total) * 100)) : 0;
+      const progress = `<div class="milestones-track-line-progress" style="width: ${pct}%;"></div>`;
+
+      const nodesHtml = currentMilestones.map((m, idx) => {
+        const st = (m.status || 'UPCOMING').toUpperCase();
+        let cls = 'milestone-node upcoming';
+        let circleContent = escapeHtml(String(m.seqNum || idx + 1));
+        let subtagHtml = m.statusLabel ? `<span class="node-subtag">${escapeHtml(m.statusLabel)}</span>` : '';
+
+        if (st === 'COMPLETED') {
+          cls = 'milestone-node completed';
+          circleContent = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        } else if (st === 'CURRENT') {
+          cls = 'milestone-node current';
+          circleContent = escapeHtml(String(m.seqNum || idx + 1));
+        } else if (st === 'DELAYED') {
+          cls = 'milestone-node delayed';
+          circleContent = '!';
+        }
+
+        const seqDisplay = String(m.seqNum || idx + 1).padStart(2, '0');
+
+        return `
+          <div class="${cls}" data-milestone-id="${escapeHtml(m.id || '')}" title="${escapeHtml(m.name)} (${escapeHtml(st)})" onclick="window.ProjectOverview.openEditModal('${escapeHtml(m.id)}')">
+            <div class="node-circle">${circleContent}</div>
+            <div class="node-text-wrap">
+              <span class="node-num">${seqDisplay}</span>
+              <span class="node-label">${escapeHtml(m.name)}</span>
+              ${subtagHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      trackContainer.innerHTML = line + progress + nodesHtml;
+    },
+
+    renderTableRows(root) {
+      const query = (sel) => (root || activeRootElement || document).querySelector(sel);
+      const tableBody = query('#milestones-table-body');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = currentMilestones.map((m, idx) => {
+        const seqDisplay = String(m.seqNum || idx + 1).padStart(2, '0');
+        const st = (m.status || 'UPCOMING').toUpperCase();
+        const statusClass = 'status-' + st.toLowerCase();
+        const dueStr = m.dueDateFormatted || m.dueDate || '--';
+        const tasksCount = m.tasksCount !== undefined && m.tasksCount !== null ? m.tasksCount : 0;
+
+        return `
+          <tr data-milestone-id="${escapeHtml(m.id)}">
+            <td class="tbl-seq">${seqDisplay}</td>
+            <td>
+              <div class="tbl-title-block">
+                <span class="tbl-title">${escapeHtml(m.name)}</span>
+                ${m.description ? `<span class="tbl-desc">${escapeHtml(m.description)}</span>` : ''}
+              </div>
+            </td>
+            <td>
+              <select class="milestone-status-select ${statusClass}" onchange="window.ProjectOverview.handleStatusChange('${escapeHtml(m.id)}', this.value)">
+                <option value="UPCOMING" ${st === 'UPCOMING' ? 'selected' : ''}>Upcoming</option>
+                <option value="CURRENT" ${st === 'CURRENT' ? 'selected' : ''}>Current</option>
+                <option value="COMPLETED" ${st === 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                <option value="DELAYED" ${st === 'DELAYED' ? 'selected' : ''}>Delayed</option>
+              </select>
+            </td>
+            <td>${escapeHtml(dueStr)}</td>
+            <td><span style="font-weight: 700;">${tasksCount}</span> tasks</td>
+            <td>
+              <div class="tbl-actions">
+                <button class="btn-tbl-action" type="button" onclick="window.ProjectOverview.openEditModal('${escapeHtml(m.id)}')">Edit</button>
+                <button class="btn-tbl-action btn-tbl-del" type="button" onclick="window.ProjectOverview.deleteMilestone('${escapeHtml(m.id)}')">Del</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    },
+
+    async handleStatusChange(milestoneId, newStatus) {
+      if (!currentProjectId || !milestoneId) return;
+
+      // Optimistic local state update
+      const target = currentMilestones.find(m => m.id === milestoneId);
+      if (target) {
+        target.status = newStatus;
+        if (newStatus === 'COMPLETED') {
+          target.statusLabel = 'Completed';
+        } else if (newStatus === 'CURRENT') {
+          target.statusLabel = 'In Progress';
+        } else {
+          target.statusLabel = 'Upcoming';
+        }
+      }
+      this.renderMilestonesUI();
+
+      try {
+        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones/${encodeURIComponent(milestoneId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (!res.ok) {
+          throw new Error('Failed to update status');
+        }
+        const updated = await res.json();
+        if (target && updated) {
+          Object.assign(target, updated);
+        }
+        this.renderMilestonesUI();
+        if (window.showToast) window.showToast(`Updated milestone status to ${newStatus}`);
+      } catch (err) {
+        console.error('Status update failed:', err);
+        alert('Could not update milestone status. Please try again.');
+        this.refreshMilestonesData();
+      }
+    },
+
+    async deleteMilestone(milestoneId) {
+      if (!currentProjectId || !milestoneId) return;
+      const target = currentMilestones.find(m => m.id === milestoneId);
+      const name = target ? target.name : 'this milestone';
+
+      if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones/${encodeURIComponent(milestoneId)}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Delete failed');
+
+        currentMilestones = currentMilestones.filter(m => m.id !== milestoneId);
+        this.renderMilestonesUI();
+        if (window.showToast) window.showToast(`Milestone removed`);
+      } catch (err) {
+        console.error('Delete milestone failed:', err);
+        alert('Failed to delete milestone');
+      }
+    },
+
+    async refreshMilestonesData() {
+      if (!currentProjectId) return;
+      try {
+        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones`);
+        if (res.ok) {
+          currentMilestones = await res.json();
+          this.renderMilestonesUI();
+        }
+      } catch (err) {
+        console.error('Failed to refresh milestones:', err);
+      }
+    },
+
+    async initializeLifecycleTemplate() {
+      if (!currentProjectId) return;
+      try {
+        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones/initialize-template`, {
+          method: 'POST'
+        });
+        if (!res.ok) throw new Error('Initialization failed');
+        currentMilestones = await res.json();
+        this.renderMilestonesUI();
+        if (window.showToast) window.showToast('Initialized standard 9-stage lifecycle stages');
+      } catch (err) {
+        console.error('Failed to initialize lifecycle template:', err);
+        alert('Could not initialize template stages. Please try again.');
+      }
+    },
+
+    openAddModal() {
+      const modal = document.querySelector('#milestone-modal');
+      const titleEl = document.querySelector('#milestone-modal-title');
+      const form = document.querySelector('#milestone-form');
+      if (!modal || !form) return;
+
+      form.reset();
+      document.querySelector('#milestone-form-id').value = '';
+      if (titleEl) titleEl.textContent = 'Add Milestone';
+
+      const nextSeq = currentMilestones.length > 0 ? (currentMilestones[currentMilestones.length - 1].seqNum || currentMilestones.length) + 1 : 1;
+      document.querySelector('#milestone-form-seq').value = nextSeq;
+      document.querySelector('#milestone-form-status').value = 'UPCOMING';
+
+      modal.style.display = 'flex';
+    },
+
+    openEditModal(milestoneId) {
+      const modal = document.querySelector('#milestone-modal');
+      const titleEl = document.querySelector('#milestone-modal-title');
+      if (!modal) return;
+
+      const m = currentMilestones.find(item => item.id === milestoneId);
+      if (!m) return;
+
+      document.querySelector('#milestone-form-id').value = m.id;
+      document.querySelector('#milestone-form-name').value = m.name || '';
+      document.querySelector('#milestone-form-seq').value = m.seqNum || 1;
+      document.querySelector('#milestone-form-status').value = m.status || 'UPCOMING';
+      document.querySelector('#milestone-form-due').value = m.dueDate || '';
+      document.querySelector('#milestone-form-desc').value = m.description || '';
+
+      if (titleEl) titleEl.textContent = `Edit Milestone: ${m.name}`;
+      modal.style.display = 'flex';
+    },
+
+    closeModal() {
+      const modal = document.querySelector('#milestone-modal');
+      if (modal) modal.style.display = 'none';
+    },
+
+    async saveMilestone(e) {
+      if (e) e.preventDefault();
+      if (!currentProjectId) return;
+
+      const id = document.querySelector('#milestone-form-id')?.value;
+      const name = document.querySelector('#milestone-form-name')?.value?.trim();
+      const seqVal = document.querySelector('#milestone-form-seq')?.value;
+      const status = document.querySelector('#milestone-form-status')?.value;
+      const dueDate = document.querySelector('#milestone-form-due')?.value;
+      const desc = document.querySelector('#milestone-form-desc')?.value?.trim();
+
+      if (!name) {
+        alert('Milestone title is required');
+        return;
+      }
+
+      const payload = {
+        name: name,
+        seqNum: seqVal ? parseInt(seqVal, 10) : null,
+        status: status,
+        dueDate: dueDate || null,
+        description: desc || ''
+      };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones/${encodeURIComponent(id)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch(`/api/projects/${encodeURIComponent(currentProjectId)}/milestones`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!res.ok) throw new Error('Save failed');
+
+        this.closeModal();
+        await this.refreshMilestonesData();
+        if (window.showToast) window.showToast(id ? 'Milestone updated' : 'Milestone created');
+      } catch (err) {
+        console.error('Failed to save milestone:', err);
+        alert('Could not save milestone. Please check inputs.');
       }
     },
 
     bindEvents(root, data) {
       if (!root) return;
-      const query = (sel) => root.querySelector(sel) || document.querySelector(sel);
-      const queryAll = (sel) => {
-        const inside = Array.from(root.querySelectorAll(sel));
-        const outside = Array.from(document.querySelectorAll(sel));
-        return Array.from(new Set([...inside, ...outside]));
-      };
 
-      // 1. View full brief click
-      const briefBtn = query('#spec-view-brief-link');
-      if (briefBtn) {
-        briefBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          alert('Opening full Project Brief: ' + (data.title || 'Website Redesign'));
-        });
+      const query = (sel) => root.querySelector(sel) || document.querySelector(sel);
+      const queryAll = (sel) => root.querySelectorAll(sel);
+
+      // --- View Switcher ---
+      const btnTimeline = query('#btn-milestones-view-timeline');
+      if (btnTimeline) {
+        btnTimeline.onclick = () => {
+          activeMilestoneView = 'timeline';
+          this.renderMilestonesUI(root);
+        };
       }
 
-      // 2. Work in motion task card click -> switch to Tasks tab or view filter
+      const btnTable = query('#btn-milestones-view-table');
+      if (btnTable) {
+        btnTable.onclick = () => {
+          activeMilestoneView = 'table';
+          this.renderMilestonesUI(root);
+        };
+      }
+
+      // --- Add Milestone Buttons ---
+      const btnAdd = query('#btn-add-milestone');
+      if (btnAdd) btnAdd.onclick = () => this.openAddModal();
+
+      const btnEmptyAdd = query('#btn-empty-add-milestone');
+      if (btnEmptyAdd) btnEmptyAdd.onclick = () => this.openAddModal();
+
+      // --- Initialize Lifecycle Template ---
+      const btnInit = query('#btn-init-lifecycle-template');
+      if (btnInit) btnInit.onclick = () => this.initializeLifecycleTemplate();
+
+      // --- Milestone Modal Close / Cancel ---
+      const btnCloseModal = query('#btn-close-milestone-modal');
+      if (btnCloseModal) btnCloseModal.onclick = () => this.closeModal();
+
+      const btnCancelModal = query('#btn-cancel-milestone');
+      if (btnCancelModal) btnCancelModal.onclick = () => this.closeModal();
+
+      const milestoneForm = query('#milestone-form');
+      if (milestoneForm) milestoneForm.onsubmit = (e) => this.saveMilestone(e);
+
+      // Close modal on backdrop click
+      const modalBackdrop = query('#milestone-modal');
+      if (modalBackdrop) {
+        modalBackdrop.onclick = (e) => {
+          if (e.target === modalBackdrop) this.closeModal();
+        };
+      }
+
+      // --- Work card filter click ---
       queryAll('.work-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
           const filter = card.getAttribute('data-status-filter');
           if (window.ProjectTabController && typeof window.ProjectTabController.switchTab === 'function') {
-            window.ProjectTabController.switchTab('tasks', { filter });
+            window.ProjectTabController.switchTab('tasks', { filter: filter });
           } else {
-            alert(`Opening Tasks filtered by: ${filter}`);
+            alert(`Opening tasks with filter: ${filter}`);
           }
         });
       });
 
-      // 3. View all tasks action
+      // --- View all tasks action ---
       const viewTasksBtn = query('#action-view-all-tasks');
       if (viewTasksBtn) {
         viewTasksBtn.addEventListener('click', (e) => {
@@ -364,16 +663,7 @@
         });
       }
 
-      // 4. View all milestones action
-      const viewMilestonesBtn = query('#action-view-all-milestones');
-      if (viewMilestonesBtn) {
-        viewMilestonesBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          alert('Milestones: 6 of 9 completed. Next up: Launch Prep.');
-        });
-      }
-
-      // 5. Document card click
+      // --- Document card click ---
       queryAll('.doc-card').forEach(doc => {
         doc.addEventListener('click', (e) => {
           e.preventDefault();
@@ -382,7 +672,7 @@
         });
       });
 
-      // 6. View all documents
+      // --- View all documents ---
       const viewDocsBtn = query('#action-view-all-docs');
       if (viewDocsBtn) {
         viewDocsBtn.addEventListener('click', (e) => {
@@ -395,7 +685,7 @@
         });
       }
 
-      // 7. Review blockers button
+      // --- Review blockers button ---
       const reviewBlockersBtn = query('#btn-review-blockers');
       if (reviewBlockersBtn) {
         reviewBlockersBtn.addEventListener('click', (e) => {
@@ -403,38 +693,29 @@
           if (window.ProjectTabController && typeof window.ProjectTabController.switchTab === 'function') {
             window.ProjectTabController.switchTab('tasks', { filter: 'BLOCKED' });
           } else {
-            alert('Reviewing 2 active blockers on Website Redesign');
+            alert('Reviewing active blockers on project');
           }
         });
       }
 
-      // 8. Review decision button
+      // --- Review decision button ---
       const reviewDecBtn = query('#btn-review-decision');
       if (reviewDecBtn) {
         reviewDecBtn.addEventListener('click', () => {
-          alert('Reviewing Decision: Homepage design approval (Due 30 Oct)');
+          alert('Reviewing Decision: Homepage design approval');
         });
       }
 
-      // 9. Add team member button
+      // --- Add team member button ---
       const addTeamBtn = query('#btn-add-team-member');
       if (addTeamBtn) {
         addTeamBtn.addEventListener('click', () => {
           const email = prompt('Invite team member to this project by email:');
           if (email && email.trim()) {
-            alert(`Invitation sent to ${email.trim()} for project: ${data.title || 'Website Redesign'}`);
+            alert(`Invitation sent to ${email.trim()} for project: ${data.title || 'Project'}`);
           }
         });
       }
-
-      // 10. Milestone node click
-      queryAll('.milestone-node').forEach(node => {
-        node.addEventListener('click', () => {
-          const name = node.querySelector('.node-label')?.textContent;
-          const num = node.querySelector('.node-num')?.textContent;
-          alert(`Milestone ${num}: ${name}`);
-        });
-      });
     }
   };
 

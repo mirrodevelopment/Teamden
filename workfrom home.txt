@@ -12,39 +12,40 @@ DAY 4 - 2026-11-12 (THURSDAY - TODAY)
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Diagnosed & Resolved "Your Priorities Always Empty" Defect in Dashboard Kanban:
-  * Removed hero exclusion filter from `DashboardService.java` so all tasks populate columns.
-- Implemented Unassigned Projects Attention Card on Today Dashboard per Reference Mockup:
-  * Replaced hardcoded unread mentions alert (Card 3) with dynamic PostgreSQL unassigned counter.
-  * Built `GET /api/projects/unassigned` and `PATCH /api/projects/{id}/assign` endpoints.
-  * Wired interactive `openUnassignedProjectsModal()` in `dashboard.js` with lead dropdown.
-- Eradicated Recent Activity Seed Data & Enabled Live Real-Time Movement Feeds:
-  * Purged dummy test artifacts (`sdfervfxc`, `sdddddddddd`) from PostgreSQL tables.
-  * Removed artificial time-shifting (`-42m`) and hardcoded "TODAY" labels in `DashboardService`.
-  * Implemented dynamic day label computation (`TODAY`, `YESTERDAY`, or `d MMM`).
-  * Enforced full activity metadata on task toggle, move, and add operations.
-  * 100% green tests: 59/59 passing integration tests across entire test suite (`./mvnw test`).
+- Implemented Interactive Project Milestones Table & PostgreSQL DB Persistence:
+  * Designed and built Dual-Mode Switcher (`Timeline View | Table View`) in Project Overview.
+  * Replaced static HTML mock nodes with dynamic PostgreSQL-backed stage nodes.
+  * Built complete REST CRUD: `GET/POST/PATCH/DELETE /api/projects/{id}/milestones`.
+  * Added 1-Click "⚡ Initialize Standard 9-Stage Lifecycle" endpoint & UI button.
+  * Wired dynamic completion ratio badge (`05/09 COMPLETED`) and animated progress bar.
+  * Added responsive Add / Edit Milestone modal dialog adhering to Zero Hex Standard tokens.
+  * Supported inline milestone status transitions (`UPCOMING`, `CURRENT`, `COMPLETED`, `DELAYED`).
+- Resolved "Your Priorities Empty" Defect in Dashboard Kanban & Unassigned Projects:
+  * Removed hero task exclusion filter so all active tasks populate Kanban columns.
+  * Added Unassigned Projects card & assignment modal to Today Dashboard.
+- Eradicated dummy activity seeds and wired authentic real-time movement feeds.
+- 100% green tests: 65/65 passing integration tests across entire test suite (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Backend Services: `DashboardService.java`, `ProjectService.java`, `ProjectRepository.java`.
-- Controllers & DTOs: `ProjectController.java`, `AssignLeadRequestDto.java`.
-- Automated Tests: `DashboardKanbanIntegrationTest.java`, `ProjectIntegrationTest.java`.
-- Database State: Purged test dummy rows in `activity_events`, `tasks`, and `projects`.
+- Backend Services: `ProjectMilestoneService.java`, `ProjectService.java`.
+- Controllers & DTOs: `ProjectMilestoneController.java`, `CreateMilestoneRequestDto.java`,
+  `UpdateMilestoneRequestDto.java`, `ProjectMilestoneDto.java`.
+- Frontend: `project-overview.html`, `project-overview.css`, `project-overview.js`.
+- Automated Tests: `ProjectMilestoneIntegrationTest.java` (6/6 passing).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Recent Activity Timeline on Today Dashboard
+Example: 02 / Milestones Component in Project Overview
   [BEFORE]:
-  Displayed dummy test items (`sdfervfxc`, `sdddddddddd`) with hardcoded "TODAY" even for past dates and artificial time offsets.
+  Hardcoded 9 static mock nodes in HTML with mismatched "00/00 COMPLETED" badge and no table or edit support.
   [AFTER]:
-  Displays authentic real-world workspace actions with exact timestamps, calculated day labels, and complete action/target/badge metadata.
+  Dual-mode view (Timeline / Table), dynamic PostgreSQL persistence, status dropdown updates, and 1-click template init.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Database Verification: Confirmed 0 dummy rows; real actions update `activity_events`.
-- Live API Verification: Verified `GET /api/dashboard/data` outputs live movements in real time.
-- Automated Test Suite: 59/59 integration tests passing 100% green (`./mvnw test`).
+- Live API Verification: Verified CRUD, template seeding (9 stages), and overview recalculation.
+- Automated Test Suite: 65/65 integration tests passing 100% green (`./mvnw test`).
 
 ===============================================================================
 DAY 3 - 2026-11-10 (TUESDAY)
@@ -53,11 +54,8 @@ DAY 3 - 2026-11-10 (TUESDAY)
 --------------------------------------------------------------------------------
 - Dedicated Project Creation Folder (`pages/projects/create-project/`), modal, options API & DB persistence.
 - Built `create-project.html`, `create-project.css`, `create-project.js` with Zero Hex Standard design tokens.
-- Implemented `GET /api/projects/options` returning active members as project leads/owners with roles and initials.
 - Interactive Task Creation modal (`/pages/tasks/create.html`), options API & PostgreSQL persistence.
-- Complete elimination of raw code values and query-time auto-seeding routines.
-- Database purge script (`purge_db.bat`) preserves login credentials while zeroing mock tables.
-2. WHAT WAS CHANGED & FILES AFFECTED: `ProjectService.java`, `ProjectController.java`, `create-project.*`, `projects.*`.
+2. WHAT WAS CHANGED: `ProjectService.java`, `ProjectController.java`, `create-project.*`, `projects.*`.
 3. VERIFICATION: 53/53 integration tests green; database purge preserves accounts with 0 mock rows.
 
 ===============================================================================
@@ -67,22 +65,17 @@ DAY 2 - 2026-11-04 (WEDNESDAY)
 --------------------------------------------------------------------------------
 - Full Mobile Layout Modernization (320px - 768px): Zero Overlay and Zero Overlap.
 - Chrome DevTools Protocol Verification across mobile viewport (375x812).
-2. WHAT WAS CHANGED & FILES AFFECTED: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`.
-3. VERIFICATION: 18/18 integration tests green; visual inspection verified.
+2. WHAT WAS CHANGED & VERIFICATION: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`. 18/18 tests green.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 ================================================================================
 - Phase 1-6 [COMPLETED]: Shell unification, mobile layout, Kanban drag-and-drop, relational Calendar.
-- Phase 7 [COMPLETED]: Multi-tenant security isolation across project, dashboard, and task APIs.
-- Phase 8 [COMPLETED]: Dedicated Recent Activity page with multi-range & custom date filtering.
-- Phase 9 [COMPLETED]: Activity full database persistence (Flyway V6) & Table View switcher.
-- Phase 10 [COMPLETED]: Universal in-code seed eradication and query-time auto-reseeding removal.
-- Phase 11 [COMPLETED]: Interactive Task Creation modal, dedicated page (`/pages/tasks/create.html`), and DB persistence.
-- Phase 12 [COMPLETED]: Dedicated Project Creation page (`/pages/projects/create-project/`), modal, options API & DB persistence.
-- Phase 13 [COMPLETED]: Fixed Kanban column task exclusion bug in `DashboardService` (retained all column tasks).
-- Phase 14 [COMPLETED]: Unassigned projects attention card, lead assignment modal & persistence (Card 3 in NEEDS ATTENTION).
-- Phase 15 [COMPLETED]: Eradicated Recent Activity dummy seed records & implemented dynamic movement feeds.
+- Phase 7-10 [COMPLETED]: Multi-tenant security, Recent Activity page, DB persistence, seed eradication.
+- Phase 11-13 [COMPLETED]: Task Creation modal, Project Creation page, Kanban hero retention.
+- Phase 14 [COMPLETED]: Unassigned projects attention card & lead assignment modal.
+- Phase 15 [COMPLETED]: Dynamic activity movements feed and dummy artifact eradication.
+- Phase 16 [COMPLETED]: Interactive Project Milestones Table, 9-stage lifecycle template & PostgreSQL persistence.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

@@ -107,114 +107,63 @@
     <!-- 02 / MILESTONES -->
     <section class="milestones-section" aria-label="Project Milestones">
       <div class="overview-section-header">
-        <span class="overview-section-label">02 / MILESTONES</span>
+        <div class="milestones-header-left">
+          <span class="overview-section-label">02 / MILESTONES</span>
+          <div class="milestones-view-switcher" role="tablist" aria-label="Milestones View Mode">
+            <button class="view-seg-btn is-active" id="btn-milestones-view-timeline" type="button" aria-selected="true">Timeline</button>
+            <button class="view-seg-btn" id="btn-milestones-view-table" type="button" aria-selected="false">Table View</button>
+          </div>
+        </div>
         <div class="milestones-header-right">
           <div class="milestones-ratio-badge-block">
-            <span class="milestones-ratio-label" id="milestones-ratio-label">06/09</span>
+            <span class="milestones-ratio-label" id="milestones-ratio-label">00/00</span>
             <span class="milestones-ratio-sub">COMPLETED</span>
           </div>
-          <a href="#milestones" class="overview-section-action" id="action-view-all-milestones">View all →</a>
+          <button class="btn-milestone-add" id="btn-add-milestone" type="button">+ Add Milestone</button>
         </div>
       </div>
 
-      <!-- Horizontal 9-stage Timeline -->
-      <div class="milestones-timeline-scroll">
+      <!-- Timeline View Container -->
+      <div class="milestones-timeline-scroll" id="milestones-timeline-view">
         <div class="milestones-track" id="milestones-track-container">
-          <!-- Background continuous bar -->
-          <div class="milestones-track-line"></div>
-          <div class="milestones-track-line-progress" id="milestones-track-progress"></div>
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
 
-          <!-- 01 Discovery (Completed) -->
-          <div class="milestone-node completed" title="Discovery (Completed)">
-            <div class="node-circle">
-              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <div class="node-text-wrap">
-              <span class="node-num">01</span>
-              <span class="node-label">Discovery</span>
-            </div>
-          </div>
+      <!-- Table View Container -->
+      <div class="milestones-table-container" id="milestones-table-view" style="display: none;">
+        <div class="milestones-table-wrap">
+          <table class="milestones-table" id="milestones-data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Milestone / Stage</th>
+                <th style="width: 140px;">Status</th>
+                <th style="width: 130px;">Target Due Date</th>
+                <th style="width: 80px;">Tasks</th>
+                <th style="width: 110px; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="milestones-table-body">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-          <!-- 02 Design (Completed) -->
-          <div class="milestone-node completed" title="Design (Completed)">
-            <div class="node-circle">
-              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <div class="node-text-wrap">
-              <span class="node-num">02</span>
-              <span class="node-label">Design</span>
-            </div>
-          </div>
-
-          <!-- 03 Development (Completed) -->
-          <div class="milestone-node completed" title="Development (Completed)">
-            <div class="node-circle">
-              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <div class="node-text-wrap">
-              <span class="node-num">03</span>
-              <span class="node-label">Development</span>
-            </div>
-          </div>
-
-          <!-- 04 Testing (Completed) -->
-          <div class="milestone-node completed" title="Testing (Completed)">
-            <div class="node-circle">
-              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <div class="node-text-wrap">
-              <span class="node-num">04</span>
-              <span class="node-label">Testing</span>
-            </div>
-          </div>
-
-          <!-- 05 Content (Completed) -->
-          <div class="milestone-node completed" title="Content (Completed)">
-            <div class="node-circle">
-              <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <div class="node-text-wrap">
-              <span class="node-num">05</span>
-              <span class="node-label">Content</span>
-            </div>
-          </div>
-
-          <!-- 06 Review / In Progress (Current) -->
-          <div class="milestone-node current" title="Review (In Progress)">
-            <div class="node-circle">6</div>
-            <div class="node-text-wrap">
-              <span class="node-num">06</span>
-              <span class="node-label">Review</span>
-              <span class="node-subtag">In Progress</span>
-            </div>
-          </div>
-
-          <!-- 07 Launch Prep (Upcoming) -->
-          <div class="milestone-node upcoming" title="Launch Prep (Upcoming)">
-            <div class="node-circle">7</div>
-            <div class="node-text-wrap">
-              <span class="node-num">07</span>
-              <span class="node-label">Launch Prep</span>
-            </div>
-          </div>
-
-          <!-- 08 Go Live (Upcoming) -->
-          <div class="milestone-node upcoming" title="Go Live (Upcoming)">
-            <div class="node-circle">8</div>
-            <div class="node-text-wrap">
-              <span class="node-num">08</span>
-              <span class="node-label">Go Live</span>
-            </div>
-          </div>
-
-          <!-- 09 Post Launch (Upcoming) -->
-          <div class="milestone-node upcoming" title="Post Launch (Upcoming)">
-            <div class="node-circle">9</div>
-            <div class="node-text-wrap">
-              <span class="node-num">09</span>
-              <span class="node-label">Post Launch</span>
-            </div>
-          </div>
+      <!-- Empty State Container -->
+      <div class="milestones-empty-box" id="milestones-empty-container" style="display: none;">
+        <div class="empty-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <h4 class="empty-title">No Milestones Configured Yet</h4>
+        <p class="empty-sub">Define project roadmap stages or quickly initialize the canonical 9-stage lifecycle.</p>
+        <div class="empty-actions">
+          <button class="btn-empty-init" id="btn-init-lifecycle-template" type="button">⚡ Initialize 9-Stage Standard Stages</button>
+          <button class="btn-empty-add" id="btn-empty-add-milestone" type="button">+ Add Milestone</button>
         </div>
       </div>
     </section>
@@ -286,6 +235,50 @@
       </div>
     </section>
 
+  </div>
+
+  <!-- Add / Edit Milestone Modal -->
+  <div class="milestone-modal-backdrop" id="milestone-modal" style="display: none;">
+    <div class="milestone-modal-dialog">
+      <div class="milestone-modal-header">
+        <h3 id="milestone-modal-title">Add Milestone</h3>
+        <button type="button" class="milestone-modal-close" id="btn-close-milestone-modal" aria-label="Close">&times;</button>
+      </div>
+      <form id="milestone-form" class="milestone-form">
+        <input type="hidden" id="milestone-form-id" value="">
+        <div class="mform-group">
+          <label for="milestone-form-name">Milestone / Stage Title <span class="req">*</span></label>
+          <input type="text" id="milestone-form-name" required placeholder="e.g. Discovery, Alpha Testing, Beta Launch">
+        </div>
+        <div class="mform-row">
+          <div class="mform-group half">
+            <label for="milestone-form-seq">Sequence #</label>
+            <input type="number" id="milestone-form-seq" min="1" max="99" placeholder="e.g. 1">
+          </div>
+          <div class="mform-group half">
+            <label for="milestone-form-status">Status</label>
+            <select id="milestone-form-status">
+              <option value="UPCOMING">Upcoming</option>
+              <option value="CURRENT">Current (In Progress)</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="DELAYED">Delayed</option>
+            </select>
+          </div>
+        </div>
+        <div class="mform-group">
+          <label for="milestone-form-due">Target Due Date</label>
+          <input type="date" id="milestone-form-due">
+        </div>
+        <div class="mform-group">
+          <label for="milestone-form-desc">Scope &amp; Description</label>
+          <textarea id="milestone-form-desc" rows="3" placeholder="Brief outline of deliverables and milestones criteria..."></textarea>
+        </div>
+        <div class="milestone-modal-footer">
+          <button type="button" class="btn-milestone-cancel" id="btn-cancel-milestone">Cancel</button>
+          <button type="submit" class="btn-milestone-save" id="btn-save-milestone">Save Milestone</button>
+        </div>
+      </form>
+    </div>
   </div>
 
 </div>
