@@ -182,6 +182,7 @@ public class DashboardService {
             // Real Attention Counts calculated from PostgreSQL database
             long blockedCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.BLOCKED));
             long inReviewCount = taskRepository.countByOrganizationIdAndStatusIn(organization.getId(), List.of(TaskStatus.IN_REVIEW));
+            long unassignedProjectsCount = projectRepository.countByOrganizationIdAndOwnerIsNull(organization.getId());
 
             List<AttentionAlertDto> attention = List.of(
                     AttentionAlertDto.builder()
@@ -189,7 +190,7 @@ public class DashboardService {
                             .count(String.format("%02d", blockedCount))
                             .title("Blocked tasks")
                             .subtitle("Require your input")
-                            .bgType("peach")
+                            .bgType(blockedCount > 0 ? "peach" : "neutral")
                             .url("#blocked-tasks")
                             .build(),
                     AttentionAlertDto.builder()
@@ -197,16 +198,16 @@ public class DashboardService {
                             .count(String.format("%02d", inReviewCount))
                             .title("Tasks waiting for others")
                             .subtitle("In review / waiting")
-                            .bgType("neutral")
+                            .bgType(inReviewCount > 0 ? "peach" : "neutral")
                             .url("#waiting-tasks")
                             .build(),
                     AttentionAlertDto.builder()
                             .id("att-3")
-                            .count("00")
-                            .title("Unread mentions")
-                            .subtitle("No unread mentions")
-                            .bgType("neutral")
-                            .url("#mentions")
+                            .count(String.format("%02d", unassignedProjectsCount))
+                            .title("Unassigned projects")
+                            .subtitle(unassignedProjectsCount > 0 ? "Require project lead" : "All projects assigned")
+                            .bgType(unassignedProjectsCount > 0 ? "peach" : "neutral")
+                            .url("#unassigned-projects")
                             .build()
             );
 

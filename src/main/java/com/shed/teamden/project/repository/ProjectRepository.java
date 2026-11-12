@@ -23,6 +23,11 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
     long countByOrganizationId(UUID orgId);
 
+    long countByOrganizationIdAndOwnerIsNull(UUID orgId);
+
+    @Query("SELECT p FROM Project p LEFT JOIN FETCH p.owner WHERE p.organization.id = :orgId AND p.owner IS NULL ORDER BY p.createdAt DESC")
+    List<Project> findUnassignedByOrganizationId(@Param("orgId") UUID orgId);
+
     long countByOrganizationIdAndStatus(UUID orgId, ProjectStatus status);
 
     long countByOrganizationIdAndStatusIn(UUID orgId, Collection<ProjectStatus> statuses);

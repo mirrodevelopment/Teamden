@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
@@ -17,6 +20,18 @@ public class ProjectController {
     @GetMapping("/options")
     public ResponseEntity<ProjectOptionsDto> getProjectOptions() {
         return ResponseEntity.ok(projectService.getProjectOptions());
+    }
+
+    @GetMapping("/unassigned")
+    public ResponseEntity<List<ProjectItemDto>> getUnassignedProjects() {
+        return ResponseEntity.ok(projectService.getUnassignedProjects());
+    }
+
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<ProjectItemDto> assignProjectLead(
+            @PathVariable("id") String id,
+            @RequestBody AssignLeadRequestDto request) {
+        return ResponseEntity.ok(projectService.assignProjectLead(UUID.fromString(id), request.getOwnerId()));
     }
 
     @GetMapping("/data")

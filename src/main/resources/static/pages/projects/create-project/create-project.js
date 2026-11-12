@@ -72,20 +72,13 @@
 
       const ownerSelect = document.getElementById('project-owner');
       if (ownerSelect && data.owners) {
-        ownerSelect.innerHTML = '';
-        if (data.owners.length === 0) {
+        ownerSelect.innerHTML = '<option value="">Unassigned (No Lead Assigned)</option>';
+        data.owners.forEach(u => {
           const opt = document.createElement('option');
-          opt.value = '';
-          opt.textContent = 'Current User (Default)';
+          opt.value = u.id;
+          opt.textContent = `${u.name} (${u.role || 'Member'})`;
           ownerSelect.appendChild(opt);
-        } else {
-          data.owners.forEach(u => {
-            const opt = document.createElement('option');
-            opt.value = u.id;
-            opt.textContent = `${u.name} (${u.role || 'Member'})`;
-            ownerSelect.appendChild(opt);
-          });
-        }
+        });
       }
     } catch (err) {
       console.warn('Error fetching project options:', err);

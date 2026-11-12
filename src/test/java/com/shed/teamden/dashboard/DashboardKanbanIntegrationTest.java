@@ -367,4 +367,25 @@ public class DashboardKanbanIntegrationTest {
         assertThat(created).isNotNull();
         assertThat(created.getKanbanColumn()).isEqualTo(KanbanColumn.LATER);
     }
+
+    @Test
+    @DisplayName("Should return Unassigned Projects in attention alert items")
+    void testDashboardDataReturnsUnassignedProjectsAttentionItem() throws Exception {
+        // Create an unassigned project in orgAlpha
+        projectRepository.save(Project.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .name("Unassigned Brand Sprint")
+                .status(ProjectStatus.ACTIVE)
+                .owner(null)
+                .build());
+
+        mockMvc.perform(get("/api/dashboard/data").session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attentionItems").isArray())
+                .andExpect(jsonPath("$.attentionItems[2].id").value("att-3"))
+                .andExpect(jsonPath("$.attentionItems[2].title").value("Unassigned projects"))
+                .andExpect(jsonPath("$.attentionItems[2].subtitle").value("Require project lead"))
+                .andExpect(jsonPath("$.attentionItems[2].count").value(not("00")));
+    }
 }

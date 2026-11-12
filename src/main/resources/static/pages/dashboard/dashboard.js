@@ -316,6 +316,8 @@
         clickHandler = `window.openBlockedTasksModal()`;
       } else if (item.title && item.title.toLowerCase().includes('waiting')) {
         clickHandler = `window.openWaitingTasksModal()`;
+      } else if (item.title && item.title.toLowerCase().includes('unassigned')) {
+        clickHandler = `window.openUnassignedProjectsModal()`;
       } else if (item.title && item.title.toLowerCase().includes('mention')) {
         clickHandler = `window.openUnreadMentionModal()`;
       }
@@ -1158,9 +1160,144 @@
     window.openModal('Unread Mentions (00)', content, footer);
   };
 
+  /**
+   * Unassigned Projects Modal & Lead Assignment
+   */
+  window.openUnassignedProjectsModal = async function (e) {
+    if (e) e.preventDefault();
+    try {
+      const [projRes, optRes] = await Promise.all([
+        fetch('/api/projects/unassigned'),
+        fetch('/api/projects/options')
+      ]);
+
+      let unassigned = [];
+      if (projRes.ok) {
+        unassigned = await projRes.json();
+      }
+
+      let members = [];
+      if (optRes.ok) {
+        const opts = await optRes.json();
+        members = opts.owners || [];
+      }
+
+      let content = '';
+      if (unassigned.length === 0) {
+        content = `
+          <div style="padding: 1.5rem 0; text-align: center; color: var(--dash-text-muted); font-size: 0.8125rem;">
+            All projects currently have an assigned project lead. No unassigned projects requiring attention.
+          </div>
+        `;
+      } else {
+        content = `
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <p style="margin: 0; font-size: 0.8125rem; color: var(--dash-text-body);">
+              ${unassigned.length} project(s) currently unassigned and require a project lead:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 380px; overflow-y: auto;">
+              ${unassigned.map(p => `
+                <div style="padding: 0.75rem; background: #fff; border: 1px solid var(--dash-border); border-radius: 8px; display: flex; flex-direction: column; gap: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <div>
+                      <span class="task-num" style="margin-right: 0.35rem;">${p.indexNum || '01'}</span>
+                      <strong style="font-size: 0.875rem;">${escapeHtml(p.name)}</strong>
+                    </div>
+                    <span style="font-size: 0.6875rem; font-weight: 700; color: #E53935; background: #FFEBEE; padding: 0.2rem 0.5rem; border-radius: 4px;">Unassigned</span>
+                  </div>
+                  ${p.description ? `<p style="margin: 0; font-size: 0.75rem; color: var(--dash-text-muted);">${escapeHtml(p.description)}</p>` : ''}
+                  <div style="display: flex; gap: 0.5rem; align-items: center; justify-content: space-between; margin-top: 0.25rem;">
+                    <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: var(--dash-text-muted);">
+                      <span>${escapeHtml(p.priority || 'Medium Priority')}</span>
+                      <span>·</span>
+                      <span>${escapeHtml(p.dueDate || 'Upcoming')}</span>
+                    </div>
+                    <div style="display: flex; gap: 0.4rem; align-items: center;">
+                      <select id="assign-lead-select-${p.id}" style="padding: 0.35rem 0.55rem; font-size: 0.75rem; border: 1px solid var(--dash-border); border-radius: 6px; background: var(--dash-surface-card);">
+                        <option value="">Select Project Lead...</option>
+                        ${members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (${escapeHtml(m.role)})</option>`).join('')}
+                      </select>
+                      <button onclick="window.assignProjectLead('${p.id}')" style="padding: 0.35rem 0.75rem; background: #111; color: #fff; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+                        Assign Lead
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      const footer = `
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+          <a href="/pages/projects/create-project/create-project.html" style="font-size: 0.75rem; font-weight: 700; color: #111; text-decoration: none;">+ Create New Project</a>
+          <button onclick="window.closeModal()" style="padding: 0.45rem 0.85rem; background: none; border: 1px solid var(--dash-border); border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--dash-text-muted);">Close</button>
+        </div>
+      `;
+      window.openModal(`Unassigned Projects (${String(unassigned.length).padStart(2, '0')})`, content, footer);
+    } catch (err) {
+      console.error('Failed to load unassigned projects:', err);
+      window.openModal('Unassigned Projects (00)', '<div style="padding: 1rem 0; color: var(--dash-text-muted); font-size: 0.8125rem;">Failed to load unassigned projects.</div>');
+    }
+  };
+
+  window.assignProjectLead = async function (projectId) {
+    const select = document.getElementById(`assign-lead-select-${projectId}`);
+    if (!select || !select.value) {
+      alert('Please select a project lead from the dropdown.');
+      return;
+    }
+
+    const ownerId = select.value;
+    try {
+      const res = await fetch(`/api/projects/${projectId}/assign`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ownerId })
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server responded with ${res.status}`);
+      }
+
+      window.closeModal();
+      window.showToast('✓ Project lead assigned successfully!');
+
+      if (typeof window.refreshDashboardData === 'function') {
+        await window.refreshDashboardData();
+      }
+    } catch (err) {
+      console.error('Failed to assign project lead:', err);
+      alert('Failed to assign project lead: ' + err.message);
+    }
+  };
+
   window.openAttentionSummaryModal = function (e) {
     if (e) e.preventDefault();
-    window.openBlockedTasksModal();
+    const items = currentDashboardData?.attentionItems || [];
+    const content = `
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <p style="margin: 0; font-size: 0.8125rem; color: var(--dash-text-body);">Current attention overview across your workspace:</p>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          ${items.map(item => `
+            <div onclick="window.closeModal(); ${item.title.toLowerCase().includes('blocked') ? 'window.openBlockedTasksModal()' : item.title.toLowerCase().includes('waiting') ? 'window.openWaitingTasksModal()' : item.title.toLowerCase().includes('unassigned') ? 'window.openUnassignedProjectsModal()' : 'window.openUnreadMentionModal()'}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: #fff; border: 1px solid var(--dash-border); border-radius: 8px; cursor: pointer;">
+              <div>
+                <strong style="font-size: 0.875rem;">${escapeHtml(item.title)}</strong>
+                <p style="margin: 0.2rem 0 0 0; font-size: 0.75rem; color: var(--dash-text-muted);">${escapeHtml(item.subtitle)}</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="attention-count" style="font-size: 1.1rem; font-weight: 800;">${escapeHtml(item.count)}</span>
+                <span style="font-size: 0.85rem; color: var(--dash-text-muted);">→</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    const footer = `<button onclick="window.closeModal()" style="padding: 0.45rem 0.85rem; background: none; border: 1px solid var(--dash-border); border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--dash-text-muted);">Close</button>`;
+    window.openModal('Needs Attention Overview', content, footer);
   };
 
   /**

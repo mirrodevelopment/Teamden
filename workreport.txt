@@ -1495,6 +1495,53 @@ Example: Kanban Column Task Population
 - Database Verification: Verified PostgreSQL `tasks` row with `kanban_column = 'NEXT'` renders in UI.
 - Automated Test Suite: 53/53 integration tests passing 100% green (`./mvnw test`).
 
+--------------------------------------------------------------------------------
+10. UNASSIGNED PROJECTS ATTENTION CARD & PROJECT LEAD ASSIGNMENT (2026-11-12)
+--------------------------------------------------------------------------------
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Needs Attention Card 3 Alignment with Reference Mockup:
+  * Replaced static hardcoded "00 Unread mentions" card in the Today dashboard right rail with a dynamic PostgreSQL unassigned projects monitor (`att-3`).
+  * Card 3 displays exact count (`0X`), title `"Unassigned projects"`, subtitle `"Require project lead"` (or `"All projects assigned"` when 0), arrow `→`, and dynamic peach styling (`card-peach` when > 0, `card-neutral` when 0) matching user reference image.
+- Backend Repository & Service Enhancements:
+  * Added `countByOrganizationIdAndOwnerIsNull(UUID orgId)` and `findUnassignedByOrganizationId(UUID orgId)` to `ProjectRepository.java`.
+  * Updated `ProjectService.createProject` so `projectOwner` remains `null` when `req.getOwnerId()` is null (instead of forcing current user).
+  * Added `getUnassignedProjects()` returning `List<ProjectItemDto>` with index numbers, tags, priorities, and `avatars: ["??"]`.
+  * Added `assignProjectLead(UUID projectId, UUID newOwnerId)` verifying organization membership, updating owner in PostgreSQL, and logging a `PROJECT_UPDATED` activity event.
+- REST API Controller Endpoints:
+  * `GET /api/projects/unassigned`: Retrieves all unassigned projects for the authenticated organization.
+  * `PATCH /api/projects/{id}/assign`: Assigns a project lead to the specified project.
+- Frontend Interactive Lead Assignment Modal:
+  * In `dashboard.js`, wired `openUnassignedProjectsModal()` to Card 3 and the Needs Attention "View all →" overview.
+  * Modal displays each unassigned project with details and an inline project lead selection dropdown loaded from `GET /api/projects/options`.
+  * Added `window.assignProjectLead(projectId)` calling `PATCH /api/projects/{id}/assign`, closing modal, showing a toast, and refreshing the dashboard dynamically.
+  * Updated `create-project.js` and `projects.js` to include `<option value="">Unassigned (No Lead Assigned)</option>` as the first choice.
+- Automated Testing & Regression Verification:
+  * Added tests `testCreateUnassignedProject`, `testGetUnassignedProjects`, `testAssignProjectLead`, and `testAssignProjectLeadCrossTenantFails` in `ProjectIntegrationTest.java`.
+  * Added test `testDashboardDataReturnsUnassignedProjectsAttentionItem` in `DashboardKanbanIntegrationTest.java`.
+  * All 58 integration tests passing 100% green across all suites (`./mvnw test`).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- Backend Services & Repositories: `ProjectRepository.java`, `ProjectService.java`, `DashboardService.java`.
+- Controllers & DTOs: `ProjectController.java`, `AssignLeadRequestDto.java`.
+- Frontend Controllers & UI: `dashboard.js`, `create-project.js`, `projects.js`.
+- Automated Tests: `ProjectIntegrationTest.java`, `DashboardKanbanIntegrationTest.java`.
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Needs Attention Card 3 on Today Page
+  [BEFORE]:
+  Card 3 was hardcoded to `00 Unread mentions / No unread mentions` with static neutral styling, completely disconnected from PostgreSQL.
+  [AFTER]:
+  Card 3 dynamically reflects PostgreSQL unassigned projects (`0X Unassigned projects / Require project lead` with peach background). Clicking the card opens an interactive assignment modal allowing direct assignment of project leads from active workspace members.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Live Server Verification: Tested `GET /api/projects/unassigned` and `GET /api/dashboard/data` on port 8080.
+- Database Verification: Verified project lead assignment updates PostgreSQL `projects` and logs `ActivityEvent`.
+- Automated Test Suite: 58/58 integration tests passing 100% green (`./mvnw test`).
+
 ================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================
@@ -1549,7 +1596,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Strict adherence to `fragments/theme/theme.css` `--dash-*` tokens platform-wide.
 - [x] Universal dual-theme (Light and Dark mode) support across all application views.
 - [x] Multi-tenant organization isolation and security validation in backend controller & service.
-- [x] 100% green test suite across all 53 integration test cases.
+- [x] 100% green test suite across all 58 integration test cases.
 - [x] Target directory hot-reload synchronization (`target/classes/static`).
 - [x] Interactive task completion & state transition tests on Kanban board.
 - [x] Full Calendar raw data migration to PostgreSQL (Flyway V5) and Table view.
@@ -1558,6 +1605,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Interactive Task Creation modal, dedicated page (`/pages/tasks/create.html`), and DB persistence.
 - [x] Interactive Project Creation modal, dedicated page (`/pages/projects/create-project/create-project.html`), and DB persistence.
 - [x] Fixed Kanban column task exclusion defect in `DashboardService.java` (all columns retain tasks).
+- [x] Unassigned projects attention card (Card 3), interactive lead assignment modal & PostgreSQL persistence.
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------

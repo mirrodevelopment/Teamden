@@ -39,6 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -283,5 +284,119 @@ public class ProjectIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalProjects", is(1)))
                 .andExpect(jsonPath("$.projects[0].name", is("Beta Secret Project")));
+    }
+
+    @Test
+    @DisplayName("Should create unassigned project when ownerId is omitted or null")
+    void testCreateUnassignedProject() throws Exception {
+        String payload = """
+                {
+                    "name": "Unassigned Infrastructure Project",
+                    "description": "Needs a lead assigned later",
+                    "projectType": "Engineering",
+                    "status": "PLANNING"
+                }
+                """;
+
+        mockMvc.perform(post("/api/projects")
+                        .session(sessionAlpha)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is("Unassigned Infrastructure Project")))
+                .andExpect(jsonPath("$.team", is("Unassigned")))
+                .andExpect(jsonPath("$.avatars[0]", is("??")));
+
+        List<Project> unassigned = projectRepository.findUnassignedByOrganizationId(orgAlpha.getId());
+        assertThat(unassigned).hasSize(1);
+        assertThat(unassigned.get(0).getOwner()).isNull();
+    }
+
+    @Test
+    @DisplayName("Should retrieve only unassigned projects for active organization")
+    void testGetUnassignedProjects() throws Exception {
+        // Create 1 unassigned in Alpha
+        projectRepository.save(Project.builder()
+                .name("Alpha Unassigned")
+                .organization(orgAlpha)
+                .owner(null)
+                .status(ProjectStatus.ACTIVE)
+                .build());
+
+        // Create 1 assigned in Alpha
+        projectRepository.save(Project.builder()
+                .name("Alpha Assigned")
+                .organization(orgAlpha)
+                .owner(userAlpha)
+                .status(ProjectStatus.ACTIVE)
+                .build());
+
+        // Create 1 unassigned in Beta (cross-tenant)
+        projectRepository.save(Project.builder()
+                .name("Beta Unassigned")
+                .organization(orgBeta)
+                .owner(null)
+                .status(ProjectStatus.ACTIVE)
+                .build());
+
+        mockMvc.perform(get("/api/projects/unassigned").session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Alpha Unassigned")))
+                .andExpect(jsonPath("$[0].team", is("Unassigned")));
+    }
+
+    @Test
+    @DisplayName("Should successfully assign project lead to unassigned project")
+    void testAssignProjectLead() throws Exception {
+        Project p = projectRepository.save(Project.builder()
+                .name("Unassigned Migration")
+                .organization(orgAlpha)
+                .owner(null)
+                .status(ProjectStatus.ACTIVE)
+                .build());
+
+        String assignPayload = String.format("{\"ownerId\":\"%s\"}", userAlpha.getId());
+
+        mockMvc.perform(patch("/api/projects/" + p.getId() + "/assign")
+                        .session(sessionAlpha)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(assignPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.team", is("Alex Lead")))
+                .andExpect(jsonPath("$.avatars[0]", is("AL")));
+
+        Project reloaded = projectRepository.findById(p.getId()).orElseThrow();
+        assertThat(reloaded.getOwner()).isNotNull();
+        assertThat(reloaded.getOwner().getId()).isEqualTo(userAlpha.getId());
+
+        // Check ActivityEvent recorded
+        List<ActivityEvent> events = activityEventRepository.findAll();
+        assertThat(events).anyMatch(e -> e.getEventType() == ActivityEventType.PROJECT_UPDATED
+                && e.getTargetTitle().equals("Unassigned Migration"));
+    }
+
+    @Test
+    @DisplayName("Assign lead fails when user is not a member of the project organization")
+    void testAssignProjectLeadCrossTenantFails() throws Exception {
+        Project p = projectRepository.save(Project.builder()
+                .name("Alpha Project")
+                .organization(orgAlpha)
+                .owner(null)
+                .status(ProjectStatus.ACTIVE)
+                .build());
+
+        // userBeta is in orgBeta, NOT in orgAlpha
+        String assignPayload = String.format("{\"ownerId\":\"%s\"}", userBeta.getId());
+
+        mockMvc.perform(patch("/api/projects/" + p.getId() + "/assign")
+                        .session(sessionAlpha)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(assignPayload))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Selected user is not an active member of this organization")));
     }
 }

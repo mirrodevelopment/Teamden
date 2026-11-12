@@ -262,7 +262,7 @@ public class ProjectService {
         User currentUser = resolveCurrentUser(organization);
 
         // Resolve Project Lead / Owner
-        User projectOwner = currentUser;
+        User projectOwner = null;
         if (req.getOwnerId() != null) {
             Optional<User> ownerOpt = userRepository.findById(req.getOwnerId());
             if (ownerOpt.isPresent()) {
@@ -348,39 +348,115 @@ public class ProjectService {
         long totalCount = projectRepository.countByOrganizationId(organization.getId());
         String indexNum = String.format("%02d", totalCount);
 
-        String dueStr = newProject.getDueDate() != null
-                ? "Due " + newProject.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                : "Upcoming";
+        return toProjectItemDto(newProject, indexNum);
+    }
 
-        String ownerName = projectOwner.getFullName() != null ? projectOwner.getFullName() : "Team";
-        String[] parts = ownerName.trim().split("\\s+");
-        String initials = parts.length > 1
-                ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                : (ownerName.length() > 0 ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase() : "TM");
+    @Transactional(readOnly = true)
+    public List<ProjectItemDto> getUnassignedProjects() {
+        Organization organization = resolveCurrentOrganization();
+        List<Project> unassigned = projectRepository.findUnassignedByOrganizationId(organization.getId());
+        List<ProjectItemDto> dtos = new ArrayList<>();
+        int idx = 1;
+        for (Project p : unassigned) {
+            dtos.add(toProjectItemDto(p, String.format("%02d", idx++)));
+        }
+        return dtos;
+    }
 
-        String statusDotColor = (status == ProjectStatus.ACTIVE) ? "green"
-                : (status == ProjectStatus.PLANNING ? "blue" : (status == ProjectStatus.ON_HOLD ? "red" : "orange"));
-        String healthDotColor = "ON_TRACK".equalsIgnoreCase(health) ? "green" : ("AT_RISK".equalsIgnoreCase(health) ? "red" : "orange");
+    @Transactional
+    public ProjectItemDto assignProjectLead(UUID projectId, UUID newOwnerId) {
+        if (projectId == null) {
+            throw new BadRequestException("Project ID is required");
+        }
+        if (newOwnerId == null) {
+            throw new BadRequestException("Owner ID is required");
+        }
+
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser(organization);
+
+        Project project = projectRepository.findByOrganizationIdAndId(organization.getId(), projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found in this organization"));
+
+        User newOwner = userRepository.findById(newOwnerId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        organizationMembershipRepository.findByOrganizationIdAndUserId(organization.getId(), newOwnerId)
+                .orElseThrow(() -> new BadRequestException("Selected user is not an active member of this organization"));
+
+        project.setOwner(newOwner);
+        project = projectRepository.save(project);
+
+        // Record Activity Event
+        ActivityEvent event = ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .actor(currentUser)
+                .eventType(ActivityEventType.PROJECT_UPDATED)
+                .entityType("PROJECT")
+                .entityId(project.getId())
+                .title("assigned project lead")
+                .description("Assigned " + newOwner.getFullName() + " to " + project.getName())
+                .actionText("assigned project lead to " + newOwner.getFullName())
+                .targetTitle(project.getName())
+                .subMeta(project.getProjectType() != null ? project.getProjectType() + " / Workspace" : "Workspace / Projects")
+                .badgeType("DOCUMENT")
+                .dotColor("blue")
+                .eventTimestamp(Instant.now())
+                .build();
+        activityEventRepository.save(event);
+
+        return toProjectItemDto(project, "01");
+    }
+
+    private ProjectItemDto toProjectItemDto(Project p, String indexNum) {
+        String stat = p.getStatus() != null ? p.getStatus().name() : "ACTIVE";
+        String statLbl = stat.replace("_", " ");
+        String dueLbl = p.getDueDate() != null ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")) : "Upcoming";
+        String health = p.getHealth() != null ? p.getHealth() : "ON_TRACK";
+        String healthLbl = health.replace("_", " ");
+        String healthDot = "AT_RISK".equalsIgnoreCase(health) ? "red" : "green";
+
+        String ownerName = (p.getOwner() != null && p.getOwner().getFullName() != null)
+                ? p.getOwner().getFullName()
+                : "Unassigned";
+
+        List<String> avatars = new ArrayList<>();
+        if (p.getOwner() != null && p.getOwner().getFullName() != null) {
+            String[] parts = ownerName.trim().split("\\s+");
+            String initials = parts.length > 1
+                    ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
+                    : (ownerName.length() > 0 ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase() : "TM");
+            avatars.add(initials);
+        } else {
+            avatars.add("??");
+        }
+
+        String priority = p.getPriority() != null ? p.getPriority() : "MEDIUM";
+        String priorityLabel = priority.charAt(0) + priority.substring(1).toLowerCase() + " Priority";
+
+        String statusDotColor = (p.getStatus() == ProjectStatus.ACTIVE) ? "green"
+                : (p.getStatus() == ProjectStatus.PLANNING ? "blue" : (p.getStatus() == ProjectStatus.ON_HOLD ? "red" : "orange"));
 
         return ProjectItemDto.builder()
-                .id(newProject.getId().toString())
+                .id(p.getId().toString())
                 .indexNum(indexNum)
-                .name(newProject.getName())
-                .description(newProject.getDescription())
-                .status(newProject.getStatus().name())
-                .statusLabel(newProject.getStatus().name().replace("_", " "))
+                .name(p.getName())
+                .description(p.getDescription() != null ? p.getDescription() : "")
+                .status(stat)
+                .statusLabel(statLbl)
                 .statusDotColor(statusDotColor)
                 .health(health)
-                .healthLabel(health.replace("_", " "))
-                .healthDotColor(healthDotColor)
+                .healthLabel(healthLbl)
+                .healthDotColor(healthDot)
                 .team(ownerName)
-                .dueDate(dueStr)
-                .priority(priority.charAt(0) + priority.substring(1).toLowerCase() + " Priority")
+                .dueDate(dueLbl)
+                .priority(priorityLabel)
                 .milestonesLabel("0/0 milestones")
                 .milestonesCompleted(0)
                 .milestonesTotal(0)
                 .blockersCount(0)
-                .avatars(List.of(initials))
+                .avatars(avatars)
                 .avatarOverflow("")
                 .build();
     }

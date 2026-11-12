@@ -356,20 +356,15 @@
   function populateOwnerSelect(owners) {
     const ownerSelect = document.getElementById('select-project-owner');
     if (!ownerSelect) return;
-    ownerSelect.innerHTML = '';
-    if (!owners || owners.length === 0) {
-      const opt = document.createElement('option');
-      opt.value = '';
-      opt.textContent = 'Current User (Default)';
-      ownerSelect.appendChild(opt);
-      return;
+    ownerSelect.innerHTML = '<option value="">Unassigned (No Lead Assigned)</option>';
+    if (owners && owners.length > 0) {
+      owners.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.id;
+        opt.textContent = `${o.name} (${o.role || 'Member'})`;
+        ownerSelect.appendChild(opt);
+      });
     }
-    owners.forEach(o => {
-      const opt = document.createElement('option');
-      opt.value = o.id;
-      opt.textContent = `${o.name} (${o.role || 'Member'})`;
-      ownerSelect.appendChild(opt);
-    });
   }
 
   /**
