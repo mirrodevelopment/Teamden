@@ -390,8 +390,9 @@ public class DashboardKanbanIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return live activity events with accurate day labels and metadata")
+    @DisplayName("Should return live activity events strictly for today and exclude past movements")
     void testDashboardDataReturnsLiveActivities() throws Exception {
+        // Event created TODAY
         activityEventRepository.save(ActivityEvent.builder()
                 .id(UUID.randomUUID())
                 .organization(orgAlpha)
@@ -407,9 +408,26 @@ public class DashboardKanbanIntegrationTest {
                 .eventTimestamp(java.time.Instant.now())
                 .build());
 
+        // Event created YESTERDAY (must be excluded from Today dashboard)
+        activityEventRepository.save(ActivityEvent.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .actor(userAlpha)
+                .eventType(ActivityEventType.PROJECT_UPDATED)
+                .entityType("PROJECT")
+                .title("updated milestone")
+                .actionText("updated milestone")
+                .targetTitle("Go Live")
+                .subMeta("Brand Identity Redesign / Milestones")
+                .badgeType("DOCUMENT")
+                .dotColor("blue")
+                .eventTimestamp(java.time.Instant.now().minus(java.time.Duration.ofDays(1)))
+                .build());
+
         mockMvc.perform(get("/api/dashboard/data").session(sessionAlpha))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.activities").isArray())
+                .andExpect(jsonPath("$.activities.length()").value(1))
                 .andExpect(jsonPath("$.activities[0].dayLabel").value("TODAY"))
                 .andExpect(jsonPath("$.activities[0].actionText").value("created task"))
                 .andExpect(jsonPath("$.activities[0].targetTitle").value("Authentication Audit"))

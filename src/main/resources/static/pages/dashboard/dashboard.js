@@ -192,7 +192,14 @@
 
     const allActivities = activities || [];
     if (allActivities.length === 0) {
-      container.innerHTML = `<div class="activity-empty-notice" style="padding: 1rem 0; font-size: 0.8125rem; color: var(--dash-text-muted);">No recent movements recorded.</div>`;
+      container.innerHTML = `
+        <div class="activity-empty-notice" style="padding: 1.5rem 0; text-align: center; color: var(--dash-text-muted); font-size: 0.8125rem;">
+          No movements recorded today.
+          <div style="margin-top: 0.5rem;">
+            <a href="/pages/activity/activity.html" style="color: var(--dash-text-primary); font-weight: 700; text-decoration: underline;">View all activity chronicle →</a>
+          </div>
+        </div>
+      `;
       return;
     }
 

@@ -4,68 +4,70 @@
 Project: Teamden Enterprise Workspace & Neo-Editorial Productivity Suite
 File: workfrom home.txt (and workfrom home)
 Tracking Standard: Every day entry strictly begins with "DAY X - [Date]"
+Line Count Standard: Strictly between 80 and 100 lines at all times.
 ================================================================================
 
 ================================================================================
-DAY 4 - 2026-11-12 (THURSDAY - TODAY)
+DAY 5 - 2026-11-13 (FRIDAY - TODAY)
 ================================================================================
 
 1. WORK COMPLETED & OBJECTIVES
 --------------------------------------------------------------------------------
-- Implemented Interactive Project Milestones Table & PostgreSQL DB Persistence:
-  * Designed and built Dual-Mode Switcher (`Timeline View | Table View`) in Project Overview.
-  * Replaced static HTML mock nodes with dynamic PostgreSQL-backed stage nodes.
-  * Built complete REST CRUD: `GET/POST/PATCH/DELETE /api/projects/{id}/milestones`.
-  * Added 1-Click "⚡ Initialize Standard 9-Stage Lifecycle" endpoint & UI button.
-  * Wired dynamic completion ratio badge (`05/09 COMPLETED`) and animated progress bar.
-  * Added responsive Add / Edit Milestone modal dialog adhering to Zero Hex Standard tokens.
-  * Supported inline milestone status transitions (`UPCOMING`, `CURRENT`, `COMPLETED`, `DELAYED`).
-- Resolved "Your Priorities Empty" Defect in Dashboard Kanban & Unassigned Projects:
-  * Removed hero task exclusion filter so all active tasks populate Kanban columns.
-  * Added Unassigned Projects card & assignment modal to Today Dashboard.
-- Eradicated dummy activity seeds and wired authentic real-time movement feeds.
-- 100% green tests: 65/65 passing integration tests across entire test suite (`./mvnw test`).
+- Restricted Today Dashboard Activity Feed Strictly to Today's Authentic Data:
+  * Implemented date-bounded query in `ActivityEventRepository` and `DashboardService`.
+  * Excluded `YESTERDAY` and past movements from the Today dashboard feed.
+  * Added clean empty state ("No movements recorded today") with link to chronicle.
+  * Preserved complete historical activity records on `/pages/activity/activity.html`.
+  * Maintained multi-tenant organization isolation across all activity queries.
+  * Synchronized compiled static assets to `target/classes/static`.
+  * Verified 100% green test suite: 65/65 passing integration tests (`./mvnw test`).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
-- Backend Services: `ProjectMilestoneService.java`, `ProjectService.java`.
-- Controllers & DTOs: `ProjectMilestoneController.java`, `CreateMilestoneRequestDto.java`,
-  `UpdateMilestoneRequestDto.java`, `ProjectMilestoneDto.java`.
-- Frontend: `project-overview.html`, `project-overview.css`, `project-overview.js`.
-- Automated Tests: `ProjectMilestoneIntegrationTest.java` (6/6 passing).
+- Backend Services: `DashboardService.java` (implemented today start/end boundaries).
+- Repositories: `ActivityEventRepository.java` (added pageable date-range query).
+- Frontend UI: `dashboard.js` (empty state renderer with chronicle link).
+- Automated Tests: `DashboardKanbanIntegrationTest.java` (strictly verifies today-only).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: 02 / Milestones Component in Project Overview
+Example: Recent Activity feed on Today Dashboard (`/pages/dashboard/dashboard.html`)
   [BEFORE]:
-  Hardcoded 9 static mock nodes in HTML with mismatched "00/00 COMPLETED" badge and no table or edit support.
+  Under "LATEST MOVEMENTS / FRI, 13 NOV 2026", displayed past events labeled "16:05 YESTERDAY".
   [AFTER]:
-  Dual-mode view (Timeline / Table), dynamic PostgreSQL persistence, status dropdown updates, and 1-click template init.
+  Displays strictly movements occurring today (13 Nov 2026) with [TODAY] badges;
+  all past history remains accessible on the Recent Activity chronicle page.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Live API Verification: Verified CRUD, template seeding (9 stages), and overview recalculation.
-- Automated Test Suite: 65/65 integration tests passing 100% green (`./mvnw test`).
+- Live API: `GET /api/dashboard/data` verified returning 100% TODAY movements.
+- Chronicle Integrity: `GET /api/projects/{id}/activity` verified past events intact.
+- Automated Tests: `DashboardKanbanIntegrationTest` and full suite (65/65 tests green).
+
+================================================================================
+DAY 4 - 2026-11-12 (THURSDAY)
+================================================================================
+1. WORK COMPLETED & OBJECTIVES:
+- Interactive Milestones Table, dual view switcher (Timeline/Table), 9-stage template seeder.
+- Built CRUD endpoints, ratio recalculation (`05/09 COMPLETED`), and Add/Edit modal.
+- Fixed Kanban column hero exclusion & added unassigned projects attention card.
+2. WHAT WAS CHANGED: `ProjectMilestone*`, `ProjectService`, `project-overview.*`, `Dashboard*`.
+3. VERIFICATION: `ProjectMilestoneIntegrationTest` 6/6 green; full suite 65/65 green.
 
 ===============================================================================
 DAY 3 - 2026-11-10 (TUESDAY)
 ===============================================================================
-1. WORK COMPLETED & OBJECTIVES
---------------------------------------------------------------------------------
-- Dedicated Project Creation Folder (`pages/projects/create-project/`), modal, options API & DB persistence.
-- Built `create-project.html`, `create-project.css`, `create-project.js` with Zero Hex Standard design tokens.
-- Interactive Task Creation modal (`/pages/tasks/create.html`), options API & PostgreSQL persistence.
-2. WHAT WAS CHANGED: `ProjectService.java`, `ProjectController.java`, `create-project.*`, `projects.*`.
-3. VERIFICATION: 53/53 integration tests green; database purge preserves accounts with 0 mock rows.
+1. WORK COMPLETED & OBJECTIVES:
+- Dedicated Project Creation page/modal (`create-project.*`), Task Creation modal (`create.*`).
+- Complete elimination of raw code values, query-time auto-seeding routines, and test purge.
+2. WHAT WAS CHANGED & VERIFICATION: `ProjectService`, `create-project.*`, 53/53 tests green.
 
 ===============================================================================
 DAY 2 - 2026-11-04 (WEDNESDAY)
 ===============================================================================
-1. WORK COMPLETED & OBJECTIVES
---------------------------------------------------------------------------------
+1. WORK COMPLETED & VERIFICATION:
 - Full Mobile Layout Modernization (320px - 768px): Zero Overlay and Zero Overlap.
-- Chrome DevTools Protocol Verification across mobile viewport (375x812).
-2. WHAT WAS CHANGED & VERIFICATION: `theme.css`, `navbar.css`, `sidebar.css`, `dashboard.css`. 18/18 tests green.
+- Chrome DevTools Protocol Verification; 18/18 integration tests green.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
@@ -73,9 +75,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 1-6 [COMPLETED]: Shell unification, mobile layout, Kanban drag-and-drop, relational Calendar.
 - Phase 7-10 [COMPLETED]: Multi-tenant security, Recent Activity page, DB persistence, seed eradication.
 - Phase 11-13 [COMPLETED]: Task Creation modal, Project Creation page, Kanban hero retention.
-- Phase 14 [COMPLETED]: Unassigned projects attention card & lead assignment modal.
-- Phase 15 [COMPLETED]: Dynamic activity movements feed and dummy artifact eradication.
-- Phase 16 [COMPLETED]: Interactive Project Milestones Table, 9-stage lifecycle template & PostgreSQL persistence.
+- Phase 14-16 [COMPLETED]: Unassigned projects card, authentic activity feeds, Project Milestones Table.
+- Phase 17 [COMPLETED]: Today page strictly scoped to today's authentic data & empty state chronicle links.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

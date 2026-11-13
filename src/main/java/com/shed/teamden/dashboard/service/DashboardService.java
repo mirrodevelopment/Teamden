@@ -140,11 +140,13 @@ public class DashboardService {
                         .build();
             }
 
-            // Fetch real activity events from PostgreSQL
-            List<ActivityEvent> activityEvents = activityEventRepository.findRecentByOrganizationId(organization.getId(), PageRequest.of(0, 10));
+            // Fetch real activity events for TODAY from PostgreSQL
+            Instant startOfToday = today.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Instant endOfToday = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+            List<ActivityEvent> activityEvents = activityEventRepository
+                    .findFilteredByOrganizationId(organization.getId(), startOfToday, endOfToday, PageRequest.of(0, 10));
             List<ActivityItemDto> activities = new ArrayList<>();
             DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
-            DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("d MMM").withZone(ZoneId.systemDefault());
 
             for (ActivityEvent event : activityEvents) {
                 String authorName = event.getActor() != null ? event.getActor().getFullName() : "System";
@@ -157,24 +159,12 @@ public class DashboardService {
                 String infoText = event.getInfoText();
 
                 Instant eventInstant = event.getEventTimestamp();
-                String timeStr = "09:42";
-                String dayLabel = "TODAY";
-                if (eventInstant != null) {
-                    timeStr = timeFmt.format(eventInstant);
-                    LocalDate eventDate = eventInstant.atZone(ZoneId.systemDefault()).toLocalDate();
-                    if (eventDate.equals(today)) {
-                        dayLabel = "TODAY";
-                    } else if (eventDate.equals(today.minusDays(1))) {
-                        dayLabel = "YESTERDAY";
-                    } else {
-                        dayLabel = dateFmt.format(eventInstant).toUpperCase();
-                    }
-                }
+                String timeStr = eventInstant != null ? timeFmt.format(eventInstant) : "09:42";
 
                 activities.add(ActivityItemDto.builder()
                         .id("act-" + event.getId().toString().substring(0, 8))
                         .time(timeStr)
-                        .dayLabel(dayLabel)
+                        .dayLabel("TODAY")
                         .dotColor(dot)
                         .badgeType(badge)
                         .author(authorName)
