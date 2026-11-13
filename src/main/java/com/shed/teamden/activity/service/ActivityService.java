@@ -236,7 +236,8 @@ public class ActivityService {
                     || event.getEventType() == ActivityEventType.ATTENDANCE_CHECKIN;
         } else if ("DOCUMENT".equals(filterType)) {
             return event.getEventType() == ActivityEventType.PROJECT_UPDATED
-                    || event.getEventType() == ActivityEventType.PROJECT_CREATED;
+                    || event.getEventType() == ActivityEventType.PROJECT_CREATED
+                    || event.getEventType() == ActivityEventType.DAILY_UPDATE_POSTED;
         } else if ("ASSIGNED".equals(filterType)) {
             return event.getEventType() == ActivityEventType.TASK_ASSIGNED;
         } else if ("COMMENT".equals(filterType)) {

@@ -4,6 +4,7 @@ import com.shed.teamden.activity.entity.ActivityEvent;
 import com.shed.teamden.activity.entity.ActivityEventType;
 import com.shed.teamden.activity.repository.ActivityEventRepository;
 import com.shed.teamden.activity.service.ActivityService;
+import com.shed.teamden.dailyupdate.service.DailyUpdateService;
 import com.shed.teamden.dashboard.dto.*;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.entity.OrganizationStatus;
@@ -50,6 +51,7 @@ public class DashboardService {
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
     private final CalendarEventRepository calendarEventRepository;
+    private final DailyUpdateService dailyUpdateService;
 
     @Transactional
     public DashboardDataDto getDashboardData() {
@@ -228,6 +230,8 @@ public class DashboardService {
                         .build());
             }
 
+            DailyUpdateSummaryDto dailyUpdateSummary = dailyUpdateService.getDailyUpdateSummary(organization, currentUser, today);
+
         return DashboardDataDto.builder()
                 .workspaceBreadcrumb("YOUR WORKSPACE / 01")
                 .currentDateLabel(formattedDate)
@@ -242,6 +246,7 @@ public class DashboardService {
                 .activities(activities)
                 .schedule(schedule)
                 .attentionItems(attention)
+                .dailyUpdateSummary(dailyUpdateSummary)
                 .build();
         } catch (Throwable t) {
             log.error("Error generating dashboard data: {}", t.getMessage(), t);

@@ -25,4 +25,5 @@ public class DashboardDataDto {
     private List<ActivityItemDto> activities;
     private List<ScheduleItemDto> schedule;
     private List<AttentionAlertDto> attentionItems;
+    private DailyUpdateSummaryDto dailyUpdateSummary;
 }

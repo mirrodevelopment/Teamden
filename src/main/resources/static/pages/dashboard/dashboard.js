@@ -1308,41 +1308,226 @@
   };
 
   /**
-   * Daily Update Modal
+   * Render Daily Update Card and Header Pill
    */
-  window.openDailyUpdateModal = function (e) {
+  function renderDailyUpdateCard(summary) {
+    const headerPill = document.getElementById('header-update-pill');
+    const railTitle = document.getElementById('rail-daily-update-title');
+    const railDesc = document.getElementById('rail-daily-update-desc');
+    const railBtn = document.getElementById('rail-daily-update-btn');
+
+    const isSubmitted = summary && summary.submitted;
+    const isDraft = summary && summary.status === 'DRAFT';
+
+    if (headerPill) {
+      if (isSubmitted) {
+        headerPill.textContent = 'Shared';
+        headerPill.className = 'btn-pill pill-shared';
+      } else if (isDraft) {
+        headerPill.textContent = 'Draft';
+        headerPill.className = 'btn-pill pill-pending';
+      } else {
+        headerPill.textContent = 'Pending';
+        headerPill.className = 'btn-pill pill-pending';
+      }
+    }
+
+    if (railTitle && railDesc) {
+      if (isSubmitted) {
+        railTitle.textContent = 'Update shared today';
+        railDesc.textContent = summary.summaryText || 'Your daily standup update is published.';
+        if (railBtn) railBtn.title = 'View or edit daily update';
+      } else if (isDraft) {
+        railTitle.textContent = 'Draft saved';
+        railDesc.textContent = summary.summaryText || 'Continue editing your daily update draft.';
+        if (railBtn) railBtn.title = 'Continue draft';
+      } else {
+        railTitle.textContent = "Today's check-in pending";
+        railDesc.textContent = 'Share your progress, focus & blockers for today.';
+        if (railBtn) railBtn.title = 'Create daily update';
+      }
+    }
+  }
+
+  /**
+   * Daily Update State & Handlers
+   */
+  let currentDailyUpdateData = null;
+  let currentDailyUpdateMood = 'ON_TRACK';
+
+  window.setDailyUpdateMood = function (mood) {
+    currentDailyUpdateMood = mood;
+    document.querySelectorAll('.mood-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-mood') === mood);
+    });
+  };
+
+  window.autofillCompleted = async function () {
+    try {
+      const res = await fetch('/api/daily-updates/suggestions');
+      if (res.ok) {
+        const data = await res.json();
+        const textarea = document.getElementById('du-work-completed');
+        if (textarea && data.defaultCompletedText) {
+          textarea.value = data.defaultCompletedText;
+          window.showToast('Accomplishments auto-filled from today’s tasks');
+        }
+      }
+    } catch (e) {
+      console.warn('Could not auto-fill suggestions:', e);
+    }
+  };
+
+  window.autofillPlanned = async function () {
+    try {
+      const res = await fetch('/api/daily-updates/suggestions');
+      if (res.ok) {
+        const data = await res.json();
+        const textarea = document.getElementById('du-work-planned');
+        if (textarea && data.defaultPlannedText) {
+          textarea.value = data.defaultPlannedText;
+          window.showToast('Planned priorities auto-filled from active tasks');
+        }
+      }
+    } catch (e) {
+      console.warn('Could not auto-fill suggestions:', e);
+    }
+  };
+
+  window.submitDailyUpdate = async function (targetStatus) {
+    const completedInput = document.getElementById('du-work-completed');
+    const plannedInput = document.getElementById('du-work-planned');
+    const blockersInput = document.getElementById('du-blockers');
+
+    const workCompleted = completedInput ? completedInput.value.trim() : '';
+    const workPlanned = plannedInput ? plannedInput.value.trim() : '';
+    const blockers = blockersInput ? blockersInput.value.trim() : '';
+
+    if (!workCompleted) {
+      window.showToast('Please describe what you worked on today');
+      if (completedInput) completedInput.focus();
+      return;
+    }
+
+    const payload = {
+      workCompleted: workCompleted,
+      workPlanned: workPlanned,
+      blockers: blockers,
+      moodTag: currentDailyUpdateMood,
+      status: targetStatus
+    };
+
+    try {
+      const res = await fetch('/api/daily-updates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.message || 'Failed to save daily update');
+      }
+
+      const saved = await res.json();
+      window.closeModal();
+
+      if (targetStatus === 'SUBMITTED') {
+        window.showToast('⚡ Daily update published and shared with team');
+      } else {
+        window.showToast('Daily update saved as draft');
+      }
+
+      if (window.refreshDashboardData) {
+        await window.refreshDashboardData();
+      }
+    } catch (err) {
+      console.error('Error saving daily update:', err);
+      window.showToast(err.message || 'Error saving daily update');
+    }
+  };
+
+  /**
+   * Daily Update Modal Dialog
+   */
+  window.openDailyUpdateModal = async function (e) {
     if (e) e.preventDefault();
+
+    // Show initial loading modal
+    window.openModal('Daily Standup Update', `
+      <div style="padding: 2.5rem 1rem; text-align: center; color: var(--dash-text-muted);">
+        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+        <div style="font-size: 0.85rem; font-weight: 600;">Loading today's standup record...</div>
+      </div>
+    `);
+
+    try {
+      const res = await fetch('/api/daily-updates/today');
+      if (res.ok) {
+        currentDailyUpdateData = await res.json();
+      }
+    } catch (err) {
+      console.warn('Could not load today update from API:', err);
+    }
+
+    const update = currentDailyUpdateData || {};
+    const author = update.authorName || 'Alex Rivera';
+    const dateStr = update.formattedDate || 'Today';
+    const isSubmitted = update.submitted || false;
+    currentDailyUpdateMood = update.moodTag || 'ON_TRACK';
+
+    const completedVal = update.workCompleted || '';
+    const plannedVal = update.workPlanned || '';
+    const blockersVal = update.blockers || '';
+
     const content = `
-      <div style="display:flex; flex-direction:column; gap:1rem;">
-        <div style="background:#EFF1E2; border:1px solid var(--dash-border); border-radius:8px; padding:1rem;">
-          <span style="font-size:0.6875rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--dash-text-muted);">Daily Standup Draft</span>
-          <h4 style="margin:0.25rem 0 0.5rem 0; font-size:1.05rem; font-weight:800;">Your draft is ready for review</h4>
-          <p style="margin:0; font-size:0.8125rem; color:var(--dash-text-muted);">Compiled automatically from your workspace actions today.</p>
+      <div class="daily-update-modal-form">
+        <div class="daily-update-banner">
+          <div class="daily-update-banner-meta">
+            <span class="daily-update-banner-date">${escapeHtml(dateStr)} • ${isSubmitted ? 'SUBMITTED' : 'DRAFT'}</span>
+            <div class="daily-update-banner-author">${escapeHtml(author)}</div>
+          </div>
+          <div class="daily-update-mood-picker">
+            <button type="button" class="mood-pill-btn ${currentDailyUpdateMood === 'ON_TRACK' ? 'active' : ''}" data-mood="ON_TRACK" onclick="window.setDailyUpdateMood('ON_TRACK')">🟢 On Track</button>
+            <button type="button" class="mood-pill-btn ${currentDailyUpdateMood === 'BLOCKED' ? 'active' : ''}" data-mood="BLOCKED" onclick="window.setDailyUpdateMood('BLOCKED')">🟡 Blocked</button>
+            <button type="button" class="mood-pill-btn ${currentDailyUpdateMood === 'NEEDS_REVIEW' ? 'active' : ''}" data-mood="NEEDS_REVIEW" onclick="window.setDailyUpdateMood('NEEDS_REVIEW')">🔵 In Review</button>
+            <button type="button" class="mood-pill-btn ${currentDailyUpdateMood === 'HIGH_VELOCITY' ? 'active' : ''}" data-mood="HIGH_VELOCITY" onclick="window.setDailyUpdateMood('HIGH_VELOCITY')">🟣 High Velocity</button>
+          </div>
         </div>
 
-        <div style="background:#fff; border:1px solid var(--dash-border); border-radius:8px; padding:1rem; font-size:0.8125rem; line-height:1.6;">
-          <strong>What I worked on today:</strong>
-          <ul style="margin:0.35rem 0 0.75rem 1.25rem; padding:0;">
-            <li>Finalised website service card content and visuals.</li>
-            <li>Reviewed mobile application screens for Client App.</li>
-            <li>Updated homepage hero copy for Website Redesign.</li>
-          </ul>
+        <div class="update-field-group">
+          <div class="update-field-header">
+            <label class="update-field-label" for="du-work-completed">1. What did you work on today? *</label>
+            <button type="button" class="update-autofill-btn" onclick="window.autofillCompleted()">⚡ Auto-fill completed</button>
+          </div>
+          <textarea id="du-work-completed" class="update-textarea" rows="3" placeholder="List tasks, milestones, or key achievements completed today...">${escapeHtml(completedVal)}</textarea>
+        </div>
 
-          <strong>Next focus:</strong>
-          <ul style="margin:0.35rem 0 0 1.25rem; padding:0;">
-            <li>Prepare Acme Co. client presentation for tomorrow.</li>
-            <li>Refine brand development colour palette.</li>
-          </ul>
+        <div class="update-field-group">
+          <div class="update-field-header">
+            <label class="update-field-label" for="du-work-planned">2. What are you working on next?</label>
+            <button type="button" class="update-autofill-btn" onclick="window.autofillPlanned()">⚡ Auto-fill priorities</button>
+          </div>
+          <textarea id="du-work-planned" class="update-textarea" rows="2" placeholder="Next key priorities for tomorrow or next sprint...">${escapeHtml(plannedVal)}</textarea>
+        </div>
+
+        <div class="update-field-group">
+          <label class="update-field-label" for="du-blockers">3. Any blockers or dependencies? (Optional)</label>
+          <input id="du-blockers" class="update-input" type="text" placeholder="e.g. Waiting on API specification review, asset delivery, or None" value="${escapeHtml(blockersVal)}" />
         </div>
       </div>
     `;
 
     const footer = `
-      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Save as Draft</button>
-      <button onclick="window.showToast('Daily update shared with team'); window.closeModal();" style="padding:0.45rem 0.95rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Share with Team ➔</button>
+      <button onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Cancel</button>
+      <button onclick="window.submitDailyUpdate('DRAFT')" style="padding:0.45rem 0.85rem; background:var(--dash-bg-card); border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer; color:var(--dash-text-primary);">Save as Draft</button>
+      <button onclick="window.submitDailyUpdate('SUBMITTED')" style="padding:0.45rem 0.95rem; background:var(--dash-text-primary, #111); color:var(--dash-bg-surface, #fff); border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Publish Update ➔</button>
     `;
 
-    window.openModal('Daily Update', content, footer);
+    window.openModal('Daily Standup Update', content, footer);
   };
 
   /**
@@ -1560,6 +1745,7 @@
         renderActivityTimeline(currentDashboardData.activities || []);
         renderSchedule(currentDashboardData.schedule || []);
         renderAttention(currentDashboardData.attentionItems || []);
+        renderDailyUpdateCard(currentDashboardData.dailyUpdateSummary);
       }
     };
 

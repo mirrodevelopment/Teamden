@@ -53,10 +53,19 @@
               <span class="dash-header-date" id="dash-header-date" style="display: none;"></span>
             </div>
 
-            <!-- Headline: today. -->
-            <div class="dash-headline-group">
-              <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot" aria-hidden="true"></span></h1>
-              <p class="dash-subtitle">Everything that needs your attention.</p>
+            <!-- Headline: today. + Daily Update Trigger -->
+            <div class="dash-headline-row">
+              <div class="dash-headline-group">
+                <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot" aria-hidden="true"></span></h1>
+                <p class="dash-subtitle">Everything that needs your attention.</p>
+              </div>
+              <div class="dash-header-actions">
+                <button class="dash-daily-update-trigger-btn" id="header-daily-update-btn" onclick="window.openDailyUpdateModal()" title="Create or review today's daily update">
+                  <span class="btn-icon">⚡</span>
+                  <span class="btn-label">Daily Update</span>
+                  <span class="btn-pill pill-pending" id="header-update-pill">Pending</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -244,10 +253,10 @@
                 </svg>
               </div>
               <div class="update-copy">
-                <strong>Your draft is ready</strong>
-                <p>Review and share your daily update.</p>
+                <strong id="rail-daily-update-title">Today's check-in pending</strong>
+                <p id="rail-daily-update-desc">Share your progress, focus & blockers for today.</p>
               </div>
-              <button class="update-action-btn" title="Open Daily Update" aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
+              <button class="update-action-btn" id="rail-daily-update-btn" title="Open Daily Update" aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
                 ➔
               </button>
             </div>

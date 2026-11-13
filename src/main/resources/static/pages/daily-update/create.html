@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — daily update.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=12">
+
+  <style>
+    .daily-update-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+    .page-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--dash-border);
+      padding-bottom: 1.5rem;
+    }
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dash-text-primary);
+      margin: 0;
+    }
+    .page-subtitle {
+      font-size: 0.875rem;
+      color: var(--dash-text-muted);
+      margin-top: 0.35rem;
+    }
+    .update-card-box {
+      background: var(--dash-bg-card);
+      border: 1px solid var(--dash-border);
+      border-radius: 14px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .form-group label {
+      font-size: 0.8125rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--dash-text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .form-group textarea, .form-group input {
+      border: 1px solid var(--dash-border);
+      background: var(--dash-bg-surface);
+      color: var(--dash-text-primary);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    .form-group textarea:focus, .form-group input:focus {
+      outline: none;
+      border-color: var(--dash-border-dark);
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+    .btn-secondary {
+      padding: 0.65rem 1.25rem;
+      background: var(--dash-bg-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--dash-text-primary);
+      cursor: pointer;
+    }
+    .btn-primary {
+      padding: 0.65rem 1.45rem;
+      background: var(--dash-text-primary, #111);
+      color: var(--dash-bg-surface, #fff);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .autofill-link {
+      background: none;
+      border: none;
+      color: var(--dash-link, #2563EB);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Content Area -->
+    <div class="dash-main-area">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <main class="daily-update-container">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">daily update<span style="color:var(--dash-text-primary);">.</span></h1>
+            <p class="page-subtitle" id="page-date-label">Record your daily standup, achievements, and upcoming focus.</p>
+          </div>
+          <div>
+            <a href="/pages/dashboard/dashboard.html" class="btn-secondary" style="text-decoration: none;">&larr; Back to Today</a>
+          </div>
+        </div>
+
+        <form id="daily-update-page-form" class="update-card-box" onsubmit="event.preventDefault(); submitPageUpdate();">
+          <div class="form-group">
+            <label for="page-work-completed">
+              <span>1. What did you work on today? *</span>
+              <button type="button" class="autofill-link" onclick="autofillPageCompleted()">⚡ Auto-fill completed tasks</button>
+            </label>
+            <textarea id="page-work-completed" rows="4" placeholder="List tasks, reviews, and achievements completed today..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="page-work-planned">
+              <span>2. What are you working on next?</span>
+              <button type="button" class="autofill-link" onclick="autofillPagePlanned()">⚡ Auto-fill priorities</button>
+            </label>
+            <textarea id="page-work-planned" rows="3" placeholder="Planned priorities for tomorrow or next sprint..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="page-blockers">
+              <span>3. Any blockers or dependencies? (Optional)</span>
+            </label>
+            <input id="page-blockers" type="text" placeholder="e.g. Waiting on client review, API specs, or None" />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="savePageDraft()">Save as Draft</button>
+            <button type="submit" class="btn-primary">Publish Daily Update ➔</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=2"></script>
+
+  <script>
+    async function loadTodayPageUpdate() {
+      try {
+        const res = await fetch('/api/daily-updates/today');
+        if (res.ok) {
+          const data = await res.json();
+          if (data) {
+            if (data.formattedDate) {
+              document.getElementById('page-date-label').textContent = data.formattedDate + ' • Standup Record';
+            }
+            if (data.workCompleted) document.getElementById('page-work-completed').value = data.workCompleted;
+            if (data.workPlanned) document.getElementById('page-work-planned').value = data.workPlanned;
+            if (data.blockers) document.getElementById('page-blockers').value = data.blockers;
+          }
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function autofillPageCompleted() {
+      try {
+        const res = await fetch('/api/daily-updates/suggestions');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.defaultCompletedText) {
+            document.getElementById('page-work-completed').value = data.defaultCompletedText;
+          }
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function autofillPagePlanned() {
+      try {
+        const res = await fetch('/api/daily-updates/suggestions');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.defaultPlannedText) {
+            document.getElementById('page-work-planned').value = data.defaultPlannedText;
+          }
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function submitPageUpdate(status = 'SUBMITTED') {
+      const completed = document.getElementById('page-work-completed').value.trim();
+      const planned = document.getElementById('page-work-planned').value.trim();
+      const blockers = document.getElementById('page-blockers').value.trim();
+
+      if (!completed) {
+        alert('Please fill out what you worked on today.');
+        return;
+      }
+
+      const payload = {
+        workCompleted: completed,
+        workPlanned: planned,
+        blockers: blockers,
+        status: status,
+        moodTag: 'ON_TRACK'
+      };
+
+      try {
+        const res = await fetch('/api/daily-updates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          window.location.href = '/pages/dashboard/dashboard.html';
+        } else {
+          const err = await res.json().catch(() => ({}));
+          alert(err.message || 'Error saving update');
+        }
+      } catch (e) {
+        alert('Failed to save update');
+      }
+    }
+
+    function savePageDraft() {
+      submitPageUpdate('DRAFT');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTodayPageUpdate);
+  </script>
+</body>
+</html>
