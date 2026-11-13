@@ -63,15 +63,14 @@ public class DailyUpdateService {
             return toDto(updateOpt.get());
         }
 
-        // Generate intelligent default suggestions if not posted yet
-        DailyUpdateSuggestionDto suggestions = getSuggestionsForToday();
+        // Return empty text fields by default (on-demand auto-fill available via suggestions endpoint)
         return DailyUpdateResponseDto.builder()
                 .userId(user.getId())
                 .authorName(user.getFullName())
                 .authorInitials(computeInitials(user.getFullName()))
                 .updateDate(today)
-                .workCompleted(suggestions.getDefaultCompletedText())
-                .workPlanned(suggestions.getDefaultPlannedText())
+                .workCompleted("")
+                .workPlanned("")
                 .blockers("")
                 .status(DailyUpdateStatus.DRAFT)
                 .moodTag(DailyUpdateMood.ON_TRACK)

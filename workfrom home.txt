@@ -16,6 +16,8 @@ DAY 5 - 2026-11-13 (FRIDAY - TODAY)
 - Interactive Daily Update Creation Option & Standup Persistence:
   * Implemented top-header trigger button (`+ Daily Update`) and companion rail card.
   * Added interactive Daily Update modal with 1-click auto-fill for tasks and priorities.
+  * Kept all standup text fields completely empty by default with on-demand auto-fill buttons.
+  * Purged developer test submissions from database for a clean, pristine initial state.
   * Created PostgreSQL `daily_updates` table (Flyway V8) with unique user/date constraint.
   * Automated `DAILY_UPDATE_POSTED` activity logging into Today Recent Activity feed.
   * Built dedicated standalone authoring page at `/pages/daily-update/create.html`.

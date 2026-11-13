@@ -1631,10 +1631,11 @@ DAY 9 - 2026-11-13 (FRIDAY - TODAY)
     (`Today's check-in pending` vs `Update shared today at HH:mm`).
   * Created interactive Daily Update Modal:
     - Status/mood selector: On Track, Blocked, In Review, High Velocity.
-    - Accomplishments (`workCompleted`), planned focus (`workPlanned`), blockers (`blockers`).
+    - Kept all text fields completely empty by default (`workCompleted = ""`, `workPlanned = ""`, `blockers = ""`).
     - Intelligent 1-click auto-fill buttons (`⚡ Auto-fill completed tasks`, `⚡ Auto-fill priorities`)
-      harvesting today's activity events and active NOW/NEXT tasks.
+      harvesting today's activity events and active NOW/NEXT tasks on-demand when desired.
     - Dual actions: `Save as Draft` (`status = DRAFT`) and `Publish Update ➔` (`status = SUBMITTED`).
+  * Purged developer test submissions from database to present a clean, pristine standup modal.
   * Implemented PostgreSQL `daily_updates` table via Flyway migration `V8__daily_updates_schema.sql`
     with tenant-safe unique constraint `(organization_id, user_id, update_date)`.
   * Integrated with Activity Stream: automatically publishes an authentic `ActivityEvent` with

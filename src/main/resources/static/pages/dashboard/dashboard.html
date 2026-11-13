@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,8 @@
   </script>
 
   <!-- Display & Typography Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
   <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
   <link rel="stylesheet" href="/fragments/theme/theme.css?v=14">
   <link rel="stylesheet" href="/fragments/theme/reset.css">
@@ -28,6 +30,7 @@
   <!-- Dashboard Page Styles -->
   <link rel="stylesheet" href="dashboard.css?v=20">
 </head>
+
 <body class="dashboard-body">
 
   <div class="dash-master-wrapper">
@@ -56,11 +59,13 @@
             <!-- Headline: today. + Daily Update Trigger -->
             <div class="dash-headline-row">
               <div class="dash-headline-group">
-                <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot" aria-hidden="true"></span></h1>
+                <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot"
+                    aria-hidden="true"></span></h1>
                 <p class="dash-subtitle">Everything that needs your attention.</p>
               </div>
               <div class="dash-header-actions">
-                <button class="dash-daily-update-trigger-btn" id="header-daily-update-btn" onclick="window.openDailyUpdateModal()" title="Create or review today's daily update">
+                <button class="dash-daily-update-trigger-btn" id="header-daily-update-btn"
+                  onclick="window.openDailyUpdateModal()" title="Create or review today's daily update">
                   <span class="btn-icon">⚡</span>
                   <span class="btn-label">Daily Update</span>
                   <span class="btn-pill pill-pending" id="header-update-pill">Pending</span>
@@ -78,12 +83,21 @@
 
               <div class="hero-tags-row">
                 <span class="hero-tag-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                  </svg>
                   <span id="hero-project-tag">Workspace</span>
                 </span>
                 <span class="hero-tag-sep">•</span>
                 <span class="hero-tag-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
                   <span id="hero-team-tag">General</span>
                 </span>
                 <span class="hero-tag-sep">•</span>
@@ -104,11 +118,12 @@
             <!-- Right Column: Options, Due Date & Continue Task Button -->
             <div class="hero-right-col">
               <div class="hero-right-top">
-                <button class="hero-options-btn" id="hero-options-btn" onclick="window.openHeroOptions()" aria-label="Hero options" title="Task options">
+                <button class="hero-options-btn" id="hero-options-btn" onclick="window.openHeroOptions()"
+                  aria-label="Hero options" title="Task options">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="5" cy="12" r="1.75"/>
-                    <circle cx="12" cy="12" r="1.75"/>
-                    <circle cx="19" cy="12" r="1.75"/>
+                    <circle cx="5" cy="12" r="1.75" />
+                    <circle cx="12" cy="12" r="1.75" />
+                    <circle cx="19" cy="12" r="1.75" />
                   </svg>
                 </button>
               </div>
@@ -135,7 +150,8 @@
           <section class="dash-priorities-block" aria-label="Your Priorities">
             <div class="dash-section-head">
               <h2 class="dash-section-title">YOUR PRIORITIES</h2>
-              <a href="#all-tasks" class="dash-action-link" id="dash-total-tasks-link" onclick="window.openAllTasksModal(event)">
+              <a href="#all-tasks" class="dash-action-link" id="dash-total-tasks-link"
+                onclick="window.openAllTasksModal(event)">
                 <span id="dash-total-tasks-count">00 TASKS</span> →
               </a>
             </div>
@@ -186,7 +202,8 @@
                 <h2 class="dash-section-title">RECENT ACTIVITY</h2>
                 <span class="activity-subtitle" id="activity-movements-label">LATEST MOVEMENTS</span>
               </div>
-              <a href="/pages/activity/activity.html" class="dash-action-link" id="activity-view-all-link">View all →</a>
+              <a href="/pages/activity/activity.html" class="dash-action-link" id="activity-view-all-link">View all
+                →</a>
             </div>
 
             <div class="activity-timeline" id="activity-timeline-list"></div>
@@ -204,8 +221,10 @@
               <span class="date-year-text" id="rail-year">2026</span>
             </div>
             <div class="date-card-right">
-              <div class="date-huge-number" id="rail-day"><span class="date-digit-first" id="rail-day-d1">1</span><span class="date-digit-second" id="rail-day-d2">0</span></div>
-              <div class="date-dow-label" id="rail-dow" aria-label="TUESDAY"><span>T</span><span>U</span><span>E</span><span>S</span><span>D</span><span>A</span><span>Y</span></div>
+              <div class="date-huge-number" id="rail-day"><span class="date-digit-first" id="rail-day-d1">1</span><span
+                  class="date-digit-second" id="rail-day-d2">0</span></div>
+              <div class="date-dow-label" id="rail-dow" aria-label="TUESDAY">
+                <span>T</span><span>U</span><span>E</span><span>S</span><span>D</span><span>A</span><span>Y</span></div>
             </div>
           </div>
 
@@ -256,7 +275,8 @@
                 <strong id="rail-daily-update-title">Today's check-in pending</strong>
                 <p id="rail-daily-update-desc">Share your progress, focus & blockers for today.</p>
               </div>
-              <button class="update-action-btn" id="rail-daily-update-btn" title="Open Daily Update" aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
+              <button class="update-action-btn" id="rail-daily-update-btn" title="Open Daily Update"
+                aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
                 ➔
               </button>
             </div>
@@ -276,4 +296,5 @@
   <!-- Dashboard Script -->
   <script src="dashboard.js?v=13"></script>
 </body>
+
 </html>

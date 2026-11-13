@@ -179,14 +179,16 @@ public class DailyUpdateIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/daily-updates/today returns unsubmitted state with auto-fill suggestions when empty")
+    @DisplayName("GET /api/daily-updates/today returns unsubmitted state with empty text fields initially")
     void getTodayUpdate_initiallyEmpty() throws Exception {
         mockMvc.perform(get("/api/daily-updates/today")
                         .session(sessionAlpha))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.submitted", is(false)))
                 .andExpect(jsonPath("$.authorName", is("Alice Standup")))
-                .andExpect(jsonPath("$.workCompleted", notNullValue()));
+                .andExpect(jsonPath("$.workCompleted", is("")))
+                .andExpect(jsonPath("$.workPlanned", is("")))
+                .andExpect(jsonPath("$.blockers", is("")));
     }
 
     @Test
