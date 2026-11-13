@@ -111,6 +111,19 @@ const Navbar = (() => {
           }
         });
       }
+
+      const updateAction = document.getElementById('create-action-update');
+      if (updateAction) {
+        updateAction.addEventListener('click', (e) => {
+          e.preventDefault();
+          createMenu.classList.remove('show');
+          if (typeof window.openDailyUpdateModal === 'function') {
+            window.openDailyUpdateModal();
+          } else {
+            window.location.href = '/pages/dashboard/dashboard.html?openDailyUpdate=true';
+          }
+        });
+      }
     }
 
     // --- Theme Switcher Logic ---

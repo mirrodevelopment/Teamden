@@ -1531,6 +1531,143 @@
   };
 
   /**
+   * Interactive Add Project Modal on Dashboard
+   */
+  window.openProjectModal = async function () {
+    const options = await fetchTaskOptions();
+    const assigneeOptionsHtml = (options.assignees || []).map(a => 
+      `<option value="${a.id}">${escapeHtml(a.name)} (${escapeHtml(a.role)})</option>`
+    ).join('');
+
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    const content = `
+      <form id="dash-create-project-form" onsubmit="event.preventDefault(); window.submitNewProject();" style="display:flex; flex-direction:column; gap:0.9rem;">
+        <div>
+          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">PROJECT NAME <span style="color:#E53935;">*</span></label>
+          <input type="text" id="dash-project-name" placeholder="e.g. Mobile Design System" required autofocus
+                 style="width:100%; padding:0.6rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff; color:var(--dash-text-primary);">
+        </div>
+
+        <div>
+          <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">DESCRIPTION</label>
+          <textarea id="dash-project-desc" rows="2" placeholder="Brief outline of project scope and goals..."
+                    style="width:100%; padding:0.5rem 0.75rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; outline:none; background:#fff; color:var(--dash-text-primary); resize:vertical; font-family:inherit;"></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">PROJECT LEAD / OWNER</label>
+            <select id="dash-project-owner" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="">Unassigned (Assign Later)</option>
+              ${assigneeOptionsHtml}
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">PROJECT TYPE</label>
+            <select id="dash-project-type" style="width:100%; padding:0.55rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+              <option value="General" selected>General</option>
+              <option value="Design & UX">Design & UX</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Product Roadmap">Product Roadmap</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">START DATE</label>
+            <input type="date" id="dash-project-start" value="${todayStr}"
+                   style="width:100%; padding:0.5rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:0.35rem; color:var(--dash-text-primary);">TARGET DUE DATE</label>
+            <input type="date" id="dash-project-due"
+                   style="width:100%; padding:0.5rem 0.65rem; border:1px solid var(--dash-border); border-radius:6px; font-size:0.8125rem; background:#fff; color:var(--dash-text-primary);">
+          </div>
+        </div>
+
+        <div id="dash-project-error" style="display:none; color:#E53935; font-size:0.75rem; font-weight:600; padding:0.4rem 0.6rem; background:rgba(229,57,53,0.08); border-radius:4px;"></div>
+      </form>
+    `;
+
+    const footer = `
+      <button type="button" onclick="window.closeModal()" style="padding:0.45rem 0.85rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; color:var(--dash-text-muted);">Cancel</button>
+      <button type="button" id="btn-submit-dash-project" onclick="window.submitNewProject()" style="padding:0.45rem 1.15rem; background:var(--dash-hero-bg, #111); color:var(--dash-text-white, #fff); border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">Create Project</button>
+    `;
+
+    window.openModal('Create New Project', content, footer);
+    setTimeout(() => {
+      const input = document.getElementById('dash-project-name');
+      if (input) input.focus();
+    }, 100);
+  };
+
+  window.submitNewProject = async function () {
+    const nameEl = document.getElementById('dash-project-name');
+    const descEl = document.getElementById('dash-project-desc');
+    const ownerEl = document.getElementById('dash-project-owner');
+    const typeEl = document.getElementById('dash-project-type');
+    const startEl = document.getElementById('dash-project-start');
+    const dueEl = document.getElementById('dash-project-due');
+    const errEl = document.getElementById('dash-project-error');
+    const submitBtn = document.getElementById('btn-submit-dash-project');
+
+    if (!nameEl || !nameEl.value.trim()) {
+      if (errEl) {
+        errEl.textContent = 'Please enter a project name';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating...';
+    }
+
+    const payload = {
+      name: nameEl.value.trim(),
+      description: descEl ? descEl.value.trim() : '',
+      projectType: typeEl ? typeEl.value : 'General',
+      ownerId: ownerEl && ownerEl.value ? ownerEl.value : null,
+      status: 'PLANNING',
+      priority: 'MEDIUM',
+      health: 'ON_TRACK',
+      startDate: startEl && startEl.value ? startEl.value : null,
+      dueDate: dueEl && dueEl.value ? dueEl.value : null
+    };
+
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server returned ${res.status}`);
+      }
+
+      window.closeModal();
+      cachedTaskOptions = null; // bust options cache
+      await window.refreshDashboardData();
+    } catch (err) {
+      if (errEl) {
+        errEl.textContent = err.message || 'Error creating project';
+        errEl.style.display = 'block';
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Project';
+      }
+    }
+  };
+
+  /**
    * Aligns the day-of-week label width to exactly match ONLY the first digit width
    */
   function alignDayToDateWidth() {
@@ -1767,6 +1904,16 @@
       const ro = new ResizeObserver(alignDayToDateWidth);
       if (railDay) ro.observe(railDay);
       if (railDayD1) ro.observe(railDayD1);
+    }
+
+    // 9. Check URL parameters for direct modal triggers
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('openDailyUpdate') === 'true') {
+      setTimeout(() => { if (typeof window.openDailyUpdateModal === 'function') window.openDailyUpdateModal(); }, 200);
+    } else if (urlParams.get('openNewTask') === 'true') {
+      setTimeout(() => { if (typeof window.openAddTaskModal === 'function') window.openAddTaskModal('NOW'); }, 200);
+    } else if (urlParams.get('openNewProject') === 'true') {
+      setTimeout(() => { if (typeof window.openProjectModal === 'function') window.openProjectModal(); }, 200);
     }
   }
 

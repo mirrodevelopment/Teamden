@@ -1642,6 +1642,15 @@ DAY 9 - 2026-11-13 (FRIDAY - TODAY)
   * Built dedicated standalone authoring page at `/pages/daily-update/create.html`.
   * Extended automated test suite with `DailyUpdateIntegrationTest.java` (6 comprehensive test cases)
     and verified 100% green suite: 71/71 tests passing (`./mvnw test`).
+- Fixed Global Header `+ Create ⌵` Dropdown Integration:
+  * Resolved defect where clicking `📄 Daily Update` in the topbar `+ Create ⌵` dropdown was inactive
+    due to missing click listener on `#create-action-update` in `fragments/navbar/navbar.js`.
+  * Wired `#create-action-update` to trigger `window.openDailyUpdateModal()` on the dashboard or
+    navigate seamlessly to `/pages/dashboard/dashboard.html?openDailyUpdate=true` from any page.
+  * Added `window.openProjectModal()` in `dashboard.js` enabling in-place project creation directly on
+    the Today dashboard via `window.openModal` with PostgreSQL persistence and instant dashboard refresh.
+  * Added direct URL parameter routing (`?openDailyUpdate=true`, `?openNewTask=true`, `?openNewProject=true`).
+  * Bumped asset cachebusters to `navbar.js?v=13` across all 14 project HTML pages.
 - Restricted Today Dashboard Activity Feed Strictly to Today's Authentic Data:
   * Resolved discrepancy where Recent Activity feed on Today page (`/pages/dashboard/dashboard.html`)
     displayed historical actions from prior dates labeled "16:05 YESTERDAY" beneath the section
@@ -1767,6 +1776,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Interactive Project Milestones Table, 9-stage lifecycle template & PostgreSQL persistence.
 - [x] Today page Recent Activity feed strictly scoped to today's authentic data & empty state chronicle links.
 - [x] Interactive Daily Update option on Today page, 1-click auto-fill, and PostgreSQL persistence (Flyway V8).
+- [x] Topbar `+ Create ⌵` dropdown actions wired (`create-action-update` Daily Update modal & in-place project modal).
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------

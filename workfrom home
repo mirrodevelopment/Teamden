@@ -19,9 +19,13 @@ DAY 5 - 2026-11-13 (FRIDAY - TODAY)
   * Created PostgreSQL `daily_updates` table (Flyway V8) with unique user/date constraint.
   * Automated `DAILY_UPDATE_POSTED` activity logging into Today Recent Activity feed.
   * Built dedicated standalone authoring page at `/pages/daily-update/create.html`.
+- Fixed Global Header `+ Create` Dropdown Actions:
+  * Wired missing `create-action-update` event listener in shared `navbar.js`.
+  * Added `openProjectModal()` in `dashboard.js` to create projects directly in-place.
+  * Supported query parameters (`?openDailyUpdate=true`, etc.) for cross-page creation.
+  * Bumped cache-busting version strings across all views (`navbar.js?v=13`).
 - Restricted Today Dashboard Activity Feed Strictly to Today's Authentic Data:
   * Date-bounded activity query excluding past movements from Today dashboard.
-  * Preserved full historical movements on `/pages/activity/activity.html` chronicle.
   * Maintained strict multi-tenant organization isolation across all operations.
   * Verified 100% green test suite: 71/71 passing integration tests (`./mvnw test`).
 
@@ -29,24 +33,23 @@ DAY 5 - 2026-11-13 (FRIDAY - TODAY)
 --------------------------------------------------------------------------------
 - Backend: `DailyUpdate*` (Entity, Repo, DTOs, Service, Controller), `SecurityConfig.java`.
 - Migration: `V8__daily_updates_schema.sql` (table, multi-tenant index, unique constraints).
-- Frontend UI: `dashboard.html`, `dashboard.css`, `dashboard.js`, `create.html`.
+- Frontend UI: `navbar.js`, `dashboard.html`, `dashboard.css`, `dashboard.js`, `create.html`.
 - Automated Tests: `DailyUpdateIntegrationTest.java` (6 new tests; 71/71 suite green).
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example: Daily Update Option on Today Dashboard (`/pages/dashboard/dashboard.html`)
+Example: Topbar `+ Create ⌵` Dropdown Action (`fragments/navbar/navbar.js`)
   [BEFORE]:
-  Companion rail card was a static, non-interactive "DAILY UPDATE" placeholder;
-  no creation modal, no PostgreSQL persistence, and no activity event logging.
+  Clicking `📄 Daily Update` in the navbar `+ Create` menu had zero listener and did nothing.
+  Clicking `📁 New Project` on the Today dashboard redirected away to standalone page.
   [AFTER]:
-  Interactive `+ Daily Update` header button & companion rail card with live status;
-  opens modal with auto-fill buttons, mood selectors, drafts, and PostgreSQL sync;
-  publishing immediately adds a verified `UPDATE` entry to Recent Activity.
+  Clicking `📄 Daily Update` opens the interactive Daily Update modal with auto-fill & DB sync;
+  clicking `📁 New Project` opens an in-place modal directly on the dashboard to create projects.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Live API: `POST /api/daily-updates` verified persisting update & logging activity.
-- Dashboard Feed: `GET /api/dashboard/data` verified `dailyUpdateSummary` & today-only events.
+- Live API: `POST /api/daily-updates` & `POST /api/projects` verified in PostgreSQL.
+- Dashboard Feed: `GET /api/dashboard/data` verified `dailyUpdateSummary` & today events.
 - Automated Tests: `DailyUpdateIntegrationTest` and full suite (71/71 tests green).
 
 ================================================================================
@@ -77,6 +80,7 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 14-16 [COMPLETED]: Unassigned projects card, Milestones Table & persistence.
 - Phase 17 [COMPLETED]: Today page strictly scoped to today's authentic data.
 - Phase 18 [COMPLETED]: Interactive Daily Update option, auto-fill, and PostgreSQL sync.
+- Phase 19 [COMPLETED]: Navbar + Create dropdown wiring for Daily Update & in-place project modal.
 
 ================================================================================
 END OF WORK FROM HOME REPORT
