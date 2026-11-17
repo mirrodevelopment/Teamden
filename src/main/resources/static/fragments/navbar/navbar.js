@@ -35,6 +35,36 @@ const Navbar = (() => {
       document.body.appendChild(script);
     }
 
+    // ── Inject Universal Create Modal CSS + JS (once) ──────────
+    if (!document.getElementById('universal-create-css')) {
+      const link = document.createElement('link');
+      link.id = 'universal-create-css';
+      link.rel = 'stylesheet';
+      link.href = '/fragments/create/universal-create.css?v=1';
+      document.head.appendChild(link);
+    }
+    if (!document.getElementById('universal-create-js')) {
+      const script = document.createElement('script');
+      script.id = 'universal-create-js';
+      script.src = '/fragments/create/universal-create.js?v=1';
+      document.body.appendChild(script);
+    }
+
+    // ── Global Creation Bridges ────────────────────────────────
+    window.openAddTaskModal = function (col, ctx) {
+      if (window.UniversalCreate) {
+        const initialCtx = typeof col === 'object' ? col : { column: col, ...(ctx || {}) };
+        window.UniversalCreate.open('TASK', initialCtx);
+      }
+    };
+    window.triggerAddTaskPrompt = window.openAddTaskModal;
+
+    window.openProjectModal = function (ctx) {
+      if (window.UniversalCreate) {
+        window.UniversalCreate.open('PROJECT', ctx || {});
+      }
+    };
+
     // ── Wire search bar click to open modal ──────────────
     const searchBox = document.getElementById('topbar-search-box');
     if (searchBox) {
@@ -108,15 +138,31 @@ const Navbar = (() => {
       });
     }
 
-    // + Create dropdown
+    // + Create pill & dropdown
     const createBtn = document.getElementById('btn-create-pill');
     const createMenu = document.getElementById('create-menu');
 
     if (createBtn && createMenu) {
       createBtn.addEventListener('click', (e) => {
+        // If clicking the chevron, toggle the mini menu for secondary choices
+        if (e.target.closest('.create-chevron')) {
+          e.stopPropagation();
+          createMenu.classList.toggle('show');
+          if (userMenu) userMenu.classList.remove('show');
+          return;
+        }
+
+        // Clicking the + Create button opens Universal Create modal
+        e.preventDefault();
         e.stopPropagation();
-        createMenu.classList.toggle('show');
-        if (userMenu) userMenu.classList.remove('show');
+        createMenu.classList.remove('show');
+        if (window.UniversalCreate) {
+          window.UniversalCreate.open('TASK');
+        } else if (typeof window.openAddTaskModal === 'function') {
+          window.openAddTaskModal('NOW');
+        } else {
+          createMenu.classList.toggle('show');
+        }
       });
 
       document.addEventListener('click', (e) => {
@@ -131,7 +177,9 @@ const Navbar = (() => {
         taskAction.addEventListener('click', (e) => {
           e.preventDefault();
           createMenu.classList.remove('show');
-          if (typeof window.triggerAddTaskPrompt === 'function') {
+          if (window.UniversalCreate) {
+            window.UniversalCreate.open('TASK');
+          } else if (typeof window.triggerAddTaskPrompt === 'function') {
             window.triggerAddTaskPrompt('NOW');
           } else if (typeof window.openAddTaskModal === 'function') {
             window.openAddTaskModal('NOW');
@@ -146,7 +194,9 @@ const Navbar = (() => {
         projectAction.addEventListener('click', (e) => {
           e.preventDefault();
           createMenu.classList.remove('show');
-          if (typeof window.openProjectModal === 'function') {
+          if (window.UniversalCreate) {
+            window.UniversalCreate.open('PROJECT');
+          } else if (typeof window.openProjectModal === 'function') {
             window.openProjectModal();
           } else {
             window.location.href = '/pages/projects/create-project/create-project.html';

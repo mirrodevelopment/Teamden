@@ -1733,6 +1733,25 @@ DAY 10 - 2026-11-17 (TUESDAY - TODAY)
   * Slide-in Detail Drawer: Accessible by clicking items or "Review decision →" with full context, document link, description, mention quote, and action buttons.
   * Global Shell Integration: Topbar notification bell (`#notification-btn`) wired with unread dot linking to inbox; Sidebar navigation equipped with active lime pill and dynamic unread badge count.
   * PostgreSQL Persistence & Multi-Tenant API: Flyway `V10__notifications_schema.sql`, JPA entity, DTOs, service with auto-seeding, and controller with full test suite coverage.
+- Brick Universal Create / Task Creation Modal (Neo-Editorial Reference `media_1794909754042_81d5fe2f.png`):
+  * Designed and built centered 2-column modal (`fragments/create/universal-create.html`, `universal-create.css`, `universal-create.js`).
+  * Header: `BRICK / UNIVERSAL CREATE` monospace breadcrumb, massive `create.` heading, `Something new begins here.` subtitle, and `✕` close button.
+  * Left Column (~32%): 4 large pastel selectable cards (Task, Project, Document, Meeting) with icons, subtitles, colored borders, and checkmark `✓` when active.
+  * Draft state persistence: switching between type cards preserves form inputs in memory without loss.
+  * Right Column (~68%):
+    - `NEW TASK` 24px bold title input.
+    - `PROJECT` searchable custom dropdown populated from live `/api/tasks/options`.
+    - `ASSIGNEE` custom picker with initials avatar badge ("PK") and `DUE DATE` calendar picker.
+    - `DESCRIPTION (OPTIONAL)` textarea with custom placeholder.
+    - Soft lavender `Linked from:` context card with document icon, project name, snippet, and `✕` detach button.
+    - Expandable `+ More details` panel (Kanban column, priority, status, tag).
+    - Bottom action bar: `+ More details` toggle, `Create & Add Another` action, and lime green `Create task →` button.
+  * Multi-entity backend integration: `POST /api/tasks`, `POST /api/projects`, `POST /api/projects/documents` (`CreateDocumentRequestDto`), `POST /api/calendar/events`.
+  * Universal Application Access:
+    - Wired navbar `+ Create ⌵` button to open the modal directly.
+    - Global bridges `window.openAddTaskModal`, `window.triggerAddTaskPrompt`, and `window.openProjectModal` across all views.
+    - Discovery page `Create from search` and Search Modal quick actions connected to Universal Create.
+  * Zero hardcoded hex colors (`--dash-*` tokens only).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
@@ -1764,6 +1783,17 @@ DAY 10 - 2026-11-17 (TUESDAY - TODAY)
 - `pages/discovery/discovery.css` (CREATED)
 - `pages/discovery/discovery.js` (CREATED)
 - `src/test/java/com/shed/teamden/search/GlobalSearchIntegrationTest.java` (CREATED)
+- `src/main/resources/static/fragments/create/universal-create.html` (CREATED: 2-column Universal Create modal markup)
+- `src/main/resources/static/fragments/create/universal-create.css` (CREATED: 100% tokenized `--dash-*` modal styling)
+- `src/main/resources/static/fragments/create/universal-create.js` (CREATED: creation controller, dropdowns, drafts, submission)
+- `src/main/java/com/shed/teamden/project/dto/CreateDocumentRequestDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/project/service/ProjectService.java` (MODIFIED: added createDocument method)
+- `src/main/java/com/shed/teamden/project/controller/ProjectController.java` (MODIFIED: added POST /documents endpoint)
+- `src/main/resources/static/fragments/navbar/navbar.js` (MODIFIED: injected universal-create fragments, wired `+ Create` button and bridges)
+- `src/main/resources/static/fragments/search/search-modal.js` (MODIFIED: wired quick actions to UniversalCreate)
+- `src/main/resources/static/pages/discovery/discovery.js` (MODIFIED: wired `btn-create-from-search` with linked context)
+- `src/main/resources/static/pages/projects/projects.js` (MODIFIED: routed create project button to UniversalCreate)
+- `src/main/resources/static/pages/dashboard/dashboard.js` (MODIFIED: routed `openAddTaskModal` and `openProjectModal` to UniversalCreate)
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
@@ -1782,13 +1812,22 @@ Example B: Global Search Trigger and Two-Column Modal
   [AFTER]:
   Clicking topbar search bar or pressing `Ctrl+K` / `⌘+K` smoothly launches a centered, elevated search modal with dark blurred backdrop.
 
+Example C: Universal Create / Task Creation Modal (Neo-Editorial Reference `media_1794909754042_81d5fe2f.png`)
+  [BEFORE]:
+  Task creation was handled across disjointed forms or sub-pages without connected context support.
+  [AFTER]:
+  Clicking `+ Create ⌵` or any create trigger launches the spacious 2-column Universal Create modal over the page.
+  Users can switch between Task, Project, Document, and Meeting, select projects and assignees from live DB options,
+  link source documents with visual context cards, expand Kanban/priority details, and create multiple tasks consecutively.
+
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
 - Live Backend API: `GET /api/notifications` verified with 7 auto-seeded items matching visual design reference.
 - Status Actions: Verified `PUT /api/notifications/{id}/read`, `POST /api/notifications/mark-all-read`, and `POST /action`.
 - Multi-Tenant Isolation: Verified Alpha Org notifications cannot be read or mutated by Beta Org users.
 - Automated Test Suite: Full test suite executed with 80/80 green passing tests (0 failures, 0 errors).
-- Zero Hardcoded Hex Standard: `inbox.css` validated with zero raw hex strings; 100% `--dash-*` tokens.
+- Live Universal Create APIs: Verified `POST /api/tasks`, `POST /api/projects/documents`, and `GET /api/tasks/options`.
+- Zero Hardcoded Hex Standard: `universal-create.css` and `inbox.css` validated with zero raw hex strings; 100% `--dash-*` tokens.
 - All static files synchronized to `target/classes/static`.
 
 ================================================================================

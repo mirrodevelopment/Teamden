@@ -378,6 +378,10 @@
     const newProjectBtn = document.getElementById('btn-open-create-project');
 
     const openModal = () => {
+      if (window.UniversalCreate) {
+        window.UniversalCreate.open('PROJECT');
+        return;
+      }
       if (modal) {
         modal.classList.remove('d-none');
         loadProjectOptions();

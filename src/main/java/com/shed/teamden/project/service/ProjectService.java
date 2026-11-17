@@ -351,6 +351,63 @@ public class ProjectService {
         return toProjectItemDto(newProject, indexNum);
     }
 
+    @Transactional
+    public ProjectDocumentsDto.DocumentItemDto createDocument(CreateDocumentRequestDto req) {
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser(organization);
+
+        if (req.getTitle() == null || req.getTitle().trim().isEmpty()) {
+            throw new BadRequestException("Document title is required");
+        }
+
+        Project project = null;
+        if (req.getProjectId() != null) {
+            project = projectRepository.findByOrganizationIdAndId(organization.getId(), req.getProjectId()).orElse(null);
+        }
+        if (project == null) {
+            List<Project> orgProjects = projectRepository.findByOrganizationIdWithDetails(organization.getId());
+            project = orgProjects.isEmpty() ? null : orgProjects.get(0);
+        }
+        if (project == null) {
+            project = projectRepository.save(Project.builder()
+                    .id(UUID.randomUUID())
+                    .organization(organization)
+                    .name("General Workspace")
+                    .status(ProjectStatus.ACTIVE)
+                    .owner(currentUser)
+                    .build());
+        }
+
+        long count = projectDocumentRepository.count();
+        String docNumber = String.format("DOCUMENT / %03d", count + 1);
+
+        ProjectDocument doc = ProjectDocument.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .project(project)
+                .docNumber(docNumber)
+                .title(req.getTitle().trim())
+                .category(req.getCategory() != null && !req.getCategory().isBlank() ? req.getCategory().trim() : "Meeting Notes")
+                .categoryKey(req.getCategory() != null ? req.getCategory().trim() : "Notes")
+                .content(req.getContent() != null ? req.getContent().trim() : "")
+                .fileType(req.getFileType() != null ? req.getFileType() : "DOC")
+                .author(currentUser)
+                .isPinned(false)
+                .build();
+
+        doc = projectDocumentRepository.save(doc);
+
+        return ProjectDocumentsDto.DocumentItemDto.builder()
+                .id(doc.getId().toString())
+                .title(doc.getTitle())
+                .category(doc.getCategory())
+                .categoryKey(doc.getCategoryKey())
+                .updatedAt("Just now")
+                .docNumber(doc.getDocNumber())
+                .isSelected(true)
+                .build();
+    }
+
     @Transactional(readOnly = true)
     public List<ProjectItemDto> getUnassignedProjects() {
         Organization organization = resolveCurrentOrganization();

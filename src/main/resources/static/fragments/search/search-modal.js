@@ -197,15 +197,20 @@
     // Quick actions
     document.getElementById('sq-task').addEventListener('click', () => {
       close();
-      if (typeof window.triggerAddTaskPrompt === 'function') window.triggerAddTaskPrompt('NOW');
+      if (window.UniversalCreate) window.UniversalCreate.open('TASK');
+      else if (typeof window.triggerAddTaskPrompt === 'function') window.triggerAddTaskPrompt('NOW');
       else if (typeof window.openAddTaskModal === 'function') window.openAddTaskModal('NOW');
       else window.location.href = '/pages/tasks/create.html';
     });
     document.getElementById('sq-doc').addEventListener('click', () => {
-      close(); window.location.href = '/pages/projects/projects.html';
+      close();
+      if (window.UniversalCreate) window.UniversalCreate.open('DOCUMENT');
+      else window.location.href = '/pages/projects/projects.html';
     });
     document.getElementById('sq-meeting').addEventListener('click', () => {
-      close(); window.location.href = '/pages/calendar/calendar.html';
+      close();
+      if (window.UniversalCreate) window.UniversalCreate.open('MEETING');
+      else window.location.href = '/pages/calendar/calendar.html';
     });
     const sqAll = document.getElementById('sq-all');
     if (sqAll) {

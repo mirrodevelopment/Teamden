@@ -174,10 +174,21 @@ const DiscoveryPage = (() => {
     const createFromSearchBtn = document.getElementById('btn-create-from-search');
     if (createFromSearchBtn) {
       createFromSearchBtn.addEventListener('click', () => {
-        if (typeof window.triggerAddTaskPrompt === 'function') {
-          window.triggerAddTaskPrompt('NOW');
+        const ctx = _selectedResult ? {
+          title: `Follow up: ${_selectedResult.title}`,
+          linkedSource: {
+            id: _selectedResult.id,
+            title: _selectedResult.title,
+            project: _selectedResult.project,
+            snippet: _selectedResult.subtitle || _selectedResult.description
+          }
+        } : {};
+        if (window.UniversalCreate) {
+          window.UniversalCreate.open('TASK', ctx);
+        } else if (typeof window.triggerAddTaskPrompt === 'function') {
+          window.triggerAddTaskPrompt('NOW', ctx);
         } else if (typeof window.openAddTaskModal === 'function') {
-          window.openAddTaskModal('NOW');
+          window.openAddTaskModal('NOW', ctx);
         } else {
           window.location.href = '/pages/tasks/create.html';
         }

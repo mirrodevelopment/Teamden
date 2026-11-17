@@ -791,6 +791,10 @@
    */
   window.openAddTaskModal = async function (column) {
     const colName = (column || 'NOW').toUpperCase();
+    if (window.UniversalCreate) {
+      window.UniversalCreate.open('TASK', { column: colName });
+      return;
+    }
     const options = await fetchTaskOptions();
 
     // Smart default due date
@@ -1534,6 +1538,10 @@
    * Interactive Add Project Modal on Dashboard
    */
   window.openProjectModal = async function () {
+    if (window.UniversalCreate) {
+      window.UniversalCreate.open('PROJECT');
+      return;
+    }
     const options = await fetchTaskOptions();
     const assigneeOptionsHtml = (options.assignees || []).map(a => 
       `<option value="${a.id}">${escapeHtml(a.name)} (${escapeHtml(a.role)})</option>`

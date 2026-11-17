@@ -63,4 +63,9 @@ public class ProjectController {
     public ResponseEntity<ProjectItemDto> createProject(@RequestBody CreateProjectRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request));
     }
+
+    @PostMapping("/documents")
+    public ResponseEntity<ProjectDocumentsDto.DocumentItemDto> createDocument(@RequestBody CreateDocumentRequestDto request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createDocument(request));
+    }
 }
