@@ -118,15 +118,18 @@ const Sidebar = (() => {
     const teamNav = document.getElementById('nav-team');
     const calendarNav = document.getElementById('nav-calendar');
     const overviewNav = document.getElementById('nav-overview');
+    const insightsNav = document.getElementById('nav-insights');
     const inboxNav = document.getElementById('nav-inbox');
 
     // Remove active from all first
-    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav, inboxNav].forEach(el => {
+    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav, insightsNav, inboxNav].forEach(el => {
       if (el) el.classList.remove('active');
     });
 
     if (currentPath.includes('/pages/inbox/')) {
       if (inboxNav) inboxNav.classList.add('active');
+    } else if (currentPath.includes('/pages/overview/insights/')) {
+      if (insightsNav) insightsNav.classList.add('active');
     } else if (currentPath.includes('/pages/overview/')) {
       if (overviewNav) overviewNav.classList.add('active');
     } else if (currentPath.includes('/pages/calendar/')) {

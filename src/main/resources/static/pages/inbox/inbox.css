@@ -159,7 +159,7 @@
 /* ---- Two-Column Grid Layout ---- */
 .inbox-grid-container {
   display: grid;
-  grid-template-columns: minmax(0, 68fr) minmax(320px, 32fr);
+  grid-template-columns: minmax(0, 1fr) 390px;
   gap: 28px;
   margin-top: 24px;
 }
@@ -258,7 +258,7 @@
   padding: 16px 20px;
   border-radius: var(--radius-md);
   border: 1px solid var(--dash-border);
-  background: var(--dash-bg-canvas);
+  background: var(--dash-bg-card-pure);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
@@ -275,25 +275,26 @@
   box-shadow: 0 0 0 2px var(--dash-accent-lime-light);
 }
 
-/* Category Pastel Highlights */
-.attention-item-card.pastel-beige {
+/* Row 1 Highlight: Light Peach with Narrow Orange Vertical Indicator */
+.attention-item-card.attention-row-highlight-peach {
   background: var(--dash-activity-highlight-bg);
   border-color: var(--dash-attention-peach);
+  border-left: 4px solid var(--dash-dot-orange);
 }
 
-.attention-item-card.pastel-blue {
+.attention-item-card.attention-row-highlight-peach .attention-icon-box {
+  background: var(--dash-badge-document-bg);
+  color: var(--dash-dot-orange);
+}
+
+.attention-item-card.attention-row-blue-icon .attention-icon-box {
   background: var(--dash-badge-assigned-bg);
-  border-color: var(--dash-priority-low-border);
+  color: var(--dash-dot-blue);
 }
 
-.attention-item-card.pastel-lavender {
+.attention-item-card.attention-row-purple-icon .attention-icon-box {
   background: var(--dash-badge-comment-bg);
-  border-color: var(--dash-border);
-}
-
-.attention-item-card.pastel-green {
-  background: var(--dash-badge-completed-bg);
-  border-color: var(--dash-border);
+  color: var(--dash-dot-purple);
 }
 
 .attention-card-left {
@@ -585,8 +586,8 @@
 
 /* CARD 01: ACTION IN FOCUS */
 .action-focus-card {
-  background: var(--dash-bg-card-pure);
-  border: 1px solid var(--dash-border);
+  background: var(--dash-activity-highlight-bg);
+  border: 1px solid var(--dash-attention-peach);
   border-radius: var(--radius-lg);
   padding: 24px;
   display: flex;
@@ -637,8 +638,9 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: var(--radius-full);
-  background: var(--dash-border);
-  color: var(--dash-text-primary);
+  background: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+  border: 1px solid var(--dash-attention-peach);
   white-space: nowrap;
 }
 
@@ -655,8 +657,8 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px 0;
-  border-top: 1px solid var(--dash-border);
-  border-bottom: 1px solid var(--dash-border);
+  border-top: 1px solid var(--dash-attention-peach);
+  border-bottom: 1px solid var(--dash-attention-peach);
   margin-bottom: 20px;
 }
 

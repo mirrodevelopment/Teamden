@@ -21,6 +21,12 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
     @Query("SELECT p FROM Project p LEFT JOIN FETCH p.owner WHERE p.organization.id = :orgId AND p.id = :projectId")
     Optional<Project> findByOrganizationIdAndId(@Param("orgId") UUID orgId, @Param("projectId") UUID projectId);
 
+    Optional<Project> findByIdAndOrganizationId(UUID id, UUID organizationId);
+
+    List<Project> findByOrganizationId(UUID organizationId, org.springframework.data.domain.Pageable pageable);
+
+    List<Project> findByOrganizationId(UUID organizationId);
+
     long countByOrganizationId(UUID orgId);
 
     long countByOrganizationIdAndOwnerIsNull(UUID orgId);
