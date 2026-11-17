@@ -289,7 +289,7 @@ public class GlobalSearchService {
         GlobalSearchResultDto partOfProject = null;
         List<GlobalSearchResultDto> relatedItems = new ArrayList<>();
 
-        if (itemType.equals("TASK")) {
+        if (itemType.equals("TASK") && id != null) {
             Optional<Task> optTask = taskRepository.findById(id);
             if (optTask.isPresent() && optTask.get().getOrganization().getId().equals(orgId)) {
                 Task t = optTask.get();
@@ -389,7 +389,7 @@ public class GlobalSearchService {
                     }
                 }
             }
-        } else if (itemType.equals("PROJECT")) {
+        } else if (itemType.equals("PROJECT") && id != null) {
             Optional<Project> optProj = projectRepository.findByOrganizationIdAndId(orgId, id);
             if (optProj.isPresent()) {
                 Project p = optProj.get();
