@@ -18,4 +18,7 @@ public interface ProjectDocumentRepository extends JpaRepository<ProjectDocument
     List<ProjectDocument> findByProjectIdAndCategoryKey(UUID projectId, String categoryKey);
 
     List<ProjectDocument> findByOrganizationIdAndProjectId(UUID organizationId, UUID projectId);
+
+    @Query("SELECT d FROM ProjectDocument d LEFT JOIN FETCH d.author LEFT JOIN FETCH d.project WHERE d.organization.id = :organizationId ORDER BY d.createdAt DESC")
+    List<ProjectDocument> findByOrganizationId(@Param("organizationId") UUID organizationId);
 }

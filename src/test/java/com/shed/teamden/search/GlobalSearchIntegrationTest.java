@@ -256,4 +256,54 @@ public class GlobalSearchIntegrationTest {
                 .andExpect(jsonPath("$.results[0].type", is("TASK")))
                 .andExpect(jsonPath("$.results[0].title", is("Refactor Core Architecture")));
     }
+
+    @Test
+    @DisplayName("Connected context endpoint returns rich relationship graph")
+    void testConnectedContextEndpoint() throws Exception {
+        Project proj = projectRepository.save(Project.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .name("Website Redesign")
+                .status(ProjectStatus.ACTIVE)
+                .owner(userAlpha)
+                .build());
+
+        Task task = taskRepository.save(Task.builder()
+                .id(UUID.randomUUID())
+                .organization(orgAlpha)
+                .project(proj)
+                .title("Refine mobile navigation")
+                .taskCode("T-014")
+                .creator(userAlpha)
+                .assignee(userAlpha)
+                .status(TaskStatus.IN_PROGRESS)
+                .priority(TaskPriority.HIGH)
+                .build());
+
+        mockMvc.perform(get("/api/search/context")
+                        .session(sessionAlpha)
+                        .param("type", "TASK")
+                        .param("id", task.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.selectedItem.title", is("Refine mobile navigation")))
+                .andExpect(jsonPath("$.selectedItem.taskCode", is("T-014")))
+                .andExpect(jsonPath("$.partOfProject.title", is("Website Redesign")));
+    }
+
+    @Test
+    @DisplayName("Saved searches API allows retrieving and creating saved queries")
+    void testSavedSearchesApi() throws Exception {
+        mockMvc.perform(get("/api/search/saved")
+                        .session(sessionAlpha))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", not(empty())));
+
+        mockMvc.perform(post("/api/search/saved")
+                        .session(sessionAlpha)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Critical bugs\",\"query\":\"bug\",\"category\":\"TASKS\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Critical bugs")))
+                .andExpect(jsonPath("$.query", is("bug")));
+    }
 }

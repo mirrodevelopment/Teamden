@@ -101,6 +101,7 @@ public class SecurityConfig {
                     "/pages/tasks/**",
                     "/pages/overview/**",
                     "/pages/daily-update/**",
+                    "/pages/discovery/**",
                     "/pages/projects/**",
                     "/pages/project/**",
                     "/shared/**",

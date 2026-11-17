@@ -1738,6 +1738,16 @@ DAY 10 - 2026-11-17 (TUESDAY - TODAY)
 - `src/main/resources/static/fragments/navbar/navbar.js` (MODIFIED: dynamic script/link injection, click-to-open, Ctrl+K binding)
 - `src/test/java/com/shed/teamden/search/GlobalSearchIntegrationTest.java` (CREATED: tests for search query, category filters, multi-tenant isolation)
 - HTML files across static resources (BUMPED: navbar.js?v=14 for cache busting)
+- `pages/discovery/discovery.html` (CREATED: complete 3-column discovery layout with breadcrumb, discover heading, search toolbar, category pills, dark results card, lavender connected context card, and 3 stacked discovery tool cards)
+- `pages/discovery/discovery.css` (CREATED: `--dash-*` tokens only, responsive 3-column grid, connector lines, lime green highlight)
+- `pages/discovery/discovery.js` (CREATED: live debounced search, connected context fetcher, sort, filters, saved searches, recently opened)
+- `src/main/java/com/shed/teamden/search/dto/ConnectedContextDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/search/dto/SavedSearchDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/project/repository/ProjectDocumentRepository.java` (MODIFIED: added findByOrganizationId)
+- `src/main/java/com/shed/teamden/project/repository/ProjectDecisionRepository.java` (MODIFIED: added findByOrganizationId)
+- `src/main/java/com/shed/teamden/search/service/GlobalSearchService.java` (MODIFIED: added sorting, connected context, saved searches)
+- `src/main/java/com/shed/teamden/search/controller/GlobalSearchController.java` (MODIFIED: added /context and /saved endpoints)
+- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (MODIFIED: permitted /pages/discovery/**)
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------

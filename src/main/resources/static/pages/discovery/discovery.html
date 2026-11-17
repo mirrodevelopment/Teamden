@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — discover.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=12">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=14">
+
+  <!-- Discovery Page Styles -->
+  <link rel="stylesheet" href="discovery.css?v=1">
+</head>
+<body class="dashboard-body discovery-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Workspace Container -->
+    <div class="dash-main-area discovery-app-main">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Discovery Content Canvas -->
+      <main class="discovery-content-canvas" id="discovery-content-canvas">
+
+        <!-- Top Header Area -->
+        <header class="discovery-header">
+          <nav class="discovery-breadcrumb" aria-label="Breadcrumb">
+            <span class="crumb-part">BRICK</span>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-part">GLOBAL SEARCH &amp; DISCOVERY</span>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-count" id="discovery-match-badge">24</span>
+          </nav>
+
+          <h1 class="discovery-page-title">discover.</h1>
+          <p class="discovery-page-subtitle">Find work, knowledge and people. All connected.</p>
+
+          <!-- Search Toolbar -->
+          <div class="discovery-toolbar">
+            <div class="discovery-search-input-wrap">
+              <svg class="discovery-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="discovery-search-input" class="discovery-search-input"
+                     placeholder="Search for projects, tasks, people or documents..."
+                     autocomplete="off" spellcheck="false" value="mobile navigation" aria-label="Search">
+              <button class="discovery-clear-btn" id="discovery-clear-btn" title="Clear query" aria-label="Clear query">✕</button>
+            </div>
+
+            <!-- Sort Dropdown -->
+            <div class="discovery-sort-dropdown-wrap">
+              <button class="discovery-toolbar-btn" id="discovery-sort-btn" aria-haspopup="true" aria-expanded="false">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m3 16 4 4 4-4"></path><path d="M7 20V4"></path>
+                  <path d="m21 8-4-4-4 4"></path><path d="M17 4v16"></path>
+                </svg>
+                <span id="discovery-sort-label">Sort: Best match</span>
+                <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="discovery-menu" id="discovery-sort-menu" role="menu">
+                <button class="discovery-menu-item active" data-sort="best_match">Best match</button>
+                <button class="discovery-menu-item" data-sort="recent">Most recent</button>
+                <button class="discovery-menu-item" data-sort="oldest">Oldest first</button>
+                <button class="discovery-menu-item" data-sort="alphabetical">Alphabetical</button>
+              </div>
+            </div>
+
+            <!-- Filters Button -->
+            <button class="discovery-toolbar-btn" id="discovery-filters-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+              </svg>
+              <span>Filters</span>
+              <span class="active-filter-dot" id="active-filter-dot" style="display:none;"></span>
+            </button>
+          </div>
+
+          <!-- Category Navigation Pills -->
+          <div class="discovery-categories-bar" id="discovery-categories-bar" role="tablist">
+            <button class="discovery-cat-pill active" data-category="ALL" role="tab" aria-selected="true">
+              <span>All</span> <span class="cat-count" id="count-pill-ALL">24</span>
+            </button>
+            <button class="discovery-cat-pill" data-category="TASKS" role="tab" aria-selected="false">
+              <span>Tasks</span> <span class="cat-count" id="count-pill-TASKS">6</span>
+            </button>
+            <button class="discovery-cat-pill" data-category="DOCUMENTS" role="tab" aria-selected="false">
+              <span>Documents</span> <span class="cat-count" id="count-pill-DOCUMENTS">8</span>
+            </button>
+            <button class="discovery-cat-pill" data-category="PROJECTS" role="tab" aria-selected="false">
+              <span>Projects</span> <span class="cat-count" id="count-pill-PROJECTS">3</span>
+            </button>
+            <button class="discovery-cat-pill" data-category="MEETINGS" role="tab" aria-selected="false">
+              <span>Meetings</span> <span class="cat-count" id="count-pill-MEETINGS">3</span>
+            </button>
+            <button class="discovery-cat-pill" data-category="PEOPLE" role="tab" aria-selected="false">
+              <span>People</span> <span class="cat-count" id="count-pill-PEOPLE">2</span>
+            </button>
+            <button class="discovery-cat-pill discovery-more-pill" id="discovery-more-btn">
+              <span>More</span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Three-Column Grid Layout -->
+        <div class="discovery-three-col-grid">
+
+          <!-- ── Left Column: Search Results (~36%) ── -->
+          <section class="discovery-col discovery-col-results" aria-label="Search Results">
+            <!-- Prominent Dark Feature Card Header -->
+            <div class="results-dark-feature-header">
+              <div class="results-eyebrow">
+                <span>SEARCH</span>
+                <span class="results-count-badge" id="results-count-text">24 MATCHES</span>
+              </div>
+              <h2 class="results-headline">Search Results.</h2>
+            </div>
+
+            <!-- Scrollable Results Container -->
+            <div class="discovery-results-scroll" id="discovery-results-scroll" role="listbox" aria-label="Results list">
+              <!-- Result rows rendered dynamically via discovery.js -->
+              <div class="discovery-loading-state" id="discovery-loading-state">
+                <div class="skeleton-result-card"></div>
+                <div class="skeleton-result-card"></div>
+                <div class="skeleton-result-card"></div>
+              </div>
+              <div id="discovery-results-container"></div>
+            </div>
+          </section>
+
+          <!-- ── Centre Column: Connected Context (~39%) ── -->
+          <section class="discovery-col discovery-col-context" aria-label="Connected Context">
+            <div class="context-lavender-card" id="context-lavender-card">
+              <!-- Top Lavender Header -->
+              <div class="context-card-header">
+                <div>
+                  <div class="context-eyebrow" id="context-eyebrow">CONNECTED KNOWLEDGE / T-014</div>
+                  <h2 class="context-headline">Connected Context.</h2>
+                </div>
+                <button class="context-chain-link-btn" id="context-chain-link-btn" title="Copy item reference" aria-label="Copy item reference">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Selected Item Card Details -->
+              <div class="context-selected-hero" id="context-selected-hero">
+                <div class="context-selected-type" id="context-hero-type">SELECTED TASK / T-014</div>
+                <h3 class="context-selected-title" id="context-hero-title">Refine mobile navigation</h3>
+                
+                <div class="context-selected-meta-row" id="context-hero-meta">
+                  <span class="context-badge-status" id="context-hero-status">
+                    <span class="status-dot"></span> In Progress
+                  </span>
+                  <span class="context-badge-project" id="context-hero-project">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Website Redesign
+                  </span>
+                  <span class="context-badge-owner" id="context-hero-owner">
+                    <span class="owner-initials-circle">PK</span> Owner
+                  </span>
+                </div>
+
+                <p class="context-selected-description" id="context-hero-desc">
+                  Update the mobile navigation structure and interactions based on design review feedback. Refine the IA, simplify key paths and prepare the updated designs for handoff.
+                </p>
+              </div>
+
+              <!-- Connected Records Section with Connector Line -->
+              <div class="context-connected-timeline" id="context-connected-timeline">
+                <!-- Connected items dynamically injected via discovery.js -->
+              </div>
+            </div>
+          </section>
+
+          <!-- ── Right Column: Discovery Tools (~25%) ── -->
+          <section class="discovery-col discovery-col-tools" aria-label="Discovery Tools">
+            
+            <!-- Card A: Discovery Tools -->
+            <div class="tools-white-card">
+              <h3 class="tools-card-title">Discovery Tools.</h3>
+              <p class="tools-card-desc">Turn what you've found into action.</p>
+
+              <div class="tools-action-list">
+                <button class="btn-create-from-search" id="btn-create-from-search">
+                  <span class="plus-icon">+</span>
+                  <span class="label">Create from search</span>
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+
+                <button class="tools-action-row" id="btn-save-workspace">
+                  <div class="action-left">
+                    <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Save to workspace</span>
+                  </div>
+                  <svg class="row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+
+                <button class="tools-action-row" id="btn-copy-ref">
+                  <div class="action-left">
+                    <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <span>Copy reference</span>
+                  </div>
+                  <svg class="row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Card B: Saved Searches -->
+            <div class="tools-white-card">
+              <div class="tools-card-header-row">
+                <h3 class="tools-card-title">Saved Searches.</h3>
+                <a href="#" class="view-all-link" id="saved-searches-view-all">View all →</a>
+              </div>
+
+              <div class="saved-searches-list" id="saved-searches-list">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+            <!-- Card C: Recently Opened -->
+            <div class="tools-white-card">
+              <div class="tools-card-header-row">
+                <h3 class="tools-card-title">Recently Opened.</h3>
+                <a href="#" class="view-all-link" id="recently-opened-view-all">View all →</a>
+              </div>
+
+              <div class="recently-opened-list" id="recently-opened-list">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Filter Drawer Modal -->
+  <div class="filter-drawer-overlay" id="filter-drawer-overlay" style="display:none;">
+    <div class="filter-drawer-content" id="filter-drawer-content">
+      <div class="drawer-header">
+        <h3>Search Filters</h3>
+        <button class="drawer-close-btn" id="filter-drawer-close">✕</button>
+      </div>
+      <div class="drawer-body">
+        <div class="filter-group">
+          <label>Status</label>
+          <select id="filter-status-select" class="discovery-select">
+            <option value="">All Statuses</option>
+            <option value="TODO">To Do</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="BLOCKED">Blocked</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Priority</label>
+          <select id="filter-priority-select" class="discovery-select">
+            <option value="">All Priorities</option>
+            <option value="HIGH">High Priority</option>
+            <option value="MEDIUM">Medium Priority</option>
+            <option value="LOW">Low Priority</option>
+          </select>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-secondary" id="btn-reset-filters">Reset</button>
+        <button class="btn-primary-action" id="btn-apply-filters">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="discovery-toast-container" id="discovery-toast-container" aria-live="polite"></div>
+
+  <!-- Shared Framework Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=2"></script>
+  <script src="/fragments/navbar/navbar.js?v=14"></script>
+
+  <!-- Discovery Page Script -->
+  <script src="discovery.js?v=1"></script>
+</body>
+</html>

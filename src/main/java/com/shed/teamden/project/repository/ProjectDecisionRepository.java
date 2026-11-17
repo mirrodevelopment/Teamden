@@ -19,4 +19,7 @@ public interface ProjectDecisionRepository extends JpaRepository<ProjectDecision
     List<ProjectDecision> findByOrganizationIdAndProjectIdOrderByDueDateAsc(UUID organizationId, UUID projectId);
 
     long countByProjectIdAndStatus(UUID projectId, DecisionStatus status);
+
+    @Query("SELECT d FROM ProjectDecision d LEFT JOIN FETCH d.decider LEFT JOIN FETCH d.project WHERE d.organization.id = :organizationId ORDER BY d.createdAt DESC")
+    List<ProjectDecision> findByOrganizationId(@Param("organizationId") UUID organizationId);
 }

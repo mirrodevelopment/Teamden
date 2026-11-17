@@ -207,6 +207,15 @@
     document.getElementById('sq-meeting').addEventListener('click', () => {
       close(); window.location.href = '/pages/calendar/calendar.html';
     });
+    const sqAll = document.getElementById('sq-all');
+    if (sqAll) {
+      sqAll.addEventListener('click', (e) => {
+        e.preventDefault();
+        const q = _currentQuery || '';
+        close();
+        window.location.href = `/pages/discovery/discovery.html?q=${encodeURIComponent(q)}&category=${encodeURIComponent(_currentCategory)}`;
+      });
+    }
   }
 
   // ── Debounced search ───────────────────────────────────
