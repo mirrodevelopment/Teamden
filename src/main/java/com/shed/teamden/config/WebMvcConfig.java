@@ -15,5 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         String location = devUsePath.endsWith("/") ? devUsePath : devUsePath + "/";
         registry.addResourceHandler("/dev use/**", "/dev%20use/**", "/dev-use/**", "/devuse/**")
                 .addResourceLocations(location);
+
+        String uploadsPath = Paths.get("uploads").toAbsolutePath().toUri().toString();
+        String uploadsLocation = uploadsPath.endsWith("/") ? uploadsPath : uploadsPath + "/";
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations(uploadsLocation);
     }
 }

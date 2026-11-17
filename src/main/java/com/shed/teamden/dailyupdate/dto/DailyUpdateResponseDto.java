@@ -24,6 +24,8 @@ public class DailyUpdateResponseDto {
     private String workCompleted;
     private String workPlanned;
     private String blockers;
+    private String referenceImageUrl;
+    private String referenceImageName;
     private DailyUpdateStatus status;
     private DailyUpdateMood moodTag;
     private Instant createdAt;

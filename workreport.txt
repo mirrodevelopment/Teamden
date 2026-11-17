@@ -1710,6 +1710,54 @@ Example B: Recent Activity feed on Today Dashboard (`/pages/dashboard/dashboard.
 - Automated Tests: `DailyUpdateIntegrationTest` and full suite (71/71 tests green).
 
 ================================================================================
+DAY 10 - 2026-11-17 (TUESDAY - TODAY)
+================================================================================
+
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Global Search & Discovery Modal Redesign (Brick UI Style Reference):
+  * Application-level search modal triggered via global topbar search bar or `Ctrl+K` / `⌘+K`.
+  * Two-column spacious layout: Left Column (Top Results) & Right Column (Connected Context Panel).
+  * Category Filter Tabs: All, Tasks, Documents, Projects, People, Meetings, Decisions, Teams with dynamic count badges.
+  * Interactive features: debounced live search, keyword highlighting, ↑↓ Arrow keyboard navigation, Enter to open, Esc to close.
+  * Quick Actions Footer: "Create task", "New document", "Schedule meeting", "View all results" + keyboard hints.
+  * Initial State: Recent searches (cached in localStorage) + quick suggestion tags + keyboard shortcut legend.
+  * Multi-Tenant Backend API: `GET /api/search?q=&category=&limit=` filtering tasks, projects, people, and activity events strictly by authenticated user's organization.
+  * Automatic universal availability: Navbar fragment loads search-modal CSS and JS so modal is instantly accessible across all pages (Dashboard, Projects, Activity, Calendar, Overview, Insights, Team, Tasks).
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- `src/main/java/com/shed/teamden/search/dto/GlobalSearchResultDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/search/dto/GlobalSearchResponseDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/search/service/GlobalSearchService.java` (CREATED)
+- `src/main/java/com/shed/teamden/search/controller/GlobalSearchController.java` (CREATED)
+- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (MODIFIED: added `/api/search/**` to CSRF ignore list and permitAll)
+- `src/main/resources/static/fragments/search/search-modal.css` (CREATED: `--dash-*` tokens only, responsive 2-column layout)
+- `src/main/resources/static/fragments/search/search-modal.js` (CREATED: debounced search, keyboard nav, connected context, recent searches)
+- `src/main/resources/static/fragments/search/search-modal.html` (CREATED: fragment placeholder)
+- `src/main/resources/static/fragments/navbar/navbar.js` (MODIFIED: dynamic script/link injection, click-to-open, Ctrl+K binding)
+- `src/test/java/com/shed/teamden/search/GlobalSearchIntegrationTest.java` (CREATED: tests for search query, category filters, multi-tenant isolation)
+- HTML files across static resources (BUMPED: navbar.js?v=14 for cache busting)
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example A: Global Search Trigger and Two-Column Modal
+  [BEFORE]:
+  Topbar search input was a static text field with a `Ctrl+K` listener that only focused the input field in-place.
+  No global discovery experience across projects, tasks, people, and documents existed; no connected context panel.
+  [AFTER]:
+  Clicking topbar search bar or pressing `Ctrl+K` / `⌘+K` smoothly launches a centered, elevated search modal with dark blurred backdrop.
+  Two-column view displays matching items on the left and full connected context (task code, owner, status, related project/document) on the right.
+  Keyboard navigation allows instantaneous item traversal with arrow keys and direct opening on Enter.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Live Backend API: `GET /api/search?q=mobile&category=ALL` returns matched tasks, projects, people, and category count badges.
+- Multi-Tenant Isolation: Verified Alpha Org users cannot discover Beta Org projects or tasks.
+- Automated Test Suite: `GlobalSearchIntegrationTest` passed (2/2); full suite passed (73/73 tests green, 0 failures, 0 errors).
+- All static files synchronized to `target/classes/static`.
+
+================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================
 
@@ -1778,6 +1826,7 @@ PHASE 5: Color Token Harmonization & Quality Assurance   [STATUS: COMPLETED]
 - [x] Today page Recent Activity feed strictly scoped to today's authentic data & empty state chronicle links.
 - [x] Interactive Daily Update option on Today page, 1-click auto-fill, and PostgreSQL persistence (Flyway V8).
 - [x] Topbar `+ Create ⌵` dropdown actions wired (`create-action-update` Daily Update modal & in-place project modal).
+- [x] Global Search & Discovery modal (Brick UI reference), two-column layout, connected context & multi-tenant search API.
 
 PHASE 6: Live Real-Time Sync & Enterprise Extensions    [STATUS: PLANNED]
 -----------------------------------------------------------------------------

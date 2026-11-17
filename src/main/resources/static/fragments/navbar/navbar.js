@@ -20,11 +20,44 @@ const Navbar = (() => {
       kbdShortcut.textContent = isMac ? '⌘ K' : 'Ctrl K';
     }
 
-    // Keyboard shortcut handler
+    // ── Inject Global Search Modal CSS + JS (once) ──────────
+    if (!document.getElementById('search-modal-css')) {
+      const link = document.createElement('link');
+      link.id = 'search-modal-css';
+      link.rel = 'stylesheet';
+      link.href = '/fragments/search/search-modal.css?v=1';
+      document.head.appendChild(link);
+    }
+    if (!document.getElementById('search-modal-js')) {
+      const script = document.createElement('script');
+      script.id = 'search-modal-js';
+      script.src = '/fragments/search/search-modal.js?v=1';
+      document.body.appendChild(script);
+    }
+
+    // ── Wire search bar click to open modal ──────────────
+    const searchBox = document.getElementById('topbar-search-box');
+    if (searchBox) {
+      searchBox.addEventListener('click', () => {
+        if (typeof window.SearchModal !== 'undefined') {
+          window.SearchModal.open();
+        }
+      });
+      // Make the input read-only so clicks bubble to searchBox
+      if (searchInput) {
+        searchInput.setAttribute('readonly', 'readonly');
+        searchInput.style.cursor = 'pointer';
+        searchInput.style.caretColor = 'transparent';
+      }
+    }
+
+    // ── Keyboard shortcut handler ────────────────────────
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        if (searchInput) {
+        if (typeof window.SearchModal !== 'undefined') {
+          window.SearchModal.open();
+        } else if (searchInput) {
           searchInput.focus();
           searchInput.select();
         }

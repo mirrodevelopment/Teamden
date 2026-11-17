@@ -49,6 +49,12 @@ public class DailyUpdate {
     @Column(name = "blockers", columnDefinition = "TEXT")
     private String blockers;
 
+    @Column(name = "reference_image_url", columnDefinition = "TEXT")
+    private String referenceImageUrl;
+
+    @Column(name = "reference_image_name", length = 255)
+    private String referenceImageName;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
     @Builder.Default

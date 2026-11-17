@@ -86,7 +86,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(requestHandler)
-                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, and daily-updates
+                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**", "/api/search/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, daily-updates, and search
             )
             .authorizeHttpRequests(auth -> auth
                 // Static resources & pages
@@ -108,6 +108,7 @@ public class SecurityConfig {
                     "/assets/**",
                     "/dev use/**",
                     "/dev-use/**",
+                    "/uploads/**",
                     "/*.png",
                     "/*.ico"
                 ).permitAll()
@@ -123,6 +124,7 @@ public class SecurityConfig {
                     "/api/calendar/**",
                     "/api/activity/**",
                     "/api/daily-updates/**",
+                    "/api/search/**",
                     "/actuator/health",
                     "/actuator/info"
                 ).permitAll()

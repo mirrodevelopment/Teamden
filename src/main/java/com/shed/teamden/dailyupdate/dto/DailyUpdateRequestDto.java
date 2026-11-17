@@ -21,6 +21,10 @@ public class DailyUpdateRequestDto {
 
     private String blockers;
 
+    private String referenceImageUrl;
+
+    private String referenceImageName;
+
     @Builder.Default
     private DailyUpdateStatus status = DailyUpdateStatus.SUBMITTED;
 

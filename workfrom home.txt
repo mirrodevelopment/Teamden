@@ -83,6 +83,7 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 17 [COMPLETED]: Today page strictly scoped to today's authentic data.
 - Phase 18 [COMPLETED]: Interactive Daily Update option, auto-fill, and PostgreSQL sync.
 - Phase 19 [COMPLETED]: Navbar + Create dropdown wiring for Daily Update & in-place project modal.
+- Phase 20 [COMPLETED]: Global Search & Discovery modal with Brick UI reference, 2-col layout & multi-tenant API.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

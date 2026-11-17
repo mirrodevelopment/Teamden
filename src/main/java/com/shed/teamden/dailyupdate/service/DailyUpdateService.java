@@ -28,7 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -72,6 +78,8 @@ public class DailyUpdateService {
                 .workCompleted("")
                 .workPlanned("")
                 .blockers("")
+                .referenceImageUrl(null)
+                .referenceImageName(null)
                 .status(DailyUpdateStatus.DRAFT)
                 .moodTag(DailyUpdateMood.ON_TRACK)
                 .formattedDate(today.format(DATE_FMT))
@@ -104,6 +112,8 @@ public class DailyUpdateService {
                     .workCompleted(request.getWorkCompleted().trim())
                     .workPlanned(request.getWorkPlanned() != null ? request.getWorkPlanned().trim() : "")
                     .blockers(request.getBlockers() != null ? request.getBlockers().trim() : "")
+                    .referenceImageUrl(request.getReferenceImageUrl())
+                    .referenceImageName(request.getReferenceImageName())
                     .status(request.getStatus() != null ? request.getStatus() : DailyUpdateStatus.SUBMITTED)
                     .moodTag(request.getMoodTag() != null ? request.getMoodTag() : DailyUpdateMood.ON_TRACK)
                     .build();
@@ -112,6 +122,8 @@ public class DailyUpdateService {
             update.setWorkCompleted(request.getWorkCompleted().trim());
             update.setWorkPlanned(request.getWorkPlanned() != null ? request.getWorkPlanned().trim() : "");
             update.setBlockers(request.getBlockers() != null ? request.getBlockers().trim() : "");
+            update.setReferenceImageUrl(request.getReferenceImageUrl());
+            update.setReferenceImageName(request.getReferenceImageName());
             if (request.getStatus() != null) {
                 update.setStatus(request.getStatus());
             }
@@ -261,6 +273,8 @@ public class DailyUpdateService {
                 .workCompleted(update.getWorkCompleted())
                 .workPlanned(update.getWorkPlanned())
                 .blockers(update.getBlockers())
+                .referenceImageUrl(update.getReferenceImageUrl())
+                .referenceImageName(update.getReferenceImageName())
                 .status(update.getStatus())
                 .moodTag(update.getMoodTag())
                 .createdAt(update.getCreatedAt())
@@ -269,6 +283,39 @@ public class DailyUpdateService {
                 .formattedDate(formattedDate)
                 .submitted(update.getStatus() == DailyUpdateStatus.SUBMITTED)
                 .build();
+    }
+
+    public Map<String, String> storeReferenceImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new BadRequestException("Uploaded image cannot be empty");
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new BadRequestException("Only image files are supported (PNG, JPEG, WebP, SVG, GIF)");
+        }
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new BadRequestException("Image file size exceeds 10MB limit");
+        }
+
+        try {
+            Path uploadDir = Paths.get("uploads", "daily-updates");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            String originalName = file.getOriginalFilename() != null ? file.getOriginalFilename() : "image.png";
+            String cleanName = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
+            String storedFileName = UUID.randomUUID() + "_" + cleanName;
+            Path targetPath = uploadDir.resolve(storedFileName);
+
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            String fileUrl = "/uploads/daily-updates/" + storedFileName;
+            return Map.of("url", fileUrl, "fileName", originalName);
+        } catch (IOException e) {
+            log.error("Failed to store reference image", e);
+            throw new RuntimeException("Could not store image file", e);
+        }
     }
 
     private Organization resolveCurrentOrganization() {
