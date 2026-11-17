@@ -309,6 +309,22 @@ html.sidebar-collapsed .tl-main-area {
   font-weight: 800;
 }
 
+.sidebar-inbox-badge {
+  background-color: var(--dash-hero-bg);
+  color: var(--dash-text-white);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: auto;
+  line-height: 1.3;
+}
+
+.nav-item.active .sidebar-inbox-badge {
+  background-color: var(--dash-text-primary);
+  color: var(--dash-accent-lime);
+}
+
 /* Divider before PINNED */
 .sidebar-divider {
   height: 1px;

@@ -118,13 +118,16 @@ const Sidebar = (() => {
     const teamNav = document.getElementById('nav-team');
     const calendarNav = document.getElementById('nav-calendar');
     const overviewNav = document.getElementById('nav-overview');
+    const inboxNav = document.getElementById('nav-inbox');
 
     // Remove active from all first
-    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav].forEach(el => {
+    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav, inboxNav].forEach(el => {
       if (el) el.classList.remove('active');
     });
 
-    if (currentPath.includes('/pages/overview/')) {
+    if (currentPath.includes('/pages/inbox/')) {
+      if (inboxNav) inboxNav.classList.add('active');
+    } else if (currentPath.includes('/pages/overview/')) {
       if (overviewNav) overviewNav.classList.add('active');
     } else if (currentPath.includes('/pages/calendar/')) {
       if (calendarNav) calendarNav.classList.add('active');
@@ -137,6 +140,27 @@ const Sidebar = (() => {
     } else if (currentPath.includes('/pages/dashboard/')) {
       if (todayNav) todayNav.classList.add('active');
     }
+
+    // Refresh inbox unread badge if present
+    fetch('/api/notifications?tab=ALL')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (!data || !data.counts) return;
+        const badge = document.getElementById('sidebar-inbox-count');
+        if (badge) {
+          if (data.counts.unread > 0) {
+            badge.textContent = data.counts.unread;
+            badge.style.display = 'inline-block';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+        const bellDot = document.getElementById('notification-unread-dot');
+        if (bellDot) {
+          bellDot.style.display = data.counts.unread > 0 ? 'block' : 'none';
+        }
+      })
+      .catch(() => {});
 
     // Pinned add button
     const pinnedAddBtn = document.getElementById('pinned-add-btn');

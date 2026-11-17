@@ -64,6 +64,15 @@ const Navbar = (() => {
       }
     });
 
+    // Notification Bell Button -> Inbox
+    const notifBtn = document.getElementById('notification-btn');
+    if (notifBtn) {
+      notifBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/pages/inbox/inbox.html';
+      });
+    }
+
     if (user) {
       if (avatarEl) {
         let initials = 'TD';

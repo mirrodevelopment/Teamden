@@ -118,6 +118,7 @@ public class ProjectMilestoneIntegrationTest {
         jdbcTemplate.execute("DELETE FROM projects");
         jdbcTemplate.execute("DELETE FROM organization_memberships");
         jdbcTemplate.execute("DELETE FROM daily_updates");
+        jdbcTemplate.execute("DELETE FROM notifications");
         jdbcTemplate.execute("DELETE FROM users");
         jdbcTemplate.execute("DELETE FROM organizations");
 

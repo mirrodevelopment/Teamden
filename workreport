@@ -1724,47 +1724,71 @@ DAY 10 - 2026-11-17 (TUESDAY - TODAY)
   * Initial State: Recent searches (cached in localStorage) + quick suggestion tags + keyboard shortcut legend.
   * Multi-Tenant Backend API: `GET /api/search?q=&category=&limit=` filtering tasks, projects, people, and activity events strictly by authenticated user's organization.
   * Automatic universal availability: Navbar fragment loads search-modal CSS and JS so modal is instantly accessible across all pages (Dashboard, Projects, Activity, Calendar, Overview, Insights, Team, Tasks).
+- Brick Inbox & Notifications Redesign (Faithful to Reference Image):
+  * Built complete central Inbox hub at `/pages/inbox/inbox.html` with responsive 2-column editorial layout.
+  * Section 01 Attention Queue: Matte Charcoal Black feature card with white typography, live request counts, and 3 distinct pastel cards (warm beige, soft blue, lavender) with right arrows.
+  * Section 02 Notification Register: Secondary filter pills (All 12, Unread 5, Mentions 4, Following 3) grouped by TODAY and EARLIER with avatar badges, quotes, unread black dots, and navigation arrows.
+  * Right Rail Card 01 (Action in Focus): Interactive detail card showing selected actionable request, due date pill, project link, requester avatar, supporting document link, and full-width electric lime CTA button.
+  * Right Rail Card 02 (Notification Controls): Interactive controls for Snooze (with toast confirmation), Mute this thread, and Notification preferences.
+  * Slide-in Detail Drawer: Accessible by clicking items or "Review decision →" with full context, document link, description, mention quote, and action buttons.
+  * Global Shell Integration: Topbar notification bell (`#notification-btn`) wired with unread dot linking to inbox; Sidebar navigation equipped with active lime pill and dynamic unread badge count.
+  * PostgreSQL Persistence & Multi-Tenant API: Flyway `V10__notifications_schema.sql`, JPA entity, DTOs, service with auto-seeding, and controller with full test suite coverage.
 
 2. WHAT WAS CHANGED & FILES AFFECTED
 --------------------------------------------------------------------------------
+- `src/main/resources/db/migration/V10__notifications_schema.sql` (CREATED: table, multi-tenant index, cascade rules)
+- `src/main/java/com/shed/teamden/notification/entity/Notification.java` (CREATED: JPA entity with multi-tenant org mapping)
+- `src/main/java/com/shed/teamden/notification/repository/NotificationRepository.java` (CREATED: queries, counts, ordering)
+- `src/main/java/com/shed/teamden/notification/dto/NotificationDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/notification/dto/NotificationCountsDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/notification/dto/NotificationResponseDto.java` (CREATED)
+- `src/main/java/com/shed/teamden/notification/service/NotificationService.java` (CREATED: business logic, seed generator, state transitions)
+- `src/main/java/com/shed/teamden/notification/controller/NotificationController.java` (CREATED: REST API endpoints)
+- `src/main/resources/static/pages/inbox/inbox.html` (CREATED: 2-column layout, Attention Queue, Register, Action in Focus, Drawer)
+- `src/main/resources/static/pages/inbox/inbox.css` (CREATED: 100% `--dash-*` tokens, zero hardcoded hex, responsive styles)
+- `src/main/resources/static/pages/inbox/inbox.js` (CREATED: dynamic data loading, tab/pill switching, selection sync, actions, toasts)
+- `src/main/resources/static/fragments/sidebar/sidebar.html` (MODIFIED: added 20 Inbox nav item with unread badge)
+- `src/main/resources/static/fragments/sidebar/sidebar.css` (MODIFIED: added `.sidebar-inbox-badge` styling)
+- `src/main/resources/static/fragments/sidebar/sidebar.js` (MODIFIED: added `/pages/inbox/` active routing & live unread badge fetching)
+- `src/main/resources/static/fragments/navbar/navbar.js` (MODIFIED: wired notification bell button to `/pages/inbox/inbox.html`)
+- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (MODIFIED: permitted `/pages/inbox/**` and `/api/notifications/**`)
+- `src/test/java/com/shed/teamden/notification/NotificationIntegrationTest.java` (CREATED: 5 tests for seeding, filters, reads, actions, and isolation)
 - `src/main/java/com/shed/teamden/search/dto/GlobalSearchResultDto.java` (CREATED)
 - `src/main/java/com/shed/teamden/search/dto/GlobalSearchResponseDto.java` (CREATED)
 - `src/main/java/com/shed/teamden/search/service/GlobalSearchService.java` (CREATED)
 - `src/main/java/com/shed/teamden/search/controller/GlobalSearchController.java` (CREATED)
-- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (MODIFIED: added `/api/search/**` to CSRF ignore list and permitAll)
-- `src/main/resources/static/fragments/search/search-modal.css` (CREATED: `--dash-*` tokens only, responsive 2-column layout)
-- `src/main/resources/static/fragments/search/search-modal.js` (CREATED: debounced search, keyboard nav, connected context, recent searches)
-- `src/main/resources/static/fragments/search/search-modal.html` (CREATED: fragment placeholder)
-- `src/main/resources/static/fragments/navbar/navbar.js` (MODIFIED: dynamic script/link injection, click-to-open, Ctrl+K binding)
-- `src/test/java/com/shed/teamden/search/GlobalSearchIntegrationTest.java` (CREATED: tests for search query, category filters, multi-tenant isolation)
-- HTML files across static resources (BUMPED: navbar.js?v=14 for cache busting)
-- `pages/discovery/discovery.html` (CREATED: complete 3-column discovery layout with breadcrumb, discover heading, search toolbar, category pills, dark results card, lavender connected context card, and 3 stacked discovery tool cards)
-- `pages/discovery/discovery.css` (CREATED: `--dash-*` tokens only, responsive 3-column grid, connector lines, lime green highlight)
-- `pages/discovery/discovery.js` (CREATED: live debounced search, connected context fetcher, sort, filters, saved searches, recently opened)
-- `src/main/java/com/shed/teamden/search/dto/ConnectedContextDto.java` (CREATED)
-- `src/main/java/com/shed/teamden/search/dto/SavedSearchDto.java` (CREATED)
-- `src/main/java/com/shed/teamden/project/repository/ProjectDocumentRepository.java` (MODIFIED: added findByOrganizationId)
-- `src/main/java/com/shed/teamden/project/repository/ProjectDecisionRepository.java` (MODIFIED: added findByOrganizationId)
-- `src/main/java/com/shed/teamden/search/service/GlobalSearchService.java` (MODIFIED: added sorting, connected context, saved searches)
-- `src/main/java/com/shed/teamden/search/controller/GlobalSearchController.java` (MODIFIED: added /context and /saved endpoints)
-- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (MODIFIED: permitted /pages/discovery/**)
+- `src/main/resources/static/fragments/search/search-modal.css` (CREATED)
+- `src/main/resources/static/fragments/search/search-modal.js` (CREATED)
+- `src/main/resources/static/fragments/search/search-modal.html` (CREATED)
+- `pages/discovery/discovery.html` (CREATED)
+- `pages/discovery/discovery.css` (CREATED)
+- `pages/discovery/discovery.js` (CREATED)
+- `src/test/java/com/shed/teamden/search/GlobalSearchIntegrationTest.java` (CREATED)
 
 3. CONCRETE BEFORE & AFTER EXAMPLE
 --------------------------------------------------------------------------------
-Example A: Global Search Trigger and Two-Column Modal
+Example A: Brick Inbox & Notifications Experience (`/pages/inbox/inbox.html`)
+  [BEFORE]:
+  Topbar notification bell was inert with no click handler; no central notification interface existed.
+  Users had no mechanism to triage pending approvals, mentions, task handoffs, or review decisions.
+  [AFTER]:
+  Clicking notification bell or sidebar Inbox opens the full Brick-styled 2-column notification hub.
+  Attention Queue highlights pending decisions with pastel urgency cards; Register organizes updates by TODAY and EARLIER.
+  Action in Focus card allows 1-click review and deep detail drawer allows instant approval, archiving, or snoozing.
+
+Example B: Global Search Trigger and Two-Column Modal
   [BEFORE]:
   Topbar search input was a static text field with a `Ctrl+K` listener that only focused the input field in-place.
-  No global discovery experience across projects, tasks, people, and documents existed; no connected context panel.
   [AFTER]:
   Clicking topbar search bar or pressing `Ctrl+K` / `⌘+K` smoothly launches a centered, elevated search modal with dark blurred backdrop.
-  Two-column view displays matching items on the left and full connected context (task code, owner, status, related project/document) on the right.
-  Keyboard navigation allows instantaneous item traversal with arrow keys and direct opening on Enter.
 
 4. VERIFICATION PERFORMED
 --------------------------------------------------------------------------------
-- Live Backend API: `GET /api/search?q=mobile&category=ALL` returns matched tasks, projects, people, and category count badges.
-- Multi-Tenant Isolation: Verified Alpha Org users cannot discover Beta Org projects or tasks.
-- Automated Test Suite: `GlobalSearchIntegrationTest` passed (2/2); full suite passed (73/73 tests green, 0 failures, 0 errors).
+- Live Backend API: `GET /api/notifications` verified with 7 auto-seeded items matching visual design reference.
+- Status Actions: Verified `PUT /api/notifications/{id}/read`, `POST /api/notifications/mark-all-read`, and `POST /action`.
+- Multi-Tenant Isolation: Verified Alpha Org notifications cannot be read or mutated by Beta Org users.
+- Automated Test Suite: Full test suite executed with 80/80 green passing tests (0 failures, 0 errors).
+- Zero Hardcoded Hex Standard: `inbox.css` validated with zero raw hex strings; 100% `--dash-*` tokens.
 - All static files synchronized to `target/classes/static`.
 
 ================================================================================
