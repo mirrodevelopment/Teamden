@@ -1,311 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meeting Detail — Teamden</title>
-  <link rel="stylesheet" href="/styles/global.css" />
-  <link rel="stylesheet" href="/styles/sidebar.css" />
-  <link rel="stylesheet" href="/styles/navbar.css" />
-  <link rel="stylesheet" href="meeting-detail.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — meeting detail.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=14">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=14">
+
+  <!-- Meeting Detail Styles -->
+  <link rel="stylesheet" href="meeting-detail.css?v=3">
 </head>
-<body>
-<!-- Sidebar mount -->
-<div id="sidebar-mount"></div>
+<body class="dashboard-body calendar-body meeting-detail-body">
 
-<!-- Main layout -->
-<div class="app-shell">
-  <!-- Navbar mount -->
-  <div id="navbar-mount"></div>
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
 
-  <!-- Page content -->
-  <main class="md-page" id="md-page">
+    <!-- Main Workspace Container -->
+    <div class="dash-main-area dash-app-main meeting-app-main">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
 
-    <!-- Header area -->
-    <div class="md-header">
-      <div class="md-breadcrumb-row">
-        <a class="md-back-btn" id="md-back-btn" href="/pages/calendar/calendar.html">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to Calendar
-        </a>
-        <span class="md-breadcrumb" id="md-breadcrumb">CALENDAR / MEETING</span>
-      </div>
+      <!-- Main Meeting Detail Canvas -->
+      <main class="md-page-container" id="md-page">
 
-      <div class="md-title-row">
-        <div class="md-title-left">
-          <h1 class="md-title" id="md-title">loading...</h1>
-          <p class="md-subtitle" id="md-subtitle"></p>
-        </div>
-        <div class="md-meta-bar">
-          <div class="md-meta-item" id="md-meta-date">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span>—</span>
+        <!-- Header Area -->
+        <header class="md-header-section">
+          <!-- Top Row: Breadcrumb & Back -->
+          <div class="md-top-nav-row">
+            <span class="md-breadcrumb-trail" id="md-breadcrumb">CALENDAR / WEBSITE REDESIGN / MEETING</span>
           </div>
-          <div class="md-meta-item" id="md-meta-time">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>—</span>
-          </div>
-          <div class="md-meta-item" id="md-meta-participants">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span>—</span>
-          </div>
-          <div class="md-avatar-row" id="md-avatars"></div>
-          <div class="md-save-status" id="md-save-status">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dash-accent)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span id="md-save-label">Saved</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="md-action-row">
-        <button class="md-btn-secondary" id="md-edit-btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Edit meeting
-        </button>
-        <button class="md-btn-secondary" id="md-more-btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-          More
-        </button>
-      </div>
-    </div>
-
-    <!-- Two-column layout -->
-    <div class="md-layout">
-
-      <!-- LEFT COLUMN -->
-      <div class="md-col-left">
-
-        <!-- 01 / AGENDA -->
-        <div class="md-card md-agenda-card">
-          <div class="md-card-header">
-            <span class="md-card-num">01 / AGENDA</span>
-            <button class="md-card-action" id="md-add-agenda-btn" title="Add agenda item">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
+          <!-- Back Button Row -->
+          <div class="md-back-row">
+            <a class="md-back-btn" id="md-back-btn" href="/pages/calendar/calendar.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Back to Calendar</span>
+            </a>
           </div>
-          <h2 class="md-card-title">What we're discussing.</h2>
-          <div class="md-agenda-items" id="md-agenda-items">
-            <!-- populated by JS -->
-          </div>
-          <div class="md-agenda-add" id="md-agenda-add" style="display:none;">
-            <input type="text" class="md-inline-input" id="md-agenda-input" placeholder="Add agenda item…" />
-            <div class="md-inline-actions">
-              <button class="md-btn-xs md-btn-accent" id="md-agenda-save-btn">Add</button>
-              <button class="md-btn-xs" id="md-agenda-cancel-btn">Cancel</button>
+
+          <!-- Title & Meta Bar Row -->
+          <div class="md-title-meta-row">
+            <div class="md-title-col">
+              <h1 class="md-title-huge" id="md-title">design review<span class="title-square-dot">.</span></h1>
+              <p class="md-subtitle-text" id="md-subtitle">Review the updated homepage and prepare the next design handoff.</p>
+            </div>
+
+            <!-- Right Info Bar -->
+            <div class="md-info-bar-box">
+              <div class="md-info-stats-row">
+                <div class="md-stat-chip" id="md-meta-date">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span>29 Oct 2026</span>
+                </div>
+                <span class="md-stat-divider">|</span>
+                <div class="md-stat-chip" id="md-meta-time">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>11:00–12:00 · IST</span>
+                </div>
+                <span class="md-stat-divider">|</span>
+                <div class="md-stat-chip" id="md-meta-participants">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span>4 participants</span>
+                </div>
+              </div>
+
+              <!-- Bottom Row: Avatars & Save Status -->
+              <div class="md-info-bottom-row">
+                <div class="md-avatar-stack" id="md-avatars">
+                  <div class="md-avatar-circle md-avatar-pk" title="Peter K.">PK</div>
+                  <div class="md-avatar-circle md-avatar-ar" title="Alex R.">AR</div>
+                  <div class="md-avatar-circle md-avatar-sk" title="Sarah K.">SK</div>
+                  <div class="md-avatar-circle md-avatar-mj" title="Michael J.">MJ</div>
+                </div>
+                <div class="md-save-badge" id="md-save-status">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span id="md-save-label">Saved 2 min ago</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 02 / COLLABORATIVE CANVAS (Meeting Notes) -->
-        <div class="md-card md-notes-card">
-          <div class="md-card-header">
-            <span class="md-card-num">02 / COLLABORATIVE CANVAS</span>
-            <div class="md-notes-toolbar" id="md-notes-toolbar">
-              <select class="md-toolbar-select" id="md-format-select">
-                <option value="p">Paragraph</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-              </select>
-              <button class="md-toolbar-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
-              <button class="md-toolbar-btn" data-cmd="italic" title="Italic"><em>I</em></button>
-              <button class="md-toolbar-btn" data-cmd="underline" title="Underline"><u>U</u></button>
-              <button class="md-toolbar-btn" data-cmd="createLink" title="Link">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <!-- Actions Row: Edit meeting & More -->
+          <div class="md-header-actions-row">
+            <button class="md-btn-pill md-btn-edit" id="md-edit-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit meeting</span>
+            </button>
+            <button class="md-btn-pill md-btn-more" id="md-more-btn" title="More options">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Two-Column Editorial Layout Grid -->
+        <div class="md-split-grid">
+
+          <!-- ===================================================================
+               LEFT COLUMN (~62%): Agenda + Collaborative Canvas Notes
+               =================================================================== -->
+          <div class="md-col-left">
+
+            <!-- 01 / AGENDA CARD (Pastel Lavender) -->
+            <section class="md-card md-agenda-card" aria-labelledby="heading-agenda">
+              <div class="md-card-top-bar">
+                <span class="md-section-index">01 / AGENDA</span>
+                <button class="md-mini-icon-btn" id="md-add-agenda-btn" title="Add agenda item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <h2 class="md-card-heading" id="heading-agenda">What we're discussing.</h2>
+
+              <div class="md-agenda-chips-wrap" id="md-agenda-items">
+                <!-- Populated dynamically via JS -->
+              </div>
+
+              <!-- Inline Add Form -->
+              <div class="md-inline-form-box" id="md-agenda-add" style="display:none;">
+                <input type="text" class="md-form-input" id="md-agenda-input" placeholder="Add discussion topic…" />
+                <div class="md-form-btns-row">
+                  <button class="md-btn-small md-btn-lime" id="md-agenda-save-btn">Add topic</button>
+                  <button class="md-btn-small md-btn-ghost" id="md-agenda-cancel-btn">Cancel</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- 02 / COLLABORATIVE CANVAS (Meeting Notes) -->
+            <section class="md-card md-canvas-card" aria-labelledby="heading-canvas">
+              <div class="md-card-top-bar">
+                <span class="md-section-index">02 / COLLABORATIVE CANVAS</span>
+
+                <!-- Canvas Toolbar -->
+                <div class="md-canvas-toolbar" id="md-notes-toolbar">
+                  <div class="md-select-wrap">
+                    <select class="md-toolbar-select" id="md-format-select">
+                      <option value="p">Paragraph</option>
+                      <option value="h2">Heading 2</option>
+                      <option value="h3">Heading 3</option>
+                    </select>
+                  </div>
+                  <button class="md-tool-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+                  <button class="md-tool-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+                  <button class="md-tool-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+                  <button class="md-tool-btn" data-cmd="createLink" title="Link">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </button>
+                  <button class="md-tool-btn" data-cmd="more" title="More options">···</button>
+                </div>
+              </div>
+
+              <h2 class="md-card-heading" id="heading-canvas">Meeting notes.</h2>
+
+              <!-- Rich Text Editable Canvas -->
+              <div class="md-notes-canvas-body" id="md-notes-editor" contenteditable="true" spellcheck="false">
+                <span class="md-canvas-section-tag">03 / HOMEPAGE DESIGN</span>
+                <h3 class="md-canvas-section-title">Simplifying the experience.</h3>
+                <p>We reviewed the updated homepage structure and discussed how it <mark class="md-notes-highlight">improves navigation clarity and helps users reach key actions faster.</mark> The overall direction feels more focused and consistent with the product narrative.</p>
+
+                <span class="md-canvas-section-tag">04 / MOBILE NAVIGATION</span>
+                <p>We discussed refinements to the mobile navigation prototype, including simplifying the menu, improving discoverability, and aligning interactions with the final design direction before the engineering handoff. <span class="md-cursor-blink">|</span></p>
+              </div>
+
+              <!-- Contextual Floating Toolbar (Appears on text selection) -->
+              <div class="md-floating-action-toolbar" id="md-floating-toolbar">
+                <button class="md-float-action-btn" id="md-float-task">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  <span>Create task</span>
+                </button>
+                <span class="md-float-divider">|</span>
+                <button class="md-float-action-btn" id="md-float-decision">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                  <span>Record decision</span>
+                </button>
+                <span class="md-float-divider">|</span>
+                <button class="md-float-action-btn" id="md-float-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <span>Link record</span>
+                </button>
+              </div>
+            </section>
+
+          </div>
+
+          <!-- ===================================================================
+               RIGHT COLUMN (~38%): Decisions + Follow-up Work + References
+               =================================================================== -->
+          <div class="md-col-right">
+
+            <!-- 03 / DECISIONS (Pastel Sage) -->
+            <section class="md-card md-decisions-card" aria-labelledby="heading-decisions">
+              <div class="md-card-top-bar">
+                <span class="md-section-index">03 / DECISIONS</span>
+                <button class="md-mini-icon-btn" id="md-add-decision-btn" title="Add decision">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <h2 class="md-card-heading" id="heading-decisions">What we decided.</h2>
+
+              <div class="md-decisions-stack" id="md-decisions-list">
+                <!-- Populated dynamically via JS -->
+              </div>
+
+              <!-- Inline Decision Form -->
+              <div class="md-inline-form-box" id="md-decision-add" style="display:none;">
+                <input type="text" class="md-form-input" id="md-decision-input" placeholder="Decision summary…" />
+                <select class="md-form-select" id="md-decision-status-select">
+                  <option value="Approved internally · Client confirmation pending">Approved internally · Client confirmation pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Pending review">Pending review</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <div class="md-form-btns-row">
+                  <button class="md-btn-small md-btn-lime" id="md-decision-save-btn">Record decision</button>
+                  <button class="md-btn-small md-btn-ghost" id="md-decision-cancel-btn">Cancel</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- 04 / FOLLOW-UP WORK (Pastel Pale Blue) -->
+            <section class="md-card md-followup-card" aria-labelledby="heading-followup">
+              <div class="md-card-top-bar">
+                <span class="md-section-index">04 / FOLLOW-UP WORK</span>
+              </div>
+              <h2 class="md-card-heading" id="heading-followup">What happens next.</h2>
+
+              <div class="md-followup-tasks-list" id="md-followup-list">
+                <!-- Populated dynamically via JS -->
+              </div>
+
+              <button class="md-add-task-trigger-btn" id="md-add-followup-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add follow-up task</span>
               </button>
-              <button class="md-toolbar-btn" data-cmd="more" title="More">···</button>
-            </div>
-          </div>
-          <h2 class="md-card-title">Meeting notes.</h2>
-          <div class="md-notes-editor" id="md-notes-editor" contenteditable="true" spellcheck="false">
-            <p>Start typing your meeting notes here…</p>
-          </div>
-          <!-- Contextual floating toolbar (shown on text selection) -->
-          <div class="md-floating-toolbar" id="md-floating-toolbar">
-            <button class="md-float-btn" id="md-float-task">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Create task
-            </button>
-            <button class="md-float-btn" id="md-float-decision">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              Record decision
-            </button>
-            <button class="md-float-btn" id="md-float-link">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              Link record
-            </button>
-          </div>
-        </div>
 
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="md-col-right">
-
-        <!-- 03 / DECISIONS -->
-        <div class="md-card md-decisions-card">
-          <div class="md-card-header">
-            <span class="md-card-num">03 / DECISIONS</span>
-            <button class="md-card-action" id="md-add-decision-btn" title="Add decision">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-          </div>
-          <h2 class="md-card-title">What we decided.</h2>
-          <div class="md-decisions-list" id="md-decisions-list">
-            <!-- populated by JS -->
-          </div>
-          <div class="md-decision-add" id="md-decision-add" style="display:none;">
-            <input type="text" class="md-inline-input" id="md-decision-input" placeholder="Describe the decision…" />
-            <select class="md-inline-select" id="md-decision-status-select">
-              <option value="Approved internally">Approved internally</option>
-              <option value="Pending review">Pending review</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-            <div class="md-inline-actions">
-              <button class="md-btn-xs md-btn-accent" id="md-decision-save-btn">Add</button>
-              <button class="md-btn-xs" id="md-decision-cancel-btn">Cancel</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 04 / FOLLOW-UP WORK -->
-        <div class="md-card md-followup-card">
-          <div class="md-card-header">
-            <span class="md-card-num">04 / FOLLOW-UP WORK</span>
-          </div>
-          <h2 class="md-card-title">What happens next.</h2>
-          <div class="md-followup-list" id="md-followup-list">
-            <!-- populated by JS -->
-          </div>
-          <button class="md-add-followup-btn" id="md-add-followup-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add follow-up task
-          </button>
-          <div class="md-followup-add" id="md-followup-add" style="display:none;">
-            <input type="text" class="md-inline-input" id="md-followup-input" placeholder="Task description…" />
-            <div class="md-followup-add-row">
-              <input type="text" class="md-inline-input md-inline-input-sm" id="md-followup-assignee" placeholder="Assignee name" />
-              <input type="date" class="md-inline-input md-inline-input-sm" id="md-followup-due" />
-            </div>
-            <div class="md-inline-actions">
-              <button class="md-btn-xs md-btn-accent" id="md-followup-save-btn">Add task</button>
-              <button class="md-btn-xs" id="md-followup-cancel-btn">Cancel</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 05 / MEETING REFERENCES -->
-        <div class="md-card md-refs-card">
-          <div class="md-card-header">
-            <span class="md-card-num">05 / MEETING REFERENCES</span>
-          </div>
-          <div class="md-refs-list" id="md-refs-list">
-            <div class="md-ref-item">
-              <span class="md-ref-badge">DOC</span>
-              <div class="md-ref-info">
-                <span class="md-ref-title">Design Review Notes</span>
-                <span class="md-ref-sub">Meeting notes · Updated today</span>
+              <!-- Inline Follow-up Form -->
+              <div class="md-inline-form-box" id="md-followup-add" style="display:none;">
+                <input type="text" class="md-form-input" id="md-followup-input" placeholder="Task description…" />
+                <div class="md-form-grid-two">
+                  <input type="text" class="md-form-input" id="md-followup-assignee" placeholder="Assignee (e.g. PK)" />
+                  <input type="date" class="md-form-input" id="md-followup-due" />
+                </div>
+                <div class="md-form-btns-row">
+                  <button class="md-btn-small md-btn-lime" id="md-followup-save-btn">Save task</button>
+                  <button class="md-btn-small md-btn-ghost" id="md-followup-cancel-btn">Cancel</button>
+                </div>
               </div>
-              <svg class="md-ref-external" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </div>
-            <div class="md-ref-item">
-              <span class="md-ref-badge md-ref-badge-pdf">PDF</span>
-              <div class="md-ref-info">
-                <span class="md-ref-title">Homepage Specifications</span>
-                <span class="md-ref-sub">Product spec · v1.4</span>
+            </section>
+
+            <!-- 05 / MEETING REFERENCES (Card Surface) -->
+            <section class="md-card md-references-card" aria-labelledby="heading-references">
+              <div class="md-card-top-bar">
+                <span class="md-section-index">05 / MEETING REFERENCES</span>
               </div>
-              <svg class="md-ref-external" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </div>
+              <div class="md-references-list" id="md-refs-list">
+                <div class="md-ref-card-item">
+                  <span class="md-ref-badge md-ref-badge-doc">DOC</span>
+                  <div class="md-ref-text-col">
+                    <span class="md-ref-title">Design Review Notes</span>
+                    <span class="md-ref-meta">Meeting notes · Updated today</span>
+                  </div>
+                  <a href="#" class="md-ref-link-icon" title="Open document">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+                <div class="md-ref-card-item">
+                  <span class="md-ref-badge md-ref-badge-pdf">PDF</span>
+                  <div class="md-ref-text-col">
+                    <span class="md-ref-title">Homepage Specifications</span>
+                    <span class="md-ref-meta">Product spec · v1.4</span>
+                  </div>
+                  <a href="#" class="md-ref-link-icon" title="Open document">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            <!-- Prepare Recap Action Card Button -->
+            <button class="md-recap-action-card" id="md-recap-btn">
+              <div class="md-recap-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Prepare recap</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
           </div>
         </div>
 
-        <!-- Prepare Recap -->
-        <button class="md-recap-btn" id="md-recap-btn">
-          Prepare recap
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
-
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- Edit Meeting Drawer -->
-<div class="md-drawer-overlay" id="md-drawer-overlay"></div>
-<aside class="md-edit-drawer" id="md-edit-drawer">
-  <div class="md-drawer-header">
-    <h2 class="md-drawer-title">Edit Meeting</h2>
-    <button class="md-drawer-close" id="md-drawer-close">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="md-drawer-body">
-    <div class="md-field-group">
-      <label class="md-field-label">Meeting Title</label>
-      <input type="text" class="md-field-input" id="edit-title" placeholder="Meeting title" />
-    </div>
-    <div class="md-field-group">
-      <label class="md-field-label">Description</label>
-      <textarea class="md-field-textarea" id="edit-desc" rows="3" placeholder="Short description"></textarea>
-    </div>
-    <div class="md-field-row">
-      <div class="md-field-group md-field-half">
-        <label class="md-field-label">Date</label>
-        <input type="date" class="md-field-input" id="edit-date" />
-      </div>
-      <div class="md-field-group md-field-half">
-        <label class="md-field-label">Project</label>
-        <input type="text" class="md-field-input" id="edit-project" placeholder="e.g. Website Redesign" />
-      </div>
-    </div>
-    <div class="md-field-row">
-      <div class="md-field-group md-field-half">
-        <label class="md-field-label">Start Time</label>
-        <input type="time" class="md-field-input" id="edit-start-time" />
-      </div>
-      <div class="md-field-group md-field-half">
-        <label class="md-field-label">End Time</label>
-        <input type="time" class="md-field-input" id="edit-end-time" />
-      </div>
-    </div>
-    <div class="md-field-group">
-      <label class="md-field-label">Location / Meeting URL</label>
-      <input type="text" class="md-field-input" id="edit-location" placeholder="Room or meeting link" />
-    </div>
-    <div class="md-field-group">
-      <label class="md-field-label">Attendees (comma-separated)</label>
-      <input type="text" class="md-field-input" id="edit-attendees" placeholder="e.g. Alex R., Peter K." />
-    </div>
-    <div class="md-field-group">
-      <label class="md-field-label">Color Theme</label>
-      <select class="md-field-input" id="edit-color-theme">
-        <option value="lavender">Lavender</option>
-        <option value="sage">Sage</option>
-        <option value="blue">Blue</option>
-        <option value="beige">Beige</option>
-        <option value="black">Black</option>
-      </select>
+      </main>
     </div>
   </div>
-  <div class="md-drawer-footer">
-    <button class="md-btn-secondary" id="md-drawer-cancel">Cancel</button>
-    <button class="md-btn-accent-full" id="md-drawer-save">Save changes</button>
+
+  <!-- ===================================================================
+       EDIT MEETING DRAWER (Slide-in Right Panel)
+       =================================================================== -->
+  <div class="md-drawer-backdrop" id="md-drawer-overlay"></div>
+  <aside class="md-drawer-panel" id="md-edit-drawer" aria-label="Edit Meeting">
+    <div class="md-drawer-header">
+      <h2 class="md-drawer-title">Edit Meeting</h2>
+      <button class="md-drawer-close-btn" id="md-drawer-close" title="Close drawer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="md-drawer-body">
+      <div class="md-drawer-group">
+        <label class="md-drawer-label" for="edit-title">Meeting Title</label>
+        <input type="text" class="md-drawer-input" id="edit-title" placeholder="Design review" />
+      </div>
+      <div class="md-drawer-group">
+        <label class="md-drawer-label" for="edit-desc">Description</label>
+        <textarea class="md-drawer-textarea" id="edit-desc" rows="3" placeholder="Brief summary of meeting purpose"></textarea>
+      </div>
+      <div class="md-drawer-row-two">
+        <div class="md-drawer-group">
+          <label class="md-drawer-label" for="edit-date">Date</label>
+          <input type="date" class="md-drawer-input" id="edit-date" />
+        </div>
+        <div class="md-drawer-group">
+          <label class="md-drawer-label" for="edit-project">Project</label>
+          <input type="text" class="md-drawer-input" id="edit-project" placeholder="Website Redesign" />
+        </div>
+      </div>
+      <div class="md-drawer-row-two">
+        <div class="md-drawer-group">
+          <label class="md-drawer-label" for="edit-start-time">Start Time</label>
+          <input type="time" class="md-drawer-input" id="edit-start-time" />
+        </div>
+        <div class="md-drawer-group">
+          <label class="md-drawer-label" for="edit-end-time">End Time</label>
+          <input type="time" class="md-drawer-input" id="edit-end-time" />
+        </div>
+      </div>
+      <div class="md-drawer-group">
+        <label class="md-drawer-label" for="edit-location">Location / Meeting URL</label>
+        <input type="text" class="md-drawer-input" id="edit-location" placeholder="Room 2A or Meet URL" />
+      </div>
+      <div class="md-drawer-group">
+        <label class="md-drawer-label" for="edit-attendees">Attendees (comma-separated)</label>
+        <input type="text" class="md-drawer-input" id="edit-attendees" placeholder="Peter K., Alex R., Sarah K." />
+      </div>
+      <div class="md-drawer-group">
+        <label class="md-drawer-label" for="edit-color-theme">Color Theme</label>
+        <select class="md-drawer-input" id="edit-color-theme">
+          <option value="lavender">Lavender</option>
+          <option value="sage">Sage</option>
+          <option value="blue">Blue</option>
+          <option value="beige">Beige</option>
+          <option value="black">Black</option>
+        </select>
+      </div>
+    </div>
+    <div class="md-drawer-footer">
+      <button class="md-btn-pill md-btn-ghost" id="md-drawer-cancel">Cancel</button>
+      <button class="md-btn-pill md-btn-lime-submit" id="md-drawer-save">Save changes</button>
+    </div>
+  </aside>
+
+  <!-- More Options Dropdown -->
+  <div class="md-more-menu-dropdown" id="md-more-dropdown" style="display:none;">
+    <button class="md-more-menu-item" id="md-action-duplicate">Duplicate meeting</button>
+    <button class="md-more-menu-item" id="md-action-copy-link">Copy link</button>
+    <button class="md-more-menu-item" id="md-action-export">Export notes</button>
+    <div class="md-more-menu-separator"></div>
+    <button class="md-more-menu-item md-more-danger" id="md-action-delete">Delete meeting</button>
   </div>
-</aside>
 
-<!-- More options dropdown -->
-<div class="md-more-dropdown" id="md-more-dropdown" style="display:none;">
-  <button class="md-more-item" id="md-action-duplicate">Duplicate meeting</button>
-  <button class="md-more-item" id="md-action-copy-link">Copy link</button>
-  <button class="md-more-item" id="md-action-export">Export notes</button>
-  <div class="md-more-divider"></div>
-  <button class="md-more-item md-more-danger" id="md-action-delete">Delete meeting</button>
-</div>
+  <!-- Notification Toast Container -->
+  <div class="md-toast-container" id="md-toast-container" role="alert" aria-live="polite"></div>
 
-<!-- Toast container -->
-<div class="md-toast-container" id="md-toast-container"></div>
-
-<script src="/scripts/auth.js"></script>
-<script src="meeting-detail.js"></script>
+  <!-- Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=5"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=14"></script>
+  <script src="/fragments/navbar/navbar.js?v=14"></script>
+  <script src="/scripts/auth.js"></script>
+  <script src="meeting-detail.js?v=3"></script>
 </body>
 </html>
