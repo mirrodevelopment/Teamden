@@ -595,8 +595,16 @@ Base URL: `http://localhost:8080`
 | **Daily Update** | `POST`| `/api/daily-updates` | `CreateDailyUpdateRequestDto` | `DailyUpdateDto` | Yes |
 | **Daily Update** | `GET` | `/api/daily-updates/suggestions` | None | `DailyUpdateSuggestionsDto` | Yes |
 | **Search** | `GET` | `/api/search` | `q`, `category`, `limit` | `GlobalSearchResponseDto` | Yes |
-| **Calendar** | `GET` | `/api/calendar/full-data` | None | `CalendarFullDataDto` | Yes |
-| **Calendar** | `POST`| `/api/calendar/events` | `CreateCalendarEventRequest` | `CalendarEventDto` | Yes |
+| **Calendar** | `GET` | `/api/calendar/data` | None | `CalendarPageDataDto` | Yes |
+| **Calendar** | `GET` | `/api/calendar/events` | `startDate`, `endDate` | `List<CalendarEventDto>` | Yes |
+| **Calendar** | `GET` | `/api/calendar/events/{id}` | Path: `id` (UUID) | `CalendarEventDto` | Yes |
+| **Calendar** | `POST`| `/api/calendar/events` | `CreateCalendarEventRequestDto` | `CalendarEventDto` | Yes |
+| **Calendar** | `PUT` | `/api/calendar/events/{id}` | `UpdateCalendarEventRequestDto` | `CalendarEventDto` | Yes |
+| **Calendar** | `PATCH`| `/api/calendar/events/{id}/notes` | `{"notes": "..."}` | `Map<String, String>` | Yes |
+| **Calendar** | `PATCH`| `/api/calendar/events/{id}/agenda` | `{"agenda": "..."}` | `Map<String, String>` | Yes |
+| **Calendar** | `PATCH`| `/api/calendar/events/{id}/decision`| `{"title": "...", "status": "..."}` | `Map<String, String>` | Yes |
+| **Calendar** | `PATCH`| `/api/calendar/events/{id}/followups`| `{"followups": "[...]"}` | `Map<String, String>` | Yes |
+| **Calendar** | `DELETE`| `/api/calendar/events/{id}` | Path: `id` (UUID) | Void (204) | Yes |
 | **Activity** | `GET` | `/api/activity/events` | `range`, `category`, `limit` | `List<ActivityEventDto>` | Yes |
 | **Dev Portal** | `GET` | `/api/dev/overview` | None | `DevOverviewDto` | No |
 | **Dev Portal** | `GET` | `/api/dev/tables` | None | `List<TableMetadataDto>` | No |

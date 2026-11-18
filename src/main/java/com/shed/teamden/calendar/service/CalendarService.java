@@ -286,6 +286,74 @@ public class CalendarService {
         return toDto(updated);
     }
 
+    @Transactional(readOnly = true)
+    public CalendarEventDto getEventById(String eventIdStr) {
+        UUID eventId;
+        try {
+            eventId = UUID.fromString(eventIdStr);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid event UUID: " + eventIdStr);
+        }
+        Organization org = resolveCurrentOrganization();
+        CalendarEvent event = calendarEventRepository.findByIdAndOrganizationId(eventId, org.getId())
+                .orElseThrow(() -> new BadRequestException("Calendar event not found: " + eventId));
+        return toDto(event);
+    }
+
+    @Transactional
+    public void updateMeetingNotes(String eventIdStr, String notes) {
+        UUID eventId;
+        try { eventId = UUID.fromString(eventIdStr); } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid event UUID: " + eventIdStr);
+        }
+        Organization org = resolveCurrentOrganization();
+        CalendarEvent event = calendarEventRepository.findByIdAndOrganizationId(eventId, org.getId())
+                .orElseThrow(() -> new BadRequestException("Calendar event not found: " + eventId));
+        event.setNotesText(notes);
+        event.setNotesTimestamp("Saved just now");
+        calendarEventRepository.save(event);
+    }
+
+    @Transactional
+    public void updateMeetingAgenda(String eventIdStr, String agenda) {
+        UUID eventId;
+        try { eventId = UUID.fromString(eventIdStr); } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid event UUID: " + eventIdStr);
+        }
+        Organization org = resolveCurrentOrganization();
+        CalendarEvent event = calendarEventRepository.findByIdAndOrganizationId(eventId, org.getId())
+                .orElseThrow(() -> new BadRequestException("Calendar event not found: " + eventId));
+        event.setAgendaText(agenda);
+        calendarEventRepository.save(event);
+    }
+
+    @Transactional
+    public void updateMeetingDecision(String eventIdStr, String title, String status) {
+        UUID eventId;
+        try { eventId = UUID.fromString(eventIdStr); } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid event UUID: " + eventIdStr);
+        }
+        Organization org = resolveCurrentOrganization();
+        CalendarEvent event = calendarEventRepository.findByIdAndOrganizationId(eventId, org.getId())
+                .orElseThrow(() -> new BadRequestException("Calendar event not found: " + eventId));
+        if (title != null && !title.isBlank()) event.setDecisionTitle(title);
+        if (status != null && !status.isBlank()) event.setDecisionStatus(status);
+        calendarEventRepository.save(event);
+    }
+
+    @Transactional
+    public void updateMeetingFollowups(String eventIdStr, String followupsJson) {
+        UUID eventId;
+        try { eventId = UUID.fromString(eventIdStr); } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid event UUID: " + eventIdStr);
+        }
+        Organization org = resolveCurrentOrganization();
+        CalendarEvent event = calendarEventRepository.findByIdAndOrganizationId(eventId, org.getId())
+                .orElseThrow(() -> new BadRequestException("Calendar event not found: " + eventId));
+        event.setFollowupsJson(followupsJson);
+        calendarEventRepository.save(event);
+    }
+
     @Transactional
     public void deleteEvent(String eventIdStr) {
         UUID eventId;

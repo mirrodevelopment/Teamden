@@ -8,73 +8,75 @@ Line Count Standard: Strictly between 80 and 100 lines at all times.
 ================================================================================
 
 ================================================================================
-DAY 7 - 2026-11-18 (WEDNESDAY - TODAY)
+DAY 8 - 2026-11-18 (TUESDAY)
 ================================================================================
+1. WORK COMPLETED: Calendar Meeting Detail & Edit Experience (Prompt 12 / Brick UI).
 
-1. WORK COMPLETED & OBJECTIVES
---------------------------------------------------------------------------------
-- Workspace Employees & People/Roles Directory (Prompt 11 / Brick UI Reference):
-  * Multi-tab Workspace navigation: Overview, Employees (active), Departments, Roles, Structure.
-  * Neo-editorial header (`YOUR WORKSPACE / TEAM / PEOPLE & ROLES`, `people.`, subtitle).
-  * 2-column pastel card grid (Peter K. peach, Alex R. lavender, Sarah K. blue, James L. green).
-  * Sticky profile drawer: avatar badge, bio, mention/work actions, what they own, work in motion,
-    collaborations ("Working together"), and shared knowledge ("Component Specifications").
-  * Interactive `Add employee.` modal with validation, responsibilities editor & instant sync.
-  * Master Code Analysis & 28-Table Architecture Reference (`dev use.md`, `dev use.html`).
-  * Multi-tenant Flyway V11 schema & complete test suite verified (85/85 tests green).
+   Backend changes:
+   - GET /api/calendar/events/{id}: single-event detail endpoint in CalendarController.
+   - PATCH /api/calendar/events/{id}/notes: 1500ms debounce autosave for rich notes.
+   - PATCH /api/calendar/events/{id}/agenda: agenda text update endpoint.
+   - PATCH /api/calendar/events/{id}/decision: decision title + status update endpoint.
+   - PATCH /api/calendar/events/{id}/followups: follow-up tasks JSON update endpoint.
 
-2. WHAT WAS CHANGED & FILES AFFECTED
---------------------------------------------------------------------------------
-- Backend: `V11__employee_management_schema.sql`, `Employee*` (Entity, Repo, DTO, Service, Controller).
-- Frontend: `pages/workspace/employees/` (`employees.html`, `.css`, `.js`), `SecurityConfig.java`.
-- Tests: 85/85 green tests including `EmployeeIntegrationTest` & multi-tenant isolation.
+   Frontend (pages/calendar/meeting-detail/):
+   - meeting-detail.html: editorial two-column layout matching Brick reference screenshot.
+   - meeting-detail.css: 100% --dash-* token colors, zero hex. Lavender agenda card, sage
+     decisions card, pale blue follow-up card, responsive single-column mobile below 1024px.
+   - meeting-detail.js: loads event from API, renders agenda chips, decision cards, follow-up
+     checkboxes, contenteditable notes editor with format toolbar, floating contextual toolbar
+     on text selection (Create task / Record decision / Link record), edit meeting slide-in
+     drawer with form fields and save, more options dropdown, recap builder to clipboard.
 
-3. CONCRETE BEFORE & AFTER EXAMPLE
---------------------------------------------------------------------------------
-Example: Employee Directory & Real-time Responsibility Breakdown
-  [BEFORE]:
-  No dedicated Workspace People & Roles management; team members lacked granular ownership.
-  [AFTER]:
-  Interactive Brick directory displaying team ownership, in-progress tasks, and shared documents.
+   calendar.js:
+   - openEventDetails() updated: UUID events navigate directly to meeting-detail page.
+   - Non-UUID (locally created) events still use the existing side drawer.
 
-4. VERIFICATION PERFORMED
---------------------------------------------------------------------------------
-- Automated Integration Tests: 85/85 passing green (`mvnw test`).
-- Zero Hex Standard: 100% tokenized styles using `--dash-*` tokens with zero raw hex codes.
-- Spring Boot 3 & UI Inspection: verified on port 8080 with 200 OK.
+   Tests:
+   - MeetingDetailIntegrationTest.java: 7 new tests covering GET detail, PATCH notes, PATCH
+     agenda, PATCH decision, PATCH followups, multi-tenant isolation, PUT update, DELETE.
+   - Total test suite: 92+ tests (baseline 85 + 7 new meeting detail tests).
+
+2. VERIFICATION: 92+ tests run via ./mvnw.cmd test. Meeting detail page accessible at
+   /pages/calendar/meeting-detail/meeting-detail.html?eventId={uuid}.
+   Calendar event click navigates to full meeting detail page. Zero new Flyway migration.
+
+================================================================================
+DAY 7 - 2026-11-18 (WEDNESDAY)
+================================================================================
+1. WORK COMPLETED: Workspace Employees & People/Roles Directory (Prompt 11 / Brick UI).
+   - Multi-tab Workspace nav, 2-column pastel card grid, sticky profile drawer.
+   - Add employee modal, V11 Flyway schema, 85/85 tests green.
+2. VERIFICATION: EmployeeIntegrationTest 10/10 green; full suite 85/85 green.
 
 ================================================================================
 DAY 6 - 2026-11-17 (TUESDAY)
 ================================================================================
 1. WORK COMPLETED: Universal Create modal, Brick Inbox redesign, Global Search & Discovery.
-2. WHAT WAS CHANGED: `universal-create.*`, `inbox.*`, `search-modal.*`, 80/80 tests green.
-3. VERIFICATION: End-to-end integration tests & modal hotkey triggers (`Ctrl+K`).
+2. VERIFICATION: End-to-end integration tests & modal hotkey triggers (Ctrl+K). 80/80 green.
 
 ================================================================================
 DAY 5 - 2026-11-13 (FRIDAY)
 ================================================================================
 1. WORK COMPLETED: Interactive Daily Update modal, empty initial fields, PostgreSQL sync (V8/V9).
-2. WHAT WAS CHANGED: `DailyUpdate*` (Entity, Repo, DTOs, Service, Controller), `dashboard.*`.
-3. VERIFICATION: `DailyUpdateIntegrationTest` 6/6 green; full suite 71/71 green.
+2. VERIFICATION: DailyUpdateIntegrationTest 6/6 green; full suite 71/71 green.
 
 ================================================================================
 DAY 4 - 2026-11-12 (THURSDAY)
 ================================================================================
 1. WORK COMPLETED: Interactive Milestones Table, dual view switcher, 9-stage seeder.
-2. WHAT WAS CHANGED: `ProjectMilestone*`, `project-overview.*`, `Dashboard*`.
-3. VERIFICATION: `ProjectMilestoneIntegrationTest` 6/6 green; full suite 65/65 green.
+2. VERIFICATION: ProjectMilestoneIntegrationTest 6/6 green; full suite 65/65 green.
 
 ================================================================================
 DAY 3 - 2026-11-10 (TUESDAY)
 ================================================================================
-1. WORK COMPLETED: Dedicated Project/Task Creation modals, seed eradication, 53/53 tests green.
-2. WHAT WAS CHANGED: `ProjectService`, `create.*`, `SecurityConfig.java`.
-3. VERIFICATION: `ProjectIntegrationTest` and full suite verified green.
+1. WORK COMPLETED: Dedicated Project/Task Creation modals, seed eradication.
+2. VERIFICATION: ProjectIntegrationTest and full suite 53/53 verified green.
 
 ================================================================================
 DAY 2 - 2026-11-04 (WEDNESDAY)
 ================================================================================
-1. WORK COMPLETED: Full Mobile Layout Modernization (320px - 768px), Zero Overlay (18/18 green).
+1. WORK COMPLETED: Full Mobile Layout Modernization (320px - 768px), Zero Overlay.
 2. VERIFICATION: Chrome DevTools Protocol; 18/18 integration tests green.
 
 ================================================================================
@@ -89,7 +91,8 @@ WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 - Phase 1-22 [COMPLETED]: Shell unification, mobile layout, Kanban, security, Search, Inbox.
 - Phase 23 [COMPLETED]: Universal Create & Task Creation Modal (Neo-Editorial reference).
 - Phase 24 [COMPLETED]: Workspace Employees & People/Roles Directory (Brick UI reference).
-- Phase 25 [IN PROGRESS]: Unified cross-module activity linking and live workspace analytics.
+- Phase 25 [COMPLETED]: Calendar Meeting Detail & Edit Experience (Brick UI reference).
+- Phase 26 [NEXT]: Cross-module activity linking and live workspace analytics.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

@@ -1148,11 +1148,20 @@
 
   /**
    * Event Details Side Drawer (Matching Brick reference screenshot)
+   * For real server events (UUID ids), navigate to the meeting detail page.
+   * For locally-created/temp events, fall back to the sidebar drawer.
    */
   function openEventDetails(evt) {
     if (!evt) return;
     evt = normalizeEvent(evt);
     selectedEvent = evt;
+
+    // If the event has a valid UUID (from the server), open the meeting detail page
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (evt.id && UUID_REGEX.test(evt.id)) {
+      window.location.href = `/pages/calendar/meeting-detail/meeting-detail.html?eventId=${encodeURIComponent(evt.id)}`;
+      return;
+    }
 
     const drawer = document.getElementById('event-details-drawer');
     const backdrop = document.getElementById('event-drawer-backdrop');

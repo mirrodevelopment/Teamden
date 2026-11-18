@@ -10,6 +10,69 @@ Format: Chronological daily log, work items, files changed, before/after example
 ================================================================================
 
 ================================================================================
+DAY 8 - 2026-11-18 (TUESDAY)
+================================================================================
+
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Calendar Meeting Detail & Edit Experience (Prompt 12 / Brick UI Reference Screenshot).
+- Objective: Make every calendar event interactive with a full detail + edit page.
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+Backend:
+  * CalendarController.java: Added GET /api/calendar/events/{id}, PATCH /notes,
+    /agenda, /decision, /followups endpoints.
+  * CalendarService.java: Added getEventById(), updateMeetingNotes(), updateMeetingAgenda(),
+    updateMeetingDecision(), updateMeetingFollowups() methods. All multi-tenant scoped.
+
+Frontend (src/main/resources/static/pages/calendar/meeting-detail/):
+  * meeting-detail.html: Two-column Brick editorial layout with sidebar + navbar fragments.
+    Left: 01/AGENDA lavender card (chips + inline add), 02/COLLABORATIVE CANVAS (contenteditable
+    rich text editor with format toolbar). Right: 03/DECISIONS sage card, 04/FOLLOW-UP WORK
+    pale blue card (checkbox tasks), 05/MEETING REFERENCES, Prepare Recap button.
+  * meeting-detail.css: Editorial styles. 100% --dash-* token colors (zero hex values).
+    Lavender/sage/blue pastel cards, slide-in Edit drawer, floating selection toolbar,
+    more options dropdown, toast notifications.
+  * meeting-detail.js: Loads event from GET /api/calendar/events/{id}. Autosave notes
+    (1500ms debounce → PATCH /notes). Agenda chips inline editable + API sync. Decision
+    recording. Follow-up task toggle + inline add form. Edit drawer prefill + PUT save.
+    Floating contextual toolbar on text selection → Create task / Record decision / Link record.
+    Recap builder → clipboard. More options → Copy link, Export, Delete with confirmation.
+
+calendar.js:
+  * openEventDetails(): Added UUID detection → navigate to meeting-detail page for server events.
+    Non-UUID events continue to use the existing side drawer.
+
+Tests:
+  * MeetingDetailIntegrationTest.java: 7 new tests:
+    - testGetEventById_returnsFullDetail
+    - testPatchNotes_savesNotesToEvent
+    - testPatchAgenda_savesAgendaToEvent
+    - testPatchDecision_savesDecision
+    - testPatchFollowups_savesFollowupsJson
+    - testGetEvent_cannotAccessOtherOrgEvent (multi-tenant isolation)
+    - testPutEvent_updatesEventFields
+    - testDeleteEvent_removesEvent
+    - testGetEvent_returnsSensibleDefaults (defaults for minimal event)
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+  [BEFORE]: Clicking a calendar event opened a side drawer with static read-only info.
+  [AFTER]: Clicking a calendar event navigates to /pages/calendar/meeting-detail/
+           meeting-detail.html?eventId={uuid} showing the full Brick editorial detail view
+           with real-time notes editing, agenda management, decision recording, follow-up
+           task tracking, and an Edit Meeting drawer.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Automated Integration Tests: 92+ tests passing (./mvnw.cmd test).
+- Zero Hex Standard: 100% --dash-* token CSS in meeting-detail.css.
+- Multi-tenant isolation: testGetEvent_cannotAccessOtherOrgEvent returns HTTP 400.
+- Existing test suite baseline (85 tests) preserved; 7 new MeetingDetail tests added.
+- Server: Spring Boot on http://localhost:8080.
+
+================================================================================
 DAY 1 - 2026-10-26 (MONDAY)
 ================================================================================
 
