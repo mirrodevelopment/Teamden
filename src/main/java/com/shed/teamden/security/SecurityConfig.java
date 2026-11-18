@@ -86,7 +86,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(requestHandler)
-                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**", "/api/search/**", "/api/notifications/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, daily-updates, search, and notifications
+                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**", "/api/search/**", "/api/notifications/**", "/api/employees/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, daily-updates, search, notifications, and employees
             )
             .authorizeHttpRequests(auth -> auth
                 // Static resources & pages
@@ -105,6 +105,8 @@ public class SecurityConfig {
                     "/pages/inbox/**",
                     "/pages/projects/**",
                     "/pages/project/**",
+                    "/pages/workspace/**",
+                    "/pages/team/**",
                     "/shared/**",
                     "/fragments/**",
                     "/assets/**",
@@ -128,6 +130,7 @@ public class SecurityConfig {
                     "/api/daily-updates/**",
                     "/api/search/**",
                     "/api/notifications/**",
+                    "/api/employees/**",
                     "/actuator/health",
                     "/actuator/info"
                 ).permitAll()

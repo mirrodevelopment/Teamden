@@ -1,0 +1,1371 @@
+/**
+ * Teamden by shed — Brick Employees / People & Roles Styles (employees.css)
+ * Path: pages/workspace/employees/employees.css
+ * Standards: Strictly Zero Hardcoded Hex Colors — 100% tokenized via theme.css (--dash-*)
+ */
+
+:root {
+  --emp-canvas: var(--dash-bg-canvas);
+  --emp-card-bg: var(--dash-bg-card);
+  --emp-card-border: var(--dash-border);
+  --emp-card-hover: var(--dash-bg-search);
+  --emp-text-primary: var(--dash-text-primary);
+  --emp-text-secondary: var(--dash-text-secondary);
+  --emp-text-muted: var(--dash-text-muted);
+  --emp-lime: var(--dash-accent-lime);
+  --emp-lime-text: var(--dash-accent-lime-text);
+  --emp-peach-bg: var(--dash-activity-highlight-bg);
+  --emp-peach-border: var(--dash-attention-peach);
+  --emp-lavender-bg: var(--dash-badge-comment-bg);
+  --emp-lavender-text: var(--dash-badge-comment-text);
+  --emp-blue-bg: var(--dash-badge-assigned-bg);
+  --emp-blue-text: var(--dash-badge-assigned-text);
+  --emp-green-bg: var(--dash-badge-completed-bg);
+  --emp-green-text: var(--dash-badge-completed-text);
+}
+
+/* Master Reset & Layout */
+.employees-body {
+  background-color: var(--emp-canvas);
+  color: var(--emp-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.employees-app-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  background-color: var(--emp-canvas);
+}
+
+/* Workspace Subnav Tab Strip */
+.ws-workspace-subnav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background-color: var(--emp-canvas);
+  border-bottom: 1px solid var(--emp-card-border);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.ws-subnav-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--emp-text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.ws-subnav-tab:hover {
+  color: var(--emp-text-primary);
+  background-color: var(--emp-card-hover);
+}
+
+.ws-subnav-tab.ws-subnav-tab--active {
+  color: var(--emp-text-primary);
+  background-color: var(--emp-card-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Main Split Layout: Left Main Canvas (~68%) + Right Detail Drawer (~32%) */
+.employees-layout-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  min-height: calc(100vh - 120px);
+  background-color: var(--emp-canvas);
+}
+
+/* Main Left Canvas */
+.employees-main-canvas {
+  padding: 2.25rem 2.5rem 3rem 2.5rem;
+  min-width: 0;
+}
+
+/* Page Header & Breadcrumbs */
+.employees-header {
+  margin-bottom: 2rem;
+}
+
+.employees-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--emp-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.crumb-separator {
+  color: var(--emp-card-border);
+}
+
+.employees-page-title {
+  font-family: 'Unbounded', 'Montserrat', 'Inter Tight', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.employees-page-subtitle {
+  font-size: 0.9375rem;
+  color: var(--emp-text-muted);
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+}
+
+/* Header Tabs Bar */
+.employees-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.25rem;
+}
+
+.employees-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emp-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid var(--emp-card-border);
+  background-color: var(--emp-card-bg);
+  color: var(--emp-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.emp-tab:hover {
+  color: var(--emp-text-primary);
+  border-color: var(--dash-border-strong);
+}
+
+.emp-tab.active {
+  background-color: var(--emp-text-primary);
+  color: var(--dash-text-white);
+  border-color: var(--emp-text-primary);
+}
+
+.emp-tab svg {
+  flex-shrink: 0;
+}
+
+.employees-search-filter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emp-search-input-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 9999px;
+  padding: 0.4rem 0.85rem;
+  width: 250px;
+  transition: border-color 0.15s ease;
+}
+
+.emp-search-input-box:focus-within {
+  border-color: var(--emp-text-primary);
+}
+
+.emp-search-input-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.8125rem;
+  color: var(--emp-text-primary);
+  width: 100%;
+}
+
+.emp-search-input-box svg {
+  color: var(--emp-text-muted);
+  flex-shrink: 0;
+}
+
+/* Team Group Subheader Row */
+.team-group-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 2rem;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.team-group-title {
+  font-family: 'Inter Tight', 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.team-group-subtitle {
+  font-size: 0.84rem;
+  color: var(--emp-text-muted);
+  margin: 0;
+}
+
+.add-member-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.add-member-btn:hover {
+  background-color: var(--emp-text-primary);
+  color: var(--dash-text-white);
+  border-color: var(--emp-text-primary);
+}
+
+.add-member-btn .plus-sign {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Two-Column Employee Cards Grid */
+.employee-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.employee-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 18px;
+  padding: 1.5rem 1.6rem;
+  border: 1px solid var(--emp-card-border);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 195px;
+}
+
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* Card Theme Palettes */
+.employee-card--peach {
+  background-color: var(--emp-peach-bg);
+  border-color: var(--emp-peach-border);
+}
+
+.employee-card--lavender {
+  background-color: var(--emp-lavender-bg);
+  border-color: rgba(147, 51, 234, 0.2);
+}
+
+.employee-card--blue {
+  background-color: var(--emp-blue-bg);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.employee-card--green {
+  background-color: var(--emp-green-bg);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+/* Selected Card State (Purple Outline matching Alex R. in reference) */
+.employee-card.is-active {
+  border: 2px solid var(--dash-dot-purple);
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.12);
+}
+
+.employee-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  background-color: var(--emp-card-bg);
+  color: var(--emp-text-primary);
+  border: 1px solid var(--emp-card-border);
+}
+
+.employee-card--lavender .card-avatar {
+  background-color: var(--emp-card-bg);
+  color: var(--emp-lavender-text);
+  border-color: rgba(147, 51, 234, 0.3);
+}
+
+.card-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-full-name {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.15rem 0;
+  line-height: 1.2;
+}
+
+.card-job-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--emp-text-secondary);
+  margin: 0;
+}
+
+.card-description {
+  font-size: 0.8125rem;
+  color: var(--emp-text-primary);
+  line-height: 1.45;
+  margin: 0 0 1.25rem 0;
+}
+
+.card-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 0.85rem;
+  margin-top: auto;
+}
+
+.card-responsibilities-count {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+}
+
+.card-responsibilities-count svg {
+  color: var(--emp-text-primary);
+  flex-shrink: 0;
+}
+
+.card-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--emp-text-primary);
+  transition: transform 0.15s ease;
+}
+
+.employee-card:hover .card-arrow {
+  transform: translateX(3px);
+}
+
+/* =====================================================================
+   RIGHT-SIDE PERSISTENT EMPLOYEE PROFILE DRAWER (~390px)
+   ===================================================================== */
+.employee-profile-drawer {
+  background-color: var(--emp-canvas);
+  border-left: 1px solid var(--emp-card-border);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  position: sticky;
+  top: 60px;
+  overflow: hidden;
+}
+
+.profile-drawer-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--emp-card-border);
+  background-color: var(--emp-canvas);
+  z-index: 10;
+}
+
+.drawer-crumb {
+  font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--emp-text-muted);
+  text-transform: uppercase;
+}
+
+.drawer-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drawer-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--emp-text-primary);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.drawer-icon-btn:hover {
+  background-color: var(--emp-card-hover);
+}
+
+.drawer-options-wrap {
+  position: relative;
+}
+
+.drawer-menu-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.25rem;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  min-width: 180px;
+  padding: 0.35rem 0;
+  z-index: 50;
+}
+
+.drawer-menu-dropdown.show {
+  display: block;
+}
+
+.drawer-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  color: var(--emp-text-primary);
+  cursor: pointer;
+}
+
+.drawer-menu-item:hover {
+  background-color: var(--emp-card-hover);
+}
+
+.drawer-menu-item.text-danger {
+  color: var(--dash-dot-red);
+}
+
+.profile-drawer-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* Profile Hero Block */
+.profile-hero-block {
+  margin-bottom: 2rem;
+}
+
+.profile-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.profile-large-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background-color: var(--emp-lavender-bg);
+  color: var(--emp-lavender-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+  border: 1px solid rgba(147, 51, 234, 0.25);
+}
+
+.profile-title-stack {
+  min-width: 0;
+}
+
+.profile-full-name {
+  font-family: 'Unbounded', 'Montserrat', 'Inter', sans-serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.15rem 0;
+  line-height: 1.1;
+}
+
+.profile-job-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.profile-department-text {
+  font-size: 0.75rem;
+  color: var(--emp-text-muted);
+  font-weight: 500;
+}
+
+.profile-bio-text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--emp-text-secondary);
+  margin: 0 0 1.25rem 0;
+}
+
+.profile-action-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-mention-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1.15rem;
+  background-color: var(--emp-text-primary);
+  color: var(--dash-text-white);
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.profile-mention-btn:hover {
+  opacity: 0.9;
+}
+
+.profile-view-work-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  cursor: pointer;
+  padding: 0.5rem 0.5rem;
+  transition: color 0.15s ease;
+}
+
+.profile-view-work-btn:hover {
+  text-decoration: underline;
+}
+
+/* Drawer Sections */
+.drawer-section {
+  margin-bottom: 2rem;
+}
+
+.drawer-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.drawer-section-title {
+  font-family: 'Inter Tight', 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--emp-text-primary);
+  margin: 0;
+}
+
+.drawer-section-action-link {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.drawer-section-action-link:hover {
+  transform: translateX(2px);
+}
+
+.drawer-inline-add-btn {
+  background: transparent;
+  border: 1px solid var(--emp-card-border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  color: var(--emp-text-primary);
+  cursor: pointer;
+}
+
+.drawer-inline-add-btn:hover {
+  background-color: var(--emp-card-hover);
+}
+
+/* Responsibilities List */
+.responsibilities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  transition: transform 0.15s ease;
+}
+
+.resp-row svg {
+  flex-shrink: 0;
+  color: var(--emp-text-primary);
+}
+
+.resp-row.is-highlight {
+  background-color: var(--emp-lavender-bg);
+  border-color: rgba(147, 51, 234, 0.25);
+  color: var(--emp-text-primary);
+}
+
+.resp-title {
+  flex: 1;
+}
+
+.resp-delete-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--emp-text-muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.resp-row:hover .resp-delete-btn {
+  display: block;
+}
+
+.resp-row:hover .resp-delete-btn:hover {
+  color: var(--dash-dot-red);
+}
+
+/* Work in Motion List */
+.work-motion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.work-motion-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  gap: 0.75rem;
+}
+
+.work-motion-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.work-motion-left svg {
+  flex-shrink: 0;
+  color: var(--emp-text-primary);
+}
+
+.work-motion-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.work-motion-status-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.work-motion-status-pill--blue {
+  background-color: var(--emp-blue-bg);
+  color: var(--emp-blue-text);
+}
+
+.work-motion-status-pill--peach {
+  background-color: var(--dash-badge-document-bg);
+  color: var(--dash-badge-document-text);
+}
+
+.work-motion-status-pill--green {
+  background-color: var(--emp-green-bg);
+  color: var(--emp-green-text);
+}
+
+/* Working Together & Shared Knowledge Cards */
+.working-together-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background-color: var(--emp-peach-bg);
+  border: 1px solid var(--emp-peach-border);
+}
+
+.partner-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--emp-card-bg);
+  color: var(--emp-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.collab-info {
+  min-width: 0;
+}
+
+.collab-project-title {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.15rem 0;
+}
+
+.collab-status-text {
+  font-size: 0.72rem;
+  color: var(--emp-text-secondary);
+  margin: 0;
+}
+
+.shared-doc-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.15s ease;
+}
+
+.shared-doc-card:hover {
+  background-color: var(--emp-card-hover);
+}
+
+.doc-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background-color: var(--emp-green-bg);
+  color: var(--emp-green-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-details-info {
+  min-width: 0;
+}
+
+.doc-name {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.15rem 0;
+}
+
+.doc-meta {
+  font-size: 0.72rem;
+  color: var(--emp-text-muted);
+  margin: 0;
+}
+
+/* =====================================================================
+   VIEW 2: ROLES & PERMISSIONS GRID
+   ===================================================================== */
+.roles-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.roles-view-title {
+  font-family: 'Inter Tight', 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.roles-view-subtitle {
+  font-size: 0.84rem;
+  color: var(--emp-text-muted);
+  margin: 0;
+}
+
+.roles-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.role-card {
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 16px;
+  padding: 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.role-card:hover {
+  border-color: var(--dash-border-strong);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.role-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.role-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0;
+}
+
+.role-emp-count-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--emp-lavender-bg);
+  color: var(--emp-lavender-text);
+}
+
+.role-card-desc {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--emp-text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.role-permissions-summary {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--emp-text-muted);
+  background-color: var(--emp-card-hover);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.role-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--emp-card-border);
+  padding-top: 0.75rem;
+}
+
+.role-action-link {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.role-action-link:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================================
+   VIEW 3: TEAM STRUCTURE TREE
+   ===================================================================== */
+.structure-header-row {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.structure-view-title {
+  font-family: 'Inter Tight', 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.structure-view-subtitle {
+  font-size: 0.84rem;
+  color: var(--emp-text-muted);
+  margin: 0;
+}
+
+.structure-tree-canvas {
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 18px;
+  padding: 2rem;
+}
+
+.org-root-node {
+  background-color: var(--emp-lavender-bg);
+  border: 1px solid rgba(147, 51, 234, 0.25);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.org-root-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0 0 0.2rem 0;
+}
+
+.org-root-sub {
+  font-size: 0.8125rem;
+  color: var(--emp-text-secondary);
+  margin: 0;
+}
+
+.dept-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.dept-node-box {
+  background-color: var(--emp-canvas);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.dept-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--emp-card-border);
+  padding-bottom: 0.65rem;
+}
+
+.dept-node-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--emp-text-primary);
+  margin: 0;
+}
+
+.dept-node-members {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dept-member-leaf {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.leaf-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background-color: var(--emp-peach-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.6875rem;
+}
+
+.leaf-name {
+  font-weight: 700;
+  color: var(--emp-text-primary);
+}
+
+.leaf-title {
+  color: var(--emp-text-muted);
+}
+
+/* =====================================================================
+   ADD EMPLOYEE MODAL
+   ===================================================================== */
+.emp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.emp-modal-card {
+  background-color: var(--emp-canvas);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.emp-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.75rem 2rem 1.25rem 2rem;
+  border-bottom: 1px solid var(--emp-card-border);
+}
+
+.emp-modal-breadcrumb {
+  font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--emp-text-muted);
+  text-transform: uppercase;
+}
+
+.emp-modal-title {
+  font-family: 'Unbounded', 'Montserrat', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--emp-text-primary);
+  margin: 0.35rem 0 0.15rem 0;
+  line-height: 1.1;
+}
+
+.emp-modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--emp-text-muted);
+  margin: 0;
+}
+
+.emp-modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--emp-text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.emp-modal-close-btn:hover {
+  color: var(--emp-text-primary);
+}
+
+.emp-modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.emp-form-scrollable {
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.emp-form-section {
+  margin-bottom: 1.5rem;
+}
+
+.emp-form-section-title {
+  font-family: 'Inter Tight', 'Montserrat', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--emp-text-muted);
+  margin: 0 0 0.85rem 0;
+}
+
+.emp-form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.emp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.emp-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emp-text-primary);
+}
+
+.emp-input,
+.emp-select,
+.emp-textarea {
+  background-color: var(--emp-card-bg);
+  border: 1px solid var(--emp-card-border);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--emp-text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.emp-input:focus,
+.emp-select:focus,
+.emp-textarea:focus {
+  border-color: var(--emp-text-primary);
+}
+
+.emp-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--emp-card-border);
+  background-color: var(--emp-canvas);
+}
+
+.emp-modal-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-emp-cancel,
+.btn-emp-draft {
+  background: transparent;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emp-text-secondary);
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+}
+
+.btn-emp-cancel:hover,
+.btn-emp-draft:hover {
+  color: var(--emp-text-primary);
+}
+
+.btn-emp-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--emp-lime);
+  color: var(--emp-lime-text);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-emp-submit:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* Toast Message */
+.emp-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--emp-text-primary);
+  color: var(--dash-text-white);
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.emp-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1080px) {
+  .employees-layout-container {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-profile-drawer {
+    display: none;
+  }
+
+  .employee-profile-drawer.mobile-open {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    background-color: var(--emp-canvas);
+  }
+}
+
+@media (max-width: 768px) {
+  .employees-main-canvas {
+    padding: 1.5rem 1rem;
+  }
+
+  .employees-page-title {
+    font-size: 2.2rem;
+  }
+
+  .employee-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .roles-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dept-nodes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — people.</title>
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=14">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=14">
+
+  <!-- Employees Page Styles (Strictly Zero Hardcoded Hex) -->
+  <link rel="stylesheet" href="employees.css?v=1">
+</head>
+<body class="dashboard-body employees-body">
+
+  <div class="dash-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Workspace Container -->
+    <div class="dash-main-area employees-app-main">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Workspace Sub-navigation Strip -->
+      <nav class="ws-workspace-subnav" aria-label="Workspace sections">
+        <a href="/pages/workspace/workspace.html" class="ws-subnav-tab" id="ws-tab-overview">Workspace Overview</a>
+        <a href="/pages/workspace/employees/employees.html" class="ws-subnav-tab ws-subnav-tab--active" id="ws-tab-employees">Employees</a>
+        <a href="#departments" class="ws-subnav-tab" id="ws-tab-departments">Departments</a>
+        <a href="#roles" class="ws-subnav-tab" id="ws-tab-roles-nav">Roles &amp; Permissions</a>
+        <a href="#structure" class="ws-subnav-tab" id="ws-tab-structure-nav">Team Structure</a>
+        <a href="#invite" class="ws-subnav-tab" id="ws-tab-invitations">Employee Invitations</a>
+      </nav>
+
+      <!-- Main Split Layout (Main Directory Content + Right Profile Drawer) -->
+      <div class="employees-layout-container" id="employees-layout-container">
+
+        <!-- ===================================================================
+             MAIN CONTENT AREA (Left Column)
+             =================================================================== -->
+        <main class="employees-main-canvas" id="employees-main-canvas">
+
+          <!-- Page Header -->
+          <header class="employees-header">
+            <nav class="employees-breadcrumb" aria-label="Breadcrumb">
+              <span class="crumb-part">YOUR WORKSPACE</span>
+              <span class="crumb-separator">/</span>
+              <span class="crumb-part">TEAM</span>
+              <span class="crumb-separator">/</span>
+              <span class="crumb-part">PEOPLE &amp; ROLES</span>
+            </nav>
+
+            <h1 class="employees-page-title">people.</h1>
+            <p class="employees-page-subtitle">Your team, their roles and what they own.</p>
+
+            <!-- Navigation Tabs Bar -->
+            <div class="employees-tabs-row">
+              <div class="employees-tabs" role="tablist" aria-label="Employee directory tabs">
+                <button class="emp-tab active" data-tab="PEOPLE" role="tab" aria-selected="true" id="tab-people">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  <span>People (<span id="people-tab-count">4</span>)</span>
+                </button>
+
+                <button class="emp-tab" data-tab="ROLES" role="tab" aria-selected="false" id="tab-roles">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
+                  <span>Roles (<span id="roles-tab-count">6</span>)</span>
+                </button>
+
+                <button class="emp-tab" data-tab="STRUCTURE" role="tab" aria-selected="false" id="tab-structure">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="3" width="6" height="6" rx="1"></rect>
+                    <rect x="3" y="15" width="6" height="6" rx="1"></rect>
+                    <rect x="15" y="15" width="6" height="6" rx="1"></rect>
+                    <path d="M12 9v3"></path>
+                    <path d="M6 15v-3h12v3"></path>
+                  </svg>
+                  <span>Team Structure</span>
+                </button>
+              </div>
+
+              <!-- Search / Filter Toolbar inside People tab -->
+              <div class="employees-search-filter-wrap" id="emp-search-filter-wrap">
+                <div class="emp-search-input-box">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="emp-search-input" placeholder="Search people, roles or skills..." autocomplete="off" aria-label="Search people">
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <!-- =================================================================
+               VIEW 1: PEOPLE DIRECTORY TAB (Default View)
+               ================================================================= -->
+          <div class="tab-view-content active" id="view-people">
+            <!-- Team Section Subheader Row -->
+            <div class="team-group-header-row">
+              <div class="team-group-title-wrap">
+                <h2 class="team-group-title" id="team-group-heading">Design Team (<span id="dept-member-count">4</span>)</h2>
+                <p class="team-group-subtitle" id="team-group-subheading">Product, brand and experience design.</p>
+              </div>
+
+              <button class="add-member-btn" id="btn-open-add-member" type="button">
+                <span class="plus-sign">+</span>
+                <span>Add Member</span>
+              </button>
+            </div>
+
+            <!-- Two-Column Employee Cards Grid -->
+            <div class="employee-cards-grid" id="employee-cards-container">
+              <!-- Dynamically populated via JavaScript -->
+            </div>
+          </div>
+
+          <!-- =================================================================
+               VIEW 2: ROLES & PERMISSIONS TAB
+               ================================================================= -->
+          <div class="tab-view-content" id="view-roles" style="display: none;">
+            <div class="roles-header-row">
+              <div class="roles-title-wrap">
+                <h2 class="roles-view-title">Workspace Roles &amp; Permissions</h2>
+                <p class="roles-view-subtitle">Define responsibilities, privilege boundaries, and access levels.</p>
+              </div>
+              <button class="add-member-btn" id="btn-create-role" type="button">
+                <span class="plus-sign">+</span>
+                <span>Create Role</span>
+              </button>
+            </div>
+
+            <div class="roles-cards-grid" id="roles-cards-container">
+              <!-- Dynamically populated via JavaScript -->
+            </div>
+          </div>
+
+          <!-- =================================================================
+               VIEW 3: TEAM STRUCTURE TAB
+               ================================================================= -->
+          <div class="tab-view-content" id="view-structure" style="display: none;">
+            <div class="structure-header-row">
+              <div class="structure-title-wrap">
+                <h2 class="structure-view-title">Organization &amp; Team Hierarchy</h2>
+                <p class="structure-view-subtitle">Interactive reporting relationships, department heads, and member mapping.</p>
+              </div>
+            </div>
+
+            <div class="structure-tree-canvas" id="structure-tree-container">
+              <!-- Dynamically populated via JavaScript -->
+            </div>
+          </div>
+
+        </main>
+
+        <!-- ===================================================================
+             RIGHT-SIDE PERSISTENT EMPLOYEE PROFILE DRAWER
+             =================================================================== -->
+        <aside class="employee-profile-drawer" id="employee-profile-drawer">
+          <!-- Drawer Top Bar -->
+          <div class="profile-drawer-topbar">
+            <span class="drawer-crumb" id="drawer-member-crumb">DESIGN TEAM / MEMBER 02</span>
+
+            <div class="drawer-top-actions">
+              <div class="drawer-options-wrap">
+                <button class="drawer-icon-btn" id="btn-drawer-options" title="Employee options" aria-label="Employee options">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="1.5"></circle>
+                    <circle cx="19" cy="12" r="1.5"></circle>
+                    <circle cx="5" cy="12" r="1.5"></circle>
+                  </svg>
+                </button>
+                <div class="drawer-menu-dropdown" id="drawer-menu-dropdown">
+                  <button class="drawer-menu-item" id="menu-opt-edit">Edit profile</button>
+                  <button class="drawer-menu-item" id="menu-opt-role">Change workspace role</button>
+                  <button class="drawer-menu-item" id="menu-opt-dept">Change department</button>
+                  <button class="drawer-menu-item text-danger" id="menu-opt-deactivate">Deactivate account</button>
+                </div>
+              </div>
+
+              <button class="drawer-icon-btn" id="btn-close-profile-drawer" title="Close details panel" aria-label="Close details">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Drawer Content Scroll Area -->
+          <div class="profile-drawer-scrollable" id="drawer-scrollable-area">
+
+            <!-- Profile Hero Header -->
+            <div class="profile-hero-block">
+              <div class="profile-hero-row">
+                <div class="profile-large-avatar" id="drawer-avatar">AR</div>
+                <div class="profile-title-stack">
+                  <h2 class="profile-full-name" id="drawer-name">Alex R.</h2>
+                  <div class="profile-job-title" id="drawer-job-title">Product Designer</div>
+                  <div class="profile-department-text" id="drawer-dept-company">Design Team &middot; Acme Co.</div>
+                </div>
+              </div>
+
+              <p class="profile-bio-text" id="drawer-bio">Interface design, thoughtful interactions and design reviews.</p>
+
+              <!-- Action Buttons Row -->
+              <div class="profile-action-buttons-row">
+                <button class="profile-mention-btn" id="btn-mention-emp" type="button">
+                  <span class="at-symbol">@</span>
+                  <span id="btn-mention-label">Mention Alex</span>
+                </button>
+                <button class="profile-view-work-btn" id="btn-view-work" type="button">View work</button>
+              </div>
+            </div>
+
+            <!-- Section 1: What [Employee] owns -->
+            <section class="drawer-section" id="sec-what-owns">
+              <div class="drawer-section-header">
+                <h3 class="drawer-section-title" id="drawer-owns-title">What Alex owns.</h3>
+                <button class="drawer-inline-add-btn" id="btn-add-responsibility-inline" title="Assign new responsibility">+ Add</button>
+              </div>
+
+              <div class="responsibilities-list" id="drawer-responsibilities-list">
+                <!-- Dynamically populated via JavaScript -->
+              </div>
+            </section>
+
+            <!-- Section 2: Work in motion -->
+            <section class="drawer-section" id="sec-work-motion">
+              <div class="drawer-section-header">
+                <h3 class="drawer-section-title">Work in motion.</h3>
+                <a href="/pages/dashboard/dashboard.html" class="drawer-section-action-link" id="link-view-all-work">View all &rarr;</a>
+              </div>
+
+              <div class="work-motion-list" id="drawer-work-motion-list">
+                <!-- Dynamically populated via JavaScript -->
+              </div>
+            </section>
+
+            <!-- Section 3: Working together -->
+            <section class="drawer-section" id="sec-working-together">
+              <div class="drawer-section-header">
+                <h3 class="drawer-section-title">Working together.</h3>
+              </div>
+
+              <div class="working-together-list" id="drawer-working-together-list">
+                <!-- Dynamically populated via JavaScript -->
+              </div>
+            </section>
+
+            <!-- Section 4: Shared knowledge -->
+            <section class="drawer-section" id="sec-shared-knowledge">
+              <div class="drawer-section-header">
+                <h3 class="drawer-section-title">Shared knowledge.</h3>
+                <a href="/pages/workspace/workspace.html" class="drawer-section-action-link" id="link-view-all-docs">View all &rarr;</a>
+              </div>
+
+              <div class="shared-knowledge-list" id="drawer-shared-knowledge-list">
+                <!-- Dynamically populated via JavaScript -->
+              </div>
+            </section>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       ADD EMPLOYEE MODAL / WORKFLOW
+       ===================================================================== -->
+  <div class="emp-modal-backdrop" id="add-employee-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-add-title">
+    <div class="emp-modal-card">
+      <div class="emp-modal-header">
+        <div class="emp-modal-title-wrap">
+          <span class="emp-modal-breadcrumb">BRICK / WORKSPACE / INVITE</span>
+          <h2 class="emp-modal-title" id="modal-add-title">Add employee.</h2>
+          <p class="emp-modal-subtitle">Bring someone into your workspace.</p>
+        </div>
+        <button class="emp-modal-close-btn" id="btn-close-add-modal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="add-employee-form" class="emp-modal-form" novalidate>
+        <div class="emp-form-scrollable">
+
+          <!-- Block 1: Personal Information -->
+          <div class="emp-form-section">
+            <h3 class="emp-form-section-title">Personal Information</h3>
+            <div class="emp-form-grid-2">
+              <div class="emp-field-group">
+                <label for="emp-input-fullname" class="emp-label">Full Name *</label>
+                <input type="text" id="emp-input-fullname" class="emp-input" placeholder="e.g. Elena Rostova" required>
+              </div>
+              <div class="emp-field-group">
+                <label for="emp-input-email" class="emp-label">Work Email *</label>
+                <input type="email" id="emp-input-email" class="emp-input" placeholder="e.g. elena.r@acme.co" required>
+              </div>
+            </div>
+            <div class="emp-form-grid-2">
+              <div class="emp-field-group">
+                <label for="emp-input-phone" class="emp-label">Phone Number</label>
+                <input type="tel" id="emp-input-phone" class="emp-input" placeholder="+44 20 7946 0999">
+              </div>
+              <div class="emp-field-group">
+                <label for="emp-input-idnum" class="emp-label">Employee ID</label>
+                <input type="text" id="emp-input-idnum" class="emp-input" placeholder="e.g. MEMBER 05">
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 2: Employment Information -->
+          <div class="emp-form-section">
+            <h3 class="emp-form-section-title">Employment Information</h3>
+            <div class="emp-form-grid-2">
+              <div class="emp-field-group">
+                <label for="emp-input-jobtitle" class="emp-label">Job Title *</label>
+                <input type="text" id="emp-input-jobtitle" class="emp-input" placeholder="e.g. Design Systems Engineer" required>
+              </div>
+              <div class="emp-field-group">
+                <label for="emp-select-dept" class="emp-label">Department</label>
+                <select id="emp-select-dept" class="emp-select">
+                  <option value="Design Team">Design Team</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Product & Growth">Product & Growth</option>
+                  <option value="Operations & Support">Operations & Support</option>
+                </select>
+              </div>
+            </div>
+            <div class="emp-form-grid-2">
+              <div class="emp-field-group">
+                <label for="emp-select-type" class="emp-label">Employment Type</label>
+                <select id="emp-select-type" class="emp-select">
+                  <option value="Full-time">Full-time</option>
+                  <option value="Contractor">Contractor</option>
+                  <option value="Part-time">Part-time</option>
+                </select>
+              </div>
+              <div class="emp-field-group">
+                <label for="emp-input-location" class="emp-label">Work Location</label>
+                <input type="text" id="emp-input-location" class="emp-input" placeholder="London / Remote">
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 3: Access & Permissions -->
+          <div class="emp-form-section">
+            <h3 class="emp-form-section-title">Access &amp; Permissions</h3>
+            <div class="emp-form-grid-2">
+              <div class="emp-field-group">
+                <label for="emp-select-role" class="emp-label">Workspace Role</label>
+                <select id="emp-select-role" class="emp-select">
+                  <option value="Employee">Employee (Standard access)</option>
+                  <option value="Team Lead">Team Lead</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Administrator">Administrator</option>
+                  <option value="Guest">Guest</option>
+                </select>
+              </div>
+              <div class="emp-field-group">
+                <label for="emp-input-manager" class="emp-label">Reporting Manager</label>
+                <input type="text" id="emp-input-manager" class="emp-input" placeholder="Peter K.">
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 4: Responsibilities & Bio -->
+          <div class="emp-form-section">
+            <h3 class="emp-form-section-title">Responsibilities &amp; Bio</h3>
+            <div class="emp-field-group">
+              <label for="emp-input-resps" class="emp-label">Areas of Responsibility (comma-separated)</label>
+              <input type="text" id="emp-input-resps" class="emp-input" placeholder="e.g. Design tokens implementation, Interface audits">
+            </div>
+            <div class="emp-field-group">
+              <label for="emp-input-bio" class="emp-label">Short Description / Biography</label>
+              <textarea id="emp-input-bio" class="emp-textarea" rows="2" placeholder="Tell the workspace what this person leads and contributes..."></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="emp-modal-footer">
+          <button type="button" class="btn-emp-cancel" id="btn-cancel-add-modal">Cancel</button>
+          <div class="emp-modal-footer-right">
+            <button type="button" class="btn-emp-draft" id="btn-draft-add-modal">Save as draft</button>
+            <button type="submit" class="btn-emp-submit" id="btn-submit-add-modal">
+              <span>Send invitation</span>
+              <span class="btn-arrow">&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="emp-toast" id="emp-toast" role="alert" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="/fragments/sidebar/sidebar.js?v=14"></script>
+  <script src="/fragments/navbar/navbar.js?v=14"></script>
+  <script src="employees.js?v=1"></script>
+</body>
+</html>

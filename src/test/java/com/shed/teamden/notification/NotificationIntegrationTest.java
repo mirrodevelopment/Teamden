@@ -77,6 +77,12 @@ public class NotificationIntegrationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
+        jdbcTemplate.execute("DELETE FROM employee_shared_documents");
+        jdbcTemplate.execute("DELETE FROM employee_collaborations");
+        jdbcTemplate.execute("DELETE FROM employee_responsibilities");
+        jdbcTemplate.execute("DELETE FROM workspace_roles");
+        jdbcTemplate.execute("DELETE FROM employees");
+        jdbcTemplate.execute("DELETE FROM departments");
         jdbcTemplate.execute("DELETE FROM notifications");
         jdbcTemplate.execute("DELETE FROM daily_updates");
         jdbcTemplate.execute("DELETE FROM task_linked_documents");

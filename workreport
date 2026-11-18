@@ -1831,6 +1831,92 @@ Example C: Universal Create / Task Creation Modal (Neo-Editorial Reference `medi
 - All static files synchronized to `target/classes/static`.
 
 ================================================================================
+DAY 7 - 2026-11-18 (WEDNESDAY - TODAY)
+================================================================================
+
+1. WORK COMPLETED & OBJECTIVES
+--------------------------------------------------------------------------------
+- Workspace Employees & People/Roles Directory (Brick UI Reference `media_1794917433996_c6495990.jpg`):
+  * Application Shell Integration & Workspace Subnavigation:
+    - Added comprehensive Workspace navigation strip: `Workspace Overview`, `Employees` (active by default), `Departments`, `Roles & Permissions`, `Team Structure`, `Employee Invitations`.
+    - Preserved 215px left sidebar with `03 Workspace` active, topbar search, lime `+ Create ⌵`, notification bell, and `PB` user avatar.
+    - Breadcrumb: `YOUR WORKSPACE / TEAM / PEOPLE & ROLES`.
+    - Editorial Heading: **`people.`** (Inter Black 900) with subtitle `"Your team, their roles and what they own."`.
+  * Primary Tab Strip:
+    - `👥 People (4)` (active charcoal badge).
+    - `Stacked layers / Roles (6)` (interactive role definitions, permissions summary, and member counts).
+    - `Org tree / Team Structure` (interactive organizational hierarchy from Executive Board down to team nodes).
+  * Team Subheader & 2-Column Employee Cards Grid:
+    - Section header: `Design Team (4)` / Subtitle `"Product, brand and experience design."` / `+ Add Member` button.
+    - 2-Column responsive card grid with pastel backgrounds matching the design reference:
+      * **Peter K.** (Design Lead, warm peach bg, initials `PK`, "Leads design direction, reviews and team delivery.", 2 responsibilities).
+      * **Alex R.** (Product Designer, soft lavender bg, initials `AR`, selected with purple border, 3 responsibilities).
+      * **Sarah K.** (UX Designer, pale blue bg, initials `SK`, "Research, user journeys and experience design.", 2 responsibilities).
+      * **James L.** (Visual Designer, light green bg, initials `JL`, "Brand, visual design and marketing creative.", 2 responsibilities).
+  * Right-Side Persistent/Sticky Employee Detail Drawer:
+    - Header: `DESIGN TEAM / MEMBER 02`, `•••` options dropdown, `✕` close button.
+    - Profile Hero: Large square lavender avatar box with purple `AR`, `Alex R.`, `Product Designer`, `Design Team · Acme Co.`, and bio `"Interface design, thoughtful interactions and design reviews."`.
+    - Quick actions: `@ Mention Alex` (black pill with toast confirmation), `View work` (text link filtering work).
+    - Section `What Alex owns.` (highlight purple row "Interface design & reviews", white cards "Design system components", "Product interaction reviews", with inline `+ Add` and delete actions).
+    - Section `Work in motion.` ("Refine onboarding interactions" [In Progress blue], "Review mobile navigation" [Review requested peach], `View all →`).
+    - Section `Working together.` (Peach card: `PK` avatar, "Website design review", "With Peter K. · Feedback pending").
+    - Section `Shared knowledge.` (Green card: document icon, "Component Specifications", "Maintained by Alex · Design Team", `View all →`).
+  * Add Employee Modal Workflow:
+    - Triggered by `+ Add Member` or `Employee Invitations`.
+    - Monospace breadcrumb, `Add employee.` heading, and subtitle `"Bring someone into your workspace."`.
+    - Form sections: Personal Info (Full Name, Email), Employment Info (Department, Job Title), Access & Permissions (Workspace Role dropdown), Responsibilities list.
+    - Actions: `Cancel`, `Save as draft`, lime `Send invitation →` button.
+  * Multi-Tenant PostgreSQL Schema & Backend Architecture:
+    - Flyway `V11__employee_management_schema.sql` creating `departments`, `employees`, `employee_responsibilities`, `workspace_roles`, `employee_collaborations`, and `employee_shared_documents`.
+    - Domain entities in `com.shed.teamden.employee.entity.*`.
+    - Repositories in `com.shed.teamden.employee.repository.*`.
+    - DTOs in `com.shed.teamden.employee.dto.*`.
+    - Multi-tenant `EmployeeService` with automatic seeder, detail builder, and isolation checks.
+    - REST controller at `/api/employees` (`/directory`, `/{id}`, `POST /`, `POST /{id}/responsibilities`, `DELETE /{id}/responsibilities/{respId}`, `/roles`, `/structure`).
+    - Fixed test database foreign key cascading order across 11 integration test suites.
+    - 85/85 tests passing green (0 failures, 0 errors).
+  * Zero Hex Standard:
+    - 100% tokenized styles utilizing `--dash-*` tokens with zero hardcoded raw hex strings.
+
+2. WHAT WAS CHANGED & FILES AFFECTED
+--------------------------------------------------------------------------------
+- `src/main/resources/db/migration/V11__employee_management_schema.sql` (CREATED: employee management tables, indexes, cascade foreign keys)
+- `src/main/java/com/shed/teamden/employee/entity/Department.java` (CREATED: department JPA entity)
+- `src/main/java/com/shed/teamden/employee/entity/Employee.java` (CREATED: employee JPA entity with tenant mapping)
+- `src/main/java/com/shed/teamden/employee/entity/EmployeeResponsibility.java` (CREATED: employee responsibility entity)
+- `src/main/java/com/shed/teamden/employee/entity/WorkspaceRole.java` (CREATED: workspace role entity)
+- `src/main/java/com/shed/teamden/employee/entity/EmployeeCollaboration.java` (CREATED: collaboration entity)
+- `src/main/java/com/shed/teamden/employee/entity/EmployeeSharedDocument.java` (CREATED: shared document entity)
+- `src/main/java/com/shed/teamden/employee/repository/*` (CREATED: Spring Data JPA repositories)
+- `src/main/java/com/shed/teamden/employee/dto/*` (CREATED: directory, detail, create, and responsibility DTOs)
+- `src/main/java/com/shed/teamden/employee/service/EmployeeService.java` (CREATED: multi-tenant service with auto-seeding)
+- `src/main/java/com/shed/teamden/employee/controller/EmployeeController.java` (CREATED: REST API controller at `/api/employees`)
+- `src/main/java/com/shed/teamden/security/SecurityConfig.java` (UPDATED: permitted workspace employee routes)
+- `src/main/resources/static/pages/workspace/employees/employees.html` (CREATED: People & Roles view)
+- `src/main/resources/static/pages/workspace/employees/employees.css` (CREATED: zero-hex responsive layout & pastel cards)
+- `src/main/resources/static/pages/workspace/employees/employees.js` (CREATED: dynamic directory, detail drawer, and modal handling)
+- `src/main/resources/static/pages/workspace/employees.html` (CREATED: alias entry point)
+- `src/main/resources/static/pages/workspace/workspace.html` (UPDATED: subnavigation tab strip)
+- `src/test/java/com/shed/teamden/employee/EmployeeIntegrationTest.java` (CREATED: 5 integration tests)
+- `src/test/java/com/shed/teamden/**/*IntegrationTest.java` (UPDATED: added employee table cleanups)
+
+3. CONCRETE BEFORE & AFTER EXAMPLE
+--------------------------------------------------------------------------------
+Example: Workspace Team & Role Exploration
+  [BEFORE]:
+  Workspace section lacked a dedicated employee and ownership management view, providing no visibility into who owns specific features, team structures, or real-time responsibilities.
+  [AFTER]:
+  Users have access to an editorial People & Roles directory with 2-column pastel cards, an interactive sticky detail drawer displaying Alex R.'s owned items, active work in motion, team collaborations, shared documents, and 1-click employee invitations.
+
+4. VERIFICATION PERFORMED
+--------------------------------------------------------------------------------
+- Automated Integration Tests: All 85 test cases passing green (`mvnw test`).
+- Live Backend API: Verified `/api/employees/directory`, `/api/employees/{id}`, `/api/employees/roles`, and `/api/employees/structure`.
+- Multi-Tenant Isolation: Verified tenant boundaries prevent cross-organization employee access.
+- Zero Hardcoded Hex Standard: `employees.css` validated with zero raw hex strings; 100% `--dash-*` tokens.
+- Live Server Verification: Verified on `http://localhost:8080/pages/workspace/employees/employees.html`.
+
+================================================================================
 PROJECT IMPLEMENTATION PLAN
 ================================================================================
 
