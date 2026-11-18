@@ -308,6 +308,108 @@
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dashboard/today</code></td>
+              <td>Yes</td>
+              <td>Today Kanban board view: columns (Now, Next, Later), task items, ticking date</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/tasks</code></td>
+              <td>Yes</td>
+              <td>Universal task creation with project association, assignee, and priority</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/tasks/options</code></td>
+              <td>Yes</td>
+              <td>Live project and assignee options for Universal Create modal</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/directory</code></td>
+              <td>Yes</td>
+              <td>Workspace people directory: 2-column cards, member counts, and ownership breakdown</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/{id}</code></td>
+              <td>Yes</td>
+              <td>Employee profile detail: owned responsibilities, work in motion, collaborations</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/employees</code></td>
+              <td>Yes</td>
+              <td>Invite / create employee with department, role, and initial responsibilities</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/roles</code></td>
+              <td>Yes</td>
+              <td>Workspace role catalog (Owner, Admin, Manager, Lead, Employee, Guest)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/structure</code></td>
+              <td>Yes</td>
+              <td>Interactive organizational hierarchy tree from executive board down to teams</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/notifications</code></td>
+              <td>Yes</td>
+              <td>Inbox notifications: Attention Queue, Notification Register, and Action in Focus</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-put">PUT</span></td>
+              <td><code>/api/notifications/{id}/read</code></td>
+              <td>Yes</td>
+              <td>Mark individual notification as read</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/notifications/mark-all-read</code></td>
+              <td>Yes</td>
+              <td>Bulk mark all notifications as read for current user</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/daily-updates/today</code></td>
+              <td>Yes</td>
+              <td>Today's standup update (completed, next, blockers, health, velocity, attachment)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/daily-updates</code></td>
+              <td>Yes</td>
+              <td>Publish or save draft daily standup update with optional image reference</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/daily-updates/suggestions</code></td>
+              <td>Yes</td>
+              <td>1-click auto-fill suggestions derived from today's completed tasks</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/search</code></td>
+              <td>Yes</td>
+              <td>Global discovery & search with connected context extraction across all entities</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/calendar/full-data</code></td>
+              <td>Yes</td>
+              <td>Unified calendar data: events, sources, commitments, team availability, backlog</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/activity/events</code></td>
+              <td>Yes</td>
+              <td>Audit feed & chronicle timeline with category key and date range filtering</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
               <td><code>/actuator/health</code></td>
               <td>No</td>
               <td>System health probe (Returns HTTP 200 UP)</td>

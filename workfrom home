@@ -20,6 +20,7 @@ DAY 7 - 2026-11-18 (WEDNESDAY - TODAY)
   * Sticky profile drawer: avatar badge, bio, mention/work actions, what they own, work in motion,
     collaborations ("Working together"), and shared knowledge ("Component Specifications").
   * Interactive `Add employee.` modal with validation, responsibilities editor & instant sync.
+  * Master Code Analysis & 28-Table Architecture Reference (`dev use.md`, `dev use.html`).
   * Multi-tenant Flyway V11 schema & complete test suite verified (85/85 tests green).
 
 2. WHAT WAS CHANGED & FILES AFFECTED
