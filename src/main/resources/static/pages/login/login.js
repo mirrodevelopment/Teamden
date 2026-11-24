@@ -3,6 +3,102 @@
  * Dual-Mode: Neo-Editorial Login & 4-Step Company Registration Flow
  */
 
+// --- Top-Level Constants & Helpers (S7721, S8786) ---
+const regStepMeta = {
+  1: {
+    eyebrow: 'STEP 1 OF 4',
+    title: 'Company Details',
+    desc: 'Let’s start with some basic information about your company.'
+  },
+  2: {
+    eyebrow: 'STEP 2 OF 4',
+    title: 'Address & Legal',
+    desc: 'Add your company’s registered address and relevant business details.'
+  },
+  3: {
+    eyebrow: 'STEP 3 OF 4',
+    title: 'Set up your administrator account',
+    desc: 'Choose the person who will manage this company workspace.'
+  },
+  4: {
+    eyebrow: 'STEP 4 OF 4',
+    title: 'Review your company',
+    desc: 'Check your information before creating your workspace.'
+  }
+};
+
+function setText(el, val) {
+  if (el) el.textContent = val || '—';
+}
+
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const trimmed = email.trim();
+  const at = trimmed.indexOf('@');
+  const dot = trimmed.lastIndexOf('.');
+  return at > 0 && dot > at + 1 && dot < trimmed.length - 1 && !trimmed.includes(' ');
+}
+
+function showAlert(msg, type = 'danger') {
+  const alertBox = document.getElementById('login-alert');
+  const alertText = document.getElementById('login-alert-text');
+  if (!alertBox || !alertText) return;
+  alertBox.className = `alert alert-${type}`;
+  alertText.textContent = msg;
+  alertBox.classList.remove('d-none');
+  alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showError(errorId, msg) {
+  const el = document.getElementById(errorId);
+  if (el) {
+    el.textContent = msg;
+    el.classList.remove('d-none');
+  }
+}
+
+function clearFieldError(errorId) {
+  const el = document.getElementById(errorId);
+  if (el) {
+    el.classList.add('d-none');
+    el.textContent = '';
+  }
+}
+
+function clearErrors() {
+  const alertBox = document.getElementById('login-alert');
+  alertBox?.classList.add('d-none');
+  document.querySelectorAll('.field-error-msg, .form-error').forEach((el) => {
+    el.classList.add('d-none');
+    el.textContent = '';
+  });
+}
+
+function setupSocialSsoButtons() {
+  ['btn-auth-google', 'btn-auth-microsoft', 'btn-auth-apple'].forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const providerName = id.replace('btn-auth-', '');
+        const capitalized = providerName.charAt(0).toUpperCase() + providerName.slice(1);
+        showAlert(`${capitalized} Single Sign-On (SSO) is managed by your workspace administrator. Please sign in with your email and password.`, 'info');
+      });
+    }
+  });
+}
+
+function setupThemeToggle(themeBtn) {
+  if (!themeBtn) return;
+  themeBtn.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme || 'light';
+    const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
+    const next = isDark ? 'light' : 'black-and-white';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('teamden-theme', next);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. If already authenticated, redirect immediately to dashboard
   if (typeof Auth !== 'undefined' && typeof Auth.redirectIfAuthenticated === 'function') {
@@ -31,8 +127,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const eyeIcon = document.getElementById('eye-icon');
   const submitBtn = document.getElementById('submit-btn');
   const btnText = document.getElementById('btn-text');
-  const alertBox = document.getElementById('login-alert');
-  const alertText = document.getElementById('login-alert-text');
   const forgotPasswordLink = document.getElementById('forgot-password-link');
 
   // --- Registration 4-Step Elements ---
@@ -116,29 +210,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Stepper State
   let currentRegStep = 1;
   const totalRegSteps = 4;
-
-  const regStepMeta = {
-    1: {
-      eyebrow: 'STEP 1 OF 4',
-      title: 'Company Details',
-      desc: 'Let’s start with some basic information about your company.'
-    },
-    2: {
-      eyebrow: 'STEP 2 OF 4',
-      title: 'Address & Legal',
-      desc: 'Add your company’s registered address and relevant business details.'
-    },
-    3: {
-      eyebrow: 'STEP 3 OF 4',
-      title: 'Set up your administrator account',
-      desc: 'Choose the person who will manage this company workspace.'
-    },
-    4: {
-      eyebrow: 'STEP 4 OF 4',
-      title: 'Review your company',
-      desc: 'Check your information before creating your workspace.'
-    }
-  };
 
   // --- Auth Mode Switcher ---
   function applyRegisterMode() {
@@ -324,7 +395,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return false;
     }
     const email = regAdminEmail ? regAdminEmail.value.trim() : '';
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    if (!isValidEmail(email)) {
       showError('reg-email-error', 'Please enter a valid work email address.');
       regAdminEmail?.focus();
       return false;
@@ -357,10 +428,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- Populate Step 4 Review Summary ---
-  function setText(el, val) {
-    if (el) el.textContent = val || '—';
-  }
-
   function populateReviewSummary() {
     setText(summaryCompanyName, regOrgName?.value?.trim());
     setText(summaryLegalName, regLegalName?.value?.trim() || 'Same as display name');
@@ -572,7 +639,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         showError('email-error', 'Please enter your work email.');
         return;
       }
-      if (!/^\S+@\S+\.\S+$/.test(email)) {
+      if (!isValidEmail(email)) {
         showError('email-error', 'Please enter a valid email address.');
         return;
       }
@@ -601,29 +668,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // --- Social SSO Buttons ---
-  ['btn-auth-google', 'btn-auth-microsoft', 'btn-auth-apple'].forEach((id) => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const providerName = id.replace('btn-auth-', '');
-        const capitalized = providerName.charAt(0).toUpperCase() + providerName.slice(1);
-        showAlert(`${capitalized} Single Sign-On (SSO) is managed by your workspace administrator. Please sign in with your email and password.`, 'info');
-      });
-    }
-  });
-
-  // --- Theme Toggle ---
-  if (loginThemeBtn) {
-    loginThemeBtn.addEventListener('click', () => {
-      const current = document.documentElement.dataset.theme || 'light';
-      const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
-      const next = isDark ? 'light' : 'black-and-white';
-      document.documentElement.dataset.theme = next;
-      localStorage.setItem('teamden-theme', next);
-    });
-  }
+  // --- Social SSO & Theme Toggle ---
+  setupSocialSsoButtons();
+  setupThemeToggle(loginThemeBtn);
 
   // --- URL Parameters Handling ---
   const urlParams = new URLSearchParams(window.location.search);
@@ -655,37 +702,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnRegBack) btnRegBack.disabled = isLoading;
     if (regBtnText) regBtnText.textContent = isLoading ? 'Creating Company...' : 'Create Company';
     regSubmitBtn.classList.toggle('btn-loading', isLoading);
-  }
-
-  function showAlert(msg, type = 'danger') {
-    if (!alertBox || !alertText) return;
-    alertBox.className = `alert alert-${type}`;
-    alertText.textContent = msg;
-    alertBox.classList.remove('d-none');
-    alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function showError(errorId, msg) {
-    const el = document.getElementById(errorId);
-    if (el) {
-      el.textContent = msg;
-      el.classList.remove('d-none');
-    }
-  }
-
-  function clearFieldError(errorId) {
-    const el = document.getElementById(errorId);
-    if (el) {
-      el.classList.add('d-none');
-      el.textContent = '';
-    }
-  }
-
-  function clearErrors() {
-    alertBox?.classList.add('d-none');
-    document.querySelectorAll('.field-error-msg, .form-error').forEach((el) => {
-      el.classList.add('d-none');
-      el.textContent = '';
-    });
   }
 });

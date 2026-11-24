@@ -45,9 +45,34 @@ const stepMeta = {
   }
 };
 
+// --- Top-Level Helper Functions (S7721, S8786) ---
 function setText(el, text) {
   if (el) {
     el.textContent = text;
+  }
+}
+
+function toggleDisplay(el, isVisible) {
+  if (el) {
+    el.classList.toggle('d-none', !isVisible);
+  }
+}
+
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const trimmed = email.trim();
+  const at = trimmed.indexOf('@');
+  const dot = trimmed.lastIndexOf('.');
+  return at > 0 && dot > at + 1 && dot < trimmed.length - 1 && !trimmed.includes(' ');
+}
+
+function assertField(condition, errorId, errorMsg, inputEl, state) {
+  if (condition) {
+    showError(errorId, errorMsg);
+    if (state.valid && inputEl) {
+      inputEl.focus();
+    }
+    state.valid = false;
   }
 }
 
@@ -81,16 +106,113 @@ function evaluatePasswordStrength(password) {
   }
 }
 
+function showAlert(msg, type = 'danger') {
+  const alertBox = document.getElementById('register-alert');
+  const alertText = document.getElementById('register-alert-text');
+  if (!alertBox || !alertText) return;
+  alertBox.className = `alert alert-${type}`;
+  alertText.textContent = msg;
+  alertBox.classList.remove('d-none');
+  alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showError(errorId, msg) {
+  const el = document.getElementById(errorId);
+  if (el) {
+    el.textContent = msg;
+    el.classList.remove('d-none');
+  }
+}
+
+function clearFieldError(errorId) {
+  const el = document.getElementById(errorId);
+  if (el) {
+    el.classList.add('d-none');
+    el.textContent = '';
+  }
+}
+
+function clearErrors() {
+  const alertBox = document.getElementById('register-alert');
+  if (alertBox) alertBox.classList.add('d-none');
+  document.querySelectorAll('.field-error-msg').forEach((el) => {
+    el.classList.add('d-none');
+    el.textContent = '';
+  });
+}
+
+function setupFileUpload({ dropzone, fileInput, removeBtn, imgEl, nameEl, idleState, previewState, errorId, onLoaded, onRemoved }) {
+  if (!dropzone || !fileInput) return;
+
+  dropzone.addEventListener('click', (e) => {
+    if (e.target !== removeBtn) {
+      fileInput.click();
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showError(errorId, 'File size must be less than 5MB.');
+      fileInput.value = '';
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      showError(errorId, 'Please select a valid image file (PNG, JPG).');
+      fileInput.value = '';
+      return;
+    }
+
+    clearFieldError(errorId);
+    const reader = new FileReader();
+    reader.onload = (re) => {
+      const dataUrl = re.target.result;
+      if (imgEl) imgEl.src = dataUrl;
+      if (nameEl) nameEl.textContent = file.name;
+      toggleDisplay(idleState, false);
+      toggleDisplay(previewState, true);
+      onLoaded(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.value = '';
+      if (imgEl) imgEl.src = '';
+      toggleDisplay(previewState, false);
+      toggleDisplay(idleState, true);
+      clearFieldError(errorId);
+      onRemoved();
+    });
+  }
+}
+
+function setupPasswordVisibility(toggleBtn, inputEl, eyeIcon) {
+  if (!toggleBtn || !inputEl) return;
+  let isVisible = false;
+  toggleBtn.addEventListener('click', () => {
+    isVisible = !isVisible;
+    inputEl.type = isVisible ? 'text' : 'password';
+    if (eyeIcon) {
+      eyeIcon.innerHTML = isVisible
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Redirect if already authenticated
   if (typeof Auth !== 'undefined' && typeof Auth.redirectIfAuthenticated === 'function') {
     await Auth.redirectIfAuthenticated();
   }
 
   // --- Element Selectors ---
   const form = document.getElementById('multi-step-form');
-  const alertBox = document.getElementById('register-alert');
-  const alertText = document.getElementById('register-alert-text');
 
   // Step Header
   const stepEyebrow = document.getElementById('current-step-eyebrow');
@@ -115,15 +237,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputWebsite = document.getElementById('company-website');
   const inputYear = document.getElementById('company-year');
 
-  // Logo upload
-  const logoDropzone = document.getElementById('logo-dropzone');
-  const logoFileInput = document.getElementById('logo-file-input');
-  const uploadIdleState = document.getElementById('upload-idle-state');
-  const uploadPreviewState = document.getElementById('upload-preview-state');
-  const logoPreviewImg = document.getElementById('logo-preview-img');
-  const logoFileName = document.getElementById('logo-file-name');
-  const removeLogoBtn = document.getElementById('remove-logo-btn');
+  // Logo upload state
   let logoBase64 = null;
+  setupFileUpload({
+    dropzone: document.getElementById('logo-dropzone'),
+    fileInput: document.getElementById('logo-file-input'),
+    removeBtn: document.getElementById('remove-logo-btn'),
+    imgEl: document.getElementById('logo-preview-img'),
+    nameEl: document.getElementById('logo-file-name'),
+    idleState: document.getElementById('upload-idle-state'),
+    previewState: document.getElementById('upload-preview-state'),
+    errorId: 'error-logo-file',
+    onLoaded: (data) => { logoBase64 = data; },
+    onRemoved: () => { logoBase64 = null; }
+  });
 
   // Step 2 Elements
   const selectCountry = document.getElementById('address-country');
@@ -170,15 +297,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputJobTitle = document.getElementById('admin-job-title');
   const inputPhone = document.getElementById('admin-phone');
 
-  // Avatar upload
-  const avatarDropzone = document.getElementById('avatar-dropzone');
-  const avatarFileInput = document.getElementById('avatar-file-input');
-  const avatarIdleState = document.getElementById('avatar-idle-state');
-  const avatarPreviewState = document.getElementById('avatar-preview-state');
-  const avatarPreviewImg = document.getElementById('avatar-preview-img');
-  const avatarFileName = document.getElementById('avatar-file-name');
-  const removeAvatarBtn = document.getElementById('remove-avatar-btn');
+  // Avatar upload state
   let avatarBase64 = null;
+  setupFileUpload({
+    dropzone: document.getElementById('avatar-dropzone'),
+    fileInput: document.getElementById('avatar-file-input'),
+    removeBtn: document.getElementById('remove-avatar-btn'),
+    imgEl: document.getElementById('avatar-preview-img'),
+    nameEl: document.getElementById('avatar-file-name'),
+    idleState: document.getElementById('avatar-idle-state'),
+    previewState: document.getElementById('avatar-preview-state'),
+    errorId: 'error-avatar-file',
+    onLoaded: (data) => { avatarBase64 = data; },
+    onRemoved: () => { avatarBase64 = null; }
+  });
+
+  setupPasswordVisibility(toggleAdminPwBtn, inputAdminPassword, eyeIconAdmin);
 
   // Consent Checkboxes
   const checkConsentTerms = document.getElementById('consent-terms');
@@ -221,7 +355,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentStep = 1;
   const totalSteps = 4;
 
-  // --- Step Navigation & UI Rendering Helpers ---
+  // --- Step Navigation & UI Rendering ---
   function updateHeaderInfo(step) {
     const meta = stepMeta[step];
     setText(stepEyebrow, meta.eyebrow);
@@ -233,13 +367,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (let i = 1; i <= totalSteps; i++) {
       const section = document.getElementById(`section-step-${i}`);
       if (section) {
-        if (i === step) {
-          section.classList.remove('d-none');
-          section.classList.add('active');
-        } else {
-          section.classList.add('d-none');
-          section.classList.remove('active');
-        }
+        const isActive = (i === step);
+        toggleDisplay(section, isActive);
+        section.classList.toggle('active', isActive);
       }
     }
   }
@@ -259,31 +389,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (connector) {
-        if (i < step) {
-          connector.classList.add('completed');
-        } else {
-          connector.classList.remove('completed');
-        }
+        connector.classList.toggle('completed', i < step);
       }
     }
   }
 
   function updateNavButtons(step) {
-    if (step === 1) {
-      if (btnCancel) btnCancel.classList.remove('d-none');
-      if (btnBack) btnBack.classList.add('d-none');
-      if (btnContinue) btnContinue.classList.remove('d-none');
-      if (btnSubmit) btnSubmit.classList.add('d-none');
-    } else if (step < totalSteps) {
-      if (btnCancel) btnCancel.classList.add('d-none');
-      if (btnBack) btnBack.classList.remove('d-none');
-      if (btnContinue) btnContinue.classList.remove('d-none');
-      if (btnSubmit) btnSubmit.classList.add('d-none');
-    } else {
-      if (btnCancel) btnCancel.classList.add('d-none');
-      if (btnBack) btnBack.classList.remove('d-none');
-      if (btnContinue) btnContinue.classList.add('d-none');
-      if (btnSubmit) btnSubmit.classList.remove('d-none');
+    const isFirst = (step === 1);
+    const isLast = (step === totalSteps);
+    toggleDisplay(btnCancel, isFirst);
+    toggleDisplay(btnBack, !isFirst);
+    toggleDisplay(btnContinue, !isLast);
+    toggleDisplay(btnSubmit, isLast);
+    if (isLast) {
       populateReviewSummary();
     }
   }
@@ -300,10 +418,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Step 1 Dynamic Industry Other ---
   if (selectIndustry && groupIndustryOther) {
     selectIndustry.addEventListener('change', () => {
-      if (selectIndustry.value === 'Other') {
-        groupIndustryOther.classList.remove('d-none');
-      } else {
-        groupIndustryOther.classList.add('d-none');
+      const isOther = (selectIndustry.value === 'Other');
+      toggleDisplay(groupIndustryOther, isOther);
+      if (!isOther) {
         if (inputIndustryOther) inputIndustryOther.value = '';
         clearFieldError('error-company-industry-other');
       }
@@ -330,28 +447,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function updateStateRequirement(selected) {
     const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selected);
-    if (stateReqIndicator) {
-      if (requiresState) {
-        stateReqIndicator.classList.remove('d-none');
-        if (stateOptHint) stateOptHint.classList.add('d-none');
-      } else {
-        stateReqIndicator.classList.add('d-none');
-        if (stateOptHint) stateOptHint.classList.remove('d-none');
-      }
-    }
+    toggleDisplay(stateReqIndicator, requiresState);
+    toggleDisplay(stateOptHint, !requiresState);
   }
 
   function updateZipRequirement(selected) {
     const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selected);
-    if (zipReqIndicator) {
-      if (requiresZip) {
-        zipReqIndicator.classList.remove('d-none');
-        if (zipOptHint) zipOptHint.classList.add('d-none');
-      } else {
-        zipReqIndicator.classList.add('d-none');
-        if (zipOptHint) zipOptHint.classList.remove('d-none');
-      }
-    }
+    toggleDisplay(zipReqIndicator, requiresZip);
+    toggleDisplay(zipOptHint, !requiresZip);
   }
 
   function updateCountryConditionalRules() {
@@ -372,13 +475,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Step 2 Billing Address Same Toggle ---
   if (checkBillingSame && groupBillingAddress) {
     checkBillingSame.addEventListener('change', () => {
-      if (checkBillingSame.checked) {
-        groupBillingAddress.classList.add('d-none');
-      } else {
-        groupBillingAddress.classList.remove('d-none');
-        if (selectBillingCountry && selectCountry.value) {
-          selectBillingCountry.value = selectCountry.value;
-        }
+      const isDifferent = !checkBillingSame.checked;
+      toggleDisplay(groupBillingAddress, isDifferent);
+      if (isDifferent && selectBillingCountry && selectCountry?.value) {
+        selectBillingCountry.value = selectCountry.value;
       }
     });
   }
@@ -390,7 +490,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       clearFieldError('error-verification-code');
       clearFieldError('error-admin-email');
 
-      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      if (!isValidEmail(email)) {
         showError('error-admin-email', 'Please enter a valid work email address before requesting an OTP code.');
         inputAdminEmail.focus();
         return;
@@ -463,7 +563,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // --- Step 3 Password Strength Meter & Compromised Checks ---
+  // --- Step 3 Password Strength Meter & Confirm Checks ---
   if (inputAdminPassword) {
     inputAdminPassword.addEventListener('input', () => {
       const pw = inputAdminPassword.value;
@@ -484,7 +584,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (inputAdminConfirmPassword) {
     inputAdminConfirmPassword.addEventListener('input', () => {
-      if (inputAdminPassword.value && inputAdminConfirmPassword.value) {
+      if (inputAdminPassword?.value && inputAdminConfirmPassword.value) {
         if (inputAdminPassword.value !== inputAdminConfirmPassword.value) {
           showError('error-admin-confirm-password', 'Passwords do not match.');
         } else {
@@ -494,171 +594,84 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // --- Step Validations ---
+  // --- Step Validations (S3776 Refactored) ---
   function validateStep1() {
-    let isValid = true;
+    const state = { valid: true };
     const compName = inputCompanyName.value.trim();
-    if (!compName || compName.length < 2) {
-      showError('error-company-name', 'Company name must be at least 2 characters.');
-      inputCompanyName.focus();
-      isValid = false;
-    }
+    assertField(!compName || compName.length < 2, 'error-company-name', 'Company name must be at least 2 characters.', inputCompanyName, state);
+    assertField(!selectCompanyType.value, 'error-company-type', 'Please select a company type.', selectCompanyType, state);
+    assertField(!selectIndustry.value, 'error-company-industry', 'Please select an industry.', selectIndustry, state);
 
-    if (!selectCompanyType.value) {
-      showError('error-company-type', 'Please select a company type.');
-      if (isValid) selectCompanyType.focus();
-      isValid = false;
-    }
-
-    if (!selectIndustry.value) {
-      showError('error-company-industry', 'Please select an industry.');
-      if (isValid) selectIndustry.focus();
-      isValid = false;
-    } else if (selectIndustry.value === 'Other') {
+    if (selectIndustry.value === 'Other') {
       const indOther = inputIndustryOther?.value?.trim() || '';
-      if (!indOther) {
-        showError('error-company-industry-other', 'Please specify your industry.');
-        if (isValid && inputIndustryOther) inputIndustryOther.focus();
-        isValid = false;
-      }
+      assertField(!indOther, 'error-company-industry-other', 'Please specify your industry.', inputIndustryOther, state);
     }
 
-    if (!selectCompanySize.value) {
-      showError('error-company-size', 'Please select company size.');
-      if (isValid) selectCompanySize.focus();
-      isValid = false;
-    }
+    assertField(!selectCompanySize.value, 'error-company-size', 'Please select company size.', selectCompanySize, state);
 
     const website = inputWebsite.value.trim();
-    if (website && !/^https?:\/\/.+\..+/.test(website)) {
-      showError('error-company-website', 'Please enter a valid URL (e.g. https://yourcompany.com).');
-      if (isValid) inputWebsite.focus();
-      isValid = false;
-    }
+    assertField(Boolean(website && !/^https?:\/\/.+\..+/.test(website)), 'error-company-website', 'Please enter a valid URL (e.g. https://yourcompany.com).', inputWebsite, state);
 
     const year = inputYear.value.trim();
-    const currentYear = new Date().getFullYear();
     if (year) {
+      const currentYear = new Date().getFullYear();
       const parsedYear = Number.parseInt(year, 10);
-      if (parsedYear < 1800 || parsedYear > currentYear) {
-        showError('error-company-year', `Please enter a valid established year between 1800 and ${currentYear}.`);
-        if (isValid) inputYear.focus();
-        isValid = false;
-      }
+      assertField(parsedYear < 1800 || parsedYear > currentYear, 'error-company-year', `Please enter a valid established year between 1800 and ${currentYear}.`, inputYear, state);
     }
 
-    return isValid;
+    return state.valid;
+  }
+
+  function validateBillingFields(state) {
+    assertField(!selectBillingCountry.value, 'error-billing-country', 'Please select a billing country.', selectBillingCountry, state);
+    assertField(!inputBillingStreet.value.trim(), 'error-billing-street', 'Please enter the billing address.', inputBillingStreet, state);
+    assertField(!inputBillingCity.value.trim(), 'error-billing-city', 'Please enter the billing city.', inputBillingCity, state);
   }
 
   function validateStep2() {
-    let isValid = true;
-    if (!selectCountry.value) {
-      showError('error-address-country', 'Please select a country or region.');
-      selectCountry.focus();
-      isValid = false;
-    }
+    const state = { valid: true };
+    assertField(!selectCountry.value, 'error-address-country', 'Please select a country or region.', selectCountry, state);
+    assertField(!inputStreet.value.trim(), 'error-address-street', 'Please enter the registered street address.', inputStreet, state);
+    assertField(!inputCity.value.trim(), 'error-address-city', 'Please enter the city or town.', inputCity, state);
 
-    const street = inputStreet.value.trim();
-    if (!street) {
-      showError('error-address-street', 'Please enter the registered street address.');
-      if (isValid) inputStreet.focus();
-      isValid = false;
-    }
+    const country = selectCountry.value;
+    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(country);
+    assertField(requiresState && !inputState.value.trim(), 'error-address-state', `State or province is required for ${country}.`, inputState, state);
 
-    const city = inputCity.value.trim();
-    if (!city) {
-      showError('error-address-city', 'Please enter the city or town.');
-      if (isValid) inputCity.focus();
-      isValid = false;
-    }
-
-    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selectCountry.value);
-    const state = inputState.value.trim();
-    if (requiresState && !state) {
-      showError('error-address-state', `State or province is required for ${selectCountry.value}.`);
-      if (isValid) inputState.focus();
-      isValid = false;
-    }
-
-    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selectCountry.value);
-    const zip = inputZip.value.trim();
-    if (requiresZip && !zip) {
-      showError('error-address-zip', `Postal or ZIP code is required for ${selectCountry.value}.`);
-      if (isValid) inputZip.focus();
-      isValid = false;
-    }
+    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(country);
+    assertField(requiresZip && !inputZip.value.trim(), 'error-address-zip', `Postal or ZIP code is required for ${country}.`, inputZip, state);
 
     if (checkBillingSame && !checkBillingSame.checked) {
-      if (!selectBillingCountry.value) {
-        showError('error-billing-country', 'Please select a billing country.');
-        if (isValid) selectBillingCountry.focus();
-        isValid = false;
-      }
-      if (!inputBillingStreet.value.trim()) {
-        showError('error-billing-street', 'Please enter the billing address.');
-        if (isValid) inputBillingStreet.focus();
-        isValid = false;
-      }
-      if (!inputBillingCity.value.trim()) {
-        showError('error-billing-city', 'Please enter the billing city.');
-        if (isValid) inputBillingCity.focus();
-        isValid = false;
-      }
+      validateBillingFields(state);
     }
 
-    return isValid;
+    return state.valid;
   }
 
   function validateStep3() {
-    let isValid = true;
+    const state = { valid: true };
     const name = inputAdminName.value.trim();
-    if (!name || name.length < 2) {
-      showError('error-admin-name', 'Please enter the administrator full name.');
-      inputAdminName.focus();
-      isValid = false;
-    }
+    assertField(!name || name.length < 2, 'error-admin-name', 'Please enter the administrator full name.', inputAdminName, state);
 
     const email = inputAdminEmail.value.trim();
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      showError('error-admin-email', 'Please enter a valid work email address.');
-      if (isValid) inputAdminEmail.focus();
-      isValid = false;
-    }
+    assertField(!isValidEmail(email), 'error-admin-email', 'Please enter a valid work email address.', inputAdminEmail, state);
 
     const password = inputAdminPassword.value;
-    if (!password || password.length < 8) {
-      showError('error-admin-password', 'Password must be at least 8 characters long.');
-      if (isValid) inputAdminPassword.focus();
-      isValid = false;
-    } else if (COMMON_COMPROMISED_PASSWORDS.has(password.toLowerCase())) {
-      showError('error-admin-password', 'This password is too commonly used and easily compromised. Please choose a stronger password.');
-      if (isValid) inputAdminPassword.focus();
-      isValid = false;
+    const isShortPw = !password || password.length < 8;
+    assertField(isShortPw, 'error-admin-password', 'Password must be at least 8 characters long.', inputAdminPassword, state);
+
+    if (!isShortPw && COMMON_COMPROMISED_PASSWORDS.has(password.toLowerCase())) {
+      assertField(true, 'error-admin-password', 'This password is too commonly used and easily compromised. Please choose a stronger password.', inputAdminPassword, state);
     }
 
     const confirmPw = inputAdminConfirmPassword.value;
-    if (password !== confirmPw) {
-      showError('error-admin-confirm-password', 'Passwords do not match.');
-      if (isValid) inputAdminConfirmPassword.focus();
-      isValid = false;
-    }
+    assertField(password !== confirmPw, 'error-admin-confirm-password', 'Passwords do not match.', inputAdminConfirmPassword, state);
 
-    if (checkConsentTerms && !checkConsentTerms.checked) {
-      showError('error-consent-terms', 'You must agree to the Terms of Service to proceed.');
-      isValid = false;
-    }
+    assertField(Boolean(checkConsentTerms && !checkConsentTerms.checked), 'error-consent-terms', 'You must agree to the Terms of Service to proceed.', null, state);
+    assertField(Boolean(checkConsentPrivacy && !checkConsentPrivacy.checked), 'error-consent-privacy', 'You must agree to the Privacy Policy to proceed.', null, state);
+    assertField(Boolean(checkConsentAuth && !checkConsentAuth.checked), 'error-consent-auth', 'You must confirm authorization to register this company.', null, state);
 
-    if (checkConsentPrivacy && !checkConsentPrivacy.checked) {
-      showError('error-consent-privacy', 'You must agree to the Privacy Policy to proceed.');
-      isValid = false;
-    }
-
-    if (checkConsentAuth && !checkConsentAuth.checked) {
-      showError('error-consent-auth', 'You must confirm authorization to register this company.');
-      isValid = false;
-    }
-
-    return isValid;
+    return state.valid;
   }
 
   function validateStep4() {
@@ -685,7 +698,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // --- Populate Step 4 Review Summary Helpers ---
+  // --- Populate Step 4 Review Summary ---
   function populateCompanySummary() {
     setText(summaryCompanyName, inputCompanyName.value.trim() || '—');
     setText(summaryLegalName, inputLegalName.value.trim() || 'Same as company name');
@@ -786,118 +799,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   });
-
-  // --- Logo File Upload Handling ---
-  if (logoDropzone && logoFileInput) {
-    logoDropzone.addEventListener('click', (e) => {
-      if (e.target !== removeLogoBtn) {
-        logoFileInput.click();
-      }
-    });
-
-    logoFileInput.addEventListener('change', () => {
-      const file = logoFileInput.files[0];
-      if (!file) return;
-
-      if (file.size > 5 * 1024 * 1024) {
-        showError('error-logo-file', 'Logo file size must be less than 5MB.');
-        logoFileInput.value = '';
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        showError('error-logo-file', 'Please select a valid image file (PNG, JPG, SVG).');
-        logoFileInput.value = '';
-        return;
-      }
-
-      clearFieldError('error-logo-file');
-      const reader = new FileReader();
-      reader.onload = (re) => {
-        logoBase64 = re.target.result;
-        if (logoPreviewImg) logoPreviewImg.src = logoBase64;
-        if (logoFileName) logoFileName.textContent = file.name;
-        if (uploadIdleState) uploadIdleState.classList.add('d-none');
-        if (uploadPreviewState) uploadPreviewState.classList.remove('d-none');
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (removeLogoBtn) {
-    removeLogoBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      logoBase64 = null;
-      if (logoFileInput) logoFileInput.value = '';
-      if (logoPreviewImg) logoPreviewImg.src = '';
-      if (uploadPreviewState) uploadPreviewState.classList.add('d-none');
-      if (uploadIdleState) uploadIdleState.classList.remove('d-none');
-      clearFieldError('error-logo-file');
-    });
-  }
-
-  // --- Avatar File Upload Handling ---
-  if (avatarDropzone && avatarFileInput) {
-    avatarDropzone.addEventListener('click', (e) => {
-      if (e.target !== removeAvatarBtn) {
-        avatarFileInput.click();
-      }
-    });
-
-    avatarFileInput.addEventListener('change', () => {
-      const file = avatarFileInput.files[0];
-      if (!file) return;
-
-      if (file.size > 5 * 1024 * 1024) {
-        showError('error-avatar-file', 'Photo file size must be less than 5MB.');
-        avatarFileInput.value = '';
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        showError('error-avatar-file', 'Please select a valid image file (PNG, JPG).');
-        avatarFileInput.value = '';
-        return;
-      }
-
-      clearFieldError('error-avatar-file');
-      const reader = new FileReader();
-      reader.onload = (re) => {
-        avatarBase64 = re.target.result;
-        if (avatarPreviewImg) avatarPreviewImg.src = avatarBase64;
-        if (avatarFileName) avatarFileName.textContent = file.name;
-        if (avatarIdleState) avatarIdleState.classList.add('d-none');
-        if (avatarPreviewState) avatarPreviewState.classList.remove('d-none');
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (removeAvatarBtn) {
-    removeAvatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      avatarBase64 = null;
-      if (avatarFileInput) avatarFileInput.value = '';
-      if (avatarPreviewImg) avatarPreviewImg.src = '';
-      if (avatarPreviewState) avatarPreviewState.classList.add('d-none');
-      if (avatarIdleState) avatarIdleState.classList.remove('d-none');
-      clearFieldError('error-avatar-file');
-    });
-  }
-
-  // --- Password Visibility Toggle ---
-  let adminPwVisible = false;
-  if (toggleAdminPwBtn && inputAdminPassword) {
-    toggleAdminPwBtn.addEventListener('click', () => {
-      adminPwVisible = !adminPwVisible;
-      inputAdminPassword.type = adminPwVisible ? 'text' : 'password';
-      if (eyeIconAdmin) {
-        eyeIconAdmin.innerHTML = adminPwVisible
-          ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
-          : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
-      }
-    });
-  }
 
   // --- Theme Toggle ---
   if (themeBtn) {
@@ -1018,38 +919,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       btnSubmit.classList.remove('btn-loading');
     }
-  }
-
-  function showAlert(msg, type = 'danger') {
-    if (!alertBox || !alertText) return;
-    alertBox.className = `alert alert-${type}`;
-    alertText.textContent = msg;
-    alertBox.classList.remove('d-none');
-    alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function showError(errorId, msg) {
-    const el = document.getElementById(errorId);
-    if (el) {
-      el.textContent = msg;
-      el.classList.remove('d-none');
-    }
-  }
-
-  function clearFieldError(errorId) {
-    const el = document.getElementById(errorId);
-    if (el) {
-      el.classList.add('d-none');
-      el.textContent = '';
-    }
-  }
-
-  function clearErrors() {
-    if (alertBox) alertBox.classList.add('d-none');
-    document.querySelectorAll('.field-error-msg').forEach((el) => {
-      el.classList.add('d-none');
-      el.textContent = '';
-    });
   }
 
   // Initialize Stepper on DOM Ready

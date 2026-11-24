@@ -315,16 +315,20 @@ const Navbar = (() => {
         .catch(() => {});
     }
 
-    updateNotificationCount();
-    window.addEventListener('focus', () => updateNotificationCount());
+    updateNotificationCount().catch(() => {});
+    window.addEventListener('focus', () => {
+      updateNotificationCount().catch(() => {});
+    });
     window.addEventListener('teamden:inbox-updated', (e) => {
       if (e?.detail?.counts) {
-        updateNotificationCount(e.detail.counts.unread);
+        updateNotificationCount(e.detail.counts.unread).catch(() => {});
       } else {
-        updateNotificationCount();
+        updateNotificationCount().catch(() => {});
       }
     });
-    window.addEventListener('teamden:notifications-updated', () => updateNotificationCount());
+    window.addEventListener('teamden:notifications-updated', () => {
+      updateNotificationCount().catch(() => {});
+    });
 
     const userBtn = document.getElementById('user-profile-btn');
     const userMenu = document.getElementById('user-dropdown-menu');
