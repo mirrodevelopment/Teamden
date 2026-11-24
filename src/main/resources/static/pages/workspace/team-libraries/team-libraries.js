@@ -1,5 +1,5 @@
 /**
- * Teamden — Team Libraries / Design Library Controller
+ * Teamden â€” Team Libraries / Design Library Controller
  * Path: pages/workspace/team-libraries/team-libraries.js
  *
  * Responsibilities:
@@ -21,15 +21,10 @@
   let searchQuery = '';
   let activeSort = 'latest';
 
-  /* ── Team Members ──────────────────────────────────────────────────────── */
-  const TEAM_MEMBERS = [
-    { id: 'm1', name: 'Priya Kapoor', role: 'Design Lead', initials: 'PK', bgClass: 'tl-avatar--pk', email: 'priya@teamden.io' },
-    { id: 'm2', name: 'Alex Rivera', role: 'Senior Product Designer', initials: 'AR', bgClass: 'tl-avatar--ar', email: 'alex@teamden.io' },
-    { id: 'm3', name: 'Samir Khan', role: 'Brand & Systems Designer', initials: 'SK', bgClass: 'tl-avatar--sk', email: 'samir@teamden.io' },
-    { id: 'm4', name: 'Maya Jones', role: 'UI/UX Designer', initials: 'MJ', bgClass: 'tl-avatar--mj', email: 'maya@teamden.io' }
-  ];
+  /* â”€â”€ Team Members â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  let TEAM_MEMBERS = [];
 
-  /* ── Collections ───────────────────────────────────────────────────────── */
+  /* â”€â”€ Collections â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const COLLECTIONS = [
     {
       id: 'coll-brand',
@@ -65,149 +60,13 @@
     }
   ];
 
-  /* ── Documents ─────────────────────────────────────────────────────────── */
-  const DOCUMENTS = [
-    {
-      id: 'doc-1',
-      title: 'Brand Guidelines v2.2',
-      collectionId: 'coll-brand',
-      collectionName: 'Brand System',
-      author: 'Priya K.',
-      updated: 'Updated 2d ago',
-      updatedTs: Date.now() - 2 * 86400000,
-      status: 'APPROVED',
-      statusBadge: 'tl-badge--approved',
-      starred: true,
-      desc: 'Full specification for brand foundations, iconography, typography hierarchy and color standards.'
-    },
-    {
-      id: 'doc-2',
-      title: 'Color Palette & Accessibility Matrix',
-      collectionId: 'coll-brand',
-      collectionName: 'Brand System',
-      author: 'Alex R.',
-      updated: 'Updated 3d ago',
-      updatedTs: Date.now() - 3 * 86400000,
-      status: 'VERSION 1.4',
-      statusBadge: 'tl-badge--version',
-      starred: true,
-      desc: 'WCAG AAA contrast tables, functional status colors, dark mode tokens and surface definitions.'
-    },
-    {
-      id: 'doc-3',
-      title: 'Typography Scale & Font Tokens',
-      collectionId: 'coll-brand',
-      collectionName: 'Brand System',
-      author: 'Samir K.',
-      updated: 'Updated 4d ago',
-      updatedTs: Date.now() - 4 * 86400000,
-      status: 'APPROVED',
-      statusBadge: 'tl-badge--approved',
-      starred: false,
-      desc: 'Desktop and mobile modular type scale, font pairings (Montserrat & Inter Tight), and line-heights.'
-    },
-    {
-      id: 'doc-4',
-      title: 'Button & Input Component Specs',
-      collectionId: 'coll-components',
-      collectionName: 'Design System Components',
-      author: 'Alex R.',
-      updated: 'Updated 5d ago',
-      updatedTs: Date.now() - 5 * 86400000,
-      status: 'SHARED',
-      statusBadge: 'tl-badge--shared',
-      starred: true,
-      desc: 'Specs for interactive states (default, hover, focus, disabled, loading) and form error indicators.'
-    },
-    {
-      id: 'doc-5',
-      title: 'Modal & Dialog Interaction Rules',
-      collectionId: 'coll-components',
-      collectionName: 'Design System Components',
-      author: 'Priya K.',
-      updated: 'Updated 1w ago',
-      updatedTs: Date.now() - 7 * 86400000,
-      status: 'APPROVED',
-      statusBadge: 'tl-badge--approved',
-      starred: false,
-      desc: 'Focus trap conventions, backdrop click behavior, accessibility aria-roles and escape handling.'
-    },
-    {
-      id: 'doc-6',
-      title: 'Q4 Usability Test Report — Workspace',
-      collectionId: 'coll-research',
-      collectionName: 'Research & Decisions',
-      author: 'Maya J.',
-      updated: 'Updated 1w ago',
-      updatedTs: Date.now() - 8 * 86400000,
-      status: 'DRAFT',
-      statusBadge: 'tl-badge--draft',
-      starred: false,
-      desc: 'Synthesis of 12 moderated user tests on multi-project navigation and knowledge library discovery.'
-    },
-    {
-      id: 'doc-7',
-      title: 'Mobile Navigation Decision Record',
-      collectionId: 'coll-research',
-      collectionName: 'Research & Decisions',
-      author: 'Samir K.',
-      updated: 'Updated 2w ago',
-      updatedTs: Date.now() - 14 * 86400000,
-      status: 'APPROVED',
-      statusBadge: 'tl-badge--approved',
-      starred: true,
-      desc: 'Evaluation matrix between bottom bar navigation vs collapsible side drawer on narrow viewports.'
-    },
-    {
-      id: 'doc-8',
-      title: 'Handoff Checklist for Web V2',
-      collectionId: 'coll-delivery',
-      collectionName: 'Delivery & Handoff',
-      author: 'Maya J.',
-      updated: 'Updated 3w ago',
-      updatedTs: Date.now() - 21 * 86400000,
-      status: 'TASKS (4)',
-      statusBadge: 'tl-badge--tasks',
-      starred: false,
-      desc: 'Design QA review checklist, token exports, asset compression guidelines and CSS custom properties.'
-    },
-    {
-      id: 'doc-9',
-      title: 'Iconography Library & SVGs',
-      collectionId: 'coll-brand',
-      collectionName: 'Brand System',
-      author: 'Alex R.',
-      updated: 'Updated 3w ago',
-      updatedTs: Date.now() - 22 * 86400000,
-      status: 'SHARED',
-      statusBadge: 'tl-badge--shared',
-      starred: false,
-      desc: '24px stroked icon grid, export rules and optical alignment recommendations.'
-    },
-    {
-      id: 'doc-10',
-      title: 'Animation & Motion Guidelines',
-      collectionId: 'coll-components',
-      collectionName: 'Design System Components',
-      author: 'Priya K.',
-      updated: 'Updated 1mo ago',
-      updatedTs: Date.now() - 30 * 86400000,
-      status: 'DRAFT',
-      statusBadge: 'tl-badge--draft',
-      starred: false,
-      desc: 'Easing curves (cubic-bezier), micro-interaction timings and reduced-motion fallbacks.'
-    }
-  ];
+  /* â”€â”€ Documents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  let DOCUMENTS = [];
 
-  /* ── Connected Projects ────────────────────────────────────────────────── */
-  const CONNECTED_PROJECTS = [
-    { id: 'p1', name: 'Website Redesign 2026', url: '/pages/projects/project-detail/project-detail.html' },
-    { id: 'p2', name: 'Mobile App v3.0', url: '/pages/projects/project-detail/project-detail.html' },
-    { id: 'p3', name: 'Design System UI Kit', url: '/pages/projects/project-detail/project-detail.html' },
-    { id: 'p4', name: 'Brand Refresh Q4', url: '/pages/projects/project-detail/project-detail.html' }
-  ];
+  /* â”€â”€ Connected Projects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  let CONNECTED_PROJECTS = [];
 
-  /* ── Helpers ───────────────────────────────────────────────────────────── */
+  /* â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function esc(str) {
     if (!str) return '';
     return String(str)
@@ -230,7 +89,7 @@
     }
   }
 
-  /* ── Toast Notifications ───────────────────────────────────────────────── */
+  /* â”€â”€ Toast Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function showToast(message, type = 'info') {
     let toast = document.getElementById('tl-toast');
     if (!toast) {
@@ -258,7 +117,7 @@
       `;
       document.body.appendChild(toast);
     }
-    toast.innerHTML = `<span style="color:#C9F34A;">●</span> ${esc(message)}`;
+    toast.innerHTML = `<span style="color:#C9F34A;">â—</span> ${esc(message)}`;
     toast.style.opacity = '1';
     toast.style.transform = 'translateY(0)';
     clearTimeout(toast._timeout);
@@ -268,7 +127,7 @@
     }, 2800);
   }
 
-  /* ── Modal Utility ─────────────────────────────────────────────────────── */
+  /* â”€â”€ Modal Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openModal(title, contentHtml, footerHtml = '') {
     let backdrop = document.getElementById('tl-modal-backdrop');
     if (!backdrop) {
@@ -328,10 +187,14 @@
     }
   }
 
-  /* ── Render Avatars ────────────────────────────────────────────────────── */
+  /* â”€â”€ Render Avatars â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function renderAvatars() {
     const el = document.getElementById('tl-avatars-group');
     if (!el) return;
+    if (TEAM_MEMBERS.length === 0) {
+      el.innerHTML = '<span style="font-size:0.75rem; color:var(--dash-text-muted);">No members</span>';
+      return;
+    }
     el.innerHTML = TEAM_MEMBERS.map(m => `
       <div class="tl-avatar ${m.bgClass}" title="${esc(m.name)} — ${esc(m.role)}">
         ${esc(m.initials)}
@@ -339,7 +202,7 @@
     `).join('');
   }
 
-  /* ── Render Collections ────────────────────────────────────────────────── */
+  /* â”€â”€ Render Collections â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function renderCollections() {
     const el = document.getElementById('tl-collections-list');
     if (!el) return;
@@ -376,7 +239,7 @@
     });
   }
 
-  /* ── Render Documents ──────────────────────────────────────────────────── */
+  /* â”€â”€ Render Documents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function renderDocuments() {
     const listEl = document.getElementById('tl-doc-list');
     const emptyEl = document.getElementById('tl-empty-state');
@@ -445,7 +308,7 @@
         </div>
         <div class="tl-doc-info">
           <span class="tl-doc-title">${esc(doc.title)}</span>
-          <span class="tl-doc-meta">${esc(doc.collectionName)} <span class="tl-doc-meta-sep">•</span> ${esc(doc.author)}</span>
+          <span class="tl-doc-meta">${esc(doc.collectionName)} <span class="tl-doc-meta-sep">â€¢</span> ${esc(doc.author)}</span>
         </div>
         <span class="tl-doc-updated">${esc(doc.updated)}</span>
         <div class="tl-doc-status">
@@ -476,14 +339,14 @@
     });
   }
 
-  /* ── Document Preview Modal ────────────────────────────────────────────── */
+  /* â”€â”€ Document Preview Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openDocumentPreview(doc) {
     const content = `
       <div style="display:flex; flex-direction:column; gap:0.75rem;">
         <div style="display:flex; align-items:center; gap:0.5rem;">
           <span class="tl-badge ${doc.statusBadge}">${esc(doc.status)}</span>
           <span style="color:var(--dash-text-muted); font-size:0.72rem;">${esc(doc.collectionName)}</span>
-          <span style="color:var(--dash-text-light); font-size:0.72rem;">•</span>
+          <span style="color:var(--dash-text-light); font-size:0.72rem;">â€¢</span>
           <span style="color:var(--dash-text-muted); font-size:0.72rem;">${esc(doc.updated)}</span>
         </div>
         <p style="margin:0; font-size:0.875rem; color:var(--dash-text-body); line-height:1.6;">
@@ -514,7 +377,7 @@
     }
   }
 
-  /* ── Document Menu Actions ─────────────────────────────────────────────── */
+  /* â”€â”€ Document Menu Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openDocumentMenu(doc, anchorEl) {
     const isStarred = doc.starred;
     const content = `
@@ -523,7 +386,7 @@
           <span>Open document</span>
         </button>
         <button id="menu-star" style="display:flex; align-items:center; gap:0.5rem; padding:0.6rem 0.8rem; background:none; border:none; text-align:left; font-size:0.8125rem; font-weight:600; cursor:pointer; border-radius:6px; color:var(--dash-text-primary);">
-          <span>${isStarred ? '★ Remove from Starred' : '☆ Add to Starred'}</span>
+          <span>${isStarred ? 'â˜… Remove from Starred' : 'â˜† Add to Starred'}</span>
         </button>
         <button id="menu-copy" style="display:flex; align-items:center; gap:0.5rem; padding:0.6rem 0.8rem; background:none; border:none; text-align:left; font-size:0.8125rem; font-weight:600; cursor:pointer; border-radius:6px; color:var(--dash-text-primary);">
           <span>Copy document link</span>
@@ -552,7 +415,7 @@
     };
   }
 
-  /* ── Render Connected Projects ─────────────────────────────────────────── */
+  /* â”€â”€ Render Connected Projects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function renderProjects() {
     const el = document.getElementById('tl-projects-list');
     const emptyEl = document.getElementById('tl-projects-empty');
@@ -580,7 +443,7 @@
     `).join('');
   }
 
-  /* ── Team Access & Permissions Modals ──────────────────────────────────── */
+  /* â”€â”€ Team Access & Permissions Modals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openTeamAccessModal() {
     const content = `
       <div style="display:flex; flex-direction:column; gap:1rem;">
@@ -609,7 +472,7 @@
       <button id="tl-invite-btn" style="padding:0.4rem 0.85rem; background:#111; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">+ Invite Member</button>
     `;
 
-    openModal('Team Access — Design Library', content, footer);
+    openModal('Team Access â€” Design Library', content, footer);
 
     const inviteBtn = document.getElementById('tl-invite-btn');
     if (inviteBtn) {
@@ -693,19 +556,19 @@
     }
   }
 
-  /* ── Needs Review Modal ────────────────────────────────────────────────── */
+  /* â”€â”€ Needs Review Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openReviewModal() {
     const content = `
       <div style="display:flex; flex-direction:column; gap:0.85rem;">
         <div style="display:flex; align-items:center; gap:0.6rem;">
           <span class="tl-badge tl-badge--neutral">AWAITING APPROVAL</span>
-          <span style="font-size:0.75rem; color:var(--dash-text-muted);">Submitted by Priya K. • 2d ago</span>
+          <span style="font-size:0.75rem; color:var(--dash-text-muted);">Submitted by Priya K. â€¢ 2d ago</span>
         </div>
         <p style="margin:0; font-size:0.8125rem; line-height:1.5; color:var(--dash-text-body);">
           <strong>Summary of changes in v2.2:</strong><br>
-          • Updated dark mode token hierarchy to comply with WCAG 2.1 AAA contrast.<br>
-          • Added secondary button hover states and focus ring specs.<br>
-          • Harmonized typography scale across desktop and mobile breakpoints.
+          â€¢ Updated dark mode token hierarchy to comply with WCAG 2.1 AAA contrast.<br>
+          â€¢ Added secondary button hover states and focus ring specs.<br>
+          â€¢ Harmonized typography scale across desktop and mobile breakpoints.
         </p>
         <div style="background:var(--dash-bg-search, #F3EFE7); padding:0.75rem; border-radius:6px; font-size:0.75rem; color:var(--dash-text-muted);">
           Pending approvals: <strong>1 of 2 required</strong> (Priya Kapoor approved, waiting on Lead Review).
@@ -716,10 +579,10 @@
     const footer = `
       <button onclick="document.getElementById('tl-modal-close-btn').click();" style="padding:0.4rem 0.8rem; background:none; border:1px solid var(--dash-border); border-radius:6px; font-size:0.75rem; cursor:pointer; color:var(--dash-text-muted);">Close</button>
       <button id="tl-request-changes-btn" style="padding:0.4rem 0.8rem; background:none; border:1px solid #EADCCC; border-radius:6px; font-size:0.75rem; cursor:pointer; color:#7A5520; font-weight:600;">Request Changes</button>
-      <button id="tl-approve-btn" style="padding:0.4rem 0.85rem; background:#3A6B2E; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">✓ Approve v2.2</button>
+      <button id="tl-approve-btn" style="padding:0.4rem 0.85rem; background:#3A6B2E; color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">âœ“ Approve v2.2</button>
     `;
 
-    openModal('Review Document — Brand Guidelines v2.2', content, footer);
+    openModal('Review Document â€” Brand Guidelines v2.2', content, footer);
 
     const approveBtn = document.getElementById('tl-approve-btn');
     if (approveBtn) {
@@ -744,7 +607,7 @@
     }
   }
 
-  /* ── Event Listeners & Wiring ──────────────────────────────────────────── */
+  /* â”€â”€ Event Listeners & Wiring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function wireEvents() {
     // Start Here card button
     const startOpenBtn = document.getElementById('tl-start-open-btn');
@@ -824,7 +687,7 @@
     }
   }
 
-  /* ── Main Init ────────────────────────────────────────────────────────── */
+  /* â”€â”€ Main Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   async function init() {
     // 1. Session check
     try {
@@ -851,13 +714,38 @@
       navWorkspace.href = '/pages/workspace/workspace.html';
     }
 
-    // 5. Render sections
+    // 5. Dynamic Data Hydration
+    try {
+      const [empRes, projRes] = await Promise.all([
+        fetch('/api/employees').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/api/projects/data').then(r => r.ok ? r.json() : null).catch(() => null)
+      ]);
+      if (empRes && empRes.employees) {
+        TEAM_MEMBERS = empRes.employees.map(emp => ({
+          id: emp.id,
+          name: emp.fullName || 'Member',
+          role: emp.jobTitle || emp.roleTitle || 'Member',
+          initials: emp.initials || (emp.fullName ? emp.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'ME'),
+          bgClass: emp.cardTheme ? `tl-avatar--${emp.cardTheme}` : 'tl-avatar--pk',
+          email: emp.email || ''
+        }));
+      }
+      if (projRes && projRes.ongoingProjects) {
+        CONNECTED_PROJECTS = projRes.ongoingProjects.map(p => ({
+          id: p.id,
+          name: p.title || p.name || 'Project',
+          url: `/pages/projects/project-detail/project-detail.html?id=${p.id}`
+        }));
+      }
+    } catch (e) {}
+
+    // 6. Render sections
     renderAvatars();
     renderCollections();
     renderDocuments();
     renderProjects();
 
-    // 6. Wire interaction events
+    // 7. Wire interaction events
     wireEvents();
   }
 

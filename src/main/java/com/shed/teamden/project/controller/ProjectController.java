@@ -68,4 +68,25 @@ public class ProjectController {
     public ResponseEntity<ProjectDocumentsDto.DocumentItemDto> createDocument(@RequestBody CreateDocumentRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createDocument(request));
     }
+
+    @GetMapping("/pinned")
+    public ResponseEntity<List<PinnedProjectDto>> getPinnedProjects() {
+        return ResponseEntity.ok(projectService.getPinnedProjectsForCurrentUser());
+    }
+
+    @GetMapping("/ongoing-available")
+    public ResponseEntity<List<OngoingProjectOptionDto>> getOngoingProjectsAvailable() {
+        return ResponseEntity.ok(projectService.getOngoingProjectsAvailableForPinning());
+    }
+
+    @PostMapping("/{id}/pin")
+    public ResponseEntity<PinnedProjectDto> pinProject(@PathVariable("id") String id) {
+        return ResponseEntity.ok(projectService.pinProjectForCurrentUser(UUID.fromString(id)));
+    }
+
+    @DeleteMapping("/{id}/pin")
+    public ResponseEntity<Void> unpinProject(@PathVariable("id") String id) {
+        projectService.unpinProjectForCurrentUser(UUID.fromString(id));
+        return ResponseEntity.noContent().build();
+    }
 }

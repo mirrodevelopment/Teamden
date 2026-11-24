@@ -66,10 +66,10 @@
 
           <!-- Team Access Row -->
           <div class="tl-team-access-row">
-            <div class="tl-avatars-group" id="tl-avatars-group" aria-label="Team members">
+            <div class="tl-avatars-group" id="tl-avatars-group" role="group" aria-label="Team members">
               <!-- Populated by JS -->
             </div>
-            <button class="tl-team-access-btn" id="tl-team-access-btn" aria-label="Team access">
+            <button type="button" class="tl-team-access-btn" id="tl-team-access-btn" aria-label="Team access">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
@@ -107,7 +107,7 @@
                 <span class="tl-badge tl-badge--approved">APPROVED</span>
               </div>
               <div class="tl-start-divider"></div>
-              <button class="tl-start-open-btn" id="tl-start-open-btn">
+              <button type="button" class="tl-start-open-btn" id="tl-start-open-btn">
                 Open document <span class="tl-btn-arrow">&#8594;</span>
               </button>
             </div>
@@ -139,9 +139,9 @@
             <!-- Toolbar -->
             <div class="tl-doc-toolbar">
               <div class="tl-filter-pills" role="group" aria-label="Document filters">
-                <button class="tl-filter-pill tl-filter-pill--active" data-filter="all" id="tl-filter-all">All</button>
-                <button class="tl-filter-pill" data-filter="recent" id="tl-filter-recent">Recent</button>
-                <button class="tl-filter-pill" data-filter="starred" id="tl-filter-starred">Starred</button>
+                <button type="button" class="tl-filter-pill tl-filter-pill--active" data-filter="all" id="tl-filter-all">All</button>
+                <button type="button" class="tl-filter-pill" data-filter="recent" id="tl-filter-recent">Recent</button>
+                <button type="button" class="tl-filter-pill" data-filter="starred" id="tl-filter-starred">Starred</button>
               </div>
               <div class="tl-doc-search-wrap">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -151,16 +151,16 @@
                 <input type="text" class="tl-doc-search" id="tl-doc-search" placeholder="Search documents..." autocomplete="off" aria-label="Search documents">
               </div>
               <div class="tl-sort-wrap">
-                <button class="tl-sort-btn" id="tl-sort-btn" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="tl-sort-btn" id="tl-sort-btn" aria-haspopup="true" aria-expanded="false">
                   <span id="tl-sort-label">Latest</span>
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
                 <div class="tl-sort-menu" id="tl-sort-menu" role="menu">
-                  <button class="tl-sort-option" data-sort="latest" role="menuitem">Latest</button>
-                  <button class="tl-sort-option" data-sort="oldest" role="menuitem">Oldest</button>
-                  <button class="tl-sort-option" data-sort="title" role="menuitem">Title A–Z</button>
+                  <button type="button" class="tl-sort-option" data-sort="latest" role="menuitem">Latest</button>
+                  <button type="button" class="tl-sort-option" data-sort="oldest" role="menuitem">Oldest</button>
+                  <button type="button" class="tl-sort-option" data-sort="title" role="menuitem">Title A–Z</button>
                 </div>
               </div>
             </div>
@@ -216,7 +216,7 @@
               <span class="tl-ctx-head-label">Access</span>
             </div>
             <div class="tl-ctx-nav-list">
-              <button class="tl-ctx-nav-row" id="tl-ctx-team-access">
+              <button type="button" class="tl-ctx-nav-row" id="tl-ctx-team-access">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                   <circle cx="9" cy="7" r="4"></circle>
@@ -226,7 +226,7 @@
                 <span>Team access</span>
                 <span class="tl-ctx-arrow">&#8594;</span>
               </button>
-              <button class="tl-ctx-nav-row" id="tl-ctx-manage-perms">
+              <button type="button" class="tl-ctx-nav-row" id="tl-ctx-manage-perms">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="3"></circle>
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -234,7 +234,7 @@
                 <span>Manage permissions</span>
                 <span class="tl-ctx-arrow">&#8594;</span>
               </button>
-              <button class="tl-ctx-nav-row" id="tl-ctx-lib-settings">
+              <button type="button" class="tl-ctx-nav-row" id="tl-ctx-lib-settings">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="3"></circle>
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -268,7 +268,7 @@
                 <span class="tl-review-doc-desc" id="tl-review-doc-desc">Updated version awaiting approval.</span>
               </div>
             </div>
-            <button class="tl-review-action-btn" id="tl-review-action-btn">
+            <button type="button" class="tl-review-action-btn" id="tl-review-action-btn">
               Review document <span class="tl-btn-arrow">&#8594;</span>
             </button>
             <!-- No-review empty state -->

@@ -1,5 +1,7 @@
 package com.shed.teamden.calendar.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shed.teamden.activity.entity.ActivityEvent;
 import com.shed.teamden.activity.entity.ActivityEventType;
 import com.shed.teamden.activity.repository.ActivityEventRepository;
@@ -7,13 +9,12 @@ import com.shed.teamden.calendar.dto.*;
 import com.shed.teamden.calendar.entity.*;
 import com.shed.teamden.calendar.repository.*;
 import com.shed.teamden.common.exception.BadRequestException;
+import com.shed.teamden.common.exception.UnauthorizedException;
 import com.shed.teamden.organization.entity.Organization;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.security.CustomUserDetails;
 import com.shed.teamden.security.SecurityUtils;
 import com.shed.teamden.user.entity.User;
-import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +39,12 @@ public class CalendarService {
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
     private final ActivityEventRepository activityEventRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
     public CalendarPageDataDto getCalendarPageData() {
         Organization org = resolveCurrentOrganization();
-        User user = resolveCurrentUser(org);
+        resolveCurrentUser(org);
 
         List<CalendarEvent> events = calendarEventRepository.findByOrganizationIdOrderByEventDateAscStartTimeAsc(org.getId());
         List<CalendarEventDto> eventDtos = events.stream().map(this::toDto).collect(Collectors.toList());
@@ -118,7 +120,7 @@ public class CalendarService {
     @Transactional
     public List<CalendarEventDto> getCalendarEvents(String startDateStr, String endDateStr) {
         Organization org = resolveCurrentOrganization();
-        User user = resolveCurrentUser(org);
+        resolveCurrentUser(org);
 
         List<CalendarEvent> events;
         if (startDateStr != null && !startDateStr.isBlank() && endDateStr != null && !endDateStr.isBlank()) {
@@ -394,21 +396,29 @@ public class CalendarService {
             }
         }
 
-        // Agenda items
+        // Agenda items directly from agendaText column
         List<String> agendaItems = new ArrayList<>();
         if (e.getAgendaText() != null && !e.getAgendaText().isBlank()) {
             for (String item : e.getAgendaText().split("\n")) {
                 if (!item.trim().isEmpty()) agendaItems.add(item.trim());
             }
-        } else {
-            agendaItems.add("Review homepage direction");
-            agendaItems.add("Finalise mobile navigation");
-            agendaItems.add("Confirm development handoff");
+        }
+        if (agendaItems.isEmpty()) {
+            agendaItems.add("Homepage direction");
+            agendaItems.add("Mobile navigation");
+            agendaItems.add("Engineering handoff");
         }
 
-        // Attendees list structured
+        // Attendees list structured directly from attendeesJson column or generated from attendeeList
         List<Object> attendeesStructured = new ArrayList<>();
-        if (!attendeeList.isEmpty()) {
+        if (e.getAttendeesJson() != null && !e.getAttendeesJson().isBlank()) {
+            try {
+                attendeesStructured = objectMapper.readValue(e.getAttendeesJson(), new TypeReference<List<Object>>() {});
+            } catch (Exception ex) {
+                log.warn("Failed to parse attendeesJson: {}", ex.getMessage());
+            }
+        }
+        if (attendeesStructured.isEmpty() && !attendeeList.isEmpty()) {
             for (String att : attendeeList) {
                 String initials = Arrays.stream(att.split(" "))
                         .map(n -> n.length() > 0 ? n.substring(0, 1) : "")
@@ -422,26 +432,29 @@ public class CalendarService {
                         "status", "Accepted"
                 ));
             }
-        } else {
-            attendeesStructured.add(Map.of("name", "Priya K.", "initials", "PK", "theme", "avatar-pk", "status", "Accepted"));
-            attendeesStructured.add(Map.of("name", "Alex R.", "initials", "AR", "theme", "avatar-ar", "status", "Accepted"));
         }
 
-        // Followups structured
-        List<Object> followups = List.of(
-                Map.of("id", "fu-1", "title", "Refine mobile navigation", "assignee", "Priya K.", "due", "Due 30 Oct", "completed", false),
-                Map.of("id", "fu-2", "title", "Prepare design handoff", "assignee", "Alex R.", "due", "Due 30 Oct", "completed", false)
-        );
+        // Followups structured directly from followupsJson column
+        List<Object> followups = new ArrayList<>();
+        if (e.getFollowupsJson() != null && !e.getFollowupsJson().isBlank()) {
+            try {
+                followups = objectMapper.readValue(e.getFollowupsJson(), new TypeReference<List<Object>>() {});
+            } catch (Exception ex) {
+                log.warn("Failed to parse followupsJson: {}", ex.getMessage());
+            }
+        }
 
-        Map<String, String> organizer = Map.of(
-                "name", e.getOrganizerName() != null ? e.getOrganizerName() : "Alex R.",
-                "role", e.getOrganizerRole() != null ? e.getOrganizerRole() : "Lead Designer"
-        );
+        Map<String, String> organizer = new HashMap<>();
+        if (e.getOrganizerName() != null && !e.getOrganizerName().isBlank()) {
+            organizer.put("name", e.getOrganizerName());
+            organizer.put("role", e.getOrganizerRole() != null ? e.getOrganizerRole() : "Lead Designer");
+        }
 
-        Map<String, String> decision = Map.of(
-                "title", e.getDecisionTitle() != null ? e.getDecisionTitle() : "Proceed with the revised homepage layout.",
-                "status", e.getDecisionStatus() != null ? e.getDecisionStatus() : "Approved internally · Client confirmation pending"
-        );
+        Map<String, String> decision = new HashMap<>();
+        if (e.getDecisionTitle() != null && !e.getDecisionTitle().isBlank()) {
+            decision.put("title", e.getDecisionTitle());
+            decision.put("status", e.getDecisionStatus() != null ? e.getDecisionStatus() : "");
+        }
 
         String breadcrumb = String.format("%s / EVENT %s",
                 e.getProject() != null && !e.getProject().isBlank() ? e.getProject().toUpperCase() : "WORKSPACE",
@@ -468,7 +481,7 @@ public class CalendarService {
                 .breadcrumb(breadcrumb)
                 .agenda(agendaItems)
                 .notes(e.getNotesText() != null ? e.getNotesText() : e.getDescription())
-                .notesTimestamp(e.getNotesTimestamp() != null ? e.getNotesTimestamp() : "Saved 5 min ago")
+                .notesTimestamp(e.getNotesTimestamp() != null ? e.getNotesTimestamp() : "Saved 2 min ago")
                 .decision(decision)
                 .followups(followups)
                 .attendeesList(attendeesStructured)
@@ -477,6 +490,7 @@ public class CalendarService {
                 .rsvp(e.getRsvpStatus() != null ? e.getRsvpStatus() : "Accepted")
                 .build();
     }
+
 
     private int parseMinutes(String timeStr) {
         try {
@@ -499,12 +513,7 @@ public class CalendarService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
     }
 
     private User resolveCurrentUser(Organization org) {
@@ -519,13 +528,6 @@ public class CalendarService {
         if (!users.isEmpty()) {
             return users.get(0);
         }
-        User defaultUser = User.builder()
-                .id(UUID.randomUUID())
-                .fullName("SIVASURYA S")
-                .email("admin@brick.local")
-                .passwordHash("$2a$12$e0MYzXy/vP7J11.d3Jg1y.X9vG32g9J8qX8f0gK6hP2cQ3v5gK7a")
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(defaultUser);
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 }

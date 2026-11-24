@@ -1158,3 +1158,63 @@
   }
 }
 
+/* ── Utility & Accessibility Classes ────────────────────────────────────── */
+.tp-hidden {
+  display: none !important;
+}
+
+.tp-section-eyebrow--access {
+  margin-bottom: 0.25rem;
+}
+
+.tp-section-title--access {
+  margin-bottom: 0.6rem;
+}
+
+.tp-title-dot--lime {
+  color: var(--dash-accent-lime);
+}
+
+.tp-title-dot--primary {
+  color: var(--dash-text-primary);
+}
+
+.tp-rail-card-label--sm {
+  font-size: 0.625rem;
+}
+
+.tp-rail-card-footer {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--dash-border-subtle);
+}
+
+.tp-rail-card-footer--alt {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.tp-rail-resource-desc {
+  font-size: 0.8rem;
+  line-height: 1.35;
+  margin-top: 0.25rem;
+}
+
+/* Button & Link reset for interactive components */
+button.tp-resp-row,
+button.tp-collab-row,
+button.tp-access-banner,
+a.tp-quick-link-row,
+button.tp-member-card {
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+

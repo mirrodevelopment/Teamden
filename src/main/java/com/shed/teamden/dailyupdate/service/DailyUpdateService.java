@@ -146,7 +146,6 @@ public class DailyUpdateService {
     public DailyUpdateSuggestionDto getSuggestionsForToday() {
         Organization org = resolveCurrentOrganization();
         User user = resolveCurrentUser(org);
-        LocalDate today = LocalDate.now();
 
         List<Task> userTasks = taskRepository.findByOrganizationIdAndAssigneeId(org.getId(), user.getId(), PageRequest.of(0, 50));
 

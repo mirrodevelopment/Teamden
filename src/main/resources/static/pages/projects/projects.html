@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -54,9 +54,9 @@
             </div>
 
             <!-- Headline: projects. -->
-            <div class="projects-headline-row" style="display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
+            <div class="projects-headline-row">
               <div class="projects-headline-group">
-                <h2 class="projects-title-main" aria-label="projects.">projects<span class="title-square-dot" aria-hidden="true"></span></h2>
+                <h2 class="projects-title-main">projects<span class="title-square-dot" aria-hidden="true"></span></h2>
                 <p class="projects-subtitle">Everything we're building, in one place.</p>
               </div>
               <button type="button" class="btn-create-project-primary" id="btn-open-create-project">
@@ -103,101 +103,34 @@
 
           <!-- Featured Project Card: 01 / PROJECT IN FOCUS -->
           <section class="featured-project-card" id="featured-project-card" aria-label="Project in Focus">
-            <div class="featured-left-col">
-              <div class="featured-top-row">
-                <span class="featured-tag-id">01 / PROJECT IN FOCUS</span>
-                <span class="status-pill pill-active">
-                  <span class="pill-dot dot-green"></span>
-                  <span>ACTIVE</span>
-                </span>
-                <span class="status-pill pill-at-risk">
-                  <span class="pill-dot dot-red"></span>
-                  <span>AT RISK</span>
-                </span>
-              </div>
-
-              <h2 class="featured-project-title" id="featured-title">Website Redesign</h2>
-              <p class="featured-project-desc" id="featured-desc">
-                Deliver a responsive, approved website ready for production.
-              </p>
-
-              <div class="featured-meta-row">
-                <span class="featured-meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                  </svg>
-                  <span id="featured-team">Design Team</span>
-                </span>
-                <span class="featured-meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
-                  <span id="featured-due">Due 15 Nov 2026</span>
-                </span>
-                <span class="featured-meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dash-status-urgent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                    <line x1="4" y1="22" x2="4" y2="15"></line>
-                  </svg>
-                  <span id="featured-priority">High Priority</span>
-                </span>
-              </div>
-            </div>
-
-            <!-- Featured Card Right Column (Metrics & Action) -->
-            <div class="featured-right-col">
-              <button class="featured-more-btn" title="More options" aria-label="More options">•••</button>
-
-              <div class="featured-metrics-wrap">
-                <div class="featured-milestones-box">
-                  <span class="feat-metric-label">MILESTONES</span>
-                  <span class="feat-metric-val" id="featured-milestone-ratio">06/09</span>
-                  <div class="feat-progress-track">
-                    <div class="feat-progress-fill" id="featured-progress-bar" style="width: 67%;"></div>
-                  </div>
-                </div>
-
-                <div class="featured-blockers-box">
-                  <span class="feat-metric-label">BLOCKERS</span>
-                  <span class="feat-metric-val" id="featured-blockers-count">02</span>
-                </div>
-              </div>
-
-              <button class="btn-open-project" id="btn-open-featured">
-                <span>Open project</span>
-                <span class="arrow-glyph">→</span>
-              </button>
-            </div>
+            <!-- Dynamically populated by renderFeaturedCard() -->
           </section>
 
           <!-- Filters Toolbar Row -->
           <section class="projects-toolbar-row" aria-label="Project Filters and View Controls">
             <!-- Filter Chips (Horizontally Scrollable) -->
             <div class="filters-chips-scroll" id="filters-chips-container">
-              <button class="filter-chip active" data-filter="all">
+              <button type="button" class="filter-chip active" data-filter="all">
                 <span>All Projects</span>
                 <span class="chip-count" id="count-all">12</span>
               </button>
-              <button class="filter-chip" data-filter="active">
+              <button type="button" class="filter-chip" data-filter="active">
                 <span>Active</span>
                 <span class="chip-count" id="count-active">8</span>
               </button>
-              <button class="filter-chip" data-filter="in_review">
+              <button type="button" class="filter-chip" data-filter="in_review">
                 <span>In Review</span>
                 <span class="chip-count" id="count-in-review">2</span>
               </button>
-              <button class="filter-chip" data-filter="planning">
+              <button type="button" class="filter-chip" data-filter="planning">
                 <span>Planning</span>
                 <span class="chip-count" id="count-planning">1</span>
               </button>
-              <button class="filter-chip" data-filter="completed">
+              <button type="button" class="filter-chip" data-filter="completed">
                 <span>Completed</span>
                 <span class="chip-count" id="count-completed">1</span>
               </button>
-              <button class="filter-chip" data-filter="on_hold">
+              <button type="button" class="filter-chip" data-filter="on_hold">
                 <span>On Hold</span>
                 <span class="chip-count" id="count-on-hold">0</span>
               </button>
@@ -208,7 +141,7 @@
               <!-- Search box trigger -->
               <div class="toolbar-search-wrap">
                 <input type="text" class="toolbar-search-input" id="projects-search-input" placeholder="Search projects..." aria-label="Search projects">
-                <button class="toolbar-icon-btn" id="btn-toggle-search" title="Search" aria-label="Search">
+                <button type="button" class="toolbar-icon-btn" id="btn-toggle-search" title="Search" aria-label="Search">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -217,7 +150,7 @@
               </div>
 
               <!-- Filter popover button -->
-              <button class="toolbar-filter-btn" id="btn-open-filter-modal" title="Filter options">
+              <button type="button" class="toolbar-filter-btn" id="btn-open-filter-modal" title="Filter options">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                 </svg>
@@ -225,8 +158,8 @@
               </button>
 
               <!-- View Toggles: Grid vs List -->
-              <div class="view-toggles-wrapper" role="radiogroup" aria-label="Layout view mode">
-                <button class="view-toggle-btn active" id="btn-view-grid" title="Grid View" aria-label="Grid View" aria-checked="true" role="radio">
+              <div class="view-toggles-wrapper">
+                <button type="button" class="view-toggle-btn active" id="btn-view-grid" title="Grid View" aria-label="Grid View" aria-pressed="true">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                     <rect x="3" y="3" width="7" height="7" rx="1"></rect>
                     <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -234,7 +167,7 @@
                     <rect x="3" y="14" width="7" height="7" rx="1"></rect>
                   </svg>
                 </button>
-                <button class="view-toggle-btn" id="btn-view-list" title="List View" aria-label="List View" aria-checked="false" role="radio">
+                <button type="button" class="view-toggle-btn" id="btn-view-list" title="List View" aria-label="List View" aria-pressed="false">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
                     <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -260,7 +193,7 @@
             </svg>
             <h3 class="empty-title">No projects match your criteria</h3>
             <p class="empty-subtitle">Try adjusting your filters or search terms.</p>
-            <button class="btn-clear-filters" id="btn-clear-filters">Clear all filters</button>
+            <button type="button" class="btn-clear-filters" id="btn-clear-filters">Clear all filters</button>
           </div>
         </main>
 
@@ -295,65 +228,7 @@
 
             <!-- Approvals List -->
             <div class="decisions-items-list" id="decisions-items-list">
-              <!-- Item 1 (Highlighted with Review button) -->
-              <div class="decision-card-item card-primary-highlight">
-                <div class="decision-top-meta">
-                  <span class="decision-dot dot-amber"></span>
-                  <span class="decision-project-tag">WEBSITE REDESIGN</span>
-                </div>
-                <h4 class="decision-title">Brand Development</h4>
-                <span class="decision-sub">Identity approval</span>
-                <div class="decision-action-row">
-                  <span class="decision-due-date">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Due 30 Oct 2026</span>
-                  </span>
-                  <button class="btn-review-decision" data-decision-id="dec-1">Review →</button>
-                </div>
-              </div>
-
-              <!-- Item 2 -->
-              <div class="decision-card-item">
-                <div class="decision-accent-bar bar-red"></div>
-                <div class="decision-content-block">
-                  <h4 class="decision-title">Marketing Campaign</h4>
-                  <span class="decision-sub">Budget sign-off</span>
-                  <div class="decision-due-date">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Due 27 Oct 2026</span>
-                  </div>
-                </div>
-                <span class="decision-arrow">→</span>
-              </div>
-
-              <!-- Item 3 -->
-              <div class="decision-card-item">
-                <div class="decision-accent-bar bar-amber"></div>
-                <div class="decision-content-block">
-                  <h4 class="decision-title">Product Roadmap</h4>
-                  <span class="decision-sub">Strategy approval</span>
-                  <div class="decision-due-date">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Due 10 Nov 2026</span>
-                  </div>
-                </div>
-                <span class="decision-arrow">→</span>
-              </div>
+              <!-- Dynamically populated by renderRightRail() -->
             </div>
           </div>
 
@@ -368,111 +243,14 @@
                 </div>
                 <div class="attention-header-text">
                   <span class="rail-header-title">PROJECT ATTENTION</span>
-                  <span class="rail-header-subtitle">RISKS, BLOCKERS & ISSUES</span>
+                  <span class="rail-header-subtitle">RISKS, BLOCKERS &amp; ISSUES</span>
                 </div>
               </div>
               <a href="#attention" class="rail-header-action" id="action-view-all-attention">View all →</a>
             </div>
 
             <div class="attention-items-list" id="attention-items-list">
-              <!-- Item 01 -->
-              <div class="attention-card-item">
-                <div class="att-num-col">
-                  <span class="att-num">01</span>
-                  <span class="att-num-line"></span>
-                </div>
-                <div class="att-body">
-                  <div class="att-top-row">
-                    <span class="att-status-badge badge-blocked">
-                      <span class="att-badge-dot dot-red"></span>
-                      <span>BLOCKED</span>
-                    </span>
-                    <span class="att-meta-label">2 blockers</span>
-                  </div>
-                  <div class="att-content-row">
-                    <div class="att-info-col">
-                      <h4 class="att-project-name">Client Application</h4>
-                      <p class="att-detail-text">2 blockers require input</p>
-                      <span class="att-date-text">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span>Since 18 Oct 2026</span>
-                      </span>
-                    </div>
-                    <span class="att-arrow">→</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Item 02 -->
-              <div class="attention-card-item">
-                <div class="att-num-col">
-                  <span class="att-num">02</span>
-                  <span class="att-num-line"></span>
-                </div>
-                <div class="att-body">
-                  <div class="att-top-row">
-                    <span class="att-status-badge badge-delay">
-                      <span class="att-badge-dot dot-amber"></span>
-                      <span>DELAY</span>
-                    </span>
-                    <span class="att-meta-label">At risk</span>
-                  </div>
-                  <div class="att-content-row">
-                    <div class="att-info-col">
-                      <h4 class="att-project-name">Brand Development</h4>
-                      <p class="att-detail-text">Design approval pending</p>
-                      <span class="att-date-text">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span>Due 30 Oct 2026</span>
-                      </span>
-                    </div>
-                    <span class="att-arrow">→</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Item 03 -->
-              <div class="attention-card-item">
-                <div class="att-num-col">
-                  <span class="att-num">03</span>
-                  <span class="att-num-line"></span>
-                </div>
-                <div class="att-body">
-                  <div class="att-top-row">
-                    <span class="att-status-badge badge-resource">
-                      <span class="att-badge-dot dot-grey"></span>
-                      <span>RESOURCE</span>
-                    </span>
-                    <span class="att-meta-label">Needs follow-up</span>
-                  </div>
-                  <div class="att-content-row">
-                    <div class="att-info-col">
-                      <h4 class="att-project-name">Content Library</h4>
-                      <p class="att-detail-text">Delayed by 2 days</p>
-                      <span class="att-date-text">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span>Due 20 Nov 2026</span>
-                      </span>
-                    </div>
-                    <span class="att-arrow">→</span>
-                  </div>
-                </div>
-              </div>
+              <!-- Dynamically populated by renderRightRail() -->
             </div>
           </div>
 
@@ -484,75 +262,7 @@
             </div>
 
             <div class="milestones-timeline-list" id="milestones-timeline-list">
-              <!-- Item 1 -->
-              <div class="milestone-timeline-item">
-                <div class="milestone-date-col">
-                  <span class="milestone-date-str">27</span>
-                  <span class="milestone-month-str">OCT</span>
-                </div>
-                <span class="milestone-node-dot dot-green"></span>
-                <div class="milestone-content">
-                  <h5 class="milestone-item-title">Brand Guidelines</h5>
-                  <span class="milestone-item-sub">Final design review</span>
-                </div>
-                <span class="milestone-arrow">→</span>
-              </div>
-
-              <!-- Item 2 -->
-              <div class="milestone-timeline-item">
-                <div class="milestone-date-col">
-                  <span class="milestone-date-str">30</span>
-                  <span class="milestone-month-str">OCT</span>
-                </div>
-                <span class="milestone-node-dot dot-green"></span>
-                <div class="milestone-content">
-                  <h5 class="milestone-item-title">Client Application</h5>
-                  <span class="milestone-item-sub">Beta build release</span>
-                </div>
-                <span class="milestone-arrow">→</span>
-              </div>
-
-              <!-- Item 3 -->
-              <div class="milestone-timeline-item">
-                <div class="milestone-date-col">
-                  <span class="milestone-date-str">02</span>
-                  <span class="milestone-month-str">NOV</span>
-                </div>
-                <span class="milestone-node-dot dot-amber"></span>
-                <div class="milestone-content">
-                  <h5 class="milestone-item-title">Marketing Campaign</h5>
-                  <span class="milestone-item-sub">Campaign assets ready</span>
-                </div>
-                <span class="milestone-arrow">→</span>
-              </div>
-
-              <!-- Item 4 -->
-              <div class="milestone-timeline-item">
-                <div class="milestone-date-col">
-                  <span class="milestone-date-str">05</span>
-                  <span class="milestone-month-str">NOV</span>
-                </div>
-                <span class="milestone-node-dot dot-red"></span>
-                <div class="milestone-content">
-                  <h5 class="milestone-item-title">Website Redesign</h5>
-                  <span class="milestone-item-sub">Client approval</span>
-                </div>
-                <span class="milestone-arrow">→</span>
-              </div>
-
-              <!-- Item 5 -->
-              <div class="milestone-timeline-item">
-                <div class="milestone-date-col">
-                  <span class="milestone-date-str">10</span>
-                  <span class="milestone-month-str">NOV</span>
-                </div>
-                <span class="milestone-node-dot dot-black"></span>
-                <div class="milestone-content">
-                  <h5 class="milestone-item-title">Product Roadmap</h5>
-                  <span class="milestone-item-sub">Strategy presentation</span>
-                </div>
-                <span class="milestone-arrow">→</span>
-              </div>
+              <!-- Dynamically populated by renderRightRail() -->
             </div>
           </div>
 
@@ -562,11 +272,11 @@
   </div>
 
   <!-- Project Creation Modal -->
-  <div class="project-modal-backdrop d-none" id="project-create-modal" aria-hidden="true" role="dialog">
+  <div class="project-modal-backdrop d-none" id="project-create-modal">
     <div class="project-modal-dialog">
       <div class="project-modal-header">
         <h3 class="project-modal-title">Create New Project</h3>
-        <button class="project-modal-close" id="btn-close-project-modal" aria-label="Close modal">✕</button>
+        <button type="button" class="project-modal-close" id="btn-close-project-modal" aria-label="Close modal">✕</button>
       </div>
       <form id="form-create-project" class="project-modal-form">
         <div class="form-group">

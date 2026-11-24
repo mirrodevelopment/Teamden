@@ -1021,6 +1021,164 @@ body.brick-register-body {
   transform: translateX(3px);
 }
 
+/* Billing Address Group */
+.optional-hint {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--brick-text-secondary);
+  margin-left: 0.35rem;
+  text-transform: none;
+}
+
+.field-info-hint {
+  font-size: 0.78rem;
+  color: var(--brick-text-secondary);
+  margin-top: 0.35rem;
+}
+
+.billing-address-group {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background-color: var(--brick-card-sand);
+  border: 1px solid var(--brick-border);
+  border-radius: 8px;
+}
+
+.billing-group-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brick-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* Email Verification OTP Section */
+.email-verification-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background-color: var(--brick-card-sand);
+  border: 1px solid var(--brick-border);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+
+.otp-action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.otp-input-wrap {
+  width: 140px;
+}
+
+.otp-input {
+  height: 34px !important;
+  font-size: 0.88rem !important;
+  font-family: var(--brick-font-brand);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.btn-otp-action {
+  height: 34px !important;
+  padding: 0 0.85rem !important;
+  font-size: 0.78rem !important;
+}
+
+.verification-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--brick-border);
+}
+
+.verification-pill.unverified {
+  background-color: var(--brick-surface);
+  color: var(--dash-dot-yellow, #f59e0b);
+}
+
+.verification-pill.unverified .pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--dash-dot-yellow, #f59e0b);
+}
+
+.verification-pill.verified {
+  background-color: var(--brick-card-sand);
+  color: var(--brick-success);
+  border-color: var(--brick-success);
+}
+
+.verification-pill.verified .pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--brick-success);
+}
+
+.otp-hint-text {
+  font-size: 0.74rem;
+  color: var(--brick-text-secondary);
+}
+
+/* Password Strength Meter */
+.password-strength-container {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.strength-bar-track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--brick-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.25s ease, background-color 0.25s ease;
+  background-color: var(--brick-error);
+}
+
+.strength-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--brick-text-secondary);
+}
+
+.strength-recommendation {
+  font-size: 0.7rem;
+  color: var(--brick-text-secondary);
+}
+
+/* Final Review Confirm Block */
+.review-confirm-block {
+  padding: 0.75rem 1rem;
+  background-color: var(--brick-card-sand);
+  border: 1px solid var(--brick-border);
+  border-radius: 8px;
+}
+
 /* Responsive Adaptations */
 @media (max-width: 1024px) {
 

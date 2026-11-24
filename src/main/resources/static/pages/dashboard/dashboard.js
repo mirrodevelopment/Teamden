@@ -1914,6 +1914,16 @@
       if (railDayD1) ro.observe(railDayD1);
     }
 
+    // 8. Bind daily update card click
+    const dailyCard = document.querySelector('.daily-update-card');
+    if (dailyCard) {
+      dailyCard.addEventListener('click', (e) => {
+        if (!e.target.closest('button, a')) {
+          window.openDailyUpdateModal(e);
+        }
+      });
+    }
+
     // 9. Check URL parameters for direct modal triggers
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('openDailyUpdate') === 'true') {

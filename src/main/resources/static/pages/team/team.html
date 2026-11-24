@@ -70,32 +70,40 @@
               <input type="text" class="team-search-input" id="team-search-input" placeholder="Find people or teams..." autocomplete="off" aria-label="Find people or teams">
             </div>
 
-            <div class="team-directory-wrap">
-              <button class="team-directory-btn" id="team-directory-btn" aria-haspopup="true" aria-expanded="false" title="Team Directory filter">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="4" y1="21" x2="4" y2="14"></line>
-                  <line x1="4" y1="10" x2="4" y2="3"></line>
-                  <line x1="12" y1="21" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12" y2="3"></line>
-                  <line x1="20" y1="21" x2="20" y2="16"></line>
-                  <line x1="20" y1="12" x2="20" y2="3"></line>
-                  <line x1="1" y1="14" x2="7" y2="14"></line>
-                  <line x1="9" y1="8" x2="15" y2="8"></line>
-                  <line x1="17" y1="16" x2="23" y2="16"></line>
-                </svg>
-                <span>Directory</span>
-                <svg class="team-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
+            <div class="team-toolbar-actions">
+              <div class="team-directory-wrap">
+                <button type="button" class="team-directory-btn" id="team-directory-btn" aria-haspopup="true" aria-expanded="false" title="Team Directory filter">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                  </svg>
+                  <span>Directory</span>
+                  <svg class="team-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
 
-              <div class="team-dir-dropdown" id="team-dir-dropdown" role="menu">
-                <button class="team-dir-opt" data-dept="all" role="menuitem">All Departments</button>
-                <button class="team-dir-opt" data-dept="design" role="menuitem">Design</button>
-                <button class="team-dir-opt" data-dept="engineering" role="menuitem">Engineering</button>
-                <button class="team-dir-opt" data-dept="content" role="menuitem">Content</button>
-                <button class="team-dir-opt" data-dept="operations" role="menuitem">Operations</button>
+                <div class="team-dir-dropdown" id="team-dir-dropdown" role="menu">
+                  <button type="button" class="team-dir-opt" data-dept="all" role="menuitem">All Departments</button>
+                  <button type="button" class="team-dir-opt" data-dept="design" role="menuitem">Design</button>
+                  <button type="button" class="team-dir-opt" data-dept="engineering" role="menuitem">Engineering</button>
+                  <button type="button" class="team-dir-opt" data-dept="content" role="menuitem">Content</button>
+                  <button type="button" class="team-dir-opt" data-dept="operations" role="menuitem">Operations</button>
+                </div>
               </div>
+
+              <!-- Create Team Button -->
+              <button class="btn-create-team-primary" id="btn-open-create-team" type="button" title="Create a new team">
+                <span class="plus-icon">+</span>
+                <span>Create Team</span>
+              </button>
             </div>
           </div>
 
@@ -108,7 +116,7 @@
             </div>
 
             <div class="team-featured-card" id="team-featured-card">
-              <button class="team-featured-popout" id="team-featured-popout" title="Open team space in full view" aria-label="Open team space">
+              <button type="button" class="team-featured-popout" id="team-featured-popout" title="Open team space in full view" aria-label="Open team space">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="7" y1="17" x2="17" y2="7"></line>
                   <polyline points="7 7 17 7 17 17"></polyline>
@@ -128,11 +136,11 @@
               </div>
 
               <div class="team-featured-bottom-row">
-                <div class="team-featured-avatars" id="team-featured-avatars" aria-label="Team members">
+                <div class="team-featured-avatars" id="team-featured-avatars" role="group" aria-label="Team members">
                   <!-- Injected via JS -->
                 </div>
 
-                <button class="team-featured-btn" id="team-featured-open-btn">
+                <button type="button" class="team-featured-btn" id="team-featured-open-btn">
                   <span>Open team</span>
                   <span class="team-btn-arrow">&#8594;</span>
                 </button>
@@ -148,10 +156,16 @@
                 <span class="team-eyebrow-sep">/</span>
                 <span class="team-eyebrow-label" id="sec-explore-teams-label">EXPLORE YOUR TEAMS</span>
               </div>
-              <button class="team-action-link" id="team-view-dir-btn">
-                <span>View directory</span>
-                <span class="team-link-arrow">&#8594;</span>
-              </button>
+              <div class="team-section-actions">
+                <button class="team-action-link team-action-create-btn" id="btn-explore-create-team" type="button" title="Create a new team">
+                  <span class="plus-icon">+</span>
+                  <span>New team</span>
+                </button>
+                <button type="button" class="team-action-link" id="team-view-dir-btn">
+                  <span>View directory</span>
+                  <span class="team-link-arrow">&#8594;</span>
+                </button>
+              </div>
             </div>
 
             <div class="team-explore-list" id="team-explore-list">
@@ -167,7 +181,7 @@
                 <span class="team-eyebrow-sep">/</span>
                 <span class="team-eyebrow-label" id="sec-across-teams-label">ACROSS TEAMS</span>
               </div>
-              <button class="team-action-link" id="team-view-across-btn">
+              <button type="button" class="team-action-link" id="team-view-across-btn">
                 <span>View all</span>
                 <span class="team-link-arrow">&#8594;</span>
               </button>
@@ -179,10 +193,10 @@
 
             <!-- Carousel Pagination Dots -->
             <div class="team-across-pagination" id="team-across-pagination">
-              <button class="team-page-arrow" id="team-page-prev" title="Previous" aria-label="Previous page">&lt;</button>
+              <button type="button" class="team-page-arrow" id="team-page-prev" title="Previous" aria-label="Previous page">&lt;</button>
               <span class="team-page-dot active"></span>
               <span class="team-page-dot"></span>
-              <button class="team-page-arrow" id="team-page-next" title="Next" aria-label="Next page">&gt;</button>
+              <button type="button" class="team-page-arrow" id="team-page-next" title="Next" aria-label="Next page">&gt;</button>
             </div>
           </section>
 
@@ -194,7 +208,7 @@
                 <span class="team-eyebrow-sep">/</span>
                 <span class="team-eyebrow-label" id="sec-from-teams-label">FROM YOUR TEAMS</span>
               </div>
-              <button class="team-action-link" id="team-view-updates-btn">
+              <button type="button" class="team-action-link" id="team-view-updates-btn">
                 <span>View all</span>
                 <span class="team-link-arrow">&#8594;</span>
               </button>
@@ -218,7 +232,7 @@
             <h2 class="team-dark-title">Needs your input<span class="team-dark-dot">.</span></h2>
             <p class="team-dark-desc">Decisions and discussions where your contribution is needed.</p>
             <div class="team-dark-divider"></div>
-            <button class="team-dark-cta-btn" id="team-view-collabs-btn">
+            <button type="button" class="team-dark-cta-btn" id="team-view-collabs-btn">
               <span>View all requests</span>
               <span class="team-btn-arrow">&#8594;</span>
             </button>
@@ -228,12 +242,12 @@
           <div class="team-panel-card team-panel-card--awaiting" id="team-awaiting-card">
             <div class="team-card-head-row">
               <span class="team-card-eyebrow">AWAITING YOUR RESPONSE</span>
-              <button class="team-card-link" id="team-awaiting-view-all">View all &#8594;</button>
+              <button type="button" class="team-card-link" id="team-awaiting-view-all">View all &#8594;</button>
             </div>
             <div class="team-awaiting-list" id="team-awaiting-list">
               <!-- Injected via JS -->
             </div>
-            <div class="team-empty-state" id="team-awaiting-empty" style="display:none;">
+            <div class="team-empty-state team-hidden" id="team-awaiting-empty">
               <p>You&#39;re all caught up.</p>
             </div>
           </div>
@@ -242,12 +256,12 @@
           <div class="team-panel-card team-panel-card--mentions" id="team-mentions-card">
             <div class="team-card-head-row">
               <span class="team-card-eyebrow">MENTIONS &amp; REQUESTS</span>
-              <button class="team-card-link" id="team-mentions-view-all">View all &#8594;</button>
+              <button type="button" class="team-card-link" id="team-mentions-view-all">View all &#8594;</button>
             </div>
             <div class="team-mentions-list" id="team-mentions-list">
               <!-- Injected via JS -->
             </div>
-            <div class="team-empty-state" id="team-mentions-empty" style="display:none;">
+            <div class="team-empty-state team-hidden" id="team-mentions-empty">
               <p>No mentions or tags yet.</p>
             </div>
           </div>
@@ -256,12 +270,12 @@
           <div class="team-panel-card team-panel-card--people" id="team-people-card">
             <div class="team-card-head-row">
               <span class="team-card-eyebrow">PEOPLE</span>
-              <button class="team-card-link" id="team-people-view-dir">View directory &#8594;</button>
+              <button type="button" class="team-card-link" id="team-people-view-dir">View directory &#8594;</button>
             </div>
             <div class="team-people-avatars-wrap" id="team-people-avatars">
               <!-- Injected via JS -->
             </div>
-            <button class="team-people-browse-btn" id="team-people-browse-btn">
+            <button type="button" class="team-people-browse-btn" id="team-people-browse-btn">
               <span>Browse team directory</span>
               <span class="team-btn-arrow">&#8594;</span>
             </button>
@@ -272,6 +286,234 @@
       </div><!-- /.team-content-split -->
     </div><!-- /.team-main-area -->
   </div><!-- /.team-master-wrapper -->
+
+  <!-- ===================================================================
+       CREATE TEAM MODAL (4-Section BRICK Specification)
+       =================================================================== -->
+  <div class="team-modal-backdrop team-hidden" id="team-create-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-headline">
+    <div class="team-modal-card team-modal-card-lg">
+      <div class="team-modal-header">
+        <div class="team-modal-meta">
+          <span class="team-modal-breadcrumb">BRICK / TEAMS</span>
+          <h2 class="team-modal-title" id="team-modal-headline">create team<span class="team-modal-title-dot">.</span></h2>
+          <p class="team-modal-sub">Organize people around shared responsibilities, projects, and goals.</p>
+        </div>
+        <button class="team-modal-close-btn" id="btn-close-team-modal" type="button" aria-label="Close modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="form-create-team" class="team-create-form" novalidate>
+        <!-- ── Section 1: Basic Team Information ── -->
+        <div class="team-create-section">
+          <div class="team-create-sec-header">
+            <span class="team-sec-num">01</span>
+            <div>
+              <h3 class="team-sec-title">Basic Team Information</h3>
+              <p class="team-sec-desc">Core identifiers, department alignment, and mission.</p>
+            </div>
+          </div>
+
+          <div class="team-form-row">
+            <!-- Team Name * -->
+            <div class="team-form-group team-flex-2">
+              <label class="team-form-label" for="create-team-name">
+                TEAM NAME <span class="required-asterisk">*</span>
+              </label>
+              <input type="text" id="create-team-name" class="team-form-input" placeholder="e.g. Core Platform Squad or Product Design" required autocomplete="off">
+            </div>
+
+            <!-- Team Code / ID (System Generated Preview) -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-code">
+                TEAM CODE <span class="team-badge-auto">AUTO</span>
+              </label>
+              <input type="text" id="create-team-code" class="team-form-input team-input-readonly" placeholder="e.g. TEAM-CORE-01" readonly>
+            </div>
+          </div>
+
+          <!-- Team Description * -->
+          <div class="team-form-group">
+            <label class="team-form-label" for="create-team-desc">
+              TEAM DESCRIPTION <span class="required-asterisk">*</span>
+            </label>
+            <textarea id="create-team-desc" class="team-form-textarea" rows="2" placeholder="Describe the team's objectives, responsibilities, and deliverables..." required></textarea>
+          </div>
+
+          <div class="team-form-row">
+            <!-- Department * -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-department">
+                DEPARTMENT <span class="required-asterisk">*</span>
+              </label>
+              <select id="create-team-department" class="team-form-select" required>
+                <option value="" disabled selected>Select department</option>
+                <!-- Dynamically loaded from /api/departments or /api/teams/options -->
+              </select>
+            </div>
+
+            <!-- Team Category -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-category">TEAM CATEGORY</label>
+              <select id="create-team-category" class="team-form-select">
+                <option value="Development" selected>Development</option>
+                <option value="Design">Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Sales">Sales</option>
+                <option value="Human Resources">Human Resources</option>
+                <option value="Finance">Finance</option>
+                <option value="Operations">Operations</option>
+                <option value="Customer Support">Customer Support</option>
+                <option value="Research">Research</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- Card Theme / Accent -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-theme">THEME</label>
+              <select id="create-team-theme" class="team-form-select">
+                <option value="lavender" selected>Lavender</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="peach">Peach</option>
+                <option value="beige">Beige</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section 2: Team Leadership ── -->
+        <div class="team-create-section">
+          <div class="team-create-sec-header">
+            <span class="team-sec-num">02</span>
+            <div>
+              <h3 class="team-sec-title">Team Leadership</h3>
+              <p class="team-sec-desc">Assign qualified leads and managers to drive the team.</p>
+            </div>
+          </div>
+
+          <div class="team-form-row">
+            <!-- Team Lead * -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-lead">
+                TEAM LEAD <span class="required-asterisk">*</span>
+              </label>
+              <select id="create-team-lead" class="team-form-select" required>
+                <option value="" disabled selected>Select team lead</option>
+                <!-- Active organization employees -->
+              </select>
+            </div>
+
+            <!-- Assistant Team Lead (Optional) -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-assistant">
+                ASSISTANT TEAM LEAD <span class="team-form-hint">(Optional)</span>
+              </label>
+              <select id="create-team-assistant" class="team-form-select">
+                <option value="">None (optional)</option>
+              </select>
+            </div>
+
+            <!-- Reporting Manager (Optional) -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-manager">
+                REPORTING MANAGER <span class="team-form-hint">(Optional)</span>
+              </label>
+              <select id="create-team-manager" class="team-form-select">
+                <option value="">None (optional)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Section 3: Team Members ── -->
+        <div class="team-create-section">
+          <div class="team-create-sec-header">
+            <span class="team-sec-num">03</span>
+            <div>
+              <h3 class="team-sec-title">Team Members <span class="required-asterisk">*</span></h3>
+              <p class="team-sec-desc">Select employees from the organization to collaborate in this team.</p>
+            </div>
+          </div>
+
+          <!-- Add Member Control -->
+          <div class="team-add-member-bar">
+            <div class="team-form-group team-form-group--flex">
+              <select id="create-team-member-selector" class="team-form-select">
+                <option value="">Choose employee to add...</option>
+              </select>
+            </div>
+            <button type="button" id="btn-add-team-member" class="team-btn-add-member">
+              + Add Member
+            </button>
+          </div>
+
+          <!-- Selected Members Interactive List -->
+          <div class="team-selected-members-container" id="create-team-selected-members">
+            <!-- Populated via JS: Lead is auto-locked; members have role dropdown & remove button -->
+          </div>
+        </div>
+
+        <!-- ── Section 4: Team Settings ── -->
+        <div class="team-create-section">
+          <div class="team-create-sec-header">
+            <span class="team-sec-num">04</span>
+            <div>
+              <h3 class="team-sec-title">Team Settings &amp; Permissions</h3>
+              <p class="team-sec-desc">Discovery visibility and system-governed team permissions.</p>
+            </div>
+          </div>
+
+          <div class="team-form-row">
+            <!-- Team Visibility * -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label" for="create-team-visibility">
+                TEAM VISIBILITY <span class="required-asterisk">*</span>
+              </label>
+              <select id="create-team-visibility" class="team-form-select" required>
+                <option value="Organization-wide" selected>Organization-wide (All members can discover)</option>
+                <option value="Restricted">Restricted (Invitation / squad members only)</option>
+              </select>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="team-form-group team-flex-1">
+              <label class="team-form-label">INITIAL STATUS</label>
+              <div class="team-badge-status-display">
+                <span class="status-indicator-dot"></span>
+                <span>Active</span>
+                <span class="team-status-tag">SYSTEM DEFAULT</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions Summary Pills -->
+          <div class="team-permissions-preview">
+            <span class="team-perm-pill">&#10003; View Assigned Projects</span>
+            <span class="team-perm-pill">&#10003; Manage Team Tasks</span>
+            <span class="team-perm-pill">&#10003; Invite Members</span>
+            <span class="team-perm-pill">&#10003; Chronicle Updates</span>
+          </div>
+        </div>
+
+        <!-- Error Container -->
+        <div class="team-form-error team-hidden" id="create-team-error"></div>
+
+        <!-- Bottom Actions -->
+        <div class="team-modal-footer">
+          <button type="button" class="team-btn-cancel" id="btn-cancel-create-team">Cancel</button>
+          <button type="submit" class="team-btn-submit" id="btn-submit-team">
+            <span>Create team</span>
+            <span class="team-btn-arrow">&rarr;</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="/fragments/company-data/company-data.js?v=2"></script>

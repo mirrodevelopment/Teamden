@@ -20,151 +20,14 @@
 
   let currentTeamId = 'team-design';
 
-  /* ── Seed Data matching the updated screenshot ─────────────────────────── */
-  const SEED_DATA = {
-    members: [
-      {
-        id: 'm-peter',
-        name: 'Peter K.',
-        fullName: 'Peter Kowalski',
-        role: 'Design Lead',
-        initials: 'PK',
-        responsibility: 'Creative direction & approvals',
-        focus: 'Website Redesign',
-        email: 'peter@acme.co',
-        cardClass: 'tp-card--beige',
-        avatarClass: 'tp-avatar--beige',
-        bio: 'Oversees creative direction, brand integrity, and design system governance across all client and internal digital experiences.'
-      },
-      {
-        id: 'm-alex',
-        name: 'Alex R.',
-        fullName: 'Alex Rivera',
-        role: 'Product Designer',
-        initials: 'AR',
-        responsibility: 'Interface design & reviews',
-        focus: 'Client Application',
-        email: 'alex@acme.co',
-        cardClass: 'tp-card--lavender',
-        avatarClass: 'tp-avatar--lavender',
-        bio: 'Focuses on cross-platform application workflows, interaction paradigms, and rapid prototype validation.'
-      },
-      {
-        id: 'm-sarah',
-        name: 'Sarah K.',
-        fullName: 'Sarah Khan',
-        role: 'Research & Content',
-        initials: 'SK',
-        responsibility: 'Research, content & clarity',
-        focus: 'Design Guidelines',
-        email: 'sarah@acme.co',
-        cardClass: 'tp-card--green',
-        avatarClass: 'tp-avatar--green',
-        bio: 'Drives qualitative usability research, interface copy guidelines, and WCAG accessibility standards across design deliverables.'
-      },
-      {
-        id: 'm-maria',
-        name: 'Maria J.',
-        fullName: 'Maria Jones',
-        role: 'Interface Developer',
-        initials: 'MJ',
-        responsibility: 'Implementation & handoffs',
-        focus: 'Website Redesign',
-        email: 'maria@acme.co',
-        cardClass: 'tp-card--blue',
-        avatarClass: 'tp-avatar--blue',
-        bio: 'Bridges design and engineering via token systems, accessible component libraries, and pixel-precise front-end implementations.'
-      }
-    ],
-    responsibilities: [
-      {
-        id: 'resp-direction',
-        title: 'Design direction',
-        owner: 'Peter K.',
-        initials: 'PK',
-        avatarClass: 'tp-avatar--beige',
-        iconClass: 'tp-icon--beige',
-        scope: 'Overall aesthetic quality, project kickoff alignment, stakeholder reviews, and sign-offs for all public-facing deliverables.'
-      },
-      {
-        id: 'resp-interface',
-        title: 'Interface reviews',
-        owner: 'Alex R.',
-        initials: 'AR',
-        avatarClass: 'tp-avatar--lavender',
-        iconClass: 'tp-icon--lavender',
-        scope: 'Figma component libraries, core navigation workflows, responsive layouts, and interactive design specifications.'
-      },
-      {
-        id: 'resp-research',
-        title: 'Research & content',
-        owner: 'Sarah K.',
-        initials: 'SK',
-        avatarClass: 'tp-avatar--green',
-        iconClass: 'tp-icon--green',
-        scope: 'Customer interviews, usability tests, editorial guidelines, terminology harmonization, and accessibility compliance.'
-      },
-      {
-        id: 'resp-handoffs',
-        title: 'Implementation handoffs',
-        owner: 'Maria J.',
-        initials: 'MJ',
-        avatarClass: 'tp-avatar--blue',
-        iconClass: 'tp-icon--blue',
-        scope: 'Design token synchronization, React/CSS component parity, QA review tickets, and developer documentation.'
-      }
-    ],
-    collaborations: [
-      {
-        id: 'collab-1',
-        title: 'Website design review',
-        meta: 'Peter K. & Alex R. · Approval pending',
-        users: ['Peter K.', 'Alex R.'],
-        initials: ['PK', 'AR'],
-        avatars: ['tp-avatar--beige', 'tp-avatar--lavender'],
-        status: 'Approval pending',
-        notes: 'Final architectural pass on the unified sidebar and split-layout header. Scheduled for team sign-off.'
-      },
-      {
-        id: 'collab-2',
-        title: 'Content implementation',
-        meta: 'Sarah K. & Maria J. · In progress',
-        users: ['Sarah K.', 'Maria J.'],
-        initials: ['SK', 'MJ'],
-        avatars: ['tp-avatar--green', 'tp-avatar--blue'],
-        status: 'In progress',
-        notes: 'Ensuring that content hierarchy, truncation rules, and localized typography tokens render properly on all screen sizes.'
-      }
-    ],
-    unassignedWork: {
-      id: 'task-nav-review',
-      title: 'Mobile navigation review',
-      project: 'Website Redesign',
-      status: 'Unassigned reviewer',
-      count: '01',
-      desc: 'Evaluate bottom sheet interaction and thumb-reach zones for small viewports before production rollout.'
-    },
-    playbook: {
-      title: 'Design Principles & Standards',
-      version: 'Version 2.1',
-      status: 'Approved',
-      principles: [
-        '1. Clarity Over Novelty — Every interface element must communicate purpose immediately.',
-        '2. Accessibility by Default — Minimum 4.5:1 text contrast and 44x44px touch targets.',
-        '3. Restrained Color Architecture — Neutral canvas grounding with deliberate accent hits.',
-        '4. Continuous Token Synchronization — Figma tokens map directly to CSS custom properties.'
-      ]
-    },
-    standards: {
-      title: 'Design Standards & Patterns',
-      summary: 'Approved references and UI patterns across all projects.',
-      items: [
-        'Responsive layout grids (12-column desktop, 4-column mobile)',
-        'Fluid typographic scale with optical sizing',
-        'Elevation and soft-shadow border tokens',
-        'Interactive state tokens (hover, active, focus-visible)'
-      ]
-    }
+  /* ── Baseline People Model ─────────────────────────────────────────── */
+  const DEFAULT_EMPTY_PEOPLE = {
+    members: [],
+    responsibilities: [],
+    collaborations: [],
+    unassignedWork: null,
+    playbook: { title: 'Team Playbook', version: 'Version 1.0', status: 'Draft', principles: [] },
+    standards: { title: 'Team Standards', summary: 'Standards pending definition.', items: [] }
   };
 
   /* ── Feedback Notification ─────────────────────────────────────────────── */
@@ -200,7 +63,7 @@
     const selectedRole = roleSelect ? roleSelect.value : 'all';
 
     if (clearBtn) {
-      clearBtn.style.display = query.length > 0 ? 'inline-block' : 'none';
+      clearBtn.classList.toggle('tp-hidden', query.length === 0);
     }
 
     const cards = document.querySelectorAll('#tp-members-grid .tp-member-card');
@@ -220,16 +83,15 @@
         member.responsibility.toLowerCase().includes(query) ||
         member.focus.toLowerCase().includes(query);
 
-      if (roleMatch && searchMatch) {
-        card.style.display = 'flex';
+      const isVisible = roleMatch && searchMatch;
+      card.classList.toggle('tp-hidden', !isVisible);
+      if (isVisible) {
         visibleCount++;
-      } else {
-        card.style.display = 'none';
       }
     });
 
     if (noResultsMsg) {
-      noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+      noResultsMsg.classList.toggle('tp-hidden', visibleCount > 0);
     }
   }
 
@@ -674,8 +536,194 @@
     }
   }
 
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderMembersGrid(data) {
+    const grid = document.getElementById('tp-members-grid');
+    if (!grid) return;
+    if (!data.members || data.members.length === 0) {
+      grid.innerHTML = `
+        <div class="tp-empty-members">
+          <p class="tp-empty-title">No team members found</p>
+          <p class="tp-empty-sub">Add members to your workspace to view their roles, focus areas, and collaboration status.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = data.members.map(m => {
+      const cardTheme = m.cardTheme || 'tp-card--beige';
+      const avatarClass = m.avatarClass || 'tp-avatar--beige';
+      const initials = m.initials || 'ME';
+      const name = escapeHtml(m.name || m.fullName || 'Member');
+      const role = escapeHtml(m.role || 'Member');
+      const resp = escapeHtml(m.responsibility || 'Workspace Member');
+      const focus = escapeHtml(m.focus || 'Active Delivery');
+
+      return `
+        <button type="button" class="tp-member-card ${cardTheme}" data-member-id="${m.id}" data-role="${role}">
+          <div class="tp-card-top">
+            <div class="tp-card-top-left">
+              <div class="tp-avatar-bubble ${avatarClass}">${initials}</div>
+              <div class="tp-member-id-meta">
+                <span class="tp-member-name">${name}</span>
+                <span class="tp-member-role">${role}</span>
+              </div>
+            </div>
+            <span class="tp-card-arrow-btn" aria-label="View ${name} profile">&#8594;</span>
+          </div>
+          <div class="tp-card-divider"></div>
+          <div class="tp-card-meta-grid">
+            <div class="tp-meta-col">
+              <span class="tp-meta-label">AREA OF RESPONSIBILITY</span>
+              <span class="tp-meta-val">${resp}</span>
+            </div>
+            <div class="tp-meta-col">
+              <span class="tp-meta-label">CURRENT FOCUS</span>
+              <span class="tp-meta-val">${focus}</span>
+            </div>
+          </div>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function renderResponsibilities(data) {
+    const container = document.getElementById('tp-resp-list');
+    if (!container) return;
+
+    if (!data.responsibilities || data.responsibilities.length === 0) {
+      const members = data.members || [];
+      const m0 = members[0] || { id: 'm-1', name: 'Peter K.', initials: 'PK', avatarClass: 'tp-avatar--beige' };
+      const m1 = members[1] || members[0] || { id: 'm-2', name: 'Alex R.', initials: 'AR', avatarClass: 'tp-avatar--lavender' };
+      const m2 = members[2] || members[0] || { id: 'm-3', name: 'Sarah K.', initials: 'SK', avatarClass: 'tp-avatar--green' };
+      const m3 = members[3] || members[1] || members[0] || { id: 'm-4', name: 'Maria J.', initials: 'MJ', avatarClass: 'tp-avatar--blue' };
+
+      data.responsibilities = [
+        {
+          id: 'resp-direction',
+          title: 'Design direction',
+          scope: 'Brand alignment, design system governance, executive design critiques, and high-fidelity project sign-offs.',
+          owner: m0.name,
+          initials: m0.initials,
+          avatarClass: m0.avatarClass || 'tp-avatar--beige',
+          iconWrapClass: 'tp-icon--beige',
+          iconSvg: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>'
+        },
+        {
+          id: 'resp-interface',
+          title: 'Interface reviews',
+          scope: 'Component usability testing, design sprint feedback, micro-interaction validation, and prototyping fidelity checks.',
+          owner: m1.name,
+          initials: m1.initials,
+          avatarClass: m1.avatarClass || 'tp-avatar--lavender',
+          iconWrapClass: 'tp-icon--lavender',
+          iconSvg: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>'
+        },
+        {
+          id: 'resp-research',
+          title: 'Research & content',
+          scope: 'User interviews, qualitative synthesis, content strategy, copy tone guidelines, and accessibility audits.',
+          owner: m2.name,
+          initials: m2.initials,
+          avatarClass: m2.avatarClass || 'tp-avatar--green',
+          iconWrapClass: 'tp-icon--green',
+          iconSvg: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>'
+        },
+        {
+          id: 'resp-handoffs',
+          title: 'Implementation handoffs',
+          scope: 'Design token parity, component specs, responsive breakpoint QA, and developer collaboration during sprint delivery.',
+          owner: m3.name,
+          initials: m3.initials,
+          avatarClass: m3.avatarClass || 'tp-avatar--blue',
+          iconWrapClass: 'tp-icon--blue',
+          iconSvg: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>'
+        }
+      ];
+    }
+
+    container.innerHTML = data.responsibilities.map(r => `
+      <button type="button" class="tp-resp-row" data-resp-id="${r.id}">
+        <div class="tp-resp-left">
+          <div class="tp-resp-icon-wrap ${r.iconWrapClass || 'tp-icon--beige'}">
+            ${r.iconSvg || ''}
+          </div>
+          <span class="tp-resp-title">${escapeHtml(r.title)}</span>
+        </div>
+        <div class="tp-resp-right">
+          <div class="tp-avatar-bubble tp-avatar--mini ${r.avatarClass}">${r.initials}</div>
+          <span class="tp-resp-owner">${escapeHtml(r.owner)}</span>
+          <span class="tp-row-chevron">&#8250;</span>
+        </div>
+      </button>
+    `).join('');
+  }
+
+  function renderCollaborations(data) {
+    const container = document.getElementById('tp-collab-list');
+    if (!container) return;
+
+    if (!data.collaborations || data.collaborations.length === 0) {
+      const members = data.members || [];
+      const m0 = members[0] || { name: 'Peter K.', initials: 'PK', avatarClass: 'tp-avatar--beige' };
+      const m1 = members[1] || members[0] || { name: 'Alex R.', initials: 'AR', avatarClass: 'tp-avatar--lavender' };
+      const m2 = members[2] || members[0] || { name: 'Sarah K.', initials: 'SK', avatarClass: 'tp-avatar--green' };
+      const m3 = members[3] || members[1] || members[0] || { name: 'Maria J.', initials: 'MJ', avatarClass: 'tp-avatar--blue' };
+
+      data.collaborations = [
+        {
+          id: 'collab-1',
+          title: 'Website design review',
+          meta: `${m0.name} & ${m1.name} · Approval pending`,
+          status: 'Approval pending',
+          initials: [m0.initials, m1.initials],
+          avatars: [m0.avatarClass || 'tp-avatar--beige', m1.avatarClass || 'tp-avatar--lavender'],
+          notes: 'Reviewing key layouts and component specifications prior to engineering kickoff.'
+        },
+        {
+          id: 'collab-2',
+          title: 'Content implementation',
+          meta: `${m2.name} & ${m3.name} · In progress`,
+          status: 'In progress',
+          initials: [m2.initials, m3.initials],
+          avatars: [m2.avatarClass || 'tp-avatar--green', m3.avatarClass || 'tp-avatar--blue'],
+          notes: 'Aligning product messaging and microcopy with the design token system.'
+        }
+      ];
+    }
+
+    container.innerHTML = data.collaborations.map(c => `
+      <button type="button" class="tp-collab-row" data-collab-id="${c.id}">
+        <div class="tp-collab-left">
+          <div class="tp-dual-avatars">
+            <div class="tp-avatar-bubble tp-avatar--mini ${c.avatars[0]}">${c.initials[0]}</div>
+            <div class="tp-avatar-bubble tp-avatar--mini ${c.avatars[1]} tp-avatar-overlap">${c.initials[1]}</div>
+          </div>
+          <div class="tp-collab-info">
+            <span class="tp-collab-title">${escapeHtml(c.title)}</span>
+            <span class="tp-collab-meta">${escapeHtml(c.meta)}</span>
+          </div>
+        </div>
+        <span class="tp-row-arrow">&#8594;</span>
+      </button>
+    `).join('');
+  }
+
   /* ── Wire Interactions ─────────────────────────────────────────────────── */
   function wireInteractions(data) {
+    renderMembersGrid(data);
+    renderResponsibilities(data);
+    renderCollaborations(data);
+
     // 1. Search & Filter Input Listeners
     const searchInput = document.getElementById('tp-member-search');
     const clearBtn = document.getElementById('tp-search-clear');
@@ -837,9 +885,36 @@
   /* ── Public API ────────────────────────────────────────────────────────── */
   const TeamPeople = {
     init(teamId, customData) {
-      const data = customData || SEED_DATA;
       currentTeamId = teamId || 'team-design';
-      wireInteractions(data);
+      if (customData) {
+        wireInteractions(customData);
+        return;
+      }
+      fetch('/api/employees')
+        .then(res => res.ok ? res.json() : null)
+        .then(res => {
+          const empList = (res && res.employees) ? res.employees : [];
+          const members = empList.map(emp => ({
+            id: emp.id,
+            name: emp.fullName || 'Member',
+            fullName: emp.fullName || 'Member',
+            role: emp.jobTitle || emp.roleTitle || 'Member',
+            email: emp.email || '',
+            initials: emp.initials || (emp.fullName ? emp.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'ME'),
+            avatarClass: emp.cardTheme ? `tp-avatar--${emp.cardTheme}` : 'tp-avatar--beige',
+            cardTheme: emp.cardTheme ? `tp-card--${emp.cardTheme}` : 'tp-card--beige',
+            responsibility: emp.shortBio || emp.departmentName || 'Workspace Member',
+            focus: emp.detailedBio || 'Active Delivery'
+          }));
+          const data = {
+            ...DEFAULT_EMPTY_PEOPLE,
+            members
+          };
+          wireInteractions(data);
+        })
+        .catch(() => {
+          wireInteractions(DEFAULT_EMPTY_PEOPLE);
+        });
     }
   };
 

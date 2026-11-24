@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -101,11 +101,11 @@
 
           <!-- Actions Row: Edit meeting & More -->
           <div class="md-header-actions-row">
-            <button class="md-btn-pill md-btn-edit" id="md-edit-btn">
+            <button type="button" class="md-btn-pill md-btn-edit" id="md-edit-btn">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               <span>Edit meeting</span>
             </button>
-            <button class="md-btn-pill md-btn-more" id="md-more-btn" title="More options">
+            <button type="button" class="md-btn-pill md-btn-more" id="md-more-btn" title="More options" aria-label="More options">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
             </button>
           </div>
@@ -123,7 +123,7 @@
             <section class="md-card md-agenda-card" aria-labelledby="heading-agenda">
               <div class="md-card-top-bar">
                 <span class="md-section-index">01 / AGENDA</span>
-                <button class="md-mini-icon-btn" id="md-add-agenda-btn" title="Add agenda item">
+                <button type="button" class="md-mini-icon-btn" id="md-add-agenda-btn" title="Add agenda item" aria-label="Add agenda item">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
               </div>
@@ -135,10 +135,10 @@
 
               <!-- Inline Add Form -->
               <div class="md-inline-form-box" id="md-agenda-add" style="display:none;">
-                <input type="text" class="md-form-input" id="md-agenda-input" placeholder="Add discussion topic…" />
+                <input type="text" class="md-form-input" id="md-agenda-input" placeholder="Add discussion topic…" aria-label="Discussion topic">
                 <div class="md-form-btns-row">
-                  <button class="md-btn-small md-btn-lime" id="md-agenda-save-btn">Add topic</button>
-                  <button class="md-btn-small md-btn-ghost" id="md-agenda-cancel-btn">Cancel</button>
+                  <button type="button" class="md-btn-small md-btn-lime" id="md-agenda-save-btn">Add topic</button>
+                  <button type="button" class="md-btn-small md-btn-ghost" id="md-agenda-cancel-btn">Cancel</button>
                 </div>
               </div>
             </section>
@@ -151,19 +151,19 @@
                 <!-- Canvas Toolbar -->
                 <div class="md-canvas-toolbar" id="md-notes-toolbar">
                   <div class="md-select-wrap">
-                    <select class="md-toolbar-select" id="md-format-select">
+                    <select class="md-toolbar-select" id="md-format-select" aria-label="Text format">
                       <option value="p">Paragraph</option>
                       <option value="h2">Heading 2</option>
                       <option value="h3">Heading 3</option>
                     </select>
                   </div>
-                  <button class="md-tool-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
-                  <button class="md-tool-btn" data-cmd="italic" title="Italic"><em>I</em></button>
-                  <button class="md-tool-btn" data-cmd="underline" title="Underline"><u>U</u></button>
-                  <button class="md-tool-btn" data-cmd="createLink" title="Link">
+                  <button type="button" class="md-tool-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+                  <button type="button" class="md-tool-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+                  <button type="button" class="md-tool-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+                  <button type="button" class="md-tool-btn" data-cmd="createLink" title="Link" aria-label="Link">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                   </button>
-                  <button class="md-tool-btn" data-cmd="more" title="More options">···</button>
+                  <button type="button" class="md-tool-btn" data-cmd="more" title="More options">···</button>
                 </div>
               </div>
 
@@ -181,17 +181,17 @@
 
               <!-- Contextual Floating Toolbar (Appears on text selection) -->
               <div class="md-floating-action-toolbar" id="md-floating-toolbar">
-                <button class="md-float-action-btn" id="md-float-task">
+                <button type="button" class="md-float-action-btn" id="md-float-task">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                   <span>Create task</span>
                 </button>
                 <span class="md-float-divider">|</span>
-                <button class="md-float-action-btn" id="md-float-decision">
+                <button type="button" class="md-float-action-btn" id="md-float-decision">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                   <span>Record decision</span>
                 </button>
                 <span class="md-float-divider">|</span>
-                <button class="md-float-action-btn" id="md-float-link">
+                <button type="button" class="md-float-action-btn" id="md-float-link">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                   <span>Link record</span>
                 </button>
@@ -209,7 +209,7 @@
             <section class="md-card md-decisions-card" aria-labelledby="heading-decisions">
               <div class="md-card-top-bar">
                 <span class="md-section-index">03 / DECISIONS</span>
-                <button class="md-mini-icon-btn" id="md-add-decision-btn" title="Add decision">
+                <button type="button" class="md-mini-icon-btn" id="md-add-decision-btn" title="Add decision" aria-label="Add decision">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
               </div>
@@ -221,16 +221,16 @@
 
               <!-- Inline Decision Form -->
               <div class="md-inline-form-box" id="md-decision-add" style="display:none;">
-                <input type="text" class="md-form-input" id="md-decision-input" placeholder="Decision summary…" />
-                <select class="md-form-select" id="md-decision-status-select">
+                <input type="text" class="md-form-input" id="md-decision-input" placeholder="Decision summary…" aria-label="Decision summary">
+                <select class="md-form-select" id="md-decision-status-select" aria-label="Decision status">
                   <option value="Approved internally · Client confirmation pending">Approved internally · Client confirmation pending</option>
                   <option value="Approved">Approved</option>
                   <option value="Pending review">Pending review</option>
                   <option value="Rejected">Rejected</option>
                 </select>
                 <div class="md-form-btns-row">
-                  <button class="md-btn-small md-btn-lime" id="md-decision-save-btn">Record decision</button>
-                  <button class="md-btn-small md-btn-ghost" id="md-decision-cancel-btn">Cancel</button>
+                  <button type="button" class="md-btn-small md-btn-lime" id="md-decision-save-btn">Record decision</button>
+                  <button type="button" class="md-btn-small md-btn-ghost" id="md-decision-cancel-btn">Cancel</button>
                 </div>
               </div>
             </section>
@@ -246,21 +246,21 @@
                 <!-- Populated dynamically via JS -->
               </div>
 
-              <button class="md-add-task-trigger-btn" id="md-add-followup-btn">
+              <button type="button" class="md-add-task-trigger-btn" id="md-add-followup-btn">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 <span>Add follow-up task</span>
               </button>
 
               <!-- Inline Follow-up Form -->
               <div class="md-inline-form-box" id="md-followup-add" style="display:none;">
-                <input type="text" class="md-form-input" id="md-followup-input" placeholder="Task description…" />
+                <input type="text" class="md-form-input" id="md-followup-input" placeholder="Task description…" aria-label="Follow-up task description">
                 <div class="md-form-grid-two">
-                  <input type="text" class="md-form-input" id="md-followup-assignee" placeholder="Assignee (e.g. PK)" />
-                  <input type="date" class="md-form-input" id="md-followup-due" />
+                  <input type="text" class="md-form-input" id="md-followup-assignee" placeholder="Assignee (e.g. PK)" aria-label="Follow-up assignee">
+                  <input type="date" class="md-form-input" id="md-followup-due" aria-label="Follow-up due date">
                 </div>
                 <div class="md-form-btns-row">
-                  <button class="md-btn-small md-btn-lime" id="md-followup-save-btn">Save task</button>
-                  <button class="md-btn-small md-btn-ghost" id="md-followup-cancel-btn">Cancel</button>
+                  <button type="button" class="md-btn-small md-btn-lime" id="md-followup-save-btn">Save task</button>
+                  <button type="button" class="md-btn-small md-btn-ghost" id="md-followup-cancel-btn">Cancel</button>
                 </div>
               </div>
             </section>
@@ -277,7 +277,7 @@
                     <span class="md-ref-title">Design Review Notes</span>
                     <span class="md-ref-meta">Meeting notes · Updated today</span>
                   </div>
-                  <a href="#" class="md-ref-link-icon" title="Open document">
+                  <a href="#" class="md-ref-link-icon" title="Open document" aria-label="Open document">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                   </a>
                 </div>
@@ -287,7 +287,7 @@
                     <span class="md-ref-title">Homepage Specifications</span>
                     <span class="md-ref-meta">Product spec · v1.4</span>
                   </div>
-                  <a href="#" class="md-ref-link-icon" title="Open document">
+                  <a href="#" class="md-ref-link-icon" title="Open document" aria-label="Open document">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                   </a>
                 </div>
@@ -295,11 +295,11 @@
             </section>
 
             <!-- Prepare Recap Action Card Button -->
-            <button class="md-recap-action-card" id="md-recap-btn">
-              <div class="md-recap-left">
+            <button type="button" class="md-recap-action-card" id="md-recap-btn">
+              <span class="md-recap-left">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 <span>Prepare recap</span>
-              </div>
+              </span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
@@ -317,14 +317,14 @@
   <aside class="md-drawer-panel" id="md-edit-drawer" aria-label="Edit Meeting">
     <div class="md-drawer-header">
       <h2 class="md-drawer-title">Edit Meeting</h2>
-      <button class="md-drawer-close-btn" id="md-drawer-close" title="Close drawer">
+      <button type="button" class="md-drawer-close-btn" id="md-drawer-close" title="Close drawer" aria-label="Close drawer">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="md-drawer-body">
       <div class="md-drawer-group">
         <label class="md-drawer-label" for="edit-title">Meeting Title</label>
-        <input type="text" class="md-drawer-input" id="edit-title" placeholder="Design review" />
+        <input type="text" class="md-drawer-input" id="edit-title" placeholder="Design review">
       </div>
       <div class="md-drawer-group">
         <label class="md-drawer-label" for="edit-desc">Description</label>
@@ -333,30 +333,30 @@
       <div class="md-drawer-row-two">
         <div class="md-drawer-group">
           <label class="md-drawer-label" for="edit-date">Date</label>
-          <input type="date" class="md-drawer-input" id="edit-date" />
+          <input type="date" class="md-drawer-input" id="edit-date">
         </div>
         <div class="md-drawer-group">
           <label class="md-drawer-label" for="edit-project">Project</label>
-          <input type="text" class="md-drawer-input" id="edit-project" placeholder="Website Redesign" />
+          <input type="text" class="md-drawer-input" id="edit-project" placeholder="Website Redesign">
         </div>
       </div>
       <div class="md-drawer-row-two">
         <div class="md-drawer-group">
           <label class="md-drawer-label" for="edit-start-time">Start Time</label>
-          <input type="time" class="md-drawer-input" id="edit-start-time" />
+          <input type="time" class="md-drawer-input" id="edit-start-time">
         </div>
         <div class="md-drawer-group">
           <label class="md-drawer-label" for="edit-end-time">End Time</label>
-          <input type="time" class="md-drawer-input" id="edit-end-time" />
+          <input type="time" class="md-drawer-input" id="edit-end-time">
         </div>
       </div>
       <div class="md-drawer-group">
         <label class="md-drawer-label" for="edit-location">Location / Meeting URL</label>
-        <input type="text" class="md-drawer-input" id="edit-location" placeholder="Room 2A or Meet URL" />
+        <input type="text" class="md-drawer-input" id="edit-location" placeholder="Room 2A or Meet URL">
       </div>
       <div class="md-drawer-group">
         <label class="md-drawer-label" for="edit-attendees">Attendees (comma-separated)</label>
-        <input type="text" class="md-drawer-input" id="edit-attendees" placeholder="Peter K., Alex R., Sarah K." />
+        <input type="text" class="md-drawer-input" id="edit-attendees" placeholder="Peter K., Alex R., Sarah K.">
       </div>
       <div class="md-drawer-group">
         <label class="md-drawer-label" for="edit-color-theme">Color Theme</label>
@@ -370,18 +370,18 @@
       </div>
     </div>
     <div class="md-drawer-footer">
-      <button class="md-btn-pill md-btn-ghost" id="md-drawer-cancel">Cancel</button>
-      <button class="md-btn-pill md-btn-lime-submit" id="md-drawer-save">Save changes</button>
+      <button type="button" class="md-btn-pill md-btn-ghost" id="md-drawer-cancel">Cancel</button>
+      <button type="submit" class="md-btn-pill md-btn-lime-submit" id="md-drawer-save">Save changes</button>
     </div>
   </aside>
 
   <!-- More Options Dropdown -->
   <div class="md-more-menu-dropdown" id="md-more-dropdown" style="display:none;">
-    <button class="md-more-menu-item" id="md-action-duplicate">Duplicate meeting</button>
-    <button class="md-more-menu-item" id="md-action-copy-link">Copy link</button>
-    <button class="md-more-menu-item" id="md-action-export">Export notes</button>
+    <button type="button" class="md-more-menu-item" id="md-action-duplicate">Duplicate meeting</button>
+    <button type="button" class="md-more-menu-item" id="md-action-copy-link">Copy link</button>
+    <button type="button" class="md-more-menu-item" id="md-action-export">Export notes</button>
     <div class="md-more-menu-separator"></div>
-    <button class="md-more-menu-item md-more-danger" id="md-action-delete">Delete meeting</button>
+    <button type="button" class="md-more-menu-item md-more-danger" id="md-action-delete">Delete meeting</button>
   </div>
 
   <!-- Notification Toast Container -->

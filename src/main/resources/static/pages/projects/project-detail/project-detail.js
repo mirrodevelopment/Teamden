@@ -75,7 +75,11 @@
       document.querySelectorAll('.project-tab-btn').forEach(btn => {
         const isTarget = btn.getAttribute('data-tab') === tabName;
         btn.classList.toggle('active', isTarget);
-        btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+        if (isTarget) {
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
       });
 
       // Update Tab Pane Visibility

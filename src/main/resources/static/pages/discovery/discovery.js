@@ -35,7 +35,7 @@ const DiscoveryPage = (() => {
       if (input) input.value = q;
     } else {
       const input = document.getElementById('discovery-search-input');
-      _currentQuery = input ? input.value.trim() : 'mobile navigation';
+      _currentQuery = input ? input.value.trim() : '';
     }
 
     const cat = params.get('category');
@@ -463,13 +463,16 @@ const DiscoveryPage = (() => {
   }
 
   function _renderFallbackContext(item) {
-    if (!item) return;
+    if (!item) {
+      _renderEmptyContext();
+      return;
+    }
     _renderConnectedContext({
       selectedItem: item,
-      originatedFrom: { type: 'DOCUMENT', title: 'Design Review Notes', subtitle: 'Source of ' + (item.taskCode || 'T-014') + ' · Updated 28 Oct', url: '/pages/activity/activity.html' },
-      discussedDuring: { type: 'MEETING', title: 'Design review', subtitle: (item.projectName || 'Website Redesign') + ' · 29 Oct', url: '/pages/calendar/calendar.html' },
-      relatedDecision: { type: 'DECISION', title: 'Navigation direction approved', subtitle: 'Approved · 27 Oct', url: '/pages/projects/projects.html' },
-      partOfProject: { type: 'PROJECT', title: item.projectName || 'Website Redesign', subtitle: 'In Progress · 3 linked tasks', url: '/pages/projects/projects.html' }
+      originatedFrom: item.originatedFrom || null,
+      discussedDuring: item.discussedDuring || null,
+      relatedDecision: item.relatedDecision || null,
+      partOfProject: item.projectName ? { type: 'PROJECT', title: item.projectName, subtitle: 'Associated Project', url: '/pages/projects/projects.html' } : null
     });
   }
 
@@ -491,19 +494,20 @@ const DiscoveryPage = (() => {
       const res = await fetch('/api/search/saved', { credentials: 'include' });
       if (!res.ok) throw new Error();
       const list = await res.json();
-      _renderSavedSearches(list);
+      _renderSavedSearches(list || []);
     } catch {
-      _renderSavedSearches([
-        { name: 'Open approvals', query: 'approval', count: 4 },
-        { name: 'My blockers', query: 'block', count: 2 },
-        { name: 'Recent design notes', query: 'design', count: 7 }
-      ]);
+      _renderSavedSearches([]);
     }
   }
 
   function _renderSavedSearches(list) {
     const container = document.getElementById('saved-searches-list');
     if (!container) return;
+
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div style="padding:12px; font-size:12px; color:var(--text-muted);">No saved searches.</div>';
+      return;
+    }
 
     container.innerHTML = list.map(item => `
       <div class="saved-search-item" data-query="${_esc(item.query || '')}">
@@ -537,11 +541,8 @@ const DiscoveryPage = (() => {
     } catch {}
 
     if (!items.length) {
-      items = [
-        { type: 'DOCUMENT', title: 'Design Review Notes', subtitle: 'Website Redesign · 28 Oct', url: '/pages/activity/activity.html' },
-        { type: 'MEETING', title: 'Design review', subtitle: 'Website Redesign · 29 Oct', url: '/pages/calendar/calendar.html' },
-        { type: 'PROJECT', title: 'Website Redesign', subtitle: 'Project · In Progress', url: '/pages/projects/projects.html' }
-      ];
+      container.innerHTML = '<div style="padding:12px; font-size:12px; color:var(--text-muted);">No recently opened items.</div>';
+      return;
     }
 
     container.innerHTML = items.slice(0, 3).map(it => `

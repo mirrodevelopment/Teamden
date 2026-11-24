@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputLegalName = document.getElementById('legal-company-name');
   const selectCompanyType = document.getElementById('company-type');
   const selectIndustry = document.getElementById('company-industry');
+  const groupIndustryOther = document.getElementById('company-industry-other-group');
+  const inputIndustryOther = document.getElementById('company-industry-other');
   const selectCompanySize = document.getElementById('company-size');
   const inputWebsite = document.getElementById('company-website');
   const inputYear = document.getElementById('company-year');
@@ -45,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const logoFileName = document.getElementById('logo-file-name');
   const removeLogoBtn = document.getElementById('remove-logo-btn');
   const errorLogoFile = document.getElementById('error-logo-file');
+  let logoBase64 = null;
 
   // Step 2 Elements
   const selectCountry = document.getElementById('address-country');
@@ -53,22 +56,60 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputCity = document.getElementById('address-city');
   const inputState = document.getElementById('address-state');
   const inputZip = document.getElementById('address-zip');
+  const stateReqIndicator = document.getElementById('state-req-indicator');
+  const stateOptHint = document.getElementById('state-opt-hint');
+  const zipReqIndicator = document.getElementById('zip-req-indicator');
+  const zipOptHint = document.getElementById('zip-opt-hint');
+  const tzSuggestionHint = document.getElementById('timezone-suggestion-hint');
   const selectCurrency = document.getElementById('currency-preference');
+  const selectTimezone = document.getElementById('timezone-preference');
   const inputRegNumber = document.getElementById('legal-reg-number');
   const inputTaxId = document.getElementById('legal-tax-id');
+  const checkBillingSame = document.getElementById('billing-same-as-registered');
+  const groupBillingAddress = document.getElementById('billing-address-group');
+  const selectBillingCountry = document.getElementById('billing-country');
+  const inputBillingStreet = document.getElementById('billing-street');
+  const inputBillingLine2 = document.getElementById('billing-line2');
+  const inputBillingCity = document.getElementById('billing-city');
+  const inputBillingState = document.getElementById('billing-state');
+  const inputBillingZip = document.getElementById('billing-zip');
 
   // Step 3 Elements
   const inputAdminName = document.getElementById('admin-name');
   const inputAdminEmail = document.getElementById('admin-email');
+  const inputVerificationCode = document.getElementById('verification-code');
+  const btnSendCode = document.getElementById('btn-send-code');
+  const btnVerifyCode = document.getElementById('btn-verify-code');
+  const badgeEmailVerified = document.getElementById('email-verified-badge');
+  const otpHintText = document.getElementById('otp-hint-text');
+  let emailVerified = false;
+
   const inputAdminPassword = document.getElementById('admin-password');
   const inputAdminConfirmPassword = document.getElementById('admin-confirm-password');
-  const inputJobTitle = document.getElementById('admin-job-title');
-  const inputPhone = document.getElementById('admin-phone');
-  const checkTerms = document.getElementById('consent-terms');
+  const strengthBarFill = document.getElementById('strength-bar-fill');
+  const strengthLabel = document.getElementById('strength-label');
   const toggleAdminPwBtn = document.getElementById('toggle-admin-pw');
   const eyeIconAdmin = document.getElementById('eye-icon-admin');
 
-  // Step 4 Summary Elements
+  const inputJobTitle = document.getElementById('admin-job-title');
+  const inputPhone = document.getElementById('admin-phone');
+
+  // Avatar upload
+  const avatarDropzone = document.getElementById('avatar-dropzone');
+  const avatarFileInput = document.getElementById('avatar-file-input');
+  const avatarIdleState = document.getElementById('avatar-idle-state');
+  const avatarPreviewState = document.getElementById('avatar-preview-state');
+  const avatarPreviewImg = document.getElementById('avatar-preview-img');
+  const avatarFileName = document.getElementById('avatar-file-name');
+  const removeAvatarBtn = document.getElementById('remove-avatar-btn');
+  let avatarBase64 = null;
+
+  // Consent Checkboxes
+  const checkConsentTerms = document.getElementById('consent-terms');
+  const checkConsentPrivacy = document.getElementById('consent-privacy');
+  const checkConsentAuth = document.getElementById('consent-auth');
+
+  // Step 4 Elements
   const summaryCompanyName = document.getElementById('summary-company-name');
   const summaryLegalName = document.getElementById('summary-legal-name');
   const summaryCompanyType = document.getElementById('summary-company-type');
@@ -83,11 +124,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const summaryZip = document.getElementById('summary-zip');
   const summaryRegNum = document.getElementById('summary-reg-num');
   const summaryTaxId = document.getElementById('summary-tax-id');
+  const summaryBillingAddress = document.getElementById('summary-billing-address');
 
   const summaryAdminName = document.getElementById('summary-admin-name');
   const summaryAdminEmail = document.getElementById('summary-admin-email');
+  const summaryVerificationStatus = document.getElementById('summary-verification-status');
   const summaryJobTitle = document.getElementById('summary-job-title');
   const summaryPhone = document.getElementById('summary-phone');
+  const summaryCurrency = document.getElementById('summary-currency');
+  const summaryTimezone = document.getElementById('summary-timezone');
+  const checkFinalConfirm = document.getElementById('final-confirm-checkbox');
 
   // Jump Step Buttons
   const jumpButtons = document.querySelectorAll('.btn-jump-step');
@@ -98,7 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // State Management
   let currentStep = 1;
   const totalSteps = 4;
-  let uploadedLogoFile = null;
 
   const stepMeta = {
     1: {
@@ -109,17 +154,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     2: {
       eyebrow: 'STEP 2 OF 4',
       title: 'Address & Legal',
-      desc: 'Add your company’s registered address and relevant business details.'
+      desc: 'Add your company’s registered address and regional settings.'
     },
     3: {
       eyebrow: 'STEP 3 OF 4',
-      title: 'Set up your administrator account',
-      desc: 'Choose the person who will manage this company workspace.'
+      title: 'Administrator Account',
+      desc: 'Set up the first user and Owner of this organization workspace.'
     },
     4: {
       eyebrow: 'STEP 4 OF 4',
-      title: 'Review your company',
-      desc: 'Check your information before creating your workspace.'
+      title: 'Review & Create',
+      desc: 'Review your complete registration before creating your workspace.'
     }
   };
 
@@ -127,15 +172,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   function updateStepUI() {
     clearErrors();
 
-    // 1. Update Stepper Header
     const meta = stepMeta[currentStep];
     if (stepEyebrow) stepEyebrow.textContent = meta.eyebrow;
     if (stepTitle) stepTitle.textContent = meta.title;
     if (stepDesc) stepDesc.textContent = meta.desc;
 
-    // 2. Toggle Step Section Visibility
     for (let i = 1; i <= totalSteps; i++) {
-      const section = document.getElementById(`section-step-i`.replace('i', i));
+      const section = document.getElementById(`section-step-${i}`);
       if (section) {
         if (i === currentStep) {
           section.classList.remove('d-none');
@@ -147,7 +190,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // 3. Update Progress Stepper Nodes & Connectors
     for (let i = 1; i <= totalSteps; i++) {
       const node = document.getElementById(`step-node-${i}`);
       const connector = document.getElementById(`connector-${i}`);
@@ -170,7 +212,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // 4. Update Navigation Buttons
     if (currentStep === 1) {
       if (btnCancel) btnCancel.classList.remove('d-none');
       if (btnBack) btnBack.classList.add('d-none');
@@ -182,7 +223,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnContinue) btnContinue.classList.remove('d-none');
       if (btnSubmit) btnSubmit.classList.add('d-none');
     } else {
-      // Step 4: Review
       if (btnCancel) btnCancel.classList.add('d-none');
       if (btnBack) btnBack.classList.remove('d-none');
       if (btnContinue) btnContinue.classList.add('d-none');
@@ -190,8 +230,240 @@ document.addEventListener('DOMContentLoaded', async () => {
       populateReviewSummary();
     }
 
-    // Smooth scroll to top of form
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // --- Step 1 Dynamic Industry Other ---
+  if (selectIndustry && groupIndustryOther) {
+    selectIndustry.addEventListener('change', () => {
+      if (selectIndustry.value === 'Other') {
+        groupIndustryOther.classList.remove('d-none');
+      } else {
+        groupIndustryOther.classList.add('d-none');
+        if (inputIndustryOther) inputIndustryOther.value = '';
+        clearFieldError('error-company-industry-other');
+      }
+    });
+  }
+
+  // --- Step 2 Country Change Suggestions & Conditional Rules ---
+  const countryDefaults = {
+    'United States': { currency: 'USD', timezone: 'America/New_York' },
+    'United Kingdom': { currency: 'GBP', timezone: 'Europe/London' },
+    'Canada': { currency: 'CAD', timezone: 'America/New_York' },
+    'Australia': { currency: 'AUD', timezone: 'Australia/Sydney' },
+    'Germany': { currency: 'EUR', timezone: 'Europe/Berlin' },
+    'France': { currency: 'EUR', timezone: 'Europe/Paris' },
+    'India': { currency: 'INR', timezone: 'Asia/Kolkata' },
+    'Singapore': { currency: 'SGD', timezone: 'Asia/Singapore' },
+    'Netherlands': { currency: 'EUR', timezone: 'Europe/Berlin' },
+    'United Arab Emirates': { currency: 'AED', timezone: 'Asia/Dubai' }
+  };
+
+  function updateCountryConditionalRules() {
+    if (!selectCountry) return;
+    const selected = selectCountry.value;
+    const def = countryDefaults[selected];
+    if (def) {
+      if (selectCurrency && def.currency) {
+        selectCurrency.value = def.currency;
+      }
+      if (selectTimezone && def.timezone) {
+        selectTimezone.value = def.timezone;
+      }
+      if (tzSuggestionHint) {
+        tzSuggestionHint.textContent = `Suggested for ${selected} (${def.timezone}) — please confirm.`;
+      }
+    } else {
+      if (tzSuggestionHint) {
+        tzSuggestionHint.textContent = 'Please confirm the workspace time zone.';
+      }
+    }
+
+    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selected);
+    if (stateReqIndicator) {
+      if (requiresState) {
+        stateReqIndicator.classList.remove('d-none');
+        if (stateOptHint) stateOptHint.classList.add('d-none');
+      } else {
+        stateReqIndicator.classList.add('d-none');
+        if (stateOptHint) stateOptHint.classList.remove('d-none');
+      }
+    }
+
+    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selected);
+    if (zipReqIndicator) {
+      if (requiresZip) {
+        zipReqIndicator.classList.remove('d-none');
+        if (zipOptHint) zipOptHint.classList.add('d-none');
+      } else {
+        zipReqIndicator.classList.add('d-none');
+        if (zipOptHint) zipOptHint.classList.remove('d-none');
+      }
+    }
+  }
+
+  if (selectCountry) {
+    selectCountry.addEventListener('change', updateCountryConditionalRules);
+    // Initial evaluation
+    if (selectCountry.value) {
+      updateCountryConditionalRules();
+    }
+  }
+
+  // --- Step 2 Billing Address Same Toggle ---
+  if (checkBillingSame && groupBillingAddress) {
+    checkBillingSame.addEventListener('change', () => {
+      if (checkBillingSame.checked) {
+        groupBillingAddress.classList.add('d-none');
+      } else {
+        groupBillingAddress.classList.remove('d-none');
+        if (selectBillingCountry && selectCountry.value) {
+          selectBillingCountry.value = selectCountry.value;
+        }
+      }
+    });
+  }
+
+  // --- Step 3 Email Verification OTP Handling ---
+  if (btnSendCode && inputAdminEmail) {
+    btnSendCode.addEventListener('click', async () => {
+      const email = inputAdminEmail.value.trim();
+      clearFieldError('error-verification-code');
+      clearFieldError('error-admin-email');
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('error-admin-email', 'Please enter a valid work email address before requesting an OTP code.');
+        inputAdminEmail.focus();
+        return;
+      }
+
+      btnSendCode.disabled = true;
+      btnSendCode.textContent = 'Sending...';
+
+      try {
+        const res = await Api.post('/api/setup/send-verification-code', { email });
+        const code = res.data ? res.data.code : '';
+        btnSendCode.textContent = 'Resend Code';
+        btnSendCode.disabled = false;
+
+        if (otpHintText) {
+          otpHintText.textContent = `Verification code sent to ${email}. (Dev hint: ${code})`;
+          otpHintText.style.color = 'var(--brick-text-primary)';
+        }
+        if (inputVerificationCode) {
+          inputVerificationCode.value = code; // Auto-fill for convenience in local dev
+          inputVerificationCode.focus();
+        }
+      } catch (err) {
+        btnSendCode.textContent = 'Send Code';
+        btnSendCode.disabled = false;
+        showError('error-verification-code', err.message || 'Failed to send verification code. Please try again.');
+      }
+    });
+  }
+
+  if (btnVerifyCode && inputVerificationCode && inputAdminEmail) {
+    btnVerifyCode.addEventListener('click', async () => {
+      const email = inputAdminEmail.value.trim();
+      const code = inputVerificationCode.value.trim();
+      clearFieldError('error-verification-code');
+
+      if (!email) {
+        showError('error-admin-email', 'Please enter your work email.');
+        return;
+      }
+      if (!code || code.length < 4) {
+        showError('error-verification-code', 'Please enter the 6-digit verification code.');
+        inputVerificationCode.focus();
+        return;
+      }
+
+      btnVerifyCode.disabled = true;
+      btnVerifyCode.textContent = 'Verifying...';
+
+      try {
+        await Api.post('/api/setup/verify-code', { email, code });
+        emailVerified = true;
+        btnVerifyCode.textContent = 'Verified ✓';
+        btnVerifyCode.disabled = true;
+        if (btnSendCode) btnSendCode.disabled = true;
+
+        if (badgeEmailVerified) {
+          badgeEmailVerified.className = 'verification-pill verified';
+          badgeEmailVerified.innerHTML = '<span class="pill-dot"></span> Verified ✓';
+        }
+        if (otpHintText) {
+          otpHintText.textContent = 'Email address verified successfully!';
+          otpHintText.style.color = 'var(--brick-success)';
+        }
+      } catch (err) {
+        btnVerifyCode.disabled = false;
+        btnVerifyCode.textContent = 'Verify';
+        showError('error-verification-code', err.message || 'Invalid or expired verification code.');
+      }
+    });
+  }
+
+  // --- Step 3 Password Strength Meter & Compromised Checks ---
+  const COMMON_COMPROMISED_PASSWORDS = [
+    'password', 'password123', 'password1', '12345678', '123456789', '1234567890',
+    'admin123', 'admin1234', 'qwerty123', 'welcome123', 'letmein123', 'pass1234'
+  ];
+
+  function evaluatePasswordStrength(password) {
+    if (!password) return { score: 0, label: '—', color: 'var(--brick-border)', pct: 0 };
+    if (COMMON_COMPROMISED_PASSWORDS.includes(password.toLowerCase())) {
+      return { score: 1, label: 'Compromised', color: 'var(--dash-dot-red, #ef4444)', pct: 15 };
+    }
+    let score = 0;
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+    if (/\d/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+    if (score <= 1) {
+      return { score: 1, label: 'Weak', color: 'var(--dash-dot-red, #ef4444)', pct: 25 };
+    } else if (score <= 2) {
+      return { score: 2, label: 'Medium', color: 'var(--dash-dot-yellow, #f59e0b)', pct: 50 };
+    } else if (score <= 3) {
+      return { score: 3, label: 'Strong', color: 'var(--dash-col-now-border, #3b82f6)', pct: 75 };
+    } else {
+      return { score: 4, label: 'Very Strong', color: 'var(--dash-dot-green, #10b981)', pct: 100 };
+    }
+  }
+
+  if (inputAdminPassword) {
+    inputAdminPassword.addEventListener('input', () => {
+      const pw = inputAdminPassword.value;
+      const res = evaluatePasswordStrength(pw);
+      if (strengthBarFill) {
+        strengthBarFill.style.width = `${res.pct}%`;
+        strengthBarFill.style.backgroundColor = res.color;
+      }
+      if (strengthLabel) {
+        strengthLabel.textContent = `Strength: ${res.label}`;
+        strengthLabel.style.color = res.color;
+      }
+      if (inputAdminConfirmPassword && inputAdminConfirmPassword.value) {
+        if (inputAdminPassword.value === inputAdminConfirmPassword.value) {
+          clearFieldError('error-admin-confirm-password');
+        }
+      }
+    });
+  }
+
+  if (inputAdminConfirmPassword) {
+    inputAdminConfirmPassword.addEventListener('input', () => {
+      if (inputAdminPassword.value && inputAdminConfirmPassword.value) {
+        if (inputAdminPassword.value !== inputAdminConfirmPassword.value) {
+          showError('error-admin-confirm-password', 'Passwords do not match.');
+        } else {
+          clearFieldError('error-admin-confirm-password');
+        }
+      }
+    });
   }
 
   // --- Step Validations ---
@@ -217,6 +489,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         showError('error-company-industry', 'Please select an industry.');
         if (isValid) selectIndustry.focus();
         isValid = false;
+      } else if (selectIndustry.value === 'Other') {
+        const indOther = inputIndustryOther ? inputIndustryOther.value.trim() : '';
+        if (!indOther) {
+          showError('error-company-industry-other', 'Please specify your industry.');
+          if (isValid && inputIndustryOther) inputIndustryOther.focus();
+          isValid = false;
+        }
       }
 
       if (!selectCompanySize.value) {
@@ -260,18 +539,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         isValid = false;
       }
 
+      // State required for US, CA, AU, IN
+      const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selectCountry.value);
       const state = inputState.value.trim();
-      if (!state) {
-        showError('error-address-state', 'Please enter the state or province.');
+      if (requiresState && !state) {
+        showError('error-address-state', `State or province is required for ${selectCountry.value}.`);
         if (isValid) inputState.focus();
         isValid = false;
       }
 
+      // ZIP / Postal code required for major regions
+      const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selectCountry.value);
       const zip = inputZip.value.trim();
-      if (!zip) {
-        showError('error-address-zip', 'Please enter the postal or ZIP code.');
+      if (requiresZip && !zip) {
+        showError('error-address-zip', `Postal or ZIP code is required for ${selectCountry.value}.`);
         if (isValid) inputZip.focus();
         isValid = false;
+      }
+
+      // If billing address differs, validate billing fields
+      if (checkBillingSame && !checkBillingSame.checked) {
+        if (!selectBillingCountry.value) {
+          showError('error-billing-country', 'Please select a billing country.');
+          if (isValid) selectBillingCountry.focus();
+          isValid = false;
+        }
+        if (!inputBillingStreet.value.trim()) {
+          showError('error-billing-street', 'Please enter the billing address.');
+          if (isValid) inputBillingStreet.focus();
+          isValid = false;
+        }
+        if (!inputBillingCity.value.trim()) {
+          showError('error-billing-city', 'Please enter the billing city.');
+          if (isValid) inputBillingCity.focus();
+          isValid = false;
+        }
       }
     } else if (currentStep === 3) {
       const name = inputAdminName.value.trim();
@@ -288,9 +590,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         isValid = false;
       }
 
+      // Email verification temporarily on hold: do not block registration if not yet verified
+      // (User can still optionally test OTP via Send Code / Verify)
+
       const password = inputAdminPassword.value;
       if (!password || password.length < 8) {
         showError('error-admin-password', 'Password must be at least 8 characters long.');
+        if (isValid) inputAdminPassword.focus();
+        isValid = false;
+      } else if (COMMON_COMPROMISED_PASSWORDS.includes(password.toLowerCase())) {
+        showError('error-admin-password', 'This password is too commonly used and easily compromised. Please choose a stronger password.');
         if (isValid) inputAdminPassword.focus();
         isValid = false;
       }
@@ -302,8 +611,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         isValid = false;
       }
 
-      if (!checkTerms.checked) {
-        showError('error-consent-terms', 'You must agree to the Terms of Service and Privacy Policy to proceed.');
+      if (checkConsentTerms && !checkConsentTerms.checked) {
+        showError('error-consent-terms', 'You must agree to the Terms of Service to proceed.');
+        isValid = false;
+      }
+
+      if (checkConsentPrivacy && !checkConsentPrivacy.checked) {
+        showError('error-consent-privacy', 'You must agree to the Privacy Policy to proceed.');
+        isValid = false;
+      }
+
+      if (checkConsentAuth && !checkConsentAuth.checked) {
+        showError('error-consent-auth', 'You must confirm authorization to register this company.');
+        isValid = false;
+      }
+    } else if (currentStep === 4) {
+      if (checkFinalConfirm && !checkFinalConfirm.checked) {
+        showError('error-final-confirm', 'Please confirm that all information is accurate to create your workspace.');
         isValid = false;
       }
     }
@@ -314,9 +638,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Populate Step 4 Review Summary ---
   function populateReviewSummary() {
     if (summaryCompanyName) summaryCompanyName.textContent = inputCompanyName.value.trim() || '—';
-    if (summaryLegalName) summaryLegalName.textContent = inputLegalName.value.trim() || 'Same as display name';
+    if (summaryLegalName) summaryLegalName.textContent = inputLegalName.value.trim() || 'Same as company name';
     if (summaryCompanyType) summaryCompanyType.textContent = selectCompanyType.value || '—';
-    if (summaryIndustry) summaryIndustry.textContent = selectIndustry.value || '—';
+
+    let indText = selectIndustry.value || '—';
+    if (selectIndustry.value === 'Other' && inputIndustryOther && inputIndustryOther.value.trim()) {
+      indText = `Other (${inputIndustryOther.value.trim()})`;
+    }
+    if (summaryIndustry) summaryIndustry.textContent = indText;
+
     if (summaryCompanySize) summaryCompanySize.textContent = selectCompanySize.value || '—';
     if (summaryWebsite) summaryWebsite.textContent = inputWebsite.value.trim() || 'None provided';
     if (summaryYear) summaryYear.textContent = inputYear.value.trim() || '—';
@@ -335,10 +665,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (summaryRegNum) summaryRegNum.textContent = inputRegNumber.value.trim() || 'None provided';
     if (summaryTaxId) summaryTaxId.textContent = inputTaxId.value.trim() || 'None provided';
 
+    if (summaryBillingAddress) {
+      if (!checkBillingSame || checkBillingSame.checked) {
+        summaryBillingAddress.textContent = 'Same as registered address';
+      } else {
+        const bStreet = inputBillingStreet.value.trim();
+        const bCity = inputBillingCity.value.trim();
+        const bCountry = selectBillingCountry.value;
+        summaryBillingAddress.textContent = `${bStreet}, ${bCity}, ${bCountry}`;
+      }
+    }
+
     if (summaryAdminName) summaryAdminName.textContent = inputAdminName.value.trim() || '—';
     if (summaryAdminEmail) summaryAdminEmail.textContent = inputAdminEmail.value.trim() || '—';
-    if (summaryJobTitle) summaryJobTitle.textContent = inputJobTitle.value.trim() || 'Administrator / Owner';
+    if (summaryVerificationStatus) {
+      summaryVerificationStatus.textContent = emailVerified ? 'Verified ✓' : 'Verification on hold (Active)';
+    }
+    if (summaryJobTitle) summaryJobTitle.textContent = inputJobTitle.value.trim() || 'Administrator';
     if (summaryPhone) summaryPhone.textContent = inputPhone.value.trim() || 'None provided';
+
+    if (summaryCurrency) summaryCurrency.textContent = selectCurrency ? selectCurrency.value : 'USD';
+    if (summaryTimezone) summaryTimezone.textContent = selectTimezone ? selectTimezone.value : 'UTC';
   }
 
   // --- Button Listeners ---
@@ -374,7 +721,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Jump to specific step from Review summary
   jumpButtons.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -398,14 +744,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const file = logoFileInput.files[0];
       if (!file) return;
 
-      // Validate size (< 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showError('error-logo-file', 'Logo file size must be less than 5MB.');
         logoFileInput.value = '';
         return;
       }
 
-      // Validate type
       if (!file.type.startsWith('image/')) {
         showError('error-logo-file', 'Please select a valid image file (PNG, JPG, SVG).');
         logoFileInput.value = '';
@@ -413,12 +757,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       clearFieldError('error-logo-file');
-      uploadedLogoFile = file;
-
-      // Display preview
       const reader = new FileReader();
       reader.onload = (re) => {
-        if (logoPreviewImg) logoPreviewImg.src = re.target.result;
+        logoBase64 = re.target.result;
+        if (logoPreviewImg) logoPreviewImg.src = logoBase64;
         if (logoFileName) logoFileName.textContent = file.name;
         if (uploadIdleState) uploadIdleState.classList.add('d-none');
         if (uploadPreviewState) uploadPreviewState.classList.remove('d-none');
@@ -430,12 +772,61 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (removeLogoBtn) {
     removeLogoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      uploadedLogoFile = null;
+      logoBase64 = null;
       if (logoFileInput) logoFileInput.value = '';
       if (logoPreviewImg) logoPreviewImg.src = '';
       if (uploadPreviewState) uploadPreviewState.classList.add('d-none');
       if (uploadIdleState) uploadIdleState.classList.remove('d-none');
       clearFieldError('error-logo-file');
+    });
+  }
+
+  // --- Avatar File Upload Handling ---
+  if (avatarDropzone && avatarFileInput) {
+    avatarDropzone.addEventListener('click', (e) => {
+      if (e.target !== removeAvatarBtn) {
+        avatarFileInput.click();
+      }
+    });
+
+    avatarFileInput.addEventListener('change', () => {
+      const file = avatarFileInput.files[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        showError('error-avatar-file', 'Photo file size must be less than 5MB.');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        showError('error-avatar-file', 'Please select a valid image file (PNG, JPG).');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      clearFieldError('error-avatar-file');
+      const reader = new FileReader();
+      reader.onload = (re) => {
+        avatarBase64 = re.target.result;
+        if (avatarPreviewImg) avatarPreviewImg.src = avatarBase64;
+        if (avatarFileName) avatarFileName.textContent = file.name;
+        if (avatarIdleState) avatarIdleState.classList.add('d-none');
+        if (avatarPreviewState) avatarPreviewState.classList.remove('d-none');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (removeAvatarBtn) {
+    removeAvatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      avatarBase64 = null;
+      if (avatarFileInput) avatarFileInput.value = '';
+      if (avatarPreviewImg) avatarPreviewImg.src = '';
+      if (avatarPreviewState) avatarPreviewState.classList.add('d-none');
+      if (avatarIdleState) avatarIdleState.classList.remove('d-none');
+      clearFieldError('error-avatar-file');
     });
   }
 
@@ -470,63 +861,87 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       clearErrors();
 
-      // Ensure all 3 steps are valid before submission
-      currentStep = 1;
-      if (!validateCurrentStep()) {
-        updateStepUI();
-        return;
-      }
-      currentStep = 2;
-      if (!validateCurrentStep()) {
-        updateStepUI();
-        return;
-      }
-      currentStep = 3;
-      if (!validateCurrentStep()) {
-        updateStepUI();
-        return;
+      // Ensure all 4 steps are validated
+      for (let s = 1; s <= 4; s++) {
+        currentStep = s;
+        if (!validateCurrentStep()) {
+          updateStepUI();
+          return;
+        }
       }
       currentStep = 4;
       updateStepUI();
 
-      // Gather submission payload matching SetupRequest DTO
-      const organizationName = inputCompanyName.value.trim();
-      const adminName = inputAdminName.value.trim();
-      const adminEmail = inputAdminEmail.value.trim();
-      const adminPassword = inputAdminPassword.value;
+      // Gather complete payload matching CompleteRegistrationRequestDto
+      const sameBilling = !checkBillingSame || checkBillingSame.checked;
 
-      // Lock button & show loading state
+      const payload = {
+        organizationName: inputCompanyName.value.trim(),
+        legalName: inputLegalName.value.trim() || null,
+        companyLogo: logoBase64 || null,
+        companyType: selectCompanyType.value,
+        industry: selectIndustry.value,
+        industryOther: (selectIndustry.value === 'Other' && inputIndustryOther) ? inputIndustryOther.value.trim() : null,
+        companySize: selectCompanySize.value,
+        websiteUrl: inputWebsite.value.trim() || null,
+        yearEstablished: inputYear.value.trim() ? parseInt(inputYear.value.trim(), 10) : null,
+
+        country: selectCountry.value,
+        registeredAddress: inputStreet.value.trim(),
+        addressLine2: inputLine2.value.trim() || null,
+        city: inputCity.value.trim(),
+        state: inputState.value.trim() || null,
+        postalCode: inputZip.value.trim() || null,
+        currency: selectCurrency ? selectCurrency.value : 'USD',
+        timezone: selectTimezone ? selectTimezone.value : 'UTC',
+        businessRegNumber: inputRegNumber.value.trim() || null,
+        taxId: inputTaxId.value.trim() || null,
+
+        billingSameAsRegistered: sameBilling,
+        billingAddress: sameBilling ? inputStreet.value.trim() : (inputBillingStreet ? inputBillingStreet.value.trim() : null),
+        billingAddressLine2: sameBilling ? (inputLine2.value.trim() || null) : (inputBillingLine2 ? inputBillingLine2.value.trim() || null : null),
+        billingCity: sameBilling ? inputCity.value.trim() : (inputBillingCity ? inputBillingCity.value.trim() : null),
+        billingState: sameBilling ? (inputState.value.trim() || null) : (inputBillingState ? inputBillingState.value.trim() || null : null),
+        billingPostalCode: sameBilling ? (inputZip.value.trim() || null) : (inputBillingZip ? inputBillingZip.value.trim() || null : null),
+        billingCountry: sameBilling ? selectCountry.value : (selectBillingCountry ? selectBillingCountry.value : null),
+
+        adminName: inputAdminName.value.trim(),
+        adminEmail: inputAdminEmail.value.trim(),
+        verificationCode: inputVerificationCode ? inputVerificationCode.value.trim() : null,
+        adminPassword: inputAdminPassword.value,
+        jobTitle: inputJobTitle.value.trim() || null,
+        phoneNumber: inputPhone.value.trim() || null,
+        profilePicture: avatarBase64 || null,
+
+        termsAccepted: checkConsentTerms ? checkConsentTerms.checked : true,
+        privacyAccepted: checkConsentPrivacy ? checkConsentPrivacy.checked : true,
+        authorizedToRegister: checkConsentAuth ? checkConsentAuth.checked : true
+      };
+
       setSubmittingState(true);
 
       try {
-        // Backend API call: POST /api/setup/register-company
-        await Api.post('/api/setup/register-company', {
-          organizationName,
-          adminName,
-          adminEmail,
-          adminPassword
-        });
+        await Api.post('/api/setup/register-company', payload);
 
-        showAlert(`Company "${organizationName}" registered successfully! Launching your workspace...`, 'success');
+        showAlert(`Workspace "${payload.organizationName}" created successfully! Launching your workspace...`, 'success');
 
-        // Automatic authentication and dashboard dispatch
         setTimeout(async () => {
           try {
-            await Auth.login(adminEmail, adminPassword);
+            await Auth.login(payload.adminEmail, payload.adminPassword);
             const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
             window.location.href = targetUrl;
           } catch (loginErr) {
             setSubmittingState(false);
-            showAlert('Company registered! Redirecting to sign in...', 'success');
+            showAlert('Workspace created! Redirecting to sign in...', 'success');
             setTimeout(() => {
-              window.location.href = `/pages/login/login.html?email=${encodeURIComponent(adminEmail)}`;
+              window.location.href = `/pages/login/login.html?email=${encodeURIComponent(payload.adminEmail)}`;
             }, 1000);
           }
         }, 800);
 
       } catch (err) {
         setSubmittingState(false);
-        showAlert(err.message || 'Company registration failed. Please check your information and try again.', 'danger');
+        showAlert(err.message || 'Company registration failed. Please review your details and try again.', 'danger');
       }
     });
   }
@@ -538,7 +953,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnBack) btnBack.disabled = isSubmitting;
 
     if (btnSubmitText) {
-      btnSubmitText.textContent = isSubmitting ? 'Creating Company...' : 'Create Company';
+      btnSubmitText.textContent = isSubmitting ? 'Creating Workspace...' : 'Create Workspace';
     }
 
     if (isSubmitting) {

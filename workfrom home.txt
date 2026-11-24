@@ -8,38 +8,47 @@ Line Count Standard: Strictly between 80 and 100 lines at all times.
 ================================================================================
 
 ================================================================================
+DAY 11 - 2026-11-20 (FRIDAY)
+================================================================================
+1. WORK COMPLETED: Universal Create V17 Schema, 4-Entity CRUD & Zero Diagnostics.
+   - Flyway V17: project_documents schema relaxation for standalone workspace docs.
+   - Universal Create: Task, Project, Document, Meeting dynamic CRUD endpoints.
+   - UI / UX: Eradicated hardcoded seed fallbacks in universal-create.html/js/css.
+   - Registration: BRICK 4-step org signup; unblocked verification on hold state.
+   - Diagnostics: Zero VS Code problems; purged all dead imports, fields & warnings.
+2. VERIFICATION: Full test suites green (0 failures, 0 errors); 0 compiler errors.
+
+================================================================================
+DAY 10 - 2026-11-19 (THURSDAY)
+================================================================================
+1. WORK COMPLETED: Relational Inbox Table (V15), Navbar Initials, DB Purge & 80 Warning Fix.
+   - Sidebar: Removed 5 static items; V14 user_pinned_projects table; user-scoped API.
+   - Flyway V15: Created inbox_items & inbox_preferences tables with zero seed data.
+   - Backend: InboxItem entity, repository, InboxService & InboxController (/api/inbox).
+   - Navbar: Replaced person SVG with 2-letter user initials badge; bell counter with unread count.
+   - Database Purge: Purged all users (0 users, 0 orgs) via purge_db.bat --force --all; DB clean.
+   - VS Code Problems: Eliminated all 83 compiler & linter warnings across 35 repos, services & tests.
+2. VERIFICATION: Setup status verified (userCount: 0); 0 VS Code warnings (83 resolved); 117/117 tests green.
+
+================================================================================
+DAY 9 - 2026-11-18 (WEDNESDAY)
+================================================================================
+1. WORK COMPLETED: Relational Table Conversion & Zero In-Code Seed Fallbacks.
+   - Flyway V13: Created workspace_role_permissions table for module permission matrices.
+   - Settings: Relational persistence for 4 roles & 16 module permissions; PUT endpoint.
+   - Calendar: Auto-seeded events with agenda, notes, decisions, follow-ups; zero fallback maps.
+   - Projects: Relational project_specifications persistence; removed hardcoded fallback DTOs.
+   - Frontend: Removed ALL_PEOPLE & TEAMS arrays in team.js & team-detail.js; live API fetch.
+   - Removed 75-line mock fallback object in settings.js; updated purge_db.bat & 14 test suites.
+2. VERIFICATION: 103/103 tests pass green (0 failures, 0 errors). Full suite verified.
+
+================================================================================
 DAY 8 - 2026-11-18 (TUESDAY)
 ================================================================================
 1. WORK COMPLETED: Calendar Meeting Detail & Edit Experience (Prompt 12 / Brick UI).
-
-   Backend changes:
-   - GET /api/calendar/events/{id}: single-event detail endpoint in CalendarController.
-   - PATCH /api/calendar/events/{id}/notes: 1500ms debounce autosave for rich notes.
-   - PATCH /api/calendar/events/{id}/agenda: agenda text update endpoint.
-   - PATCH /api/calendar/events/{id}/decision: decision title + status update endpoint.
-   - PATCH /api/calendar/events/{id}/followups: follow-up tasks JSON update endpoint.
-
-   Frontend (pages/calendar/meeting-detail/):
-   - meeting-detail.html: editorial two-column layout matching Brick reference screenshot.
-   - meeting-detail.css: 100% --dash-* token colors, zero hex. Lavender agenda card, sage
-     decisions card, pale blue follow-up card, responsive single-column mobile below 1024px.
-   - meeting-detail.js: loads event from API, renders agenda chips, decision cards, follow-up
-     checkboxes, contenteditable notes editor with format toolbar, floating contextual toolbar
-     on text selection (Create task / Record decision / Link record), edit meeting slide-in
-     drawer with form fields and save, more options dropdown, recap builder to clipboard.
-
-   calendar.js:
-   - openEventDetails() updated: UUID events navigate directly to meeting-detail page.
-   - Non-UUID (locally created) events still use the existing side drawer.
-
-   Tests:
-   - MeetingDetailIntegrationTest.java: 7 new tests covering GET detail, PATCH notes, PATCH
-     agenda, PATCH decision, PATCH followups, multi-tenant isolation, PUT update, DELETE.
-   - Total test suite: 92+ tests (baseline 85 + 7 new meeting detail tests).
-
-2. VERIFICATION: 92+ tests run via ./mvnw.cmd test. Meeting detail page accessible at
-   /pages/calendar/meeting-detail/meeting-detail.html?eventId={uuid}.
-   Calendar event click navigates to full meeting detail page. Zero new Flyway migration.
+   - GET /api/calendar/events/{id}, PATCH notes/agenda/decision/followups, PUT update, DELETE.
+   - meeting-detail.html/css/js: Two-column editorial layout, format toolbar, drawer, recap.
+2. VERIFICATION: MeetingDetailIntegrationTest 9/9 green; total 92+ tests green.
 
 ================================================================================
 DAY 7 - 2026-11-18 (WEDNESDAY)
@@ -56,43 +65,19 @@ DAY 6 - 2026-11-17 (TUESDAY)
 2. VERIFICATION: End-to-end integration tests & modal hotkey triggers (Ctrl+K). 80/80 green.
 
 ================================================================================
-DAY 5 - 2026-11-13 (FRIDAY)
+DAY 1 to 5 - 2026-10-26 to 2026-11-13
 ================================================================================
-1. WORK COMPLETED: Interactive Daily Update modal, empty initial fields, PostgreSQL sync (V8/V9).
-2. VERIFICATION: DailyUpdateIntegrationTest 6/6 green; full suite 71/71 green.
-
-================================================================================
-DAY 4 - 2026-11-12 (THURSDAY)
-================================================================================
-1. WORK COMPLETED: Interactive Milestones Table, dual view switcher, 9-stage seeder.
-2. VERIFICATION: ProjectMilestoneIntegrationTest 6/6 green; full suite 65/65 green.
-
-================================================================================
-DAY 3 - 2026-11-10 (TUESDAY)
-================================================================================
-1. WORK COMPLETED: Dedicated Project/Task Creation modals, seed eradication.
-2. VERIFICATION: ProjectIntegrationTest and full suite 53/53 verified green.
-
-================================================================================
-DAY 2 - 2026-11-04 (WEDNESDAY)
-================================================================================
-1. WORK COMPLETED: Full Mobile Layout Modernization (320px - 768px), Zero Overlay.
-2. VERIFICATION: Chrome DevTools Protocol; 18/18 integration tests green.
-
-================================================================================
-DAY 1 - 2026-10-26 (MONDAY)
-================================================================================
-1. WORK COMPLETED: Initial Shell architecture, multi-tenant setup, database foundations.
-2. VERIFICATION: Core Spring Boot security and provisioning verified green.
+1. WORK COMPLETED: Core shell foundations, mobile layouts, Daily Update modal, Milestones table.
+2. VERIFICATION: Multi-tenant auth, PostgreSQL sync (V8/V9), full test suites verified green.
 
 ================================================================================
 WORK FROM HOME (WFH) IMPLEMENTATION PLAN
 ================================================================================
-- Phase 1-22 [COMPLETED]: Shell unification, mobile layout, Kanban, security, Search, Inbox.
-- Phase 23 [COMPLETED]: Universal Create & Task Creation Modal (Neo-Editorial reference).
-- Phase 24 [COMPLETED]: Workspace Employees & People/Roles Directory (Brick UI reference).
+- Phase 1-24 [COMPLETED]: Shell unification, mobile layout, Kanban, security, Search, Directory.
 - Phase 25 [COMPLETED]: Calendar Meeting Detail & Edit Experience (Brick UI reference).
-- Phase 26 [NEXT]: Cross-module activity linking and live workspace analytics.
+- Phase 26 [COMPLETED]: Workspace Settings Categories & Relational Roles/Permissions (V13).
+- Phase 27 [COMPLETED]: Elimination of Raw Code & Seed Data; Zero VS Code Compiler Warnings.
+- Phase 28 [NEXT]: Cross-module activity linking and live workspace analytics.
 
 ================================================================================
 END OF WORK FROM HOME REPORT

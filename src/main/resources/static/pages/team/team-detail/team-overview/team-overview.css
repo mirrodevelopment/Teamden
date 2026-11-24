@@ -189,7 +189,7 @@
   gap: 0.65rem;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: box-shadow 150ms, transform 120ms;
+  transition: box-shadow 150ms;
 }
 
 .tov-motion-card:hover {
@@ -232,6 +232,7 @@
 }
 
 .tov-motion-title {
+  display: block;
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--dash-text-primary);
@@ -240,6 +241,7 @@
 }
 
 .tov-motion-desc {
+  display: block;
   font-size: 0.72rem;
   color: var(--dash-text-muted);
   margin: 0;
@@ -264,7 +266,7 @@
 
 .tov-motion-arrow {
   color: var(--dash-text-muted);
-  transition: transform 150ms, color 150ms;
+  transition: color 150ms;
 }
 
 .tov-motion-card:hover .tov-motion-arrow {
@@ -358,7 +360,7 @@
   font-size: 0.85rem;
   color: var(--dash-text-light);
   flex-shrink: 0;
-  transition: transform 150ms, color 150ms;
+  transition: color 150ms;
 }
 
 .tov-list-row:hover .tov-row-arrow {
@@ -382,7 +384,7 @@
   align-items: flex-start;
   gap: 0.75rem;
   cursor: pointer;
-  transition: box-shadow 150ms, transform 120ms;
+  transition: box-shadow 150ms;
 }
 
 .tov-update-card:hover {
@@ -424,6 +426,7 @@
 }
 
 .tov-update-desc {
+  display: block;
   font-size: 0.72rem;
   color: var(--dash-text-muted);
   line-height: 1.4;
@@ -439,7 +442,7 @@
   font-size: 0.85rem;
   color: var(--dash-text-light);
   flex-shrink: 0;
-  transition: transform 150ms, color 150ms;
+  transition: color 150ms;
 }
 
 .tov-update-card:hover .tov-update-arrow {
@@ -519,7 +522,7 @@
   border: none;
   border-radius: var(--radius-sm, 6px);
   cursor: pointer;
-  transition: background 150ms, transform 120ms;
+  transition: background 150ms;
 }
 
 .tov-dark-btn:hover {
@@ -652,7 +655,6 @@
   font-weight: 700;
   color: var(--dash-text-primary);
   cursor: pointer;
-  transition: transform 120ms;
 }
 
 .tov-member-bubble:hover {
@@ -820,7 +822,7 @@
   font-size: 0.85rem;
   color: var(--dash-text-light);
   flex-shrink: 0;
-  transition: transform 150ms, color 150ms;
+  transition: color 150ms;
 }
 
 .tov-decision-row:hover .tov-decision-arrow {
@@ -872,4 +874,60 @@
     padding: 1rem;
   }
 }
+
+/* Button Resets for Native Elements replacing role="button" */
+button.tov-motion-card,
+button.tov-list-row,
+button.tov-update-card,
+button.tov-decision-row {
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+span.tov-motion-divider {
+  display: block;
+}
+
+.tov-title-dot--lime {
+  color: var(--dash-accent-lime);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tov-motion-card {
+    transition: box-shadow 150ms, transform 120ms;
+  }
+  .tov-motion-arrow,
+  .tov-row-arrow,
+  .tov-update-arrow,
+  .tov-decision-arrow {
+    transition: transform 150ms, color 150ms;
+  }
+  .tov-update-card {
+    transition: box-shadow 150ms, transform 120ms;
+  }
+  .tov-dark-btn {
+    transition: background 150ms, transform 120ms;
+  }
+  .tov-member-bubble {
+    transition: transform 120ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tov-motion-card,
+  .tov-update-card,
+  .tov-dark-btn,
+  .tov-member-bubble,
+  .tov-motion-card:hover,
+  .tov-update-card:hover,
+  .tov-dark-btn:hover,
+  .tov-member-bubble:hover {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 

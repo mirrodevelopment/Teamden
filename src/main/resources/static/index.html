@@ -8,17 +8,17 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
     })();
   </script>
-  
+
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
   <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/fragments/theme/reset.css">
   <link rel="stylesheet" href="/fragments/components/components.css">
   <link rel="stylesheet" href="/fragments/utilities/utilities.css">
   <script src="/fragments/company-data/company-data.js"></script>
-  
+
   <style>
     body {
       display: flex;
@@ -259,12 +259,26 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bootstrapper-card,
+      .brand-glow,
+      .spinner-dot,
+      .offline-card {
+        animation: none !important;
+      }
+
+      .boot-progress-bar,
+      .btn-retry {
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="bootstrapper-card" role="region" aria-live="polite">
-    
+  <section class="bootstrapper-card" aria-live="polite">
+
     <!-- Branding Header -->
     <div class="brand-group">
       <a href="/" class="brand-logo-container" data-company-url data-company="url" title="Teamden by shed">
@@ -309,15 +323,15 @@
     </div>
 
     <div class="boot-footer">
-      Secured with Spring Security & PostgreSQL
+      Secured with Spring Security &amp; PostgreSQL
     </div>
 
-  </div>
+  </section>
 
   <!-- Shared API and Auth helpers -->
   <script src="/shared/js/api.js"></script>
   <script src="/shared/js/auth.js"></script>
-  
+
   <script>
     /**
      * Intelligent Application Bootstrapper
@@ -362,8 +376,8 @@
             clearInterval(retryCountdownInterval);
             if (retryBtnText) retryBtnText.textContent = 'Retrying...';
             bootApplication();
-          } else {
-            if (retryBtnText) retryBtnText.textContent = `Retry Now (${remaining}s)`;
+          } else if (retryBtnText) {
+            retryBtnText.textContent = `Retry Now (${remaining}s)`;
           }
         }, 1000);
       }

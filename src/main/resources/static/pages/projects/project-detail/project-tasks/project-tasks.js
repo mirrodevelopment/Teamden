@@ -839,7 +839,11 @@
           tabButtons.forEach(b => {
             const isTarget = (b === btn);
             b.classList.toggle('active', isTarget);
-            b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+            if (isTarget) {
+              b.setAttribute('aria-current', 'page');
+            } else {
+              b.removeAttribute('aria-current');
+            }
           });
 
           document.querySelectorAll('.drawer-pane').forEach(pane => {

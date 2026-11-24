@@ -63,7 +63,7 @@
 
               <div class="header-right-controls">
                 <!-- Overview Button -->
-                <a href="/pages/overview/overview.html" class="filter-btn btn-back-overview" title="Back to Overview" style="text-decoration:none;">
+                <a href="/pages/overview/overview.html" class="filter-btn btn-back-overview" title="Back to Overview">
                   <svg class="filter-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
@@ -85,10 +85,10 @@
                     </svg>
                   </button>
                   <div class="filter-menu" id="date-filter-menu" role="menu">
-                    <button class="filter-option" data-range="7" role="menuitem">Last 7 days</button>
-                    <button class="filter-option selected" data-range="30" role="menuitem">Last 30 days</button>
-                    <button class="filter-option" data-range="90" role="menuitem">Last 90 days</button>
-                    <button class="filter-option" data-range="custom" role="menuitem">Custom range</button>
+                    <button type="button" class="filter-option" data-range="7" role="menuitem">Last 7 days</button>
+                    <button type="button" class="filter-option selected" data-range="30" role="menuitem">Last 30 days</button>
+                    <button type="button" class="filter-option" data-range="90" role="menuitem">Last 90 days</button>
+                    <button type="button" class="filter-option" data-range="custom" role="menuitem">Custom range</button>
                   </div>
                 </div>
 
@@ -107,11 +107,11 @@
                     </svg>
                   </button>
                   <div class="filter-menu" id="team-filter-menu" role="menu">
-                    <button class="filter-option selected" data-team="all" role="menuitem">All teams</button>
-                    <button class="filter-option" data-team="Design" role="menuitem">Design</button>
-                    <button class="filter-option" data-team="Engineering" role="menuitem">Engineering</button>
-                    <button class="filter-option" data-team="Marketing" role="menuitem">Marketing</button>
-                    <button class="filter-option" data-team="Operations" role="menuitem">Operations</button>
+                    <button type="button" class="filter-option selected" data-team="all" role="menuitem">All teams</button>
+                    <button type="button" class="filter-option" data-team="Design" role="menuitem">Design</button>
+                    <button type="button" class="filter-option" data-team="Engineering" role="menuitem">Engineering</button>
+                    <button type="button" class="filter-option" data-team="Marketing" role="menuitem">Marketing</button>
+                    <button type="button" class="filter-option" data-team="Operations" role="menuitem">Operations</button>
                   </div>
                 </div>
 
@@ -139,9 +139,9 @@
                     </svg>
                   </button>
                   <div class="chart-selector-menu" id="chart-selector-menu" role="menu">
-                    <button class="chart-selector-option selected" data-metric="milestones" role="menuitem">MILESTONES</button>
-                    <button class="chart-selector-option" data-metric="tasks" role="menuitem">TASKS</button>
-                    <button class="chart-selector-option" data-metric="projects" role="menuitem">PROJECTS</button>
+                    <button type="button" class="chart-selector-option selected" data-metric="milestones" role="menuitem">MILESTONES</button>
+                    <button type="button" class="chart-selector-option" data-metric="tasks" role="menuitem">TASKS</button>
+                    <button type="button" class="chart-selector-option" data-metric="projects" role="menuitem">PROJECTS</button>
                   </div>
                 </div>
               </div>
@@ -253,7 +253,7 @@
             <!-- PERFORMANCE METRICS (3 HORIZONTAL CARDS: BEIGE, BLUE, LAVENDER) -->
             <section class="performance-metrics-grid" aria-label="Organisation Performance Metrics">
               <!-- Metric Card 1: Decisions Turnaround (Warm Beige) -->
-              <div class="perf-metric-card perf-card-beige" id="perf-card-decisions" role="button" tabindex="0" title="Inspect Decision Turnaround">
+              <div class="perf-metric-card perf-card-beige" id="perf-card-decisions" title="Inspect Decision Turnaround">
                 <div class="perf-card-top">
                   <span class="perf-eyebrow">02 / DECISIONS</span>
                   <div class="perf-icon-circle">
@@ -272,7 +272,7 @@
               </div>
 
               <!-- Metric Card 2: Blocked Duration (Pale Blue) -->
-              <div class="perf-metric-card perf-card-blue" id="perf-card-blockers" role="button" tabindex="0" title="Inspect Blocked Duration">
+              <div class="perf-metric-card perf-card-blue" id="perf-card-blockers" title="Inspect Blocked Duration">
                 <div class="perf-card-top">
                   <span class="perf-eyebrow">03 / BLOCKERS</span>
                   <div class="perf-icon-circle">
@@ -291,7 +291,7 @@
               </div>
 
               <!-- Metric Card 3: Handoff Acceptance (Lavender) -->
-              <div class="perf-metric-card perf-card-lavender" id="perf-card-handoffs" role="button" tabindex="0" title="Inspect Handoff Acceptance">
+              <div class="perf-metric-card perf-card-lavender" id="perf-card-handoffs" title="Inspect Handoff Acceptance">
                 <div class="perf-card-top">
                   <span class="perf-eyebrow">04 / HANDOFFS</span>
                   <div class="perf-icon-circle">
@@ -324,7 +324,7 @@
 
                 <div class="decision-slowdown-list" id="decision-slowdown-list">
                   <!-- Row 1: Overdue Decision -->
-                  <div class="slowdown-row-item" data-id="dec-homepage" role="button" tabindex="0">
+                  <div class="slowdown-row-item" data-id="dec-homepage">
                     <div class="row-left-group">
                       <div class="row-icon-circle circle-amber">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -341,7 +341,7 @@
                   </div>
 
                   <!-- Row 2: Resolved Decision -->
-                  <div class="slowdown-row-item" data-id="dec-pricing" role="button" tabindex="0">
+                  <div class="slowdown-row-item" data-id="dec-pricing">
                     <div class="row-left-group">
                       <div class="row-icon-circle circle-green">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -376,7 +376,7 @@
                 </div>
 
                 <!-- Visual Directional Flow -->
-                <div class="collab-flow-card" id="btn-open-collab-details" role="button" tabindex="0" title="Inspect Team Flow">
+                <div class="collab-flow-card" id="btn-open-collab-details" title="Inspect Team Flow">
                   <div class="collab-flow-pill-row">
                     <div class="team-flow-pill pill-lavender">Design</div>
                     <svg class="team-flow-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -440,7 +440,7 @@
 
               <div class="exec-items-list" id="saved-reports-list">
                 <!-- Item 1: Monthly Delivery Review -->
-                <div class="exec-rail-item" data-report="Monthly Delivery Review" role="button" tabindex="0">
+                <div class="exec-rail-item" data-report="Monthly Delivery Review">
                   <div class="exec-item-icon-box icon-box-blue">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -457,7 +457,7 @@
                 </div>
 
                 <!-- Item 2: Team Collaboration -->
-                <div class="exec-rail-item" data-report="Team Collaboration" role="button" tabindex="0">
+                <div class="exec-rail-item" data-report="Team Collaboration">
                   <div class="exec-item-icon-box icon-box-purple">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -491,7 +491,7 @@
                 <h4 class="exec-card-title">QUICK EXPORT</h4>
               </div>
 
-              <div class="quick-export-row" id="btn-quick-export-summary" role="button" tabindex="0" title="Export Executive Summary">
+              <div class="quick-export-row" id="btn-quick-export-summary" title="Export Executive Summary">
                 <div class="export-icon-box">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -518,7 +518,7 @@
 
               <div class="key-insights-list" id="key-insights-list">
                 <!-- Insight 1: Delivery Reliability -->
-                <div class="key-insight-bullet" role="button" tabindex="0">
+                <div class="key-insight-bullet">
                   <span class="bullet-dot dot-green"></span>
                   <div class="bullet-text">
                     <strong>Delivery reliability improved</strong>
@@ -527,7 +527,7 @@
                 </div>
 
                 <!-- Insight 2: Decision Turnaround -->
-                <div class="key-insight-bullet" role="button" tabindex="0">
+                <div class="key-insight-bullet">
                   <span class="bullet-dot dot-purple"></span>
                   <div class="bullet-text">
                     <strong>Decision turnaround reduced</strong>
@@ -536,7 +536,7 @@
                 </div>
 
                 <!-- Insight 3: Engineering Flow -->
-                <div class="key-insight-bullet" role="button" tabindex="0">
+                <div class="key-insight-bullet">
                   <span class="bullet-dot dot-blue"></span>
                   <div class="bullet-text">
                     <strong>More work in Engineering</strong>
@@ -566,11 +566,11 @@
   <!-- ===================================================================
        MODAL 1: REPORT BUILDER / STUDIO WORKFLOW
        =================================================================== -->
-  <div class="insights-modal-backdrop" id="modal-report-backdrop" aria-hidden="true">
+  <div class="insights-modal-backdrop" id="modal-report-backdrop">
     <div class="insights-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
       <div class="modal-dialog-header">
         <div class="modal-eyebrow">REPORTING STUDIO · GENERATE REPORT</div>
-        <button class="modal-close-btn" id="btn-close-report-modal" aria-label="Close dialog">
+        <button type="button" class="modal-close-btn" id="btn-close-report-modal" aria-label="Close dialog">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
@@ -606,26 +606,26 @@
           <span class="form-label">Include Sections</span>
           <label class="checkbox-row">
             <input type="checkbox" checked id="chk-delivery">
-            <span>Delivery Reliability & Milestone Cadence (80% rate)</span>
+            <span>Delivery Reliability &amp; Milestone Cadence (80% rate)</span>
           </label>
           <label class="checkbox-row">
             <input type="checkbox" checked id="chk-decisions">
-            <span>Decision Bottlenecks & Overdue Direction</span>
+            <span>Decision Bottlenecks &amp; Overdue Direction</span>
           </label>
           <label class="checkbox-row">
             <input type="checkbox" checked id="chk-collab">
-            <span>Cross-Team Collaboration & Handoff Latency</span>
+            <span>Cross-Team Collaboration &amp; Handoff Latency</span>
           </label>
           <label class="checkbox-row">
             <input type="checkbox" checked id="chk-changes">
-            <span>Automated Key Insights & Trend Shifts</span>
+            <span>Automated Key Insights &amp; Trend Shifts</span>
           </label>
         </div>
       </div>
 
       <div class="modal-dialog-footer">
         <button class="btn-secondary" id="btn-cancel-report-modal" type="button">Cancel</button>
-        <button class="btn-primary-action" id="btn-generate-report-action" type="button">Generate & Download</button>
+        <button class="btn-primary-action" id="btn-generate-report-action" type="button">Generate &amp; Download</button>
       </div>
     </div>
   </div>
@@ -633,11 +633,11 @@
   <!-- ===================================================================
        MODAL 2: DECISION DETAILS & RESOLUTION WORKFLOW
        =================================================================== -->
-  <div class="insights-modal-backdrop" id="modal-decision-backdrop" aria-hidden="true">
+  <div class="insights-modal-backdrop" id="modal-decision-backdrop">
     <div class="insights-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-decision-heading">
       <div class="modal-dialog-header">
         <div class="modal-eyebrow">DECISION INTELLIGENCE · DETAILS</div>
-        <button class="modal-close-btn" id="btn-close-decision-modal" aria-label="Close dialog">
+        <button type="button" class="modal-close-btn" id="btn-close-decision-modal" aria-label="Close dialog">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
@@ -648,7 +648,7 @@
 
         <div class="modal-meta-box">
           <div class="meta-row"><span class="meta-lbl">Project</span><span class="meta-val">Brand Development</span></div>
-          <div class="meta-row"><span class="meta-lbl">Responsible Team</span><span class="meta-val">Creative & Design</span></div>
+          <div class="meta-row"><span class="meta-lbl">Responsible Team</span><span class="meta-val">Creative &amp; Design</span></div>
           <div class="meta-row"><span class="meta-lbl">Time Waiting</span><span class="meta-val text-amber">4.8 days (Median is 2.4d)</span></div>
           <div class="meta-row"><span class="meta-lbl">Decision Owner</span><span class="meta-val">Marcus Jones</span></div>
           <div class="meta-row"><span class="meta-lbl">Impact</span><span class="meta-val">Blocks Client Presentation deck handoff</span></div>
@@ -665,11 +665,11 @@
   <!-- ===================================================================
        MODAL 3: COLLABORATION & HANDOFF ANALYSIS MODAL
        =================================================================== -->
-  <div class="insights-modal-backdrop" id="modal-collab-backdrop" aria-hidden="true">
+  <div class="insights-modal-backdrop" id="modal-collab-backdrop">
     <div class="insights-modal-dialog modal-collab-dialog" role="dialog" aria-modal="true">
       <div class="modal-dialog-header">
         <div class="modal-eyebrow">ORGANISATIONAL FLOW · COLLABORATION MATRIX</div>
-        <button class="modal-close-btn" id="btn-close-collab-modal" aria-label="Close dialog">
+        <button type="button" class="modal-close-btn" id="btn-close-collab-modal" aria-label="Close dialog">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>

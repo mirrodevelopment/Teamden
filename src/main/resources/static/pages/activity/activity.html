@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -105,7 +105,7 @@
               <!-- Live Search Box -->
               <div class="filter-search-box">
                 <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="activity-search-input" placeholder="Search movements, authors, targets..." autocomplete="off">
+                <input type="text" id="activity-search-input" placeholder="Search movements, authors, targets..." aria-label="Search activity" autocomplete="off">
                 <button type="button" id="activity-search-clear" class="search-clear-btn" style="display:none;" title="Clear search">×</button>
               </div>
             </div>
@@ -228,7 +228,7 @@
         <div class="drawer-divider"></div>
 
         <div class="drawer-section">
-          <span class="drawer-section-label">DETAILS & CONTEXT</span>
+          <span class="drawer-section-label">DETAILS &amp; CONTEXT</span>
           <div class="drawer-info-box" id="drawer-info-text">-</div>
         </div>
 

@@ -198,12 +198,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Bind Top-Right Mode Switch Button
+  // Redirect to full BRICK 4-step registration page if #register is requested
+  if (window.location.hash === '#register' || window.location.search.includes('mode=register')) {
+    window.location.replace('/pages/register/register.html');
+    return;
+  }
+
+  // Bind Top-Right Mode Switch Button to dedicated registration page
   if (topSwitchBtn) {
     topSwitchBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const nextMode = (currentAuthMode === 'signin' ? 'register' : 'signin');
-      setAuthMode(nextMode);
+      window.location.href = '/pages/register/register.html';
     });
   }
 

@@ -10,12 +10,14 @@
   let _isOpen = false;
   let _currentType = 'TASK'; // 'TASK' | 'PROJECT' | 'DOCUMENT' | 'MEETING'
   let _taskOptions = null; // { projects: [], assignees: [], columns: [], priorities: [] }
+  let _projectOptions = null; // { teams: [], owners: [], clients: [], statuses: [], priorities: [] }
   let _isLoadingOptions = false;
   let _selectedProject = null;
   let _selectedAssignee = null;
   let _selectedDueDate = '';
   let _linkedSource = null;
   let _isMoreDetailsOpen = false;
+  let _isProjectMoreDetailsOpen = false;
   let _drafts = {
     TASK: {},
     PROJECT: {},
@@ -56,15 +58,20 @@
 
   // ── Ensure Modal HTML Loaded ─────────────────────────────────────────
   let _loadPromise = null;
+  let _eventsBound = false;
   async function ensureLoaded() {
     if (document.getElementById('universal-create-backdrop')) {
+      if (!_eventsBound) {
+        _bindDomEvents();
+        _eventsBound = true;
+      }
       return true;
     }
     if (_loadPromise) return _loadPromise;
 
     _loadPromise = (async () => {
       try {
-        const res = await fetch('/fragments/create/universal-create.html?v=1');
+        const res = await fetch('/fragments/create/universal-create.html?v=2');
         if (res.ok) {
           const html = await res.text();
           const wrapper = document.createElement('div');
@@ -78,33 +85,168 @@
       } catch (err) {
         console.error('[UniversalCreate] Error fetching universal-create.html:', err);
       }
-      _bindDomEvents();
+      if (!_eventsBound) {
+        _bindDomEvents();
+        _eventsBound = true;
+      }
       return true;
     })();
 
     return _loadPromise;
   }
 
-  // ── Fetch Task Options (/api/tasks/options) ──────────────────────────
+  // ── Fetch Options (/api/tasks/options & /api/projects/options) ──────
   async function loadOptions(force = false) {
-    if (_taskOptions && !force) return _taskOptions;
+    if (_taskOptions && _projectOptions && !force) return _taskOptions;
     if (_isLoadingOptions) return;
     _isLoadingOptions = true;
 
     try {
-      const res = await fetch('/api/tasks/options');
-      if (res.ok) {
-        _taskOptions = await res.json();
+      const [taskRes, projRes] = await Promise.all([
+        fetch('/api/tasks/options').catch(err => { console.warn('task options fetch error:', err); return null; }),
+        fetch('/api/projects/options').catch(err => { console.warn('project options fetch error:', err); return null; })
+      ]);
+
+      if (taskRes && taskRes.ok) {
+        _taskOptions = await taskRes.json();
         _populateProjectDropdown();
         _populateAssigneeDropdown();
         _populateSecondaryProjectDropdowns();
       }
+
+      if (projRes && projRes.ok) {
+        _projectOptions = await projRes.json();
+        _populateProjectFormOptions();
+      }
     } catch (err) {
-      console.warn('[UniversalCreate] Could not load task options:', err);
+      console.warn('[UniversalCreate] Could not load creation options:', err);
     } finally {
       _isLoadingOptions = false;
     }
     return _taskOptions;
+  }
+
+  // ── Populate Project Form Options ─────────────────────────────────────
+  function _populateProjectFormOptions() {
+    if (!_projectOptions) return;
+
+    // Populate team select
+    const teamSelect = document.getElementById('project-team-select');
+    if (teamSelect && _projectOptions.teams) {
+      const currentVal = teamSelect.value;
+      const optionsHtml = '<option value="" disabled ' + (!currentVal ? 'selected' : '') + '>Select team</option>' +
+        _projectOptions.teams.map(t => {
+          const sub = t.subtitle ? ` (${t.subtitle})` : '';
+          return `<option value="${t.id}" ${currentVal === String(t.id) ? 'selected' : ''}>${escapeHtml(t.name)}${escapeHtml(sub)}</option>`;
+        }).join('');
+      teamSelect.innerHTML = optionsHtml;
+      if (teamSelect.value) {
+        _onProjectTeamChanged(teamSelect.value);
+      }
+    }
+
+    // Populate clients datalist
+    const clientsDatalist = document.getElementById('project-clients-datalist');
+    if (clientsDatalist && _projectOptions.clients) {
+      clientsDatalist.innerHTML = _projectOptions.clients
+        .map(c => `<option value="${escapeHtml(c)}"></option>`)
+        .join('');
+    }
+
+    // Set default target due date (today + 30 days)
+    const dueInput = document.getElementById('project-due-input');
+    if (dueInput && !dueInput.value) {
+      const target = new Date();
+      target.setDate(target.getDate() + 30);
+      dueInput.value = target.toISOString().split('T')[0];
+    }
+
+    // Set default start date (today)
+    const startInput = document.getElementById('project-start-date-input');
+    if (startInput && !startInput.value) {
+      startInput.value = getTodayIso();
+    }
+  }
+
+  function _onProjectTeamChanged(teamId) {
+    const leadSelect = document.getElementById('project-team-lead-select');
+    const membersChecklist = document.getElementById('project-members-checklist');
+    if (!leadSelect) return;
+
+    if (!teamId || !_projectOptions || !_projectOptions.teams) {
+      leadSelect.innerHTML = '<option value="" disabled selected>Select team first</option>';
+      leadSelect.disabled = true;
+      if (membersChecklist) {
+        membersChecklist.innerHTML = '<span class="placeholder-text text-sm">Select a team above to view eligible members.</span>';
+      }
+      return;
+    }
+
+    const team = _projectOptions.teams.find(t => String(t.id) === String(teamId));
+    if (!team || !team.members || team.members.length === 0) {
+      leadSelect.innerHTML = '<option value="" disabled selected>No members in selected team</option>';
+      leadSelect.disabled = true;
+      if (membersChecklist) {
+        membersChecklist.innerHTML = '<span class="placeholder-text text-sm">No other members in this team.</span>';
+      }
+      return;
+    }
+
+    const members = team.members;
+    leadSelect.disabled = false;
+
+    // Populate lead options
+    leadSelect.innerHTML = '<option value="" disabled>Select team lead</option>' +
+      members.map(m => {
+        const idVal = m.userId || m.id;
+        const isHead = team.headUserId && String(team.headUserId) === String(idVal);
+        return `<option value="${idVal}">${escapeHtml(m.name || 'Member')}${m.role ? ` · ${escapeHtml(m.role)}` : ''}${isHead ? ' (Team Head)' : ''}</option>`;
+      }).join('');
+
+    // Pre-select team head if present, else first member
+    if (team.headUserId && members.some(m => String(m.userId || m.id) === String(team.headUserId))) {
+      leadSelect.value = team.headUserId;
+    } else if (members.length > 0) {
+      leadSelect.value = members[0].userId || members[0].id;
+    }
+
+    _updateProjectMembersChecklist(members, leadSelect.value);
+  }
+
+  function _updateProjectMembersChecklist(members, selectedLeadId) {
+    const membersChecklist = document.getElementById('project-members-checklist');
+    if (!membersChecklist) return;
+
+    const availableMembers = (members || []).filter(m => String(m.userId || m.id) !== String(selectedLeadId));
+    if (availableMembers.length === 0) {
+      membersChecklist.innerHTML = '<span class="placeholder-text text-sm">No additional members in this team.</span>';
+      return;
+    }
+
+    membersChecklist.innerHTML = availableMembers.map(m => {
+      const idVal = m.userId || m.id;
+      return `
+        <label class="member-checkbox-item">
+          <input type="checkbox" name="project-member" value="${idVal}">
+          <span>${escapeHtml(m.name || 'Member')}${m.role ? ` <small style="color:var(--dash-text-muted);">(${escapeHtml(m.role)})</small>` : ''}</span>
+        </label>
+      `;
+    }).join('');
+  }
+
+  function toggleProjectMoreDetails() {
+    const panel = document.getElementById('project-more-details-panel');
+    const btn = document.getElementById('btn-toggle-project-more-details');
+    const textSpan = document.getElementById('project-more-details-text');
+    if (!panel) return;
+
+    _isProjectMoreDetailsOpen = !_isProjectMoreDetailsOpen;
+    panel.style.display = _isProjectMoreDetailsOpen ? 'block' : 'none';
+    if (textSpan) textSpan.textContent = _isProjectMoreDetailsOpen ? 'Fewer details' : 'More details';
+    if (btn) {
+      btn.classList.toggle('active', _isProjectMoreDetailsOpen);
+      btn.setAttribute('aria-expanded', _isProjectMoreDetailsOpen ? 'true' : 'false');
+    }
   }
 
   // ── Populate Projects Dropdown ────────────────────────────────────────
@@ -119,13 +261,13 @@
     const filtered = projects.filter(p => !query || (p.name && p.name.toLowerCase().includes(query)));
 
     if (filtered.length === 0) {
-      list.innerHTML = '<div class="select-option-empty">No matching projects found</div>';
+      list.innerHTML = `<div class="select-option-empty">${query ? 'No matching projects found' : 'No projects created yet'}</div>`;
       return;
     }
 
     filtered.forEach(proj => {
       const opt = document.createElement('div');
-      opt.className = 'custom-select-option';
+      opt.className = 'custom-select-option select-option-item';
       if (_selectedProject && _selectedProject.id === proj.id) {
         opt.classList.add('selected');
       }
@@ -168,19 +310,19 @@
     _selectedProject = proj;
     const nameEl = document.getElementById('task-project-selected-name');
     const hiddenEl = document.getElementById('task-project-hidden-val');
-    if (nameEl) nameEl.textContent = proj ? proj.name : 'Select project';
+    if (nameEl) {
+      nameEl.textContent = proj ? proj.name : 'Select project...';
+      nameEl.classList.toggle('placeholder-text', !proj);
+    }
     if (hiddenEl) hiddenEl.value = proj ? (proj.id || '') : '';
 
-    // Close dropdown
-    const dropdown = document.getElementById('task-project-dropdown');
-    const trigger = document.getElementById('task-project-trigger');
-    if (dropdown) dropdown.classList.remove('open');
-    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    // Close dropdown cleanly
+    closeProjectDropdown();
 
     // Update selection highlight
     const list = document.getElementById('task-project-options');
     if (list) {
-      list.querySelectorAll('.custom-select-option').forEach(el => {
+      list.querySelectorAll('.custom-select-option, .select-option-item').forEach(el => {
         el.classList.toggle('selected', el.dataset.id === (proj ? proj.id : ''));
       });
     }
@@ -194,9 +336,14 @@
     list.innerHTML = '';
     const assignees = _taskOptions.assignees || [];
 
+    if (assignees.length === 0) {
+      list.innerHTML = '<div class="select-option-empty">No active members found</div>';
+      return;
+    }
+
     assignees.forEach(assignee => {
       const opt = document.createElement('div');
-      opt.className = 'custom-select-option';
+      opt.className = 'custom-select-option select-option-item';
       if (_selectedAssignee && _selectedAssignee.id === assignee.id) {
         opt.classList.add('selected');
       }
@@ -230,19 +377,19 @@
 
     const initials = assignee ? (assignee.initials || (assignee.name ? assignee.name.substring(0, 2).toUpperCase() : 'TD')) : '--';
     if (avatarEl) avatarEl.textContent = initials;
-    if (nameEl) nameEl.textContent = assignee ? assignee.name : 'Unassigned';
+    if (nameEl) {
+      nameEl.textContent = assignee ? assignee.name : 'Select assignee...';
+      nameEl.classList.toggle('placeholder-text', !assignee);
+    }
     if (hiddenEl) hiddenEl.value = assignee ? (assignee.id || '') : '';
 
-    // Close dropdown
-    const dropdown = document.getElementById('task-assignee-dropdown');
-    const trigger = document.getElementById('task-assignee-trigger');
-    if (dropdown) dropdown.classList.remove('open');
-    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    // Close dropdown cleanly
+    closeAssigneeDropdown();
 
     // Update selection highlight
     const list = document.getElementById('task-assignee-options');
     if (list) {
-      list.querySelectorAll('.custom-select-option').forEach(el => {
+      list.querySelectorAll('.custom-select-option, .select-option-item').forEach(el => {
         el.classList.toggle('selected', el.dataset.id === (assignee ? assignee.id : ''));
       });
     }
@@ -250,11 +397,19 @@
 
   // ── Set Due Date ──────────────────────────────────────────────────────
   function setDueDate(isoDate) {
-    _selectedDueDate = isoDate || getTodayIso();
+    _selectedDueDate = isoDate || '';
     const rawInput = document.getElementById('task-due-date-raw');
     const displayEl = document.getElementById('task-due-formatted-display');
     if (rawInput) rawInput.value = _selectedDueDate;
-    if (displayEl) displayEl.textContent = formatDisplayDate(_selectedDueDate);
+    if (displayEl) {
+      if (_selectedDueDate) {
+        displayEl.textContent = formatDisplayDate(_selectedDueDate);
+        displayEl.classList.remove('placeholder-text');
+      } else {
+        displayEl.textContent = 'Select due date...';
+        displayEl.classList.add('placeholder-text');
+      }
+    }
   }
 
   // ── Switch Creation Type (Task, Project, Document, Meeting) ────────────
@@ -274,6 +429,7 @@
       const isActive = cardType === targetType;
       card.classList.toggle('active', isActive);
       card.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      card.setAttribute('tabindex', isActive ? '0' : '-1');
     });
 
     // 3. Update Form Panels
@@ -329,9 +485,29 @@
     } else if (type === 'PROJECT') {
       const name = document.getElementById('project-name-input');
       const desc = document.getElementById('project-desc-textarea');
+      const team = document.getElementById('project-team-select');
+      const lead = document.getElementById('project-team-lead-select');
+      const cat = document.getElementById('project-category-select');
+      const prio = document.getElementById('project-priority-select');
+      const due = document.getElementById('project-due-input');
+      const client = document.getElementById('project-client-input');
+      const cover = document.getElementById('project-cover-image-input');
+      const start = document.getElementById('project-start-date-input');
+      const deliv = document.getElementById('project-deliverables-textarea');
+      const tags = document.getElementById('project-tags-input');
       _drafts.PROJECT = {
         name: name ? name.value : '',
-        desc: desc ? desc.value : ''
+        desc: desc ? desc.value : '',
+        teamId: team ? team.value : '',
+        teamLeadId: lead ? lead.value : '',
+        category: cat ? cat.value : 'Design',
+        priority: prio ? prio.value : 'Medium',
+        dueDate: due ? due.value : '',
+        clientName: client ? client.value : '',
+        coverImageUrl: cover ? cover.value : '',
+        startDate: start ? start.value : '',
+        deliverables: deliv ? deliv.value : '',
+        tags: tags ? tags.value : ''
       };
     } else if (type === 'DOCUMENT') {
       const title = document.getElementById('doc-title-input');
@@ -361,8 +537,31 @@
     } else if (type === 'PROJECT') {
       const name = document.getElementById('project-name-input');
       const desc = document.getElementById('project-desc-textarea');
+      const team = document.getElementById('project-team-select');
+      const lead = document.getElementById('project-team-lead-select');
+      const cat = document.getElementById('project-category-select');
+      const prio = document.getElementById('project-priority-select');
+      const due = document.getElementById('project-due-input');
+      const client = document.getElementById('project-client-input');
+      const cover = document.getElementById('project-cover-image-input');
+      const start = document.getElementById('project-start-date-input');
+      const deliv = document.getElementById('project-deliverables-textarea');
+      const tags = document.getElementById('project-tags-input');
       if (name && draft.name !== undefined) name.value = draft.name;
       if (desc && draft.desc !== undefined) desc.value = draft.desc;
+      if (team && draft.teamId) {
+        team.value = draft.teamId;
+        _onProjectTeamChanged(draft.teamId);
+      }
+      if (lead && draft.teamLeadId) lead.value = draft.teamLeadId;
+      if (cat && draft.category) cat.value = draft.category;
+      if (prio && draft.priority) prio.value = draft.priority;
+      if (due && draft.dueDate) due.value = draft.dueDate;
+      if (client && draft.clientName) client.value = draft.clientName;
+      if (cover && draft.coverImageUrl) cover.value = draft.coverImageUrl;
+      if (start && draft.startDate) start.value = draft.startDate;
+      if (deliv && draft.deliverables) deliv.value = draft.deliverables;
+      if (tags && draft.tags) tags.value = draft.tags;
     } else if (type === 'DOCUMENT') {
       const title = document.getElementById('doc-title-input');
       const content = document.getElementById('doc-content-textarea');
@@ -386,7 +585,10 @@
     _isMoreDetailsOpen = !_isMoreDetailsOpen;
     panel.style.display = _isMoreDetailsOpen ? 'block' : 'none';
     if (textSpan) textSpan.textContent = _isMoreDetailsOpen ? 'Fewer details' : 'More details';
-    if (btn) btn.classList.toggle('active', _isMoreDetailsOpen);
+    if (btn) {
+      btn.classList.toggle('active', _isMoreDetailsOpen);
+      btn.setAttribute('aria-expanded', _isMoreDetailsOpen ? 'true' : 'false');
+    }
   }
 
   // ── Linked Source Context ─────────────────────────────────────────────
@@ -444,16 +646,22 @@
     if (initialContext.projectId && _taskOptions && _taskOptions.projects) {
       const match = _taskOptions.projects.find(p => p.id === initialContext.projectId);
       if (match) selectProject(match);
+      else selectProject(null);
     } else if (!_selectedProject && _taskOptions && _taskOptions.projects && _taskOptions.projects.length > 0) {
       selectProject(_taskOptions.projects[0]);
+    } else if (!_selectedProject) {
+      selectProject(null);
     }
 
     // Pre-select assignee if specified, or default to first assignee
     if (initialContext.assigneeId && _taskOptions && _taskOptions.assignees) {
       const match = _taskOptions.assignees.find(a => a.id === initialContext.assigneeId);
       if (match) selectAssignee(match);
+      else selectAssignee(null);
     } else if (!_selectedAssignee && _taskOptions && _taskOptions.assignees && _taskOptions.assignees.length > 0) {
       selectAssignee(_taskOptions.assignees[0]);
+    } else if (!_selectedAssignee) {
+      selectAssignee(null);
     }
 
     // Handle Linked Source Context
@@ -474,7 +682,7 @@
 
     // Show Modal
     backdrop.classList.add('open');
-    backdrop.setAttribute('aria-hidden', 'false');
+    backdrop.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
     _isOpen = true;
   }
@@ -483,7 +691,7 @@
     const backdrop = document.getElementById('universal-create-backdrop');
     if (backdrop) {
       backdrop.classList.remove('open');
-      backdrop.setAttribute('aria-hidden', 'true');
+      backdrop.setAttribute('inert', '');
     }
     document.body.style.overflow = '';
     _isOpen = false;
@@ -492,16 +700,107 @@
     _closeAllDropdowns();
   }
 
-  function _closeAllDropdowns() {
-    const projDropdown = document.getElementById('task-project-dropdown');
-    const projTrigger = document.getElementById('task-project-trigger');
-    if (projDropdown) projDropdown.classList.remove('open');
-    if (projTrigger) projTrigger.setAttribute('aria-expanded', 'false');
+  // ── Dropdown Toggle Functions ─────────────────────────────────────────
+  function closeProjectDropdown() {
+    const wrap = document.getElementById('task-project-select-wrap');
+    const trigger = document.getElementById('task-project-trigger');
+    const dropdown = document.getElementById('task-project-dropdown');
+    if (wrap) {
+      wrap.classList.remove('active');
+      wrap.closest('.form-field-group')?.classList.remove('active-dropdown');
+    }
+    if (dropdown) dropdown.classList.remove('open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  }
 
-    const assigneeDropdown = document.getElementById('task-assignee-dropdown');
-    const assigneeTrigger = document.getElementById('task-assignee-trigger');
-    if (assigneeDropdown) assigneeDropdown.classList.remove('open');
-    if (assigneeTrigger) assigneeTrigger.setAttribute('aria-expanded', 'false');
+  function closeAssigneeDropdown() {
+    const wrap = document.getElementById('task-assignee-select-wrap');
+    const trigger = document.getElementById('task-assignee-trigger');
+    const dropdown = document.getElementById('task-assignee-dropdown');
+    if (wrap) {
+      wrap.classList.remove('active');
+      wrap.closest('.form-field-group')?.classList.remove('active-dropdown');
+    }
+    if (dropdown) dropdown.classList.remove('open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  async function toggleProjectDropdown(force) {
+    const wrap = document.getElementById('task-project-select-wrap');
+    const trigger = document.getElementById('task-project-trigger');
+    const dropdown = document.getElementById('task-project-dropdown');
+    const searchInput = document.getElementById('task-project-search');
+    if (!dropdown || !wrap) return;
+
+    const currentlyOpen = wrap.classList.contains('active');
+    const willOpen = typeof force === 'boolean' ? force : !currentlyOpen;
+
+    if (!willOpen) {
+      closeProjectDropdown();
+      return;
+    }
+
+    // Close other dropdown directly without recursion
+    closeAssigneeDropdown();
+
+    if (!_taskOptions) {
+      await loadOptions();
+    }
+
+    wrap.classList.add('active');
+    dropdown.classList.add('open');
+    wrap.closest('.form-field-group')?.classList.add('active-dropdown');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+
+    if (searchInput) {
+      setTimeout(() => searchInput.focus(), 60);
+    }
+  }
+
+  async function toggleAssigneeDropdown(force) {
+    const wrap = document.getElementById('task-assignee-select-wrap');
+    const trigger = document.getElementById('task-assignee-trigger');
+    const dropdown = document.getElementById('task-assignee-dropdown');
+    if (!dropdown || !wrap) return;
+
+    const currentlyOpen = wrap.classList.contains('active');
+    const willOpen = typeof force === 'boolean' ? force : !currentlyOpen;
+
+    if (!willOpen) {
+      closeAssigneeDropdown();
+      return;
+    }
+
+    // Close other dropdown directly without recursion
+    closeProjectDropdown();
+
+    if (!_taskOptions) {
+      await loadOptions();
+    }
+
+    wrap.classList.add('active');
+    dropdown.classList.add('open');
+    wrap.closest('.form-field-group')?.classList.add('active-dropdown');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+  }
+
+  function _closeAllDropdowns() {
+    closeProjectDropdown();
+    closeAssigneeDropdown();
+  }
+
+  function openDatePicker() {
+    const dateInput = document.getElementById('task-due-date-raw');
+    if (!dateInput) return;
+    try {
+      if (typeof dateInput.showPicker === 'function') {
+        dateInput.showPicker();
+      } else {
+        dateInput.focus();
+      }
+    } catch (err) {
+      dateInput.focus();
+    }
   }
 
   // ── Bind DOM Events ───────────────────────────────────────────────────
@@ -540,17 +839,13 @@
 
     // Project Dropdown Trigger
     const projTrigger = document.getElementById('task-project-trigger');
-    const projDropdown = document.getElementById('task-project-dropdown');
     const projSearch = document.getElementById('task-project-search');
 
-    if (projTrigger && projDropdown) {
+    if (projTrigger) {
       projTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
-        const isOpen = projDropdown.classList.toggle('open');
-        projTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        if (isOpen && projSearch) {
-          setTimeout(() => projSearch.focus(), 50);
-        }
+        toggleProjectDropdown();
       });
     }
 
@@ -563,41 +858,54 @@
 
     // Assignee Dropdown Trigger
     const assigneeTrigger = document.getElementById('task-assignee-trigger');
-    const assigneeDropdown = document.getElementById('task-assignee-dropdown');
-
-    if (assigneeTrigger && assigneeDropdown) {
+    if (assigneeTrigger) {
       assigneeTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
-        const isOpen = assigneeDropdown.classList.toggle('open');
-        assigneeTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        toggleAssigneeDropdown();
       });
     }
 
     // Date Picker Trigger
     const dateTrigger = document.getElementById('task-due-trigger');
+    const dateWrap = document.getElementById('task-date-select-wrap');
     const dateInput = document.getElementById('task-due-date-raw');
-    if (dateTrigger && dateInput) {
-      dateTrigger.addEventListener('click', () => {
-        if (typeof dateInput.showPicker === 'function') {
-          dateInput.showPicker();
-        } else {
-          dateInput.focus();
+
+    if (dateTrigger) {
+      dateTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openDatePicker();
+      });
+    }
+
+    if (dateWrap) {
+      dateWrap.addEventListener('click', (e) => {
+        if (e.target !== dateTrigger && !dateTrigger?.contains(e.target)) {
+          openDatePicker();
         }
       });
+    }
+
+    if (dateInput) {
       dateInput.addEventListener('change', (e) => {
+        setDueDate(e.target.value);
+      });
+      dateInput.addEventListener('input', (e) => {
         setDueDate(e.target.value);
       });
     }
 
-    // Close dropdowns on document click
+    // Close dropdowns on document click (only when modal is active)
     document.addEventListener('click', (e) => {
+      const backdrop = document.getElementById('universal-create-backdrop');
+      if (!backdrop || !backdrop.classList.contains('open')) return;
+
       if (!e.target.closest('#task-project-select-wrap')) {
-        if (projDropdown) projDropdown.classList.remove('open');
-        if (projTrigger) projTrigger.setAttribute('aria-expanded', 'false');
+        closeProjectDropdown();
       }
       if (!e.target.closest('#task-assignee-select-wrap')) {
-        if (assigneeDropdown) assigneeDropdown.classList.remove('open');
-        if (assigneeTrigger) assigneeTrigger.setAttribute('aria-expanded', 'false');
+        closeAssigneeDropdown();
       }
     });
 
@@ -611,11 +919,39 @@
       });
     }
 
-    // More Details Toggle
+    // Task More Details Toggle
     const moreDetailsBtn = document.getElementById('btn-toggle-more-details');
     if (moreDetailsBtn) {
       moreDetailsBtn.addEventListener('click', () => {
         toggleMoreDetails();
+      });
+    }
+
+    // Project More Details Toggle
+    const projectMoreDetailsBtn = document.getElementById('btn-toggle-project-more-details');
+    if (projectMoreDetailsBtn) {
+      projectMoreDetailsBtn.addEventListener('click', () => {
+        toggleProjectMoreDetails();
+      });
+    }
+
+    // Project Team Change Listener
+    const projectTeamSelect = document.getElementById('project-team-select');
+    if (projectTeamSelect) {
+      projectTeamSelect.addEventListener('change', (e) => {
+        _onProjectTeamChanged(e.target.value);
+      });
+    }
+
+    // Project Team Lead Change Listener
+    const projectTeamLeadSelect = document.getElementById('project-team-lead-select');
+    if (projectTeamLeadSelect) {
+      projectTeamLeadSelect.addEventListener('change', (e) => {
+        const teamSelect = document.getElementById('project-team-select');
+        const team = _projectOptions?.teams?.find(t => String(t.id) === String(teamSelect?.value));
+        if (team && team.members) {
+          _updateProjectMembersChecklist(team.members, e.target.value);
+        }
       });
     }
 
@@ -626,6 +962,44 @@
         submitTask(true);
       });
     }
+
+    // Form Submit Listeners
+    const formTask = document.getElementById('form-panel-task');
+    if (formTask) {
+      formTask.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitTask();
+      });
+    }
+
+    const formProject = document.getElementById('form-panel-project');
+    if (formProject) {
+      formProject.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitProject();
+      });
+    }
+
+    const formDoc = document.getElementById('form-panel-document');
+    if (formDoc) {
+      formDoc.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitDocument();
+      });
+    }
+
+    const formMeeting = document.getElementById('form-panel-meeting');
+    if (formMeeting) {
+      formMeeting.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitMeeting();
+      });
+    }
+
+    // Refresh project team options when a new team is created from any page
+    document.addEventListener('teamden:teamCreated', () => {
+      loadOptions(true);
+    });
   }
 
   // ── Submit Handlers ───────────────────────────────────────────────────
@@ -744,36 +1118,93 @@
     const errorEl = document.getElementById('project-create-error');
     if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
 
+    // Mandatory: Project Name
     const nameInput = document.getElementById('project-name-input');
     const name = nameInput ? nameInput.value.trim() : '';
-
     if (!name) {
-      if (errorEl) {
-        errorEl.textContent = 'Please enter a project name.';
-        errorEl.style.display = 'block';
-      }
-      if (nameInput) nameInput.focus();
+      _showProjectError('Please enter a project name.', nameInput);
       return;
     }
 
+    // Mandatory: Description & Goals
     const descInput = document.getElementById('project-desc-textarea');
     const desc = descInput ? descInput.value.trim() : '';
+    if (!desc) {
+      _showProjectError('Please explain the project objectives, expected deliverables, and success criteria.', descInput);
+      return;
+    }
 
-    const statusSelect = document.getElementById('project-status-select');
-    const status = statusSelect ? statusSelect.value : 'ACTIVE';
+    // Mandatory: Team Name
+    const teamSelect = document.getElementById('project-team-select');
+    const teamId = teamSelect ? teamSelect.value : '';
+    if (!teamId) {
+      _showProjectError('Please select a team for this project.', teamSelect);
+      return;
+    }
+    const teamName = teamSelect.options[teamSelect.selectedIndex]?.text.split('(')[0].trim();
 
+    // Mandatory: Team Lead
+    const leadSelect = document.getElementById('project-team-lead-select');
+    const teamLeadId = leadSelect ? leadSelect.value : '';
+    if (!teamLeadId) {
+      _showProjectError('Please select an active team lead for this project.', leadSelect);
+      return;
+    }
+
+    // Mandatory: Category
+    const categorySelect = document.getElementById('project-category-select');
+    const category = categorySelect ? categorySelect.value : 'Design';
+
+    // Mandatory: Priority
+    const prioSelect = document.getElementById('project-priority-select');
+    const priority = prioSelect ? prioSelect.value : 'Medium';
+
+    // Mandatory: Target Due Date
     const dueInput = document.getElementById('project-due-input');
-    const dueDate = dueInput && dueInput.value ? dueInput.value : null;
+    const dueDate = dueInput ? dueInput.value : '';
+    if (!dueDate) {
+      _showProjectError('Please select a target due date.', dueInput);
+      return;
+    }
+
+    // Optional Fields from More Details
+    const clientInput = document.getElementById('project-client-input');
+    const clientName = clientInput && clientInput.value.trim() ? clientInput.value.trim() : null;
+
+    const coverImageInput = document.getElementById('project-cover-image-input');
+    const coverImageUrl = coverImageInput && coverImageInput.value.trim() ? coverImageInput.value.trim() : null;
+
+    const startDateInput = document.getElementById('project-start-date-input');
+    const startDate = startDateInput && startDateInput.value ? startDateInput.value : getTodayIso();
+
+    const deliverablesTextarea = document.getElementById('project-deliverables-textarea');
+    const deliverables = deliverablesTextarea && deliverablesTextarea.value.trim() ? deliverablesTextarea.value.trim() : null;
+
+    const tagsInput = document.getElementById('project-tags-input');
+    const tags = tagsInput && tagsInput.value.trim() ? tagsInput.value.trim() : null;
+
+    const memberCheckboxes = document.querySelectorAll('#project-members-checklist input[type="checkbox"]:checked');
+    const memberIds = Array.from(memberCheckboxes).map(cb => cb.value);
 
     const payload = {
       name,
-      description: desc || null,
-      status,
-      health: 'HEALTHY',
-      priority: 'MEDIUM',
-      projectType: 'General',
-      startDate: getTodayIso(),
-      dueDate: dueDate || null
+      description: desc,
+      goals: desc,
+      teamId,
+      teamName,
+      teamLeadId,
+      category,
+      projectType: category,
+      priority,
+      status: 'PLANNING', // Initialized as Planned (Default) per user specification
+      health: 'ON_TRACK',
+      dueDate,
+      startDate,
+      clientName,
+      coverImageUrl,
+      deliverables,
+      tags,
+      memberIds: memberIds.length > 0 ? memberIds : null
     };
 
     const submitBtn = document.getElementById('btn-submit-project');
@@ -797,15 +1228,32 @@
       const created = await res.json();
 
       if (typeof window.showToast === 'function') {
-        window.showToast(`Project "${created.name || name}" created`);
+        window.showToast(`Project "${created.name || name}" created successfully.`, 'success');
       }
 
       _dispatchCreationEvent('project', created);
       _drafts.PROJECT = {};
+
+      // Reset form fields
       if (nameInput) nameInput.value = '';
       if (descInput) descInput.value = '';
+      if (teamSelect) teamSelect.selectedIndex = 0;
+      if (leadSelect) {
+        leadSelect.innerHTML = '<option value="" disabled selected>Select team first</option>';
+        leadSelect.disabled = true;
+      }
+      if (categorySelect) categorySelect.value = 'Design';
+      if (prioSelect) prioSelect.value = 'Medium';
+      if (clientInput) clientInput.value = '';
+      if (coverImageInput) coverImageInput.value = '';
+      if (deliverablesTextarea) deliverablesTextarea.value = '';
+      if (tagsInput) tagsInput.value = '';
+      const membersChecklist = document.getElementById('project-members-checklist');
+      if (membersChecklist) {
+        membersChecklist.innerHTML = '<span class="placeholder-text text-sm">Select a team above to view eligible members.</span>';
+      }
 
-      // Reload options so the new project shows up in dropdowns
+      // Reload options so the new project shows up in task and doc project dropdowns
       loadOptions(true);
 
       close();
@@ -820,6 +1268,17 @@
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
       }
+    }
+  }
+
+  function _showProjectError(msg, focusEl) {
+    const errorEl = document.getElementById('project-create-error');
+    if (errorEl) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+    if (focusEl) {
+      focusEl.focus();
     }
   }
 

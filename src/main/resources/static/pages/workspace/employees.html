@@ -73,7 +73,7 @@
             <!-- Navigation Tabs Bar -->
             <div class="employees-tabs-row">
               <div class="employees-tabs" role="tablist" aria-label="Employee directory tabs">
-                <button class="emp-tab active" data-tab="PEOPLE" role="tab" aria-selected="true" id="tab-people">
+                <button type="button" class="emp-tab active" data-tab="PEOPLE" role="tab" aria-selected="true" id="tab-people">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -83,7 +83,7 @@
                   <span>People (<span id="people-tab-count">4</span>)</span>
                 </button>
 
-                <button class="emp-tab" data-tab="ROLES" role="tab" aria-selected="false" id="tab-roles">
+                <button type="button" class="emp-tab" data-tab="ROLES" role="tab" aria-selected="false" id="tab-roles">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                     <path d="M2 17l10 5 10-5"></path>
@@ -92,7 +92,7 @@
                   <span>Roles (<span id="roles-tab-count">6</span>)</span>
                 </button>
 
-                <button class="emp-tab" data-tab="STRUCTURE" role="tab" aria-selected="false" id="tab-structure">
+                <button type="button" class="emp-tab" data-tab="STRUCTURE" role="tab" aria-selected="false" id="tab-structure">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="3" width="6" height="6" rx="1"></rect>
                     <rect x="3" y="15" width="6" height="6" rx="1"></rect>
@@ -188,7 +188,7 @@
 
             <div class="drawer-top-actions">
               <div class="drawer-options-wrap">
-                <button class="drawer-icon-btn" id="btn-drawer-options" title="Employee options" aria-label="Employee options">
+                <button type="button" class="drawer-icon-btn" id="btn-drawer-options" title="Employee options" aria-label="Employee options">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="12" cy="12" r="1.5"></circle>
                     <circle cx="19" cy="12" r="1.5"></circle>
@@ -196,14 +196,14 @@
                   </svg>
                 </button>
                 <div class="drawer-menu-dropdown" id="drawer-menu-dropdown">
-                  <button class="drawer-menu-item" id="menu-opt-edit">Edit profile</button>
-                  <button class="drawer-menu-item" id="menu-opt-role">Change workspace role</button>
-                  <button class="drawer-menu-item" id="menu-opt-dept">Change department</button>
-                  <button class="drawer-menu-item text-danger" id="menu-opt-deactivate">Deactivate account</button>
+                  <button type="button" class="drawer-menu-item" id="menu-opt-edit">Edit profile</button>
+                  <button type="button" class="drawer-menu-item" id="menu-opt-role">Change workspace role</button>
+                  <button type="button" class="drawer-menu-item" id="menu-opt-dept">Change department</button>
+                  <button type="button" class="drawer-menu-item text-danger" id="menu-opt-deactivate">Deactivate account</button>
                 </div>
               </div>
 
-              <button class="drawer-icon-btn" id="btn-close-profile-drawer" title="Close details panel" aria-label="Close details">
+              <button type="button" class="drawer-icon-btn" id="btn-close-profile-drawer" title="Close details panel" aria-label="Close details">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -242,7 +242,7 @@
             <section class="drawer-section" id="sec-what-owns">
               <div class="drawer-section-header">
                 <h3 class="drawer-section-title" id="drawer-owns-title">What Alex owns.</h3>
-                <button class="drawer-inline-add-btn" id="btn-add-responsibility-inline" title="Assign new responsibility">+ Add</button>
+                <button type="button" class="drawer-inline-add-btn" id="btn-add-responsibility-inline" title="Assign new responsibility">+ Add</button>
               </div>
 
               <div class="responsibilities-list" id="drawer-responsibilities-list">
@@ -303,7 +303,7 @@
           <h2 class="emp-modal-title" id="modal-add-title">Add employee.</h2>
           <p class="emp-modal-subtitle">Bring someone into your workspace.</p>
         </div>
-        <button class="emp-modal-close-btn" id="btn-close-add-modal" aria-label="Close dialog">&times;</button>
+        <button type="button" class="emp-modal-close-btn" id="btn-close-add-modal" aria-label="Close dialog">&times;</button>
       </div>
 
       <form id="add-employee-form" class="emp-modal-form" novalidate>
@@ -347,8 +347,8 @@
                 <select id="emp-select-dept" class="emp-select">
                   <option value="Design Team">Design Team</option>
                   <option value="Engineering">Engineering</option>
-                  <option value="Product & Growth">Product & Growth</option>
-                  <option value="Operations & Support">Operations & Support</option>
+                  <option value="Product &amp; Growth">Product &amp; Growth</option>
+                  <option value="Operations &amp; Support">Operations &amp; Support</option>
                 </select>
               </div>
             </div>

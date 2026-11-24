@@ -5,7 +5,7 @@ cls
 
 echo =======================================================================
 echo                    TEAMDEN BY SHED (Version 1.0)                    
-echo       Team Productivity, Work Management & SaaS Platform            
+echo       Team Productivity, Work Management ^& SaaS Platform            
 echo =======================================================================
 echo.
 

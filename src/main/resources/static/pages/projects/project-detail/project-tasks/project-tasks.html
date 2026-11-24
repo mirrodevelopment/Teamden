@@ -93,7 +93,7 @@
       <!-- Main Headline & New Task Button Inline Row -->
       <div class="register-title-action-row">
         <h2 class="register-main-title">Tasks in motion.</h2>
-        <button class="btn-new-task-lime" id="btn-new-task" title="Create a new task">
+        <button type="button" class="btn-new-task-lime" id="btn-new-task" title="Create a new task">
           <span>+ New task</span>
           <span class="btn-chevron">⌄</span>
         </button>
@@ -104,7 +104,7 @@
         <!-- View Switcher Pills -->
         <div class="view-switcher-group" role="tablist" aria-label="Task Views">
           <span class="view-label-prefix">View</span>
-          <button class="view-btn active" id="view-btn-register" role="tab" aria-selected="true" data-view="register">
+          <button type="button" class="view-btn active" id="view-btn-register" role="tab" aria-selected="true" data-view="register">
             <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <line x1="8" y1="6" x2="21" y2="6"></line>
               <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -115,14 +115,14 @@
             </svg>
             <span>Register</span>
           </button>
-          <button class="view-btn" id="view-btn-board" role="tab" aria-selected="false" data-view="board">
+          <button type="button" class="view-btn" id="view-btn-board" role="tab" aria-selected="false" data-view="board">
             <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <rect x="3" y="3" width="7" height="18" rx="1"></rect>
               <rect x="14" y="3" width="7" height="11" rx="1"></rect>
             </svg>
             <span>Board</span>
           </button>
-          <button class="view-btn" id="view-btn-timeline" role="tab" aria-selected="false" data-view="timeline">
+          <button type="button" class="view-btn" id="view-btn-timeline" role="tab" aria-selected="false" data-view="timeline">
             <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <line x1="4" y1="6" x2="16" y2="6"></line>
               <line x1="8" y1="12" x2="20" y2="12"></line>
@@ -130,7 +130,7 @@
             </svg>
             <span>Timeline</span>
           </button>
-          <button class="view-btn" id="view-btn-calendar" role="tab" aria-selected="false" data-view="calendar">
+          <button type="button" class="view-btn" id="view-btn-calendar" role="tab" aria-selected="false" data-view="calendar">
             <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -151,7 +151,7 @@
             <input type="text" class="search-input" id="tasks-search-input" placeholder="Search tasks..." aria-label="Search tasks">
           </div>
 
-          <button class="toolbar-btn btn-filters" id="btn-tasks-filters" title="Filter tasks">
+          <button type="button" class="toolbar-btn btn-filters" id="btn-tasks-filters" title="Filter tasks">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
@@ -159,7 +159,7 @@
             <span class="btn-chevron">⌄</span>
           </button>
 
-          <button class="toolbar-btn btn-more" id="btn-tasks-more" title="More options" aria-label="More options">•••</button>
+          <button type="button" class="toolbar-btn btn-more" id="btn-tasks-more" title="More options" aria-label="More options">•••</button>
         </div>
       </div>
 
@@ -170,13 +170,13 @@
 
         <!-- GROUP 1: IN PROGRESS (Expanded by default) -->
         <div class="task-group-card expanded" id="group-in-progress" data-group-status="IN_PROGRESS">
-          <div class="group-header-row" role="button" tabindex="0" aria-expanded="true">
+          <div class="group-header-row" aria-expanded="true">
             <div class="group-header-left">
               <span class="group-status-dot dot-amber"></span>
               <span class="group-title">IN PROGRESS</span>
               <span class="group-count-pill" id="group-count-inprogress">00</span>
             </div>
-            <button class="group-toggle-btn" aria-label="Toggle In Progress Group">
+            <button type="button" class="group-toggle-btn" aria-label="Toggle In Progress Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -199,7 +199,7 @@
             <div class="task-rows-list" id="list-in-progress"></div>
 
             <!-- Add Task Row -->
-            <button class="btn-group-add-task" id="btn-add-task-inprogress">
+            <button type="button" class="btn-group-add-task" id="btn-add-task-inprogress">
               <span class="plus-icon">+</span>
               <span>Add task</span>
             </button>
@@ -208,13 +208,13 @@
 
         <!-- GROUP 2: IN REVIEW (Collapsed) -->
         <div class="task-group-card collapsed" id="group-in-review" data-group-status="IN_REVIEW">
-          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+          <div class="group-header-row" aria-expanded="false">
             <div class="group-header-left">
               <span class="group-status-dot dot-blue"></span>
               <span class="group-title">IN REVIEW</span>
               <span class="group-count-pill" id="group-count-inreview">00</span>
             </div>
-            <button class="group-toggle-btn" aria-label="Toggle In Review Group">
+            <button type="button" class="group-toggle-btn" aria-label="Toggle In Review Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -227,13 +227,13 @@
 
         <!-- GROUP 3: TO DO (Collapsed) -->
         <div class="task-group-card collapsed" id="group-to-do" data-group-status="TODO">
-          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+          <div class="group-header-row" aria-expanded="false">
             <div class="group-header-left">
               <span class="group-status-dot dot-gray"></span>
               <span class="group-title">TO DO</span>
               <span class="group-count-pill" id="group-count-todo">00</span>
             </div>
-            <button class="group-toggle-btn" aria-label="Toggle To Do Group">
+            <button type="button" class="group-toggle-btn" aria-label="Toggle To Do Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -246,7 +246,7 @@
 
         <!-- GROUP 4: COMPLETED (Collapsed) -->
         <div class="task-group-card collapsed" id="group-completed" data-group-status="COMPLETED">
-          <div class="group-header-row" role="button" tabindex="0" aria-expanded="false">
+          <div class="group-header-row" aria-expanded="false">
             <div class="group-header-left">
               <span class="group-status-dot dot-dark">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -256,7 +256,7 @@
               <span class="group-title">COMPLETED</span>
               <span class="group-count-pill" id="group-count-completed">00</span>
             </div>
-            <button class="group-toggle-btn" aria-label="Toggle Completed Group">
+            <button type="button" class="group-toggle-btn" aria-label="Toggle Completed Group">
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -288,7 +288,8 @@
       <div class="milestone-card-top">
         <span class="milestone-tag">CURRENT MILESTONE</span>
         <div class="milestone-progress-ring-wrap">
-          <svg class="progress-ring-svg" width="34" height="34" viewBox="0 0 36 36" aria-label="Milestone Progress Ring">
+          <svg class="progress-ring-svg" width="34" height="34" viewBox="0 0 36 36" role="img">
+            <title>Milestone Progress Ring</title>
             <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--dash-border)" stroke-width="3.6" />
             <path class="ring-fg" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--dash-accent-lime)" stroke-width="3.6" stroke-linecap="round" />
           </svg>
@@ -297,7 +298,7 @@
 
       <div class="milestone-middle-row">
         <h3 class="milestone-title" id="rail-milestone-title">—</h3>
-        <div class="milestone-dots-row" aria-label="Milestone progress dots">
+        <div class="milestone-dots-row" aria-hidden="true">
           <span class="m-dot"></span>
           <span class="m-dot"></span>
           <span class="m-dot"></span>
@@ -372,13 +373,13 @@
       </div>
 
       <div class="quick-actions-list">
-        <button class="quick-action-row-btn" id="qa-create-task" title="Create new task">
+        <button type="button" class="quick-action-row-btn" id="qa-create-task" title="Create new task">
           <span class="qa-plus-glyph">+</span>
           <span class="qa-label">Create new task</span>
           <span class="qa-arrow">→</span>
         </button>
 
-        <button class="quick-action-row-btn" id="qa-import-doc" title="Import from document">
+        <button type="button" class="quick-action-row-btn" id="qa-import-doc" title="Import from document">
           <svg class="qa-svg-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -389,7 +390,7 @@
           <span class="qa-arrow">→</span>
         </button>
 
-        <button class="quick-action-row-btn" id="qa-manage-deps" title="Manage dependencies">
+        <button type="button" class="quick-action-row-btn" id="qa-manage-deps" title="Manage dependencies">
           <svg class="qa-svg-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="18" cy="18" r="3"></circle>
             <circle cx="6" cy="6" r="3"></circle>
@@ -417,10 +418,10 @@
       </div>
 
       <div class="drawer-top-actions">
-        <button class="drawer-nav-btn" id="btn-prev-task" title="Previous task" aria-label="Previous task">‹</button>
-        <button class="drawer-nav-btn" id="btn-next-task" title="Next task" aria-label="Next task">›</button>
-        <button class="drawer-nav-btn" id="btn-drawer-options" title="Task actions" aria-label="Task options">•••</button>
-        <button class="drawer-close-btn" id="btn-close-drawer" title="Close drawer" aria-label="Close drawer">✕</button>
+        <button type="button" class="drawer-nav-btn" id="btn-prev-task" title="Previous task" aria-label="Previous task">‹</button>
+        <button type="button" class="drawer-nav-btn" id="btn-next-task" title="Next task" aria-label="Next task">›</button>
+        <button type="button" class="drawer-nav-btn" id="btn-drawer-options" title="Task actions" aria-label="Task options">•••</button>
+        <button type="button" class="drawer-close-btn" id="btn-close-drawer" title="Close drawer" aria-label="Close drawer">✕</button>
       </div>
     </div>
 
@@ -449,18 +450,18 @@
     </div>
 
     <!-- Full-Width "Mark complete" Button -->
-    <button class="btn-mark-complete-dark" id="btn-mark-complete" title="Mark this task complete">
+    <button type="button" class="btn-mark-complete-dark" id="btn-mark-complete" title="Mark this task complete">
       <span class="btn-complete-label">Mark complete</span>
       <span class="btn-complete-check">✓</span>
     </button>
 
     <!-- Drawer Horizontal Tabs -->
-    <nav class="drawer-tabs-bar" role="tablist" aria-label="Drawer Tabs">
-      <button class="drawer-tab-btn active" id="dtab-details" role="tab" aria-selected="true" data-tab="details">Details</button>
-      <button class="drawer-tab-btn" id="dtab-subtasks" role="tab" aria-selected="false" data-tab="subtasks">Subtasks <span class="tab-badge" id="dtab-sub-count">(1/3)</span></button>
-      <button class="drawer-tab-btn" id="dtab-linked" role="tab" aria-selected="false" data-tab="linked">Linked <span class="tab-badge">(2)</span></button>
-      <button class="drawer-tab-btn" id="dtab-comments" role="tab" aria-selected="false" data-tab="comments">Comments <span class="tab-badge">(3)</span></button>
-      <button class="drawer-tab-btn" id="dtab-history" role="tab" aria-selected="false" data-tab="history">History</button>
+    <nav class="drawer-tabs-bar" aria-label="Drawer Tabs">
+      <button type="button" class="drawer-tab-btn active" id="dtab-details" aria-current="page" data-tab="details">Details</button>
+      <button type="button" class="drawer-tab-btn" id="dtab-subtasks" data-tab="subtasks">Subtasks <span class="tab-badge" id="dtab-sub-count">(1/3)</span></button>
+      <button type="button" class="drawer-tab-btn" id="dtab-linked" data-tab="linked">Linked <span class="tab-badge">(2)</span></button>
+      <button type="button" class="drawer-tab-btn" id="dtab-comments" data-tab="comments">Comments <span class="tab-badge">(3)</span></button>
+      <button type="button" class="drawer-tab-btn" id="dtab-history" data-tab="history">History</button>
     </nav>
 
     <!-- Drawer Tab Panes -->
@@ -473,7 +474,7 @@
         <section class="drawer-section" aria-label="Task Properties">
           <div class="drawer-section-header">
             <span class="drawer-section-label">01 / TASK PROPERTIES</span>
-            <button class="btn-drawer-action" id="btn-edit-properties" title="Edit all properties">
+            <button type="button" class="btn-drawer-action" id="btn-edit-properties" title="Edit all properties">
               <span>Edit all</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
@@ -561,7 +562,7 @@
           </div>
 
           <!-- Centered Expandable "More properties ∨" Button -->
-          <button class="btn-more-properties" id="btn-more-properties">
+          <button type="button" class="btn-more-properties" id="btn-more-properties">
             <span>More properties</span>
             <span class="btn-chevron">⌄</span>
           </button>
@@ -571,7 +572,7 @@
         <section class="drawer-section" aria-label="Task Description">
           <div class="drawer-section-header">
             <span class="drawer-section-label">02 / DESCRIPTION</span>
-            <button class="btn-drawer-action" id="btn-edit-description" title="Edit description">
+            <button type="button" class="btn-drawer-action" id="btn-edit-description" title="Edit description">
               <span>Edit</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
@@ -592,14 +593,14 @@
 
           <!-- Slim Horizontal Progress Bar -->
           <div class="subtasks-progress-track">
-            <div class="subtasks-progress-bar" id="subtasks-progress-bar" style="width: 33.33%;"></div>
+            <div class="subtasks-progress-bar" id="subtasks-progress-bar"></div>
           </div>
 
           <!-- Subtasks List -->
           <div class="subtasks-list" id="subtasks-list">
             <!-- Subtask 1: Completed -->
             <div class="subtask-row completed" data-subtask-id="sub-1">
-              <button class="subtask-checkbox-btn checked" aria-label="Toggle subtask 1">
+              <button type="button" class="subtask-checkbox-btn checked" aria-label="Toggle subtask 1">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
@@ -607,29 +608,29 @@
               <span class="subtask-title">Implement desktop layout</span>
               <span class="assignee-avatar avatar-mj subtask-avatar">MJ</span>
               <span class="subtask-date">20 Oct</span>
-              <button class="subtask-more-btn" title="Subtask options">•••</button>
+              <button type="button" class="subtask-more-btn" title="Subtask options">•••</button>
             </div>
 
             <!-- Subtask 2: Incomplete -->
             <div class="subtask-row" data-subtask-id="sub-2">
-              <button class="subtask-checkbox-btn" aria-label="Toggle subtask 2"></button>
+              <button type="button" class="subtask-checkbox-btn" aria-label="Toggle subtask 2"></button>
               <span class="subtask-title">Complete responsive behaviour</span>
               <span class="assignee-avatar avatar-pk subtask-avatar">PK</span>
               <span class="subtask-date">24 Oct</span>
-              <button class="subtask-more-btn" title="Subtask options">•••</button>
+              <button type="button" class="subtask-more-btn" title="Subtask options">•••</button>
             </div>
 
             <!-- Subtask 3: Incomplete -->
             <div class="subtask-row" data-subtask-id="sub-3">
-              <button class="subtask-checkbox-btn" aria-label="Toggle subtask 3"></button>
+              <button type="button" class="subtask-checkbox-btn" aria-label="Toggle subtask 3"></button>
               <span class="subtask-title">Verify accessibility</span>
               <span class="assignee-avatar avatar-sk subtask-avatar">SK</span>
               <span class="subtask-date">28 Oct</span>
-              <button class="subtask-more-btn" title="Subtask options">•••</button>
+              <button type="button" class="subtask-more-btn" title="Subtask options">•••</button>
             </div>
           </div>
 
-          <button class="btn-add-subtask" id="btn-add-subtask">
+          <button type="button" class="btn-add-subtask" id="btn-add-subtask">
             <span>+ Add subtask</span>
           </button>
         </section>
@@ -652,7 +653,7 @@
                   </svg>
                   <span class="dep-tag tag-amber">WAITING ON</span>
                 </div>
-                <button class="dep-more-btn" title="Card options">•••</button>
+                <button type="button" class="dep-more-btn" title="Card options">•••</button>
               </div>
               <h5 class="dep-title">Homepage design approval</h5>
               <span class="dep-subtext">T-009 · Awaiting review</span>
@@ -670,12 +671,12 @@
                   </svg>
                   <span class="dep-tag tag-red">BLOCKER</span>
                 </div>
-                <button class="dep-more-btn" title="Card options">•••</button>
+                <button type="button" class="dep-more-btn" title="Card options">•••</button>
               </div>
               <h5 class="dep-title">CMS content not finalised</h5>
               <span class="dep-subtext">Content team to confirm final copy and assets.</span>
               <div class="dep-card-footer">
-                <button class="btn-resolve-link" id="btn-resolve-blocker">Resolve ↗</button>
+                <button type="button" class="btn-resolve-link" id="btn-resolve-blocker">Resolve ↗</button>
               </div>
             </div>
           </div>

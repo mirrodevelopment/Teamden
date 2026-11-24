@@ -60,7 +60,7 @@
                 <span class="tdet-bc-sep">/</span>
                 <span class="tdet-bc-num" id="tdet-bc-num">01</span>
               </div>
-              <button class="tdet-header-more-btn" id="tdet-more-btn" title="More options" aria-label="More options">•••</button>
+              <button type="button" class="tdet-header-more-btn" id="tdet-more-btn" title="More options" aria-label="More options">•••</button>
             </div>
 
             <div class="tdet-headline-group">
@@ -70,7 +70,7 @@
 
             <div class="tdet-members-row">
               <div class="tdet-members-left">
-                <div class="tdet-avatars-group" id="tdet-header-avatars" aria-label="Team members">
+                <div class="tdet-avatars-group" id="tdet-header-avatars" role="group" aria-label="Team members">
                   <div class="tdet-avatar-bubble avatar--pk" title="Priya Kapoor (PK)">PK</div>
                   <div class="tdet-avatar-bubble avatar--ar" title="Alex Rivera (AR)">AR</div>
                   <div class="tdet-avatar-bubble avatar--sk" title="Samir Khan (SK)">SK</div>
@@ -78,10 +78,10 @@
                 </div>
                 <span class="tdet-members-count" id="tdet-header-count">4 members</span>
                 <div class="tdet-members-pipe"></div>
-                <span class="tdet-members-team-tag" id="tdet-header-team-tag" style="font-size:0.75rem; font-weight:700; color:var(--dash-text-muted);">Design Team</span>
+                <span class="tdet-members-team-tag" id="tdet-header-team-tag">Design Team</span>
               </div>
 
-              <button class="tdet-workspace-btn" id="tdet-workspace-btn" title="Open team workspace">
+              <button type="button" class="tdet-workspace-btn" id="tdet-workspace-btn" title="Open team workspace">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                   <circle cx="9" cy="7" r="4"></circle>
@@ -94,16 +94,16 @@
 
             <!-- Team Tabs Bar -->
             <nav class="tdet-tabs-bar" role="tablist" aria-label="Team Navigation Tabs">
-              <button class="tdet-tab-btn active" id="tab-btn-overview" data-tab="overview" role="tab" aria-selected="true">
+              <button type="button" class="tdet-tab-btn active" id="tab-btn-overview" data-tab="overview" role="tab" aria-selected="true">
                 Overview
               </button>
-              <button class="tdet-tab-btn" id="tab-btn-work" data-tab="work" role="tab" aria-selected="false">
+              <button type="button" class="tdet-tab-btn" id="tab-btn-work" data-tab="work" role="tab" aria-selected="false">
                 Work
               </button>
-              <button class="tdet-tab-btn" id="tab-btn-knowledge" data-tab="knowledge" role="tab" aria-selected="false">
+              <button type="button" class="tdet-tab-btn" id="tab-btn-knowledge" data-tab="knowledge" role="tab" aria-selected="false">
                 Knowledge
               </button>
-              <button class="tdet-tab-btn" id="tab-btn-people" data-tab="people" role="tab" aria-selected="false">
+              <button type="button" class="tdet-tab-btn" id="tab-btn-people" data-tab="people" role="tab" aria-selected="false">
                 People
               </button>
             </nav>
@@ -140,9 +140,9 @@
         <!-- ── Right Information Rail (Starts directly below Topbar alongside Header) ── -->
         <aside class="tdet-right-rail" id="tdet-right-rail" aria-label="Team Context Sidebar">
           <div id="tdet-rail-overview" class="tdet-rail-pane active"></div>
-          <div id="tdet-rail-work" class="tdet-rail-pane" style="display:none;"></div>
-          <div id="tdet-rail-knowledge" class="tdet-rail-pane" style="display:none;"></div>
-          <div id="tdet-rail-people" class="tdet-rail-pane" style="display:none;"></div>
+          <div id="tdet-rail-work" class="tdet-rail-pane"></div>
+          <div id="tdet-rail-knowledge" class="tdet-rail-pane"></div>
+          <div id="tdet-rail-people" class="tdet-rail-pane"></div>
         </aside>
 
       </main><!-- /.tdet-split-container -->

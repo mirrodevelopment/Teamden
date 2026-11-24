@@ -86,7 +86,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(requestHandler)
-                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**", "/api/search/**", "/api/notifications/**", "/api/employees/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, daily-updates, search, notifications, and employees
+                .ignoringRequestMatchers("/api/auth/login", "/api/setup/**", "/api/dev/**", "/api/dashboard/**", "/api/tasks/**", "/api/projects/**", "/api/calendar/**", "/api/activity/**", "/api/daily-updates/**", "/api/search/**", "/api/notifications/**", "/api/inbox/**", "/api/employees/**", "/api/departments/**", "/api/teams/**", "/api/settings/**", "/api/overview/**", "/api/insights/**") // Allow auth, setup, dev portal, public dashboard data, tasks, projects, calendar, activity, daily-updates, search, notifications, inbox, employees, departments, teams, settings, overview, insights
             )
             .authorizeHttpRequests(auth -> auth
                 // Static resources & pages
@@ -107,6 +107,7 @@ public class SecurityConfig {
                     "/pages/project/**",
                     "/pages/workspace/**",
                     "/pages/team/**",
+                    "/pages/settings/**",
                     "/shared/**",
                     "/fragments/**",
                     "/assets/**",
@@ -130,7 +131,13 @@ public class SecurityConfig {
                     "/api/daily-updates/**",
                     "/api/search/**",
                     "/api/notifications/**",
+                    "/api/inbox/**",
                     "/api/employees/**",
+                    "/api/departments/**",
+                    "/api/teams/**",
+                    "/api/settings/**",
+                    "/api/overview/**",
+                    "/api/insights/**",
                     "/actuator/health",
                     "/actuator/info"
                 ).permitAll()

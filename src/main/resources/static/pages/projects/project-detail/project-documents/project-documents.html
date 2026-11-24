@@ -12,34 +12,35 @@
     <!-- Header with Title and Collapse Button -->
     <div class="docs-library-header">
       <span class="docs-library-title">PROJECT LIBRARY</span>
-      <button class="btn-library-collapse" id="btn-library-collapse" title="Collapse Library" aria-label="Collapse Library">«</button>
+      <button type="button" class="btn-library-collapse" id="btn-library-collapse" title="Collapse Library" aria-label="Collapse Library">«</button>
     </div>
 
     <!-- Search Input & Quick Add Button -->
     <div class="docs-search-row">
       <div class="docs-search-input-wrap">
+        <label for="docs-search-input" class="sr-only">Search documents</label>
         <svg class="search-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
         <input type="text" class="docs-search-input" id="docs-search-input" placeholder="Search documents..." autocomplete="off">
       </div>
-      <button class="btn-add-doc-quick" id="btn-add-doc-quick" title="Add document" aria-label="Add document">+</button>
+      <button type="button" class="btn-add-doc-quick" id="btn-add-doc-quick" title="Add document" aria-label="Add document">+</button>
     </div>
 
     <!-- Category Filter Pills -->
     <div class="docs-category-filters" role="tablist" aria-label="Document category filters">
-      <button class="doc-cat-pill active" data-category="All" role="tab" aria-selected="true">All</button>
-      <button class="doc-cat-pill" data-category="Notes" role="tab" aria-selected="false">Notes</button>
-      <button class="doc-cat-pill" data-category="Plans" role="tab" aria-selected="false">Plans</button>
-      <button class="doc-cat-pill" data-category="Design" role="tab" aria-selected="false">Design</button>
-      <button class="doc-cat-pill" data-category="Other" role="tab" aria-selected="false">Other</button>
+      <button type="button" class="doc-cat-pill active" data-category="All" role="tab" aria-selected="true">All</button>
+      <button type="button" class="doc-cat-pill" data-category="Notes" role="tab" aria-selected="false">Notes</button>
+      <button type="button" class="doc-cat-pill" data-category="Plans" role="tab" aria-selected="false">Plans</button>
+      <button type="button" class="doc-cat-pill" data-category="Design" role="tab" aria-selected="false">Design</button>
+      <button type="button" class="doc-cat-pill" data-category="Other" role="tab" aria-selected="false">Other</button>
     </div>
 
     <!-- Document List (Stacked Vertically) -->
-    <div class="docs-library-list" id="docs-library-list" role="list">
+    <ul class="docs-library-list" id="docs-library-list">
       <!-- Item 1: Design Review Notes (Selected by default) -->
-      <div class="doc-library-item selected" data-id="doc-01" data-cat="Notes" role="listitem" tabindex="0">
+      <li class="doc-library-item selected" data-id="doc-01" data-cat="Notes">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -52,11 +53,11 @@
           <span class="doc-item-name">Design Review Notes</span>
           <span class="doc-item-details">Meeting Notes <span class="meta-dot">·</span> Updated today</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Design Review Notes">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Design Review Notes">•••</button>
+      </li>
 
       <!-- Item 2: Project Brief -->
-      <div class="doc-library-item" data-id="doc-02" data-cat="Plans" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-02" data-cat="Plans">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -69,11 +70,11 @@
           <span class="doc-item-name">Project Brief</span>
           <span class="doc-item-details">Foundation <span class="meta-dot">·</span> Updated 2 days ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Project Brief">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Project Brief">•••</button>
+      </li>
 
       <!-- Item 3: Design Guidelines -->
-      <div class="doc-library-item" data-id="doc-03" data-cat="Design" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-03" data-cat="Design">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -86,11 +87,11 @@
           <span class="doc-item-name">Design Guidelines</span>
           <span class="doc-item-details">Reference <span class="meta-dot">·</span> Updated 4 days ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Design Guidelines">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Design Guidelines">•••</button>
+      </li>
 
       <!-- Item 4: Research & References -->
-      <div class="doc-library-item" data-id="doc-04" data-cat="Other" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-04" data-cat="Other">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -100,14 +101,14 @@
           </svg>
         </div>
         <div class="doc-item-body">
-          <span class="doc-item-name">Research & References</span>
+          <span class="doc-item-name">Research &amp; References</span>
           <span class="doc-item-details">Research <span class="meta-dot">·</span> Updated 1 week ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Research & References">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Research &amp; References">•••</button>
+      </li>
 
       <!-- Item 5: Client Feedback -->
-      <div class="doc-library-item" data-id="doc-05" data-cat="Notes" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-05" data-cat="Notes">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -120,11 +121,11 @@
           <span class="doc-item-name">Client Feedback</span>
           <span class="doc-item-details">Meeting Notes <span class="meta-dot">·</span> Updated 1 week ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Client Feedback">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Client Feedback">•••</button>
+      </li>
 
       <!-- Item 6: Technical Requirements -->
-      <div class="doc-library-item" data-id="doc-06" data-cat="Plans" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-06" data-cat="Plans">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -137,11 +138,11 @@
           <span class="doc-item-name">Technical Requirements</span>
           <span class="doc-item-details">Specification <span class="meta-dot">·</span> Updated 1 week ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Technical Requirements">•••</button>
-      </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Technical Requirements">•••</button>
+      </li>
 
       <!-- Item 7: Content Strategy -->
-      <div class="doc-library-item" data-id="doc-07" data-cat="Plans" role="listitem" tabindex="0">
+      <li class="doc-library-item" data-id="doc-07" data-cat="Plans">
         <div class="doc-item-icon-wrap">
           <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -154,13 +155,13 @@
           <span class="doc-item-name">Content Strategy</span>
           <span class="doc-item-details">Plan <span class="meta-dot">·</span> Updated 2 weeks ago</span>
         </div>
-        <button class="doc-item-more-btn" title="Document options" aria-label="Options for Content Strategy">•••</button>
-      </div>
-    </div>
+        <button type="button" class="doc-item-more-btn" title="Document options" aria-label="Options for Content Strategy">•••</button>
+      </li>
+    </ul>
 
     <!-- Bottom Action Button: + New Document -->
     <div class="docs-library-footer">
-      <button class="btn-new-document-bottom" id="btn-new-document-bottom">
+      <button type="button" class="btn-new-document-bottom" id="btn-new-document-bottom">
         <span class="btn-plus-icon">+</span>
         <span>New document</span>
       </button>
@@ -180,15 +181,15 @@
 
       <div class="doc-top-controls-right">
         <!-- Collaborator Avatars -->
-        <div class="doc-collab-group" id="doc-collab-group" aria-label="Collaborators">
+        <div class="doc-collab-group" id="doc-collab-group">
           <span class="doc-collab-circle avatar-mj" title="Maria J. (MJ)">MJ</span>
           <span class="doc-collab-circle avatar-pk" title="Peter K. (PK)">PK</span>
           <span class="doc-collab-circle avatar-ar" title="Alex R. (AR)">AR</span>
-          <button class="doc-collab-add-btn" id="btn-add-collaborator" title="Add collaborator" aria-label="Add collaborator">+</button>
+          <button type="button" class="doc-collab-add-btn" id="btn-add-collaborator" title="Add collaborator" aria-label="Add collaborator">+</button>
         </div>
 
         <!-- Share Button -->
-        <button class="doc-share-btn" id="btn-share-doc" title="Share document">
+        <button type="button" class="doc-share-btn" id="btn-share-doc" title="Share document">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
             <polyline points="16 6 12 2 8 6"></polyline>
@@ -198,7 +199,7 @@
         </button>
 
         <!-- Document Options Menu Button -->
-        <button class="doc-more-menu-btn" id="btn-doc-more-menu" title="Document options" aria-label="Document options">•••</button>
+        <button type="button" class="doc-more-menu-btn" id="btn-doc-more-menu" title="Document options" aria-label="Document options">•••</button>
       </div>
     </div>
 
@@ -221,7 +222,7 @@
           <span class="saved-check-icon">✓</span>
           <span id="doc-saved-text">Saved 2 minutes ago</span>
         </div>
-        <button class="btn-version-history" id="btn-version-history">
+        <button type="button" class="btn-version-history" id="btn-version-history">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
@@ -275,20 +276,20 @@
 
           <!-- Inline Formatting Floating Toolbar -->
           <div class="doc-inline-formatting-toolbar" id="doc-inline-toolbar" role="toolbar" aria-label="Text formatting tools">
-            <button class="toolbar-icon-btn btn-bold" id="toolbar-bold" title="Bold (Ctrl+B)">B</button>
-            <button class="toolbar-icon-btn btn-italic" id="toolbar-italic" title="Italic (Ctrl+I)">I</button>
-            <button class="toolbar-icon-btn" id="toolbar-link" title="Insert Link">
+            <button type="button" class="toolbar-icon-btn btn-bold" id="toolbar-bold" title="Bold (Ctrl+B)" aria-label="Bold">B</button>
+            <button type="button" class="toolbar-icon-btn btn-italic" id="toolbar-italic" title="Italic (Ctrl+I)" aria-label="Italic">I</button>
+            <button type="button" class="toolbar-icon-btn" id="toolbar-link" title="Insert Link" aria-label="Insert Link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
               </svg>
             </button>
-            <button class="toolbar-icon-btn" id="toolbar-comment" title="Add Comment">
+            <button type="button" class="toolbar-icon-btn" id="toolbar-comment" title="Add Comment" aria-label="Add Comment">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               </svg>
             </button>
-            <button class="toolbar-icon-btn" id="toolbar-bullet-list" title="Bulleted List">
+            <button type="button" class="toolbar-icon-btn" id="toolbar-bullet-list" title="Bulleted List" aria-label="Bulleted List">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -298,7 +299,7 @@
                 <line x1="3" y1="18" x2="3.01" y2="18"></line>
               </svg>
             </button>
-            <button class="toolbar-icon-btn" id="toolbar-number-list" title="Numbered List">
+            <button type="button" class="toolbar-icon-btn" id="toolbar-number-list" title="Numbered List" aria-label="Numbered List">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="10" y1="6" x2="21" y2="6"></line>
                 <line x1="10" y1="12" x2="21" y2="12"></line>
@@ -308,7 +309,7 @@
                 <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
               </svg>
             </button>
-            <button class="toolbar-icon-btn btn-more" id="toolbar-more" title="More formatting options">•••</button>
+            <button type="button" class="toolbar-icon-btn btn-more" id="toolbar-more" title="More formatting options" aria-label="More formatting options">•••</button>
           </div>
         </div>
 
@@ -330,23 +331,24 @@
             <!-- Task Description Input Box -->
             <div class="linked-task-body-content">
               <div class="linked-task-textarea-container">
+                <label for="linked-task-description" class="sr-only">Task description</label>
                 <textarea class="linked-task-textarea" id="linked-task-description" rows="3" placeholder="Describe the task to link...">Simplify the mobile navigation and reduce unnecessary interface controls.</textarea>
               </div>
 
               <!-- Assignee Row -->
               <div class="linked-task-prop-row">
                 <span class="linked-prop-label">Assignee</span>
-                <div class="linked-prop-control-btn" id="linked-assignee-select" role="button" tabindex="0" title="Change assignee">
+                <button type="button" class="linked-prop-control-btn" id="linked-assignee-select" title="Change assignee">
                   <span class="linked-avatar-pill avatar-pk">PK</span>
                   <span class="linked-assignee-name" id="linked-assignee-name">Peter K.</span>
                   <span class="linked-prop-chevron">⌄</span>
-                </div>
+                </button>
               </div>
 
               <!-- Due Date Row -->
               <div class="linked-task-prop-row">
                 <span class="linked-prop-label">Due date</span>
-                <div class="linked-prop-control-btn" id="linked-duedate-select" role="button" tabindex="0" title="Change due date">
+                <button type="button" class="linked-prop-control-btn" id="linked-duedate-select" title="Change due date">
                   <svg class="calendar-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -355,18 +357,18 @@
                   </svg>
                   <span class="linked-due-date-str" id="linked-due-date-str">28 Oct 2026</span>
                   <span class="linked-prop-chevron">⌄</span>
-                </div>
+                </button>
               </div>
 
               <!-- Primary Action Button: Create Task -> -->
-              <button class="btn-create-task-primary" id="btn-submit-create-task">
+              <button type="submit" class="btn-create-task-primary" id="btn-submit-create-task">
                 <span>Create task</span>
                 <span class="btn-arrow-right">→</span>
               </button>
 
               <!-- Secondary Actions Row -->
               <div class="linked-task-footer-links">
-                <button class="linked-secondary-btn" id="btn-action-record-decision">
+                <button type="button" class="linked-secondary-btn" id="btn-action-record-decision">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
                     <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -378,7 +380,7 @@
                   <span>Also record as decision</span>
                 </button>
 
-                <button class="linked-secondary-btn" id="btn-action-link-existing">
+                <button type="button" class="linked-secondary-btn" id="btn-action-link-existing">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
@@ -418,10 +420,10 @@
               </svg>
               <span>T-021</span>
             </span>
-            <button class="decision-nav-arrow-btn" title="View decision" aria-label="View decision">
+            <button type="button" class="decision-nav-arrow-btn" title="View decision" aria-label="View decision">
               <span>→</span>
             </button>
-            <button class="decision-more-btn" title="Options" aria-label="Options">•••</button>
+            <button type="button" class="decision-more-btn" title="Options" aria-label="Options">•••</button>
           </div>
         </div>
 
@@ -438,17 +440,17 @@
             <span class="decision-item-submeta">Awaiting review <span class="meta-dot">·</span> Owner: PK <span class="meta-dot">·</span> Due 28 Oct 2026</span>
           </div>
           <div class="decision-actions-right">
-            <button class="decision-nav-arrow-btn" title="View decision" aria-label="View decision">
+            <button type="button" class="decision-nav-arrow-btn" title="View decision" aria-label="View decision">
               <span>→</span>
             </button>
-            <button class="decision-more-btn" title="Options" aria-label="Options">•••</button>
+            <button type="button" class="decision-more-btn" title="Options" aria-label="Options">•••</button>
           </div>
         </div>
       </div>
 
       <!-- + Record Decision Link -->
       <div class="doc-record-decision-row">
-        <button class="btn-record-decision-link" id="btn-record-decision-link">
+        <button type="button" class="btn-record-decision-link" id="btn-record-decision-link">
           <span class="plus-sign">+</span>
           <span>Record decision</span>
         </button>
@@ -463,21 +465,21 @@
 
       <div class="doc-next-steps-checklist" id="doc-next-steps-checklist">
         <!-- Next Step 1 -->
-        <label class="next-step-item-label" for="ns-chk-01">
+        <label class="next-step-item-label">
           <input type="checkbox" class="next-step-input" id="ns-chk-01" data-id="ns-01">
           <span class="next-step-checkbox-custom"></span>
           <span class="next-step-item-text">Develop the revised mobile navigation prototype.</span>
         </label>
 
         <!-- Next Step 2 -->
-        <label class="next-step-item-label" for="ns-chk-02">
+        <label class="next-step-item-label">
           <input type="checkbox" class="next-step-input" id="ns-chk-02" data-id="ns-02">
           <span class="next-step-checkbox-custom"></span>
           <span class="next-step-item-text">Review with the client for final feedback.</span>
         </label>
 
         <!-- Next Step 3 -->
-        <label class="next-step-item-label" for="ns-chk-03">
+        <label class="next-step-item-label">
           <input type="checkbox" class="next-step-input" id="ns-chk-03" data-id="ns-03">
           <span class="next-step-checkbox-custom"></span>
           <span class="next-step-item-text">Prepare implementation tasks for development phase.</span>

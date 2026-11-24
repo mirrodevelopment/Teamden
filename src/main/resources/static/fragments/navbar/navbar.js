@@ -3,6 +3,70 @@
  * Path: fragments/navbar/navbar.js
  */
 const Navbar = (() => {
+  function computeInitials(name) {
+    if (!name || !name.trim()) return 'TD';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return parts[0].substring(0, Math.min(2, parts[0].length)).toUpperCase();
+    }
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function updateUserProfile(userData) {
+    if (!userData) return;
+    const avatarEl = document.getElementById('topbar-user-avatar');
+    const initialsEl = document.getElementById('topbar-user-initials');
+    const dropdownUserNameEl = document.getElementById('dropdown-user-name');
+    const dropdownUserRoleEl = document.getElementById('dropdown-user-role');
+
+    const name = userData.fullName || userData.name || (userData.email ? userData.email.split('@')[0] : 'User');
+    const initials = userData.initials || computeInitials(name);
+    if (initialsEl) {
+      initialsEl.textContent = initials;
+    } else if (avatarEl) {
+      avatarEl.innerHTML = `<span class="user-avatar-initials" id="topbar-user-initials">${initials}</span>`;
+    }
+
+    if (dropdownUserNameEl) dropdownUserNameEl.textContent = name;
+    if (dropdownUserRoleEl) dropdownUserRoleEl.textContent = `${userData.role || 'Member'} · ${userData.activeOrganizationName || 'Teamden'}`;
+  }
+
+  function updateNotificationCount(countOverride) {
+    const badge = document.getElementById('topbar-bell-count');
+    if (!badge) return;
+
+    if (countOverride != null) {
+      const count = Number(countOverride);
+      if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = 'inline-flex';
+        badge.setAttribute('aria-label', `${count} unread notifications`);
+      } else {
+        badge.textContent = '0';
+        badge.style.display = 'none';
+        badge.removeAttribute('aria-label');
+      }
+      return;
+    }
+
+    fetch('/api/inbox?tab=ALL')
+      .then(res => res.ok ? res.json() : fetch('/api/notifications?tab=ALL').then(r => r.ok ? r.json() : null))
+      .then(data => {
+        if (!data || !data.counts) return;
+        const unread = Number(data.counts.unread || 0);
+        if (unread > 0) {
+          badge.textContent = unread > 99 ? '99+' : unread;
+          badge.style.display = 'inline-flex';
+          badge.setAttribute('aria-label', `${unread} unread notifications`);
+        } else {
+          badge.textContent = '0';
+          badge.style.display = 'none';
+          badge.removeAttribute('aria-label');
+        }
+      })
+      .catch(() => {});
+  }
+
   function init(user) {
     const avatarEl = document.getElementById('topbar-user-avatar');
     const dropdownUserNameEl = document.getElementById('dropdown-user-name');
@@ -40,13 +104,13 @@ const Navbar = (() => {
       const link = document.createElement('link');
       link.id = 'universal-create-css';
       link.rel = 'stylesheet';
-      link.href = '/fragments/create/universal-create.css?v=1';
+      link.href = '/fragments/create/universal-create.css?v=3';
       document.head.appendChild(link);
     }
     if (!document.getElementById('universal-create-js')) {
       const script = document.createElement('script');
       script.id = 'universal-create-js';
-      script.src = '/fragments/create/universal-create.js?v=1';
+      script.src = '/fragments/create/universal-create.js?v=4';
       document.body.appendChild(script);
     }
 
@@ -103,22 +167,30 @@ const Navbar = (() => {
       });
     }
 
+    // Hydrate User Profile (using passed user or fetch from /api/auth/me)
     if (user) {
-      if (avatarEl) {
-        let initials = 'TD';
-        if (user.initials) {
-          initials = user.initials;
-        } else if (user.fullName) {
-          const parts = user.fullName.trim().split(/\s+/);
-          initials = parts.length === 1 
-            ? parts[0].substring(0, Math.min(2, parts[0].length)).toUpperCase() 
-            : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-        avatarEl.textContent = initials;
-      }
-      if (dropdownUserNameEl) dropdownUserNameEl.textContent = user.fullName || 'User';
-      if (dropdownUserRoleEl) dropdownUserRoleEl.textContent = `${user.role || 'Member'} · ${user.activeOrganizationName || 'Teamden'}`;
+      updateUserProfile(user);
+    } else {
+      fetch('/api/auth/me')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          const profile = (data && data.data) ? data.data : data;
+          if (profile) updateUserProfile(profile);
+        })
+        .catch(() => {});
     }
+
+    // Hydrate Notification Bell Count & setup reactive listeners
+    updateNotificationCount();
+    window.addEventListener('focus', () => updateNotificationCount());
+    window.addEventListener('teamden:inbox-updated', (e) => {
+      if (e && e.detail && e.detail.counts) {
+        updateNotificationCount(e.detail.counts.unread);
+      } else {
+        updateNotificationCount();
+      }
+    });
+    window.addEventListener('teamden:notifications-updated', () => updateNotificationCount());
 
     // User Profile dropdown
     const userBtn = document.getElementById('user-profile-btn');
@@ -299,7 +371,12 @@ const Navbar = (() => {
     }
   }
 
-  return { init };
+  return {
+    init,
+    updateUserProfile,
+    updateNotificationCount,
+    computeInitials
+  };
 })();
 
 // Immediate theme initialization on script load

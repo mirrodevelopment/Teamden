@@ -120,13 +120,16 @@ const Sidebar = (() => {
     const overviewNav = document.getElementById('nav-overview');
     const insightsNav = document.getElementById('nav-insights');
     const inboxNav = document.getElementById('nav-inbox');
+    const settingsNav = document.getElementById('nav-settings');
 
     // Remove active from all first
-    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav, insightsNav, inboxNav].forEach(el => {
+    [todayNav, projectsNav, workspaceNav, teamNav, calendarNav, overviewNav, insightsNav, inboxNav, settingsNav].forEach(el => {
       if (el) el.classList.remove('active');
     });
 
-    if (currentPath.includes('/pages/inbox/')) {
+    if (currentPath.includes('/pages/settings/')) {
+      if (settingsNav) settingsNav.classList.add('active');
+    } else if (currentPath.includes('/pages/inbox/')) {
       if (inboxNav) inboxNav.classList.add('active');
     } else if (currentPath.includes('/pages/overview/insights/')) {
       if (insightsNav) insightsNav.classList.add('active');
@@ -145,8 +148,8 @@ const Sidebar = (() => {
     }
 
     // Refresh inbox unread badge if present
-    fetch('/api/notifications?tab=ALL')
-      .then(res => res.ok ? res.json() : null)
+    fetch('/api/inbox?tab=ALL')
+      .then(res => res.ok ? res.json() : fetch('/api/notifications?tab=ALL').then(r => r.ok ? r.json() : null))
       .then(data => {
         if (!data || !data.counts) return;
         const badge = document.getElementById('sidebar-inbox-count');
@@ -158,39 +161,187 @@ const Sidebar = (() => {
             badge.style.display = 'none';
           }
         }
-        const bellDot = document.getElementById('notification-unread-dot');
-        if (bellDot) {
-          bellDot.style.display = data.counts.unread > 0 ? 'block' : 'none';
+        const topbarBellCount = document.getElementById('topbar-bell-count');
+        if (topbarBellCount) {
+          const unread = Number(data.counts.unread || 0);
+          if (unread > 0) {
+            topbarBellCount.textContent = unread > 99 ? '99+' : unread;
+            topbarBellCount.style.display = 'inline-flex';
+          } else {
+            topbarBellCount.textContent = '0';
+            topbarBellCount.style.display = 'none';
+          }
         }
       })
       .catch(() => {});
 
-    // Pinned add button
+    // Pinned Projects (User-Scoped Ongoing Projects)
+    loadPinnedProjects();
+
     const pinnedAddBtn = document.getElementById('pinned-add-btn');
     if (pinnedAddBtn) {
-      pinnedAddBtn.addEventListener('click', (e) => {
+      pinnedAddBtn.onclick = (e) => {
         e.preventDefault();
-        const pinTitle = prompt('Enter item name to pin to sidebar:');
-        if (pinTitle && pinTitle.trim()) {
-          const list = document.querySelector('.pinned-list');
-          if (list) {
-            const item = document.createElement('a');
-            item.href = '#' + pinTitle.trim().toLowerCase().replace(/\s+/g, '-');
-            item.className = 'pinned-item';
-            item.innerHTML = `
-              <svg class="pinned-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-              </svg>
-              <span class="pinned-label">${pinTitle.trim()}</span>
-            `;
-            list.appendChild(item);
-          }
-        }
-      });
+        e.stopPropagation();
+        togglePinPicker();
+      };
+    }
+
+    const pinnedCloseBtn = document.getElementById('pinned-picker-close');
+    if (pinnedCloseBtn) {
+      pinnedCloseBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closePinPicker();
+      };
     }
   }
 
-  return { init, toggle };
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  async function loadPinnedProjects() {
+    const list = document.getElementById('sidebar-pinned-list');
+    if (!list) return;
+
+    try {
+      const res = await fetch('/api/projects/pinned');
+      if (!res.ok) {
+        list.innerHTML = '<div class="pinned-empty">No pinned projects</div>';
+        return;
+      }
+      const pinned = await res.json();
+      if (!Array.isArray(pinned) || pinned.length === 0) {
+        list.innerHTML = '<div class="pinned-empty">No pinned projects</div>';
+        return;
+      }
+
+      const currentPath = window.location.pathname + window.location.search;
+      list.innerHTML = pinned.map(p => {
+        const isActive = currentPath.includes(p.id);
+        return `
+          <div class="pinned-item ${isActive ? 'active' : ''}" data-project-id="${p.id}" data-tooltip="${escapeHtml(p.name)}">
+            <a href="${p.url || ('/pages/projects/project-detail/project-detail.html?id=' + p.id)}" class="pinned-item-main" title="${escapeHtml(p.name)}">
+              <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="pinned-label">${escapeHtml(p.name)}</span>
+            </a>
+            <button type="button" class="pinned-unpin-btn" data-project-id="${p.id}" title="Unpin project" aria-label="Unpin ${escapeHtml(p.name)}">&times;</button>
+          </div>
+        `;
+      }).join('');
+
+      // Attach unpin event listeners
+      list.querySelectorAll('.pinned-unpin-btn').forEach(btn => {
+        btn.onclick = async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const projId = btn.getAttribute('data-project-id');
+          if (!projId) return;
+          try {
+            const delRes = await fetch(`/api/projects/${projId}/pin`, { method: 'DELETE' });
+            if (delRes.ok || delRes.status === 204) {
+              loadPinnedProjects();
+            }
+          } catch (err) {
+            console.error('Failed to unpin project', err);
+          }
+        };
+      });
+    } catch (err) {
+      console.error('Error loading pinned projects', err);
+      list.innerHTML = '<div class="pinned-empty">No pinned projects</div>';
+    }
+  }
+
+  function closePinPicker() {
+    const popover = document.getElementById('pinned-picker-popover');
+    if (popover) {
+      popover.style.display = 'none';
+    }
+  }
+
+  async function togglePinPicker() {
+    const popover = document.getElementById('pinned-picker-popover');
+    if (!popover) return;
+
+    if (popover.style.display === 'block') {
+      closePinPicker();
+      return;
+    }
+
+    const pickerList = document.getElementById('pinned-picker-list');
+    if (pickerList) {
+      pickerList.innerHTML = '<div class="pinned-picker-empty">Loading ongoing projects...</div>';
+    }
+    popover.style.display = 'block';
+
+    try {
+      const res = await fetch('/api/projects/ongoing-available');
+      if (!res.ok) {
+        if (pickerList) pickerList.innerHTML = '<div class="pinned-picker-empty">Failed to load projects</div>';
+        return;
+      }
+      const projects = await res.json();
+      if (!Array.isArray(projects) || projects.length === 0) {
+        if (pickerList) pickerList.innerHTML = '<div class="pinned-picker-empty">No ongoing projects found</div>';
+        return;
+      }
+
+      if (pickerList) {
+        pickerList.innerHTML = projects.map(p => {
+          const isPinned = !!(p.isPinned || p.pinned);
+          return `
+            <button type="button" class="pinned-picker-item ${isPinned ? 'already-pinned' : ''}" data-project-id="${p.id}" ${isPinned ? 'disabled' : ''}>
+              <span class="pinned-picker-item-name">${escapeHtml(p.name)}</span>
+              <span class="pinned-picker-badge">${isPinned ? 'Pinned' : escapeHtml(p.statusLabel || p.status)}</span>
+            </button>
+          `;
+        }).join('');
+
+        pickerList.querySelectorAll('.pinned-picker-item:not(.already-pinned)').forEach(btn => {
+          btn.onclick = async (e) => {
+            e.preventDefault();
+            const projId = btn.getAttribute('data-project-id');
+            if (!projId) return;
+            try {
+              const pinRes = await fetch(`/api/projects/${projId}/pin`, { method: 'POST' });
+              if (pinRes.ok) {
+                closePinPicker();
+                loadPinnedProjects();
+              }
+            } catch (err) {
+              console.error('Failed to pin project', err);
+            }
+          };
+        });
+      }
+    } catch (err) {
+      console.error('Error opening pin picker', err);
+      if (pickerList) pickerList.innerHTML = '<div class="pinned-picker-empty">Error loading projects</div>';
+    }
+  }
+
+  // Close picker when clicking outside
+  document.addEventListener('click', (e) => {
+    const popover = document.getElementById('pinned-picker-popover');
+    if (popover && popover.style.display === 'block') {
+      const pinnedSection = document.getElementById('sidebar-pinned-section');
+      if (pinnedSection && !pinnedSection.contains(e.target)) {
+        closePinPicker();
+      }
+    }
+  });
+
+  return { init, toggle, loadPinnedProjects };
 })();
 
 window.Sidebar = Sidebar;

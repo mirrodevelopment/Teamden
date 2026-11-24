@@ -151,7 +151,7 @@
       listEl.innerHTML = filtered.map(doc => {
         const isSel = doc.id === State.selectedDocId;
         return `
-          <div class="doc-library-item ${isSel ? 'selected' : ''}" data-id="${escapeHtml(doc.id)}" data-cat="${escapeHtml(doc.categoryKey || 'Notes')}" role="listitem" tabindex="0">
+          <li class="doc-library-item ${isSel ? 'selected' : ''}" data-id="${escapeHtml(doc.id)}" data-cat="${escapeHtml(doc.categoryKey || 'Notes')}">
             <div class="doc-item-icon-wrap">
               <svg class="doc-item-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -165,7 +165,7 @@
               <span class="doc-item-details">${escapeHtml(doc.category)} <span class="meta-dot">·</span> ${escapeHtml(doc.updatedAt)}</span>
             </div>
             <button class="doc-item-more-btn" title="Options" aria-label="Options for ${escapeHtml(doc.title)}" onclick="event.stopPropagation();">•••</button>
-          </div>
+          </li>
         `;
       }).join('');
 

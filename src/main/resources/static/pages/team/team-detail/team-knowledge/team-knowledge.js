@@ -21,152 +21,67 @@
   let currentTeamId = 'team-design';
 
   /* ── Baseline Seed Data Adhering to Screenshot & Prompt Specifications ─── */
-  const SEED_DATA = {
+  /* -- Baseline Empty Knowledge Structure ------------------------- */
+  const DEFAULT_EMPTY_KNOWLEDGE = {
     playbook: {
       id: 'pb-01',
       title: 'Design Principles & Standards',
       desc: 'Our shared foundation for consistent, accessible and thoughtful digital experiences.',
-      version: 'Version 2.1',
-      approvedDate: '15 Oct 2026',
-      sections: [
-        {
-          heading: '1. Clarity Over Novelty',
-          text: 'Every interface element must communicate purpose immediately. Favor recognizable affordances and clear typographic hierarchy over decorative visual flourish.'
-        },
-        {
-          heading: '2. Accessibility by Default',
-          text: 'Maintain minimum 4.5:1 text contrast for body text and 3:1 for large display headers. Touch targets must never fall below 44×44px across responsive viewports.'
-        },
-        {
-          heading: '3. Restrained Color Architecture',
-          text: 'Use neutral canvas tones (#F8F6F0, #FAF7F1, #111111) as structural grounding. Apply vibrant accent colors (lime #C9F34A) with deliberate intentionality.'
-        },
-        {
-          heading: '4. Continuous Token Synchronization',
-          text: 'Design tokens defined in Figma must remain in lockstep with CSS variables. Every spacing, color, and radius token maps directly to shared engineering contracts.'
-        }
-      ]
+      version: 'Version 1.0',
+      approvedDate: 'Pending Review',
+      sections: []
     },
-    connectedDocs: [
-      {
-        id: 'doc-review-notes',
-        title: 'Design Review Notes',
-        sub: 'Website Redesign · Meeting notes',
-        tasks: '3 linked tasks',
-        decisions: '1 recorded decision',
-        updated: 'Updated 2 days ago',
-        author: 'Alex Rivera',
-        initials: 'AR',
-        bgClass: 'avatar--ar',
-        colorClass: 'tk-doc-row--blue',
-        content: 'Summary of stakeholder feedback on the new modular dashboard architecture. Approved components include header split-layout, unified breadcrumb navigation, and right-rail cards.'
-      },
-      {
-        id: 'doc-comp-specs',
-        title: 'Component Specifications',
-        sub: 'Website Redesign · Development handoff',
-        tasks: 'Linked to Review milestone',
-        decisions: 'Engineering handoff',
-        updated: 'Updated 5 days ago',
-        author: 'Maya Jones',
-        initials: 'MJ',
-        bgClass: 'avatar--mj',
-        colorClass: 'tk-doc-row--green',
-        content: 'Detailed specifications for card elevations, border tokens, pill button active states, and avatar stack groupings. Includes CSS custom property mappings for light and dark themes.'
-      },
-      {
-        id: 'doc-brand-guidelines',
-        title: 'Brand Guidelines',
-        sub: 'Shared reference across 2 projects',
-        tasks: '5 linked tasks',
-        decisions: 'Used in 2 projects',
-        updated: 'Updated 12 days ago',
-        author: 'Samir Khan',
-        initials: 'SK',
-        bgClass: 'avatar--sk',
-        colorClass: 'tk-doc-row--white',
-        content: 'Core brand identity system covering typography pairings (Inter, Inter Tight, Montserrat), primary and secondary color palettes, icon stroke weights (2px standard), and tone of voice guidelines.'
-      }
-    ],
-    decisions: [
-      {
-        id: 'dec-unified-nav',
-        type: 'APPROVED DECISION',
-        badgeClass: 'tk-badge--approved',
-        title: 'Unified navigation structure',
-        meta: 'Approved for the Website Redesign project · 18 Oct 2026',
-        details: 'The team approved moving to a persistent sidebar combined with topbar breadcrumbs across all team workspace and project views, eliminating nested tab redundancies.'
-      },
-      {
-        id: 'learn-nav-layers',
-        type: 'DOCUMENTED LEARNING',
-        badgeClass: 'tk-badge--learning',
-        title: 'Reduce unnecessary navigation layers',
-        meta: 'Recorded during the interface review · 12 Oct 2026',
-        details: 'Usability testing demonstrated that users found tab navigation within sub-views disorienting when nested more than 2 layers deep. Sub-tabs are now flattened into clean top-level tab pills.'
-      }
-    ],
-    awaitingApproval: {
-      id: 'appr-01',
-      title: 'Design Guidelines v2.2',
-      desc: 'A revised edition is ready for review. Version 2.1 remains approved.',
-      currentVer: '2.1',
-      pendingVer: '2.2',
-      changes: [
-        'Added high-contrast dark mode token definitions',
-        'Updated mobile drawer swipe threshold from 80px to 60px',
-        'Standardized 999px pill border radii for status and filter buttons'
-      ],
-      pending: true
-    },
-    knowledgeRequest: {
-      id: 'req-01',
-      title: 'Component usage clarification for mobile navigation',
-      sub: 'Requested by Engineering',
-      time: '3 days ago',
-      details: 'Engineering requested clarity on whether mobile sidebar drawers should close on background backdrop click or require a dedicated close button tap.'
-    },
-    contributions: [
-      {
-        id: 'c1',
-        title: 'Design Review Notes',
-        sub: 'Updated by Alex R.',
-        time: '2 days ago',
-        author: 'Alex Rivera',
-        initials: 'AR',
-        bgClass: 'avatar--ar'
-      },
-      {
-        id: 'c2',
-        title: 'Typography guidelines',
-        sub: 'Updated by Peter K.',
-        time: '5 days ago',
-        author: 'Peter Kapoor',
-        initials: 'PK',
-        bgClass: 'avatar--pk'
-      }
-    ],
-    resources: [
-      {
-        id: 'res-standards',
-        title: 'Design Standards',
-        desc: 'Approved references and patterns',
-        url: '/pages/workspace/team-libraries/team-libraries.html'
-      },
-      {
-        id: 'res-templates',
-        title: 'Project Templates',
-        desc: 'Reusable briefs and handoff documents',
-        url: '/pages/workspace/team-libraries/team-libraries.html'
-      },
-      {
-        id: 'res-archive',
-        title: 'Research Archive',
-        desc: 'Previous findings and observations',
-        url: '/pages/workspace/team-libraries/team-libraries.html'
-      }
-    ]
+    connectedDocs: [],
+    decisions: [],
+    awaitingApproval: null,
+    knowledgeRequest: null,
+    contributions: [],
+    resources: []
   };
+
+  function renderConnectedDocs(data) {
+    const listEl = document.getElementById('tk-connected-list');
+    if (!listEl) return;
+    const docs = data.connectedDocs || [];
+    if (docs.length === 0) {
+      listEl.innerHTML = `
+        <div class="tk-empty-docs" style="padding: 2.5rem 1.5rem; text-align: center; background: var(--dash-bg-card); border: 1px dashed var(--dash-border); border-radius: 12px;">
+          <p style="font-weight: 600; color: var(--dash-text-primary); margin-bottom: 0.35rem;">No connected documents</p>
+          <p style="font-size: 0.8125rem; color: var(--dash-text-muted);">Link documents and specifications from active projects to see them here.</p>
+        </div>
+      `;
+      return;
+    }
+    listEl.innerHTML = docs.map(doc => `
+      <div class="tk-doc-row " data-doc-id="" role="button" tabindex="0">
+        <div class="tk-doc-left">
+          <div class="tk-doc-icon-wrap tk-icon--blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="tk-doc-info">
+            <span class="tk-doc-title"></span>
+            <span class="tk-doc-sub"></span>
+            <div class="tk-doc-meta-row">
+              <span></span>
+              <span class="tk-meta-dot">�</span>
+              <span></span>
+              <span class="tk-meta-dot">�</span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="tk-doc-right">
+          <div class="tk-avatar-bubble " title=""></div>
+          <span class="tk-row-arrow">&#8594;</span>
+        </div>
+      </div>
+    `).join('');
+  }
 
   /* ── Helper: Escape HTML ───────────────────────────────────────────────── */
   function esc(str) {
@@ -470,6 +385,8 @@
 
   /* ── Wire Interactions & Event Handlers ────────────────────────────────── */
   function wireInteractions(data) {
+    renderConnectedDocs(data);
+
     // 1. Open Playbook
     const openPlaybookBtn = document.getElementById('tk-open-playbook-btn');
     if (openPlaybookBtn) {
@@ -598,7 +515,7 @@
   /* ── Public API ────────────────────────────────────────────────────────── */
   const TeamKnowledge = {
     init(teamId, customData) {
-      const data = customData || SEED_DATA;
+      const data = customData || DEFAULT_EMPTY_KNOWLEDGE;
       currentTeamId = teamId || 'team-design';
       wireInteractions(data);
     }

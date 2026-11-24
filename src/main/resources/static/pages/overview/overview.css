@@ -1505,6 +1505,19 @@ body.sidebar-collapsed .overview-app-main {
   border-radius: 4px;
 }
 
+.dept-progress-fill.w-88 { width: 88%; }
+.dept-progress-fill.w-72 { width: 72%; }
+.dept-progress-fill.w-95 { width: 95%; }
+.dept-progress-fill.w-80 { width: 80%; }
+
+.btn-goto-full-insights {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
 .fill-green {
   background-color: var(--dash-dot-green);
 }

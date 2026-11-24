@@ -9,19 +9,14 @@ import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
 import com.shed.teamden.dashboard.dto.ActivityItemDto;
 import com.shed.teamden.organization.entity.Organization;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationRepository;
-import com.shed.teamden.project.entity.Project;
-import com.shed.teamden.project.entity.ProjectStatus;
 import com.shed.teamden.project.repository.ProjectRepository;
 import com.shed.teamden.security.CustomUserDetails;
 import com.shed.teamden.security.SecurityUtils;
 import com.shed.teamden.user.entity.User;
-import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,23 +119,29 @@ public class ActivityService {
         Instant start = null;
         Instant end = null;
 
-        if ("today".equals(rangeNorm)) {
-            start = today.atStartOfDay(ZoneId.systemDefault()).toInstant();
-            end = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        } else if ("yesterday".equals(rangeNorm)) {
-            LocalDate yesterday = today.minusDays(1);
-            start = yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant();
-            end = today.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        } else if ("last_week".equals(rangeNorm)) {
-            start = today.minusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant();
-            end = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        } else if ("custom".equals(rangeNorm)) {
-            if (startDate != null) {
-                start = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        switch (rangeNorm) {
+            case "today" -> {
+                start = today.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                end = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
             }
-            if (endDate != null) {
-                end = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+            case "yesterday" -> {
+                LocalDate yesterday = today.minusDays(1);
+                start = yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                end = today.atStartOfDay(ZoneId.systemDefault()).toInstant();
             }
+            case "last_week" -> {
+                start = today.minusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant();
+                end = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+            }
+            case "custom" -> {
+                if (startDate != null) {
+                    start = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                }
+                if (endDate != null) {
+                    end = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+                }
+            }
+            default -> { /* all time: no time bounds */ }
         }
 
         List<ActivityEvent> events;
@@ -231,20 +232,17 @@ public class ActivityService {
         if (event.getBadgeType() != null && !event.getBadgeType().isBlank()) {
             return event.getBadgeType().equalsIgnoreCase(filterType);
         }
-        if ("COMPLETED".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.TASK_COMPLETED
+        return switch (filterType) {
+            case "COMPLETED" -> event.getEventType() == ActivityEventType.TASK_COMPLETED
                     || event.getEventType() == ActivityEventType.ATTENDANCE_CHECKIN;
-        } else if ("DOCUMENT".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.PROJECT_UPDATED
+            case "DOCUMENT" -> event.getEventType() == ActivityEventType.PROJECT_UPDATED
                     || event.getEventType() == ActivityEventType.PROJECT_CREATED
                     || event.getEventType() == ActivityEventType.DAILY_UPDATE_POSTED;
-        } else if ("ASSIGNED".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.TASK_ASSIGNED;
-        } else if ("COMMENT".equals(filterType)) {
-            return event.getEventType() == ActivityEventType.TASK_CREATED
+            case "ASSIGNED" -> event.getEventType() == ActivityEventType.TASK_ASSIGNED;
+            case "COMMENT" -> event.getEventType() == ActivityEventType.TASK_CREATED
                     || event.getEventType() == ActivityEventType.TASK_STATUS_CHANGED;
-        }
-        return true;
+            default -> true;
+        };
     }
 
     private boolean matchesTextQuery(ActivityEvent event, String q) {
@@ -267,10 +265,8 @@ public class ActivityService {
         if (event.getActor() != null && event.getActor().getFullName() != null
                 && event.getActor().getFullName().toLowerCase().contains(q))
             return true;
-        if (event.getProject() != null && event.getProject().getName() != null
-                && event.getProject().getName().toLowerCase().contains(q))
-            return true;
-        return false;
+        return event.getProject() != null && event.getProject().getName() != null
+                && event.getProject().getName().toLowerCase().contains(q);
     }
 
     private ActivityItemDto toActivityItemDto(ActivityEvent event, LocalDate today) {
@@ -336,12 +332,7 @@ public class ActivityService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
     }
 
     private User resolveCurrentUser(Organization org) {
@@ -354,13 +345,6 @@ public class ActivityService {
         if (!users.isEmpty()) {
             return users.get(0);
         }
-        User defaultUser = User.builder()
-                .id(UUID.randomUUID())
-                .fullName("SIVASURYA S")
-                .email("admin@brick.local")
-                .passwordHash("$2a$12$e0MYzXy/vP7J11.d3Jg1y.X9vG32g9J8qX8f0gK6hP2cQ3v5gK7a")
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(defaultUser);
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 }

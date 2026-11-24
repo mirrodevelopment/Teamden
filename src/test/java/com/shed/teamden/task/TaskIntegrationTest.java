@@ -50,214 +50,226 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class TaskIntegrationTest {
 
-    @Autowired
-    private WebApplicationContext context;
+        @Autowired
+        private WebApplicationContext context;
 
-    private MockMvc mockMvc;
+        private MockMvc mockMvc;
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+        @Autowired
+        private OrganizationRepository organizationRepository;
 
-    @Autowired
-    private OrganizationMembershipRepository membershipRepository;
+        @Autowired
+        private OrganizationMembershipRepository membershipRepository;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+        @Autowired
+        private ProjectRepository projectRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+        @Autowired
+        private TaskRepository taskRepository;
 
-    @Autowired
-    private ActivityEventRepository activityEventRepository;
+        @Autowired
+        private ActivityEventRepository activityEventRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+        @Autowired
+        private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
-    private Organization orgAlpha;
-    private Organization orgBeta;
-    private User userAlpha;
-    private User userBeta;
-    private Project projectAlpha;
-    private MockHttpSession sessionAlpha;
+        private Organization orgAlpha;
+        private Organization orgBeta;
+        private User userAlpha;
+        private User userBeta;
+        private Project projectAlpha;
+        private MockHttpSession sessionAlpha;
 
-    @BeforeEach
-    void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
+        @BeforeEach
+        void setUp() throws Exception {
+                mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                                .apply(SecurityMockMvcConfigurers.springSecurity())
+                                .build();
 
-        jdbcTemplate.execute("DELETE FROM employee_shared_documents");
-        jdbcTemplate.execute("DELETE FROM employee_collaborations");
-        jdbcTemplate.execute("DELETE FROM employee_responsibilities");
-        jdbcTemplate.execute("DELETE FROM workspace_roles");
-        jdbcTemplate.execute("DELETE FROM employees");
-        jdbcTemplate.execute("DELETE FROM departments");
-        jdbcTemplate.execute("DELETE FROM task_linked_documents");
-        jdbcTemplate.execute("DELETE FROM project_document_collaborators");
-        jdbcTemplate.execute("DELETE FROM project_documents");
-        jdbcTemplate.execute("DELETE FROM project_decisions");
-        jdbcTemplate.execute("DELETE FROM project_specifications");
-        jdbcTemplate.execute("DELETE FROM project_members");
-        jdbcTemplate.execute("DELETE FROM task_subtasks");
-        jdbcTemplate.execute("DELETE FROM activity_events");
-        jdbcTemplate.execute("DELETE FROM tasks");
-        jdbcTemplate.execute("DELETE FROM project_milestones");
-        jdbcTemplate.execute("DELETE FROM attendance_records");
-        jdbcTemplate.execute("DELETE FROM calendar_commitments");
-        jdbcTemplate.execute("DELETE FROM calendar_needs_scheduling");
-        jdbcTemplate.execute("DELETE FROM calendar_sources");
-        jdbcTemplate.execute("DELETE FROM calendar_team_availability");
-        jdbcTemplate.execute("DELETE FROM calendar_events");
-        jdbcTemplate.execute("DELETE FROM projects");
-        jdbcTemplate.execute("DELETE FROM organization_memberships");
-        jdbcTemplate.execute("DELETE FROM daily_updates");
-        jdbcTemplate.execute("DELETE FROM notifications");
-        jdbcTemplate.execute("DELETE FROM users");
-        jdbcTemplate.execute("DELETE FROM organizations");
+                jdbcTemplate.execute("DELETE FROM inbox_items");
+                jdbcTemplate.execute("DELETE FROM inbox_preferences");
+                jdbcTemplate.execute("DELETE FROM user_pinned_projects");
+                jdbcTemplate.execute("DELETE FROM workspace_role_permissions");
+                jdbcTemplate.execute("DELETE FROM workspace_security_policies");
+                jdbcTemplate.execute("DELETE FROM workspace_integrations");
+                jdbcTemplate.execute("DELETE FROM workspace_settings");
+                jdbcTemplate.execute("DELETE FROM employee_shared_documents");
+                jdbcTemplate.execute("DELETE FROM employee_collaborations");
+                jdbcTemplate.execute("DELETE FROM employee_responsibilities");
+                jdbcTemplate.execute("DELETE FROM workspace_roles");
+                jdbcTemplate.execute("DELETE FROM employees");
+                jdbcTemplate.execute("DELETE FROM departments");
+                jdbcTemplate.execute("DELETE FROM task_linked_documents");
+                jdbcTemplate.execute("DELETE FROM project_document_collaborators");
+                jdbcTemplate.execute("DELETE FROM project_documents");
+                jdbcTemplate.execute("DELETE FROM project_decisions");
+                jdbcTemplate.execute("DELETE FROM project_specifications");
+                jdbcTemplate.execute("DELETE FROM project_members");
+                jdbcTemplate.execute("DELETE FROM task_subtasks");
+                jdbcTemplate.execute("DELETE FROM activity_events");
+                jdbcTemplate.execute("DELETE FROM tasks");
+                jdbcTemplate.execute("DELETE FROM project_milestones");
+                jdbcTemplate.execute("DELETE FROM attendance_records");
+                jdbcTemplate.execute("DELETE FROM calendar_commitments");
+                jdbcTemplate.execute("DELETE FROM calendar_needs_scheduling");
+                jdbcTemplate.execute("DELETE FROM calendar_sources");
+                jdbcTemplate.execute("DELETE FROM calendar_team_availability");
+                jdbcTemplate.execute("DELETE FROM calendar_events");
+                jdbcTemplate.execute("DELETE FROM projects");
+                jdbcTemplate.execute("DELETE FROM legal_acceptances");
+                jdbcTemplate.execute("DELETE FROM user_profiles");
+                jdbcTemplate.execute("DELETE FROM organization_addresses");
+                jdbcTemplate.execute("DELETE FROM email_verifications");
+                jdbcTemplate.execute("DELETE FROM organization_memberships");
+                jdbcTemplate.execute("DELETE FROM daily_updates");
+                jdbcTemplate.execute("DELETE FROM notifications");
+                jdbcTemplate.execute("DELETE FROM users");
+                jdbcTemplate.execute("DELETE FROM organizations");
 
-        String sA = UUID.randomUUID().toString().substring(0, 8);
-        String sB = UUID.randomUUID().toString().substring(0, 8);
+                String sA = UUID.randomUUID().toString().substring(0, 8);
+                String sB = UUID.randomUUID().toString().substring(0, 8);
 
-        orgAlpha = organizationRepository.save(Organization.builder()
-                .name("Task Org Alpha " + sA)
-                .status(OrganizationStatus.ACTIVE)
-                .build());
+                orgAlpha = organizationRepository.save(Organization.builder()
+                                .name("Task Org Alpha " + sA)
+                                .status(OrganizationStatus.ACTIVE)
+                                .build());
 
-        userAlpha = userRepository.save(User.builder()
-                .email("task_alpha_" + sA + "@teamden.org")
-                .fullName("Task User Alpha")
-                .passwordHash(passwordEncoder.encode("Secret123!"))
-                .status(UserStatus.ACTIVE)
-                .build());
+                userAlpha = userRepository.save(User.builder()
+                                .email("task_alpha_" + sA + "@teamden.org")
+                                .fullName("Task User Alpha")
+                                .passwordHash(passwordEncoder.encode("Secret123!"))
+                                .status(UserStatus.ACTIVE)
+                                .build());
 
-        membershipRepository.save(OrganizationMembership.builder()
-                .organization(orgAlpha)
-                .user(userAlpha)
-                .role(MembershipRole.OWNER)
-                .status(MembershipStatus.ACTIVE)
-                .build());
+                membershipRepository.save(OrganizationMembership.builder()
+                                .organization(orgAlpha)
+                                .user(userAlpha)
+                                .role(MembershipRole.OWNER)
+                                .status(MembershipStatus.ACTIVE)
+                                .build());
 
-        projectAlpha = projectRepository.save(Project.builder()
-                .name("Alpha Portal")
-                .organization(orgAlpha)
-                .owner(userAlpha)
-                .status(ProjectStatus.ACTIVE)
-                .health("ON_TRACK")
-                .priority("HIGH")
-                .startDate(LocalDate.now())
-                .build());
+                projectAlpha = projectRepository.save(Project.builder()
+                                .name("Alpha Portal")
+                                .organization(orgAlpha)
+                                .owner(userAlpha)
+                                .status(ProjectStatus.ACTIVE)
+                                .health("ON_TRACK")
+                                .priority("HIGH")
+                                .startDate(LocalDate.now())
+                                .build());
 
-        orgBeta = organizationRepository.save(Organization.builder()
-                .name("Task Org Beta " + sB)
-                .status(OrganizationStatus.ACTIVE)
-                .build());
+                orgBeta = organizationRepository.save(Organization.builder()
+                                .name("Task Org Beta " + sB)
+                                .status(OrganizationStatus.ACTIVE)
+                                .build());
 
-        userBeta = userRepository.save(User.builder()
-                .email("task_beta_" + sB + "@teamden.org")
-                .fullName("Task User Beta")
-                .passwordHash(passwordEncoder.encode("Secret123!"))
-                .status(UserStatus.ACTIVE)
-                .build());
+                userBeta = userRepository.save(User.builder()
+                                .email("task_beta_" + sB + "@teamden.org")
+                                .fullName("Task User Beta")
+                                .passwordHash(passwordEncoder.encode("Secret123!"))
+                                .status(UserStatus.ACTIVE)
+                                .build());
 
-        membershipRepository.save(OrganizationMembership.builder()
-                .organization(orgBeta)
-                .user(userBeta)
-                .role(MembershipRole.OWNER)
-                .status(MembershipStatus.ACTIVE)
-                .build());
+                membershipRepository.save(OrganizationMembership.builder()
+                                .organization(orgBeta)
+                                .user(userBeta)
+                                .role(MembershipRole.OWNER)
+                                .status(MembershipStatus.ACTIVE)
+                                .build());
 
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"email\":\"%s\",\"password\":\"Secret123!\",\"organizationId\":\"%s\"}",
-                                userAlpha.getEmail(), orgAlpha.getId())))
-                .andExpect(status().isOk())
-                .andReturn();
+                MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(String.format(
+                                                "{\"email\":\"%s\",\"password\":\"Secret123!\",\"organizationId\":\"%s\"}",
+                                                userAlpha.getEmail(), orgAlpha.getId())))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        sessionAlpha = (MockHttpSession) loginResult.getRequest().getSession(false);
-    }
+                sessionAlpha = (MockHttpSession) loginResult.getRequest().getSession(false);
+        }
 
-    @Test
-    @DisplayName("GET /api/tasks/options returns organization projects and assignees")
-    void testGetTaskOptions() throws Exception {
-        mockMvc.perform(get("/api/tasks/options").session(sessionAlpha))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projects", hasSize(1)))
-                .andExpect(jsonPath("$.projects[0].name", is("Alpha Portal")))
-                .andExpect(jsonPath("$.assignees", hasSize(1)))
-                .andExpect(jsonPath("$.assignees[0].name", is("Task User Alpha")));
-    }
+        @Test
+        @DisplayName("GET /api/tasks/options returns organization projects and assignees")
+        void testGetTaskOptions() throws Exception {
+                mockMvc.perform(get("/api/tasks/options").session(sessionAlpha))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.projects", hasSize(1)))
+                                .andExpect(jsonPath("$.projects[0].name", is("Alpha Portal")))
+                                .andExpect(jsonPath("$.assignees", hasSize(1)))
+                                .andExpect(jsonPath("$.assignees[0].name", is("Task User Alpha")));
+        }
 
-    @Test
-    @DisplayName("POST /api/tasks creates task in DB, returns 201 Created, and logs activity")
-    void testCreateTaskSuccess() throws Exception {
-        String payload = String.format("""
-                {
-                    "title": "Design token exports and typography audit",
-                    "description": "Export all design tokens to theme.css and verify zero hex usage",
-                    "projectId": "%s",
-                    "assigneeId": "%s",
-                    "kanbanColumn": "NOW",
-                    "priority": "HIGH",
-                    "dueDate": "2026-11-20"
-                }
-                """, projectAlpha.getId(), userAlpha.getId());
+        @Test
+        @DisplayName("POST /api/tasks creates task in DB, returns 201 Created, and logs activity")
+        void testCreateTaskSuccess() throws Exception {
+                String payload = String.format("""
+                                {
+                                    "title": "Design token exports and typography audit",
+                                    "description": "Export all design tokens to theme.css and verify zero hex usage",
+                                    "projectId": "%s",
+                                    "assigneeId": "%s",
+                                    "kanbanColumn": "NOW",
+                                    "priority": "HIGH",
+                                    "dueDate": "2026-11-20"
+                                }
+                                """, projectAlpha.getId(), userAlpha.getId());
 
-        MvcResult result = mockMvc.perform(post("/api/tasks")
-                        .session(sessionAlpha)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title", is("Design token exports and typography audit")))
-                .andExpect(jsonPath("$.column", is("NOW")))
-                .andExpect(jsonPath("$.columnOrder", is(1)))
-                .andReturn();
+                mockMvc.perform(post("/api/tasks")
+                                .session(sessionAlpha)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(payload))
+                                .andExpect(status().isCreated())
+                                .andExpect(jsonPath("$.title", is("Design token exports and typography audit")))
+                                .andExpect(jsonPath("$.column", is("NOW")))
+                                .andExpect(jsonPath("$.columnOrder", is(1)));
 
-        // Verify task persisted in database
-        List<Task> tasks = taskRepository.findByOrganizationId(orgAlpha.getId());
-        assertThat(tasks).hasSize(1);
-        Task savedTask = tasks.get(0);
-        assertThat(savedTask.getTitle()).isEqualTo("Design token exports and typography audit");
-        assertThat(savedTask.getKanbanColumn()).isEqualTo(KanbanColumn.NOW);
-        assertThat(savedTask.getProject().getId()).isEqualTo(projectAlpha.getId());
-        assertThat(savedTask.getAssignee().getId()).isEqualTo(userAlpha.getId());
+                // Verify task persisted in database
+                List<Task> tasks = taskRepository.findByOrganizationId(orgAlpha.getId());
+                assertThat(tasks).hasSize(1);
+                Task savedTask = tasks.get(0);
+                assertThat(savedTask.getTitle()).isEqualTo("Design token exports and typography audit");
+                assertThat(savedTask.getKanbanColumn()).isEqualTo(KanbanColumn.NOW);
+                assertThat(savedTask.getProject().getId()).isEqualTo(projectAlpha.getId());
+                assertThat(savedTask.getAssignee().getId()).isEqualTo(userAlpha.getId());
 
-        // Verify Activity Event logged
-        List<ActivityEvent> events = activityEventRepository.findAllByOrganizationIdWithDetails(orgAlpha.getId());
-        assertThat(events).hasSize(1);
-        ActivityEvent event = events.get(0);
-        assertThat(event.getEventType()).isEqualTo(ActivityEventType.TASK_CREATED);
-        assertThat(event.getTargetTitle()).isEqualTo("Design token exports and typography audit");
-    }
+                // Verify Activity Event logged
+                List<ActivityEvent> events = activityEventRepository
+                                .findAllByOrganizationIdWithDetails(orgAlpha.getId());
+                assertThat(events).hasSize(1);
+                ActivityEvent event = events.get(0);
+                assertThat(event.getEventType()).isEqualTo(ActivityEventType.TASK_CREATED);
+                assertThat(event.getTargetTitle()).isEqualTo("Design token exports and typography audit");
+        }
 
-    @Test
-    @DisplayName("POST /api/tasks throws 400 when assigning to project from another organization")
-    void testCreateTaskTenantIsolation() throws Exception {
-        Project betaProject = projectRepository.save(Project.builder()
-                .name("Beta Restricted Project")
-                .organization(orgBeta)
-                .owner(userBeta)
-                .status(ProjectStatus.ACTIVE)
-                .build());
+        @Test
+        @DisplayName("POST /api/tasks throws 400 when assigning to project from another organization")
+        void testCreateTaskTenantIsolation() throws Exception {
+                Project betaProject = projectRepository.save(Project.builder()
+                                .name("Beta Restricted Project")
+                                .organization(orgBeta)
+                                .owner(userBeta)
+                                .status(ProjectStatus.ACTIVE)
+                                .build());
 
-        String payload = String.format("""
-                {
-                    "title": "Malicious Cross-Tenant Task",
-                    "projectId": "%s",
-                    "kanbanColumn": "NOW"
-                }
-                """, betaProject.getId());
+                String payload = String.format("""
+                                {
+                                    "title": "Malicious Cross-Tenant Task",
+                                    "projectId": "%s",
+                                    "kanbanColumn": "NOW"
+                                }
+                                """, betaProject.getId());
 
-        mockMvc.perform(post("/api/tasks")
-                        .session(sessionAlpha)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isBadRequest());
-    }
+                mockMvc.perform(post("/api/tasks")
+                                .session(sessionAlpha)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(payload))
+                                .andExpect(status().isBadRequest());
+        }
 }

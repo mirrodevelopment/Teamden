@@ -55,6 +55,39 @@ public class Project {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @Column(name = "project_code", length = 50)
+    private String projectCode;
+
+    @Column(name = "team_id")
+    private UUID teamId;
+
+    @Column(name = "team_name", length = 150)
+    private String teamName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_lead_id")
+    private User teamLead;
+
+    @Column(name = "cover_image_url", length = 500)
+    private String coverImageUrl;
+
+    @Column(name = "client_name", length = 200)
+    private String clientName;
+
+    @Column(name = "goals", columnDefinition = "TEXT")
+    private String goals;
+
+    @Column(name = "deliverables", columnDefinition = "TEXT")
+    private String deliverables;
+
+    @Column(name = "progress")
+    @Builder.Default
+    private Integer progress = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_id")
+    private User createdBy;
+
     @Column(name = "start_date")
     private LocalDate startDate;
 
@@ -75,7 +108,7 @@ public class Project {
             this.id = UUID.randomUUID();
         }
         if (this.status == null) {
-            this.status = ProjectStatus.ACTIVE;
+            this.status = ProjectStatus.PLANNING;
         }
         if (this.health == null) {
             this.health = "ON_TRACK";
@@ -85,6 +118,9 @@ public class Project {
         }
         if (this.projectType == null) {
             this.projectType = "General";
+        }
+        if (this.progress == null) {
+            this.progress = 0;
         }
     }
 }

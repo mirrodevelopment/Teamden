@@ -79,6 +79,14 @@ body.projects-body {
   letter-spacing: 0.08em;
 }
 
+.projects-headline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 /* Headline Group: projects. */
 .projects-headline-group {
   display: flex;

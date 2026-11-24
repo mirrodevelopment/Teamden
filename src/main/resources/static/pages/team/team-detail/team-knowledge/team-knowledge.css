@@ -852,3 +852,24 @@
   }
 }
 
+/* Button reset for interactive knowledge components */
+button.tk-decision-item,
+button.tk-request-item,
+button.tk-contributed-item,
+button.tk-resource-row {
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.tk-title-dot--lime {
+  color: var(--dash-accent-lime);
+}
+
+

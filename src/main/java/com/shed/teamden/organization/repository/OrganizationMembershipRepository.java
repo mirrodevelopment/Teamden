@@ -5,13 +5,11 @@ import com.shed.teamden.organization.entity.OrganizationMembership;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 public interface OrganizationMembershipRepository extends JpaRepository<OrganizationMembership, UUID> {
 
     @Query("SELECT m FROM OrganizationMembership m JOIN FETCH m.organization WHERE m.user.id = :userId AND m.status = :status")

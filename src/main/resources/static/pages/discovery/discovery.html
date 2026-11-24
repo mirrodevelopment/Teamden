@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -65,12 +65,12 @@
               <input type="text" id="discovery-search-input" class="discovery-search-input"
                      placeholder="Search for projects, tasks, people or documents..."
                      autocomplete="off" spellcheck="false" value="mobile navigation" aria-label="Search">
-              <button class="discovery-clear-btn" id="discovery-clear-btn" title="Clear query" aria-label="Clear query">✕</button>
+              <button type="button" class="discovery-clear-btn" id="discovery-clear-btn" title="Clear query" aria-label="Clear query">✕</button>
             </div>
 
             <!-- Sort Dropdown -->
             <div class="discovery-sort-dropdown-wrap">
-              <button class="discovery-toolbar-btn" id="discovery-sort-btn" aria-haspopup="true" aria-expanded="false">
+              <button type="button" class="discovery-toolbar-btn" id="discovery-sort-btn" aria-haspopup="true" aria-expanded="false">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="m3 16 4 4 4-4"></path><path d="M7 20V4"></path>
                   <path d="m21 8-4-4-4 4"></path><path d="M17 4v16"></path>
@@ -79,15 +79,15 @@
                 <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </button>
               <div class="discovery-menu" id="discovery-sort-menu" role="menu">
-                <button class="discovery-menu-item active" data-sort="best_match">Best match</button>
-                <button class="discovery-menu-item" data-sort="recent">Most recent</button>
-                <button class="discovery-menu-item" data-sort="oldest">Oldest first</button>
-                <button class="discovery-menu-item" data-sort="alphabetical">Alphabetical</button>
+                <button type="button" class="discovery-menu-item active" data-sort="best_match">Best match</button>
+                <button type="button" class="discovery-menu-item" data-sort="recent">Most recent</button>
+                <button type="button" class="discovery-menu-item" data-sort="oldest">Oldest first</button>
+                <button type="button" class="discovery-menu-item" data-sort="alphabetical">Alphabetical</button>
               </div>
             </div>
 
             <!-- Filters Button -->
-            <button class="discovery-toolbar-btn" id="discovery-filters-btn">
+            <button type="button" class="discovery-toolbar-btn" id="discovery-filters-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
                 <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
@@ -102,25 +102,25 @@
 
           <!-- Category Navigation Pills -->
           <div class="discovery-categories-bar" id="discovery-categories-bar" role="tablist">
-            <button class="discovery-cat-pill active" data-category="ALL" role="tab" aria-selected="true">
+            <button type="button" class="discovery-cat-pill active" data-category="ALL" role="tab" aria-selected="true">
               <span>All</span> <span class="cat-count" id="count-pill-ALL">24</span>
             </button>
-            <button class="discovery-cat-pill" data-category="TASKS" role="tab" aria-selected="false">
+            <button type="button" class="discovery-cat-pill" data-category="TASKS" role="tab" aria-selected="false">
               <span>Tasks</span> <span class="cat-count" id="count-pill-TASKS">6</span>
             </button>
-            <button class="discovery-cat-pill" data-category="DOCUMENTS" role="tab" aria-selected="false">
+            <button type="button" class="discovery-cat-pill" data-category="DOCUMENTS" role="tab" aria-selected="false">
               <span>Documents</span> <span class="cat-count" id="count-pill-DOCUMENTS">8</span>
             </button>
-            <button class="discovery-cat-pill" data-category="PROJECTS" role="tab" aria-selected="false">
+            <button type="button" class="discovery-cat-pill" data-category="PROJECTS" role="tab" aria-selected="false">
               <span>Projects</span> <span class="cat-count" id="count-pill-PROJECTS">3</span>
             </button>
-            <button class="discovery-cat-pill" data-category="MEETINGS" role="tab" aria-selected="false">
+            <button type="button" class="discovery-cat-pill" data-category="MEETINGS" role="tab" aria-selected="false">
               <span>Meetings</span> <span class="cat-count" id="count-pill-MEETINGS">3</span>
             </button>
-            <button class="discovery-cat-pill" data-category="PEOPLE" role="tab" aria-selected="false">
+            <button type="button" class="discovery-cat-pill" data-category="PEOPLE" role="tab" aria-selected="false">
               <span>People</span> <span class="cat-count" id="count-pill-PEOPLE">2</span>
             </button>
-            <button class="discovery-cat-pill discovery-more-pill" id="discovery-more-btn">
+            <button type="button" class="discovery-cat-pill discovery-more-pill" id="discovery-more-btn">
               <span>More</span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Scrollable Results Container -->
-            <div class="discovery-results-scroll" id="discovery-results-scroll" role="listbox" aria-label="Results list">
+            <div class="discovery-results-scroll" id="discovery-results-scroll">
               <!-- Result rows rendered dynamically via discovery.js -->
               <div class="discovery-loading-state" id="discovery-loading-state">
                 <div class="skeleton-result-card"></div>
@@ -162,7 +162,7 @@
                   <div class="context-eyebrow" id="context-eyebrow">CONNECTED KNOWLEDGE / T-014</div>
                   <h2 class="context-headline">Connected Context.</h2>
                 </div>
-                <button class="context-chain-link-btn" id="context-chain-link-btn" title="Copy item reference" aria-label="Copy item reference">
+                <button type="button" class="context-chain-link-btn" id="context-chain-link-btn" title="Copy item reference" aria-label="Copy item reference">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
@@ -174,7 +174,6 @@
               <div class="context-selected-hero" id="context-selected-hero">
                 <div class="context-selected-type" id="context-hero-type">SELECTED TASK / T-014</div>
                 <h3 class="context-selected-title" id="context-hero-title">Refine mobile navigation</h3>
-                
                 <div class="context-selected-meta-row" id="context-hero-meta">
                   <span class="context-badge-status" id="context-hero-status">
                     <span class="status-dot"></span> In Progress
@@ -202,37 +201,36 @@
 
           <!-- ── Right Column: Discovery Tools (~25%) ── -->
           <section class="discovery-col discovery-col-tools" aria-label="Discovery Tools">
-            
             <!-- Card A: Discovery Tools -->
             <div class="tools-white-card">
               <h3 class="tools-card-title">Discovery Tools.</h3>
               <p class="tools-card-desc">Turn what you've found into action.</p>
 
               <div class="tools-action-list">
-                <button class="btn-create-from-search" id="btn-create-from-search">
+                <button type="button" class="btn-create-from-search" id="btn-create-from-search">
                   <span class="plus-icon">+</span>
                   <span class="label">Create from search</span>
                   <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
 
-                <button class="tools-action-row" id="btn-save-workspace">
-                  <div class="action-left">
+                <button type="button" class="tools-action-row" id="btn-save-workspace">
+                  <span class="action-left">
                     <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                     </svg>
                     <span>Save to workspace</span>
-                  </div>
+                  </span>
                   <svg class="row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
 
-                <button class="tools-action-row" id="btn-copy-ref">
-                  <div class="action-left">
+                <button type="button" class="tools-action-row" id="btn-copy-ref">
+                  <span class="action-left">
                     <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                     </svg>
                     <span>Copy reference</span>
-                  </div>
+                  </span>
                   <svg class="row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
               </div>
@@ -274,11 +272,11 @@
     <div class="filter-drawer-content" id="filter-drawer-content">
       <div class="drawer-header">
         <h3>Search Filters</h3>
-        <button class="drawer-close-btn" id="filter-drawer-close">✕</button>
+        <button type="button" class="drawer-close-btn" id="filter-drawer-close" aria-label="Close filters">✕</button>
       </div>
       <div class="drawer-body">
         <div class="filter-group">
-          <label>Status</label>
+          <label for="filter-status-select">Status</label>
           <select id="filter-status-select" class="discovery-select">
             <option value="">All Statuses</option>
             <option value="TODO">To Do</option>
@@ -288,7 +286,7 @@
           </select>
         </div>
         <div class="filter-group">
-          <label>Priority</label>
+          <label for="filter-priority-select">Priority</label>
           <select id="filter-priority-select" class="discovery-select">
             <option value="">All Priorities</option>
             <option value="HIGH">High Priority</option>
@@ -298,8 +296,8 @@
         </div>
       </div>
       <div class="drawer-footer">
-        <button class="btn-secondary" id="btn-reset-filters">Reset</button>
-        <button class="btn-primary-action" id="btn-apply-filters">Apply Filters</button>
+        <button type="button" class="btn-secondary" id="btn-reset-filters">Reset</button>
+        <button type="button" class="btn-primary-action" id="btn-apply-filters">Apply Filters</button>
       </div>
     </div>
   </div>

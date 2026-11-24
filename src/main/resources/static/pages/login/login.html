@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
     })();
   </script>
 
@@ -270,7 +270,7 @@
         <div class="top-switch-group">
           <div class="top-switch-wrapper">
             <span id="top-switch-prompt" class="top-switch-prompt">New to Brick?</span>
-            <button type="button" id="top-switch-btn" class="top-switch-btn">Create account</button>
+            <a href="/pages/register/register.html" id="top-switch-btn" class="top-switch-btn">Create account</a>
           </div>
           <button id="login-theme-btn" type="button" class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -409,7 +409,10 @@
             </button>
           </div>
 
-          <a href="#" id="switch-to-register-link" class="d-none">Register as New Company</a>
+          <div class="login-register-callout">
+            <span>New organization?</span>
+            <a href="/pages/register/register.html" id="switch-to-register-link" class="brick-register-prompt-link">Register your company workspace &rarr;</a>
+          </div>
         </form>
 
         <!-- Terms of Service & Privacy Policy Notice -->
@@ -515,9 +518,9 @@
 
                 <!-- Field 3: Company Logo Upload -->
                 <div class="field-cell">
-                  <label class="input-label">Company logo</label>
+                  <label class="input-label" for="logo-file-input">Company logo</label>
                   <div class="logo-upload-dropzone" id="logo-dropzone">
-                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none">
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none" aria-label="Company logo upload">
                     <div class="upload-idle-state" id="upload-idle-state">
                       <div class="upload-icon-box">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -532,7 +535,7 @@
                       </div>
                     </div>
                     <div class="upload-preview-state d-none" id="upload-preview-state">
-                      <img id="logo-preview-img" src="" alt="Company Logo Preview" class="logo-preview-thumb">
+                      <img id="logo-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Company Logo Preview" class="logo-preview-thumb">
                       <div class="preview-meta">
                         <span id="logo-file-name" class="file-name-label">logo.png</span>
                         <button type="button" id="remove-logo-btn" class="btn-remove-logo">Remove</button>
@@ -862,6 +865,7 @@
                       class="brick-control with-icon with-trailing"
                       placeholder="Create secure password (min 8 chars)"
                       minlength="8"
+                      autocomplete="new-password"
                       required
                     >
                     <button type="button" id="reg-toggle-password-btn" class="input-trailing-action" aria-label="Toggle password visibility">
@@ -887,6 +891,7 @@
                       id="reg-confirm-password"
                       class="brick-control with-icon"
                       placeholder="Re-enter your password"
+                      autocomplete="new-password"
                       required
                     >
                   </div>

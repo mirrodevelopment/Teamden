@@ -9,7 +9,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -59,12 +59,12 @@
             <!-- Headline: today. + Daily Update Trigger -->
             <div class="dash-headline-row">
               <div class="dash-headline-group">
-                <h1 class="dash-title-today" aria-label="today.">today<span class="title-square-dot"
+                <h1 class="dash-title-today">today<span class="title-square-dot"
                     aria-hidden="true"></span></h1>
                 <p class="dash-subtitle">Everything that needs your attention.</p>
               </div>
               <div class="dash-header-actions">
-                <button class="dash-daily-update-trigger-btn" id="header-daily-update-btn"
+                <button type="button" class="dash-daily-update-trigger-btn" id="header-daily-update-btn"
                   onclick="window.openDailyUpdateModal()" title="Create or review today's daily update">
                   <span class="btn-icon">⚡</span>
                   <span class="btn-label">Daily Update</span>
@@ -118,7 +118,7 @@
             <!-- Right Column: Options, Due Date & Continue Task Button -->
             <div class="hero-right-col">
               <div class="hero-right-top">
-                <button class="hero-options-btn" id="hero-options-btn" onclick="window.openHeroOptions()"
+                <button type="button" class="hero-options-btn" id="hero-options-btn" onclick="window.openHeroOptions()"
                   aria-label="Hero options" title="Task options">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <circle cx="5" cy="12" r="1.75" />
@@ -139,7 +139,7 @@
                 </div>
               </div>
 
-              <button class="hero-continue-btn" id="hero-continue-btn" onclick="window.openHeroTaskDrawer()">
+              <button type="button" class="hero-continue-btn" id="hero-continue-btn" onclick="window.openHeroTaskDrawer()">
                 <span>Continue task</span>
                 <span class="btn-arrow">→</span>
               </button>
@@ -164,7 +164,7 @@
                   <span class="col-badge" id="badge-count-now">00</span>
                 </div>
                 <div class="kanban-task-list" id="list-tasks-now" data-col="NOW"></div>
-                <button class="kanban-add-btn" onclick="openAddTaskModal('NOW')">
+                <button type="button" class="kanban-add-btn" onclick="openAddTaskModal('NOW')">
                   + Add task
                 </button>
               </div>
@@ -176,7 +176,7 @@
                   <span class="col-badge" id="badge-count-next">00</span>
                 </div>
                 <div class="kanban-task-list" id="list-tasks-next" data-col="NEXT"></div>
-                <button class="kanban-add-btn" onclick="openAddTaskModal('NEXT')">
+                <button type="button" class="kanban-add-btn" onclick="openAddTaskModal('NEXT')">
                   + Add task
                 </button>
               </div>
@@ -188,7 +188,7 @@
                   <span class="col-badge" id="badge-count-later">00</span>
                 </div>
                 <div class="kanban-task-list" id="list-tasks-later" data-col="LATER"></div>
-                <button class="kanban-add-btn" onclick="openAddTaskModal('LATER')">
+                <button type="button" class="kanban-add-btn" onclick="openAddTaskModal('LATER')">
                   + Add task
                 </button>
               </div>
@@ -223,7 +223,7 @@
             <div class="date-card-right">
               <div class="date-huge-number" id="rail-day"><span class="date-digit-first" id="rail-day-d1">1</span><span
                   class="date-digit-second" id="rail-day-d2">0</span></div>
-              <div class="date-dow-label" id="rail-dow" aria-label="TUESDAY">
+              <div class="date-dow-label" id="rail-dow">
                 <span>T</span><span>U</span><span>E</span><span>S</span><span>D</span><span>A</span><span>Y</span></div>
             </div>
           </div>
@@ -261,7 +261,7 @@
               <h3 class="rail-title">DAILY UPDATE</h3>
               <a href="#daily-update" class="rail-link" onclick="window.openDailyUpdateModal(event)">→</a>
             </div>
-            <div class="daily-update-card" onclick="window.openDailyUpdateModal()" style="cursor: pointer;">
+            <div class="daily-update-card">
               <div class="update-icon-box">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -273,9 +273,9 @@
               </div>
               <div class="update-copy">
                 <strong id="rail-daily-update-title">Today's check-in pending</strong>
-                <p id="rail-daily-update-desc">Share your progress, focus & blockers for today.</p>
+                <p id="rail-daily-update-desc">Share your progress, focus &amp; blockers for today.</p>
               </div>
-              <button class="update-action-btn" id="rail-daily-update-btn" title="Open Daily Update"
+              <button type="button" class="update-action-btn" id="rail-daily-update-btn" title="Open Daily Update"
                 aria-label="Open Daily Update" onclick="event.stopPropagation(); window.openDailyUpdateModal()">
                 ➔
               </button>

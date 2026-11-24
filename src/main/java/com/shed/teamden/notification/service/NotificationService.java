@@ -2,13 +2,13 @@ package com.shed.teamden.notification.service;
 
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
+import com.shed.teamden.notification.dto.CreateNotificationRequestDto;
 import com.shed.teamden.notification.dto.NotificationCountsDto;
 import com.shed.teamden.notification.dto.NotificationDto;
 import com.shed.teamden.notification.dto.NotificationResponseDto;
 import com.shed.teamden.notification.entity.Notification;
 import com.shed.teamden.notification.repository.NotificationRepository;
 import com.shed.teamden.organization.entity.Organization;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.security.CustomUserDetails;
 import com.shed.teamden.security.SecurityUtils;
@@ -36,7 +36,6 @@ public class NotificationService {
     @Transactional
     public NotificationResponseDto getNotifications(String tab, String filter, UUID activeItemId) {
         Organization organization = resolveCurrentOrganization();
-        ensureSeedData(organization);
 
         List<Notification> allOrgNotifications = notificationRepository
                 .findByOrganizationIdOrderBySortOrderAscCreatedAtDesc(organization.getId());
@@ -49,7 +48,7 @@ public class NotificationService {
         long updatesCount = allOrgNotifications.stream()
                 .filter(n -> !n.isArchived() && "UPDATES".equalsIgnoreCase(n.getCategory()))
                 .count();
-        long archivedCount = allOrgNotifications.stream().filter(Notification::isArchived).count();
+        long archivedCount = allOrgNotifications.stream().filter(n -> Boolean.TRUE.equals(n.isArchived())).count();
         long unreadCount = allOrgNotifications.stream()
                 .filter(n -> !n.isArchived() && !n.isRead())
                 .count();
@@ -216,187 +215,40 @@ public class NotificationService {
         return mapToDto(notification);
     }
 
-    private void ensureSeedData(Organization organization) {
-        if (notificationRepository.countByOrganizationId(organization.getId()) > 0) {
-            return;
-        }
+    @Transactional
+    public NotificationDto createNotification(CreateNotificationRequestDto req) {
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser(organization);
 
         Instant now = Instant.now();
-        List<Notification> seeds = List.of(
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("ATTENTION_QUEUE")
-                        .category("NEEDS_ACTION")
-                        .filterType("ALL")
-                        .itemType("APPROVAL")
-                        .title("Brand identity approval")
-                        .subtitle("Brand Development · Your decision required")
-                        .description("Your approval is required before the client presentation.")
-                        .projectTitle("Brand Development")
-                        .requesterName("Peter K.")
-                        .requesterInitials("PK")
-                        .supportingDocTitle("Brand Identity Guidelines")
-                        .dueDateStr("Due 30 Oct")
-                        .actionLabel("Review decision")
-                        .actionUrl("/pages/projects/projects.html")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(1)
-                        .createdAt(now.minus(45, ChronoUnit.MINUTES))
-                        .updatedAt(now.minus(45, ChronoUnit.MINUTES))
-                        .build(),
+        Notification notification = Notification.builder()
+                .id(UUID.randomUUID())
+                .organization(organization)
+                .recipient(currentUser)
+                .title(req.getTitle() != null ? req.getTitle().trim() : "Notification")
+                .subtitle(req.getSubtitle() != null ? req.getSubtitle().trim() : "")
+                .quote(req.getQuote() != null ? req.getQuote().trim() : null)
+                .description(req.getDescription() != null ? req.getDescription().trim() : "")
+                .category(req.getCategory() != null && !req.getCategory().isBlank() ? req.getCategory().trim() : "UPDATES")
+                .section(req.getSection() != null && !req.getSection().isBlank() ? req.getSection().trim() : "REGISTER_TODAY")
+                .filterType(req.getFilterType() != null && !req.getFilterType().isBlank() ? req.getFilterType().trim() : "ALL")
+                .itemType(req.getItemType() != null && !req.getItemType().isBlank() ? req.getItemType().trim() : "UPDATE")
+                .projectTitle(req.getProjectTitle() != null ? req.getProjectTitle().trim() : "")
+                .requesterName(req.getRequesterName() != null ? req.getRequesterName().trim() : currentUser.getFullName())
+                .requesterInitials(req.getRequesterInitials() != null ? req.getRequesterInitials().trim() : "TD")
+                .supportingDocTitle(req.getSupportingDocTitle() != null ? req.getSupportingDocTitle().trim() : "")
+                .dueDateStr(req.getDueDateStr() != null ? req.getDueDateStr().trim() : "")
+                .actionLabel(req.getActionLabel() != null ? req.getActionLabel().trim() : "View")
+                .actionUrl(req.getActionUrl() != null ? req.getActionUrl().trim() : "/pages/inbox/inbox.html")
+                .isRead(false)
+                .isArchived(false)
+                .sortOrder(0)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
 
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("ATTENTION_QUEUE")
-                        .category("NEEDS_ACTION")
-                        .filterType("ALL")
-                        .itemType("FEEDBACK")
-                        .title("Review mobile navigation")
-                        .subtitle("Website Redesign · Feedback requested")
-                        .description("Please review the proposed mobile navigation transitions and hamburger interaction hierarchy before code freeze.")
-                        .projectTitle("Website Redesign")
-                        .requesterName("Alex R.")
-                        .requesterInitials("AR")
-                        .supportingDocTitle("Design Review Notes")
-                        .dueDateStr("Due 31 Oct")
-                        .actionLabel("Submit feedback")
-                        .actionUrl("/pages/discovery/discovery.html?q=mobile+navigation")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(2)
-                        .createdAt(now.minus(2, ChronoUnit.HOURS))
-                        .updatedAt(now.minus(2, ChronoUnit.HOURS))
-                        .build(),
-
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("ATTENTION_QUEUE")
-                        .category("NEEDS_ACTION")
-                        .filterType("ALL")
-                        .itemType("HANDOFF")
-                        .title("Design handoff acknowledgement")
-                        .subtitle("Design → Engineering · Response required")
-                        .description("Sprint 44 design deliverables exported to Zeplin and Figma. Engineering lead acknowledgement requested.")
-                        .projectTitle("Client Application")
-                        .requesterName("Marcus V.")
-                        .requesterInitials("MV")
-                        .supportingDocTitle("Engineering Handoff V2")
-                        .dueDateStr("Due 02 Nov")
-                        .actionLabel("Acknowledge handoff")
-                        .actionUrl("/pages/projects/projects.html")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(3)
-                        .createdAt(now.minus(4, ChronoUnit.HOURS))
-                        .updatedAt(now.minus(4, ChronoUnit.HOURS))
-                        .build(),
-
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("REGISTER_TODAY")
-                        .category("UPDATES")
-                        .filterType("MENTIONS")
-                        .itemType("MENTION")
-                        .title("Alex R. mentioned you")
-                        .subtitle("Design Review Notes · 12 minutes ago")
-                        .quote("\"Can we finalise the navigation direction?\"")
-                        .description("Alex R. commented on Design Review Notes: \"Can we finalise the navigation direction? Need your sign-off before today's standup.\"")
-                        .projectTitle("Website Redesign")
-                        .requesterName("Alex R.")
-                        .requesterInitials("AR")
-                        .supportingDocTitle("Design Review Notes")
-                        .dueDateStr("Today")
-                        .actionLabel("Reply in thread")
-                        .actionUrl("/pages/discovery/discovery.html?q=navigation")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(4)
-                        .createdAt(now.minus(12, ChronoUnit.MINUTES))
-                        .updatedAt(now.minus(12, ChronoUnit.MINUTES))
-                        .build(),
-
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("REGISTER_TODAY")
-                        .category("UPDATES")
-                        .filterType("FOLLOWING")
-                        .itemType("ASSIGNMENT")
-                        .title("You were assigned a new task")
-                        .subtitle("Update design components · Client Application · 1 hour ago")
-                        .quote(null)
-                        .description("You have been assigned to task T-018: Update design components for responsive layouts.")
-                        .projectTitle("Client Application")
-                        .requesterName("Marcus V.")
-                        .requesterInitials("MV")
-                        .supportingDocTitle("Design System Tokens")
-                        .dueDateStr("Due 04 Nov")
-                        .actionLabel("Open task")
-                        .actionUrl("/pages/dashboard/dashboard.html")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(5)
-                        .createdAt(now.minus(60, ChronoUnit.MINUTES))
-                        .updatedAt(now.minus(60, ChronoUnit.MINUTES))
-                        .build(),
-
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("REGISTER_TODAY")
-                        .category("UPDATES")
-                        .filterType("ALL")
-                        .itemType("DECISION")
-                        .title("Design specifications approved")
-                        .subtitle("Website Redesign · Engineering handoff · 3 hours ago")
-                        .quote(null)
-                        .description("Elena T. has approved the design specifications for Website Redesign sprint milestone.")
-                        .projectTitle("Website Redesign")
-                        .requesterName("Elena T.")
-                        .requesterInitials("ET")
-                        .supportingDocTitle("Specifications V1.4")
-                        .dueDateStr("3 hours ago")
-                        .actionLabel("View milestone")
-                        .actionUrl("/pages/projects/projects.html")
-                        .isRead(false)
-                        .isArchived(false)
-                        .sortOrder(6)
-                        .createdAt(now.minus(180, ChronoUnit.MINUTES))
-                        .updatedAt(now.minus(180, ChronoUnit.MINUTES))
-                        .build(),
-
-                Notification.builder()
-                        .id(UUID.randomUUID())
-                        .organization(organization)
-                        .section("REGISTER_EARLIER")
-                        .category("UPDATES")
-                        .filterType("ALL")
-                        .itemType("CALENDAR")
-                        .title("Client review rescheduled")
-                        .subtitle("Brand Development · Calendar update · Yesterday")
-                        .quote(null)
-                        .description("The quarterly client review has been moved from Thursday to Friday 10:00 AM.")
-                        .projectTitle("Brand Development")
-                        .requesterName("Peter K.")
-                        .requesterInitials("PK")
-                        .supportingDocTitle("Client Presentation Deck")
-                        .dueDateStr("Yesterday")
-                        .actionLabel("Open calendar")
-                        .actionUrl("/pages/calendar/calendar.html")
-                        .isRead(true)
-                        .isArchived(false)
-                        .sortOrder(7)
-                        .createdAt(now.minus(24, ChronoUnit.HOURS))
-                        .updatedAt(now.minus(24, ChronoUnit.HOURS))
-                        .build()
-        );
-
-        notificationRepository.saveAll(seeds);
+        notification = notificationRepository.save(notification);
+        return mapToDto(notification);
     }
 
     private NotificationDto mapToDto(Notification n) {
@@ -454,11 +306,19 @@ public class NotificationService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
+    }
+
+    private User resolveCurrentUser(Organization org) {
+        Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
+        if (userOpt.isPresent()) {
+            return userRepository.findById(userOpt.get().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userOpt.get().getId()));
+        }
+        List<User> users = userRepository.findAll();
+        if (!users.isEmpty()) {
+            return users.get(0);
+        }
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 }

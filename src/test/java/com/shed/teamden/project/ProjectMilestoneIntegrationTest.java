@@ -86,9 +86,7 @@ public class ProjectMilestoneIntegrationTest {
     private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
     private Organization orgAlpha;
-    private Organization orgBeta;
     private User userAlpha;
-    private User userBeta;
     private Project projectAlpha;
     private MockHttpSession sessionAlpha;
     private MockHttpSession sessionBeta;
@@ -99,6 +97,13 @@ public class ProjectMilestoneIntegrationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
+        jdbcTemplate.execute("DELETE FROM inbox_items");
+        jdbcTemplate.execute("DELETE FROM inbox_preferences");
+        jdbcTemplate.execute("DELETE FROM user_pinned_projects");
+        jdbcTemplate.execute("DELETE FROM workspace_role_permissions");
+        jdbcTemplate.execute("DELETE FROM workspace_security_policies");
+        jdbcTemplate.execute("DELETE FROM workspace_integrations");
+        jdbcTemplate.execute("DELETE FROM workspace_settings");
         jdbcTemplate.execute("DELETE FROM employee_shared_documents");
         jdbcTemplate.execute("DELETE FROM employee_collaborations");
         jdbcTemplate.execute("DELETE FROM employee_responsibilities");
@@ -157,15 +162,15 @@ public class ProjectMilestoneIntegrationTest {
                 .name("Editorial Platform Redesign")
                 .description("Next generation publishing engine")
                 .status(ProjectStatus.ACTIVE)
-                .startDate(LocalDate.now())
+                .startDate(LocalDate.now(java.time.ZoneId.systemDefault()))
                 .build());
 
-        orgBeta = organizationRepository.save(Organization.builder()
+        Organization orgBeta = organizationRepository.save(Organization.builder()
                 .name("Milestone Org Beta " + sB)
                 .status(OrganizationStatus.ACTIVE)
                 .build());
 
-        userBeta = userRepository.save(User.builder()
+        User userBeta = userRepository.save(User.builder()
                 .email("m_beta_" + sB + "@teamden.org")
                 .fullName("Bob Beta")
                 .passwordHash(passwordEncoder.encode("Secret123!"))
@@ -200,7 +205,7 @@ public class ProjectMilestoneIntegrationTest {
 
     @Test
     @DisplayName("GET /api/projects/{projectId}/milestones returns empty list initially")
-    void getProjectMilestones_initiallyEmpty() throws Exception {
+    void getProjectMilestonesInitiallyEmpty() throws Exception {
         mockMvc.perform(get("/api/projects/{projectId}/milestones", projectAlpha.getId())
                         .session(sessionAlpha))
                 .andExpect(status().isOk())
@@ -209,7 +214,7 @@ public class ProjectMilestoneIntegrationTest {
 
     @Test
     @DisplayName("POST /api/projects/{projectId}/milestones creates milestone and persists to DB")
-    void createMilestone_success() throws Exception {
+    void createMilestoneSuccess() throws Exception {
         String payload = """
                 {
                     "name": "Design Phase 1",
@@ -246,7 +251,7 @@ public class ProjectMilestoneIntegrationTest {
 
     @Test
     @DisplayName("PATCH /api/projects/{projectId}/milestones/{milestoneId} updates milestone and marks completedAt")
-    void updateMilestone_statusAndCompletedAt() throws Exception {
+    void updateMilestoneStatusAndCompletedAt() throws Exception {
         ProjectMilestone m = projectMilestoneRepository.save(ProjectMilestone.builder()
                 .id(UUID.randomUUID())
                 .organization(orgAlpha)
@@ -284,7 +289,7 @@ public class ProjectMilestoneIntegrationTest {
 
     @Test
     @DisplayName("DELETE /api/projects/{projectId}/milestones/{milestoneId} deletes milestone and disassociates linked tasks")
-    void deleteMilestone_success() throws Exception {
+    void deleteMilestoneSuccess() throws Exception {
         ProjectMilestone m = projectMilestoneRepository.save(ProjectMilestone.builder()
                 .id(UUID.randomUUID())
                 .organization(orgAlpha)
@@ -320,7 +325,7 @@ public class ProjectMilestoneIntegrationTest {
 
     @Test
     @DisplayName("POST /api/projects/{projectId}/milestones/initialize-template initializes 9 standard lifecycle stages")
-    void initializeLifecycleTemplate_seeds9Stages() throws Exception {
+    void initializeLifecycleTemplateSeeds9Stages() throws Exception {
         mockMvc.perform(post("/api/projects/{projectId}/milestones/initialize-template", projectAlpha.getId())
                         .session(sessionAlpha)
                         .with(csrf()))

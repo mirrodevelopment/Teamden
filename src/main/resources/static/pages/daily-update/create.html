@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -140,28 +140,28 @@
       <main class="daily-update-container">
         <div class="page-header-row">
           <div>
-            <h1 class="page-title">daily update<span style="color:var(--dash-text-primary);">.</span></h1>
+            <h1 class="page-title">daily update<span class="page-title-dot">.</span></h1>
             <p class="page-subtitle" id="page-date-label">Record your daily standup, achievements, and upcoming focus.</p>
           </div>
           <div>
-            <a href="/pages/dashboard/dashboard.html" class="btn-secondary" style="text-decoration: none;">&larr; Back to Today</a>
+            <a href="/pages/dashboard/dashboard.html" class="btn-secondary">&larr; Back to Today</a>
           </div>
         </div>
 
         <form id="daily-update-page-form" class="update-card-box" onsubmit="event.preventDefault(); submitPageUpdate();">
           <div class="form-group">
-            <label for="page-work-completed">
-              <span>1. What did you work on today? *</span>
+            <div class="form-label-row">
+              <label for="page-work-completed">1. What did you work on today? *</label>
               <button type="button" class="autofill-link" onclick="autofillPageCompleted()">⚡ Auto-fill completed tasks</button>
-            </label>
+            </div>
             <textarea id="page-work-completed" rows="4" placeholder="List tasks, reviews, and achievements completed today..." required></textarea>
           </div>
 
           <div class="form-group">
-            <label for="page-work-planned">
-              <span>2. What are you working on next?</span>
+            <div class="form-label-row">
+              <label for="page-work-planned">2. What are you working on next?</label>
               <button type="button" class="autofill-link" onclick="autofillPagePlanned()">⚡ Auto-fill priorities</button>
-            </label>
+            </div>
             <textarea id="page-work-planned" rows="3" placeholder="Planned priorities for tomorrow or next sprint..."></textarea>
           </div>
 
@@ -169,7 +169,7 @@
             <label for="page-blockers">
               <span>3. Any blockers or dependencies? (Optional)</span>
             </label>
-            <input id="page-blockers" type="text" placeholder="e.g. Waiting on client review, API specs, or None" />
+            <input id="page-blockers" type="text" placeholder="e.g. Waiting on client review, API specs, or None">
           </div>
 
           <div class="form-actions">
@@ -189,22 +189,30 @@
   <script src="/fragments/navbar/navbar.js?v=14"></script>
 
   <script>
+    function populateField(id, val) {
+      if (val) {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      }
+    }
+
     async function loadTodayPageUpdate() {
       try {
         const res = await fetch('/api/daily-updates/today');
-        if (res.ok) {
-          const data = await res.json();
-          if (data) {
-            if (data.formattedDate) {
-              document.getElementById('page-date-label').textContent = data.formattedDate + ' • Standup Record';
-            }
-            if (data.workCompleted) document.getElementById('page-work-completed').value = data.workCompleted;
-            if (data.workPlanned) document.getElementById('page-work-planned').value = data.workPlanned;
-            if (data.blockers) document.getElementById('page-blockers').value = data.blockers;
-          }
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (!data) return;
+
+        if (data.formattedDate) {
+          const dateEl = document.getElementById('page-date-label');
+          if (dateEl) dateEl.textContent = `${data.formattedDate} • Standup Record`;
         }
+        populateField('page-work-completed', data.workCompleted);
+        populateField('page-work-planned', data.workPlanned);
+        populateField('page-blockers', data.blockers);
       } catch (e) {
-        console.warn(e);
+        console.warn('Could not load today update:', e);
       }
     }
 
@@ -267,7 +275,8 @@
           const err = await res.json().catch(() => ({}));
           alert(err.message || 'Error saving update');
         }
-      } catch (e) {
+      } catch (err) {
+        console.error('Failed to save daily update:', err);
         alert('Failed to save update');
       }
     }

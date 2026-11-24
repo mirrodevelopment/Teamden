@@ -24,6 +24,30 @@ public class Organization {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
+    @Column(name = "legal_name", length = 200)
+    private String legalName;
+
+    @Column(name = "company_type", length = 100)
+    private String companyType;
+
+    @Column(name = "industry", length = 100)
+    private String industry;
+
+    @Column(name = "industry_other", length = 150)
+    private String industryOther;
+
+    @Column(name = "company_size", length = 50)
+    private String companySize;
+
+    @Column(name = "website_url", length = 255)
+    private String websiteUrl;
+
+    @Column(name = "year_established")
+    private Integer yearEstablished;
+
+    @Column(name = "logo_url", columnDefinition = "TEXT")
+    private String logoUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
     @Builder.Default

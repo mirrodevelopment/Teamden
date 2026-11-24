@@ -30,385 +30,57 @@
   let selectedTeam = 'all';       // 'all' | 'Design' | 'Engineering' | 'Marketing' | 'Operations'
   let isComparing = false;        // compare periods toggled
 
-  // Master Dataset strictly aligned with Reference Screenshot & Teamden Schema
+  // Master Dataset baseline structure
   const INSIGHTS_DATA = {
-    // Delivery Intelligence Datasets
     metrics: {
       milestones: {
         label: 'MILESTONES',
         heading: 'Delivery reliability.',
         periods: {
-          '7': {
-            rate: '83%',
-            completedCount: '5 of 6 milestones',
-            completedText: 'Completed on time',
-            deltaText: '5% vs previous period',
-            banner: 'One milestone required rescheduling during the past week.',
-            points: [
-              { label: 'Mon', val: 78 },
-              { label: 'Tue', val: 80 },
-              { label: 'Wed', val: 82 },
-              { label: 'Thu', val: 85 },
-              { label: 'Fri', val: 80 },
-              { label: 'Sun', val: 83, active: true }
-            ]
-          },
-          '30': {
-            rate: '80%',
-            completedCount: '12 of 15 milestones',
-            completedText: 'Completed on time',
-            deltaText: '8% vs previous period',
-            banner: 'Three milestones were not completed on time in this reporting period.',
-            points: [
-              { label: 'May', val: 72 },
-              { label: 'Jun', val: 76 },
-              { label: 'Jul', val: 74 },
-              { label: 'Aug', val: 83 },
-              { label: 'Sep', val: 86 },
-              { label: 'Oct', val: 80, active: true }
-            ]
-          },
-          '90': {
-            rate: '79%',
-            completedCount: '38 of 48 milestones',
-            completedText: 'Completed on time',
-            deltaText: '11% vs previous quarter',
-            banner: 'Ten milestones required deadline extensions across Q3 and Q4.',
-            points: [
-              { label: 'Aug W1', val: 74 },
-              { label: 'Aug W3', val: 81 },
-              { label: 'Sep W1', val: 84 },
-              { label: 'Sep W3', val: 88 },
-              { label: 'Oct W1', val: 82 },
-              { label: 'Oct W4', val: 79, active: true }
-            ]
-          },
-          'custom': {
-            rate: '82%',
-            completedCount: '23 of 28 milestones',
-            completedText: 'Completed on time',
-            deltaText: '7% vs custom baseline',
-            banner: 'Custom period delivery reliability shows positive convergence.',
-            points: [
-              { label: 'T-5', val: 75 },
-              { label: 'T-4', val: 79 },
-              { label: 'T-3', val: 83 },
-              { label: 'T-2', val: 85 },
-              { label: 'T-1', val: 81 },
-              { label: 'Now', val: 82, active: true }
-            ]
-          }
+          '7': { rate: '0%', completedCount: '0 of 0 milestones', completedText: 'No data', deltaText: '0%', banner: 'No active milestones recorded.', points: [] },
+          '30': { rate: '0%', completedCount: '0 of 0 milestones', completedText: 'No data', deltaText: '0%', banner: 'No active milestones recorded.', points: [] },
+          '90': { rate: '0%', completedCount: '0 of 0 milestones', completedText: 'No data', deltaText: '0%', banner: 'No active milestones recorded.', points: [] },
+          'custom': { rate: '0%', completedCount: '0 of 0 milestones', completedText: 'No data', deltaText: '0%', banner: 'No active milestones recorded.', points: [] }
         }
       },
       tasks: {
         label: 'TASKS',
-        heading: 'Task completion on time.',
+        heading: 'Throughput velocity.',
         periods: {
-          '7': {
-            rate: '91%',
-            completedCount: '41 of 45 tasks',
-            completedText: 'Resolved without blocker',
-            deltaText: '4% vs previous period',
-            banner: 'Task velocity accelerated following sprint boundary sync.',
-            points: [
-              { label: 'Mon', val: 85 },
-              { label: 'Tue', val: 88 },
-              { label: 'Wed', val: 90 },
-              { label: 'Thu', val: 92 },
-              { label: 'Fri', val: 94 },
-              { label: 'Sun', val: 91, active: true }
-            ]
-          },
-          '30': {
-            rate: '88%',
-            completedCount: '142 of 161 tasks',
-            completedText: 'Resolved on schedule',
-            deltaText: '6% vs previous period',
-            banner: 'Nineteen tasks experienced brief blocked durations in this reporting period.',
-            points: [
-              { label: 'May', val: 81 },
-              { label: 'Jun', val: 84 },
-              { label: 'Jul', val: 82 },
-              { label: 'Aug', val: 89 },
-              { label: 'Sep', val: 92 },
-              { label: 'Oct', val: 88, active: true }
-            ]
-          },
-          '90': {
-            rate: '86%',
-            completedCount: '412 of 479 tasks',
-            completedText: 'Completed on schedule',
-            deltaText: '9% vs previous quarter',
-            banner: 'Overall task execution velocity remained above benchmark targets.',
-            points: [
-              { label: 'Aug W1', val: 80 },
-              { label: 'Aug W3', val: 83 },
-              { label: 'Sep W1', val: 87 },
-              { label: 'Sep W3', val: 91 },
-              { label: 'Oct W1', val: 89 },
-              { label: 'Oct W4', val: 86, active: true }
-            ]
-          },
-          'custom': {
-            rate: '87%',
-            completedCount: '194 of 223 tasks',
-            completedText: 'Completed on schedule',
-            deltaText: '5% vs custom baseline',
-            banner: 'Consistent task throughput observed across custom window.',
-            points: [
-              { label: 'T-5', val: 82 },
-              { label: 'T-4', val: 85 },
-              { label: 'T-3', val: 88 },
-              { label: 'T-2', val: 91 },
-              { label: 'T-1', val: 89 },
-              { label: 'Now', val: 87, active: true }
-            ]
-          }
+          '7': { rate: '0%', completedCount: '0 of 0 tasks', completedText: 'No data', deltaText: '0%', banner: 'No active tasks recorded.', points: [] },
+          '30': { rate: '0%', completedCount: '0 of 0 tasks', completedText: 'No data', deltaText: '0%', banner: 'No active tasks recorded.', points: [] },
+          '90': { rate: '0%', completedCount: '0 of 0 tasks', completedText: 'No data', deltaText: '0%', banner: 'No active tasks recorded.', points: [] },
+          'custom': { rate: '0%', completedCount: '0 of 0 tasks', completedText: 'No data', deltaText: '0%', banner: 'No active tasks recorded.', points: [] }
         }
       },
       projects: {
         label: 'PROJECTS',
-        heading: 'Project milestone health.',
+        heading: 'Portfolio health.',
         periods: {
-          '7': {
-            rate: '78%',
-            completedCount: '7 of 9 projects',
-            completedText: 'Currently on track',
-            deltaText: '10% vs previous period',
-            banner: 'Two projects are currently flagged with pending client approvals.',
-            points: [
-              { label: 'Mon', val: 72 },
-              { label: 'Tue', val: 74 },
-              { label: 'Wed', val: 76 },
-              { label: 'Thu', val: 79 },
-              { label: 'Fri', val: 78 },
-              { label: 'Sun', val: 78, active: true }
-            ]
-          },
-          '30': {
-            rate: '75%',
-            completedCount: '6 of 8 projects',
-            completedText: 'Currently on track',
-            deltaText: '12% vs previous period',
-            banner: 'Brand Development and Client Application require cross-team resolution.',
-            points: [
-              { label: 'May', val: 68 },
-              { label: 'Jun', val: 70 },
-              { label: 'Jul', val: 75 },
-              { label: 'Aug', val: 72 },
-              { label: 'Sep', val: 78 },
-              { label: 'Oct', val: 75, active: true }
-            ]
-          },
-          '90': {
-            rate: '73%',
-            completedCount: '11 of 15 projects',
-            completedText: 'Delivered or on track',
-            deltaText: '14% vs previous quarter',
-            banner: 'Quarterly roadmap delivery sustained steady performance.',
-            points: [
-              { label: 'Aug W1', val: 66 },
-              { label: 'Aug W3', val: 69 },
-              { label: 'Sep W1', val: 72 },
-              { label: 'Sep W3', val: 76 },
-              { label: 'Oct W1', val: 75 },
-              { label: 'Oct W4', val: 73, active: true }
-            ]
-          },
-          'custom': {
-            rate: '76%',
-            completedCount: '8 of 10 projects',
-            completedText: 'Currently on track',
-            deltaText: '8% vs custom baseline',
-            banner: 'Custom period projects maintain healthy milestone velocity.',
-            points: [
-              { label: 'T-5', val: 69 },
-              { label: 'T-4', val: 72 },
-              { label: 'T-3', val: 75 },
-              { label: 'T-2', val: 78 },
-              { label: 'T-1', val: 76 },
-              { label: 'Now', val: 76, active: true }
-            ]
-          }
+          '7': { rate: '0%', completedCount: '0 of 0 projects', completedText: 'No data', deltaText: '0%', banner: 'No active projects recorded.', points: [] },
+          '30': { rate: '0%', completedCount: '0 of 0 projects', completedText: 'No data', deltaText: '0%', banner: 'No active projects recorded.', points: [] },
+          '90': { rate: '0%', completedCount: '0 of 0 projects', completedText: 'No data', deltaText: '0%', banner: 'No active projects recorded.', points: [] },
+          'custom': { rate: '0%', completedCount: '0 of 0 projects', completedText: 'No data', deltaText: '0%', banner: 'No active projects recorded.', points: [] }
         }
       }
     },
-
-    // 3 Performance Metrics by Team & Range
     performance: {
-      all: {
-        turnaround: { val: '2.4d', delta: '18% vs previous period', change: '-18%' },
-        blocked: { val: '1.8d', delta: '25% vs previous period', change: '-25%' },
-        handoff: { val: '3.2d', delta: '20% vs previous period', change: '-20%' }
-      },
-      Design: {
-        turnaround: { val: '1.9d', delta: '22% vs previous period', change: '-22%' },
-        blocked: { val: '1.2d', delta: '30% vs previous period', change: '-30%' },
-        handoff: { val: '1.6d', delta: '25% vs previous period', change: '-25%' }
-      },
-      Engineering: {
-        turnaround: { val: '2.1d', delta: '15% vs previous period', change: '-15%' },
-        blocked: { val: '2.4d', delta: '18% vs previous period', change: '-18%' },
-        handoff: { val: '2.8d', delta: '16% vs previous period', change: '-16%' }
-      },
-      Marketing: {
-        turnaround: { val: '1.8d', delta: '20% vs previous period', change: '-20%' },
-        blocked: { val: '1.0d', delta: '35% vs previous period', change: '-35%' },
-        handoff: { val: '2.2d', delta: '18% vs previous period', change: '-18%' }
-      },
-      Operations: {
-        turnaround: { val: '2.9d', delta: '12% vs previous period', change: '-12%' },
-        blocked: { val: '2.1d', delta: '14% vs previous period', change: '-14%' },
-        handoff: { val: '3.5d', delta: '10% vs previous period', change: '-10%' }
-      }
+      all: { turnaround: { val: '0d', delta: '0%', change: '0%' }, blocked: { val: '0d', delta: '0%', change: '0%' }, handoff: { val: '0d', delta: '0%', change: '0%' } },
+      Design: { turnaround: { val: '0d', delta: '0%', change: '0%' }, blocked: { val: '0d', delta: '0%', change: '0%' }, handoff: { val: '0d', delta: '0%', change: '0%' } },
+      Engineering: { turnaround: { val: '0d', delta: '0%', change: '0%' }, blocked: { val: '0d', delta: '0%', change: '0%' }, handoff: { val: '0d', delta: '0%', change: '0%' } },
+      Marketing: { turnaround: { val: '0d', delta: '0%', change: '0%' }, blocked: { val: '0d', delta: '0%', change: '0%' }, handoff: { val: '0d', delta: '0%', change: '0%' } },
+      Operations: { turnaround: { val: '0d', delta: '0%', change: '0%' }, blocked: { val: '0d', delta: '0%', change: '0%' }, handoff: { val: '0d', delta: '0%', change: '0%' } }
     },
-
-    // Decisions Database (Where decisions slow down)
-    decisions: [
-      {
-        id: 'dec-homepage',
-        title: 'Homepage approval',
-        project: 'Brand Development',
-        team: 'Design',
-        status: 'overdue',
-        statusBadge: '2 days overdue',
-        iconClass: 'circle-amber',
-        owner: 'Marcus Jones',
-        timeWaiting: '4.8 days (Median is 2.4d)',
-        dateCreated: '24 Oct 2026',
-        impact: 'Blocks Client Presentation deck handoff and staging deployment'
-      },
-      {
-        id: 'dec-pricing',
-        title: 'Pricing update',
-        project: 'Client Application',
-        team: 'Engineering',
-        status: 'resolved',
-        statusBadge: 'Resolved',
-        iconClass: 'circle-green',
-        owner: 'Elena Rostova',
-        timeWaiting: '1.2 days',
-        dateCreated: '20 Oct 2026',
-        impact: 'Annual enterprise subscription tier launch'
-      },
-      {
-        id: 'dec-brand-system',
-        title: 'Design System 2.0 Tokens',
-        project: 'Website Redesign',
-        team: 'Design',
-        status: 'awaiting',
-        statusBadge: 'Awaiting decision',
-        iconClass: 'circle-amber',
-        owner: 'Sarah Chen',
-        timeWaiting: '1.5 days',
-        dateCreated: '28 Oct 2026',
-        impact: 'Blocks unified CSS token deployment across mobile & web'
-      },
-      {
-        id: 'dec-api-contract',
-        title: 'GraphQL schema federation',
-        project: 'Client Application',
-        team: 'Engineering',
-        status: 'overdue',
-        statusBadge: '1 day overdue',
-        iconClass: 'circle-amber',
-        owner: 'David Kim',
-        timeWaiting: '3.6 days',
-        dateCreated: '27 Oct 2026',
-        impact: 'Blocks mobile application sprint handoff'
-      }
-    ],
-
-    // Collaboration Flow (How work moves)
+    decisions: [],
     collaboration: {
-      all: {
-        from: 'Design',
-        to: 'Engineering',
-        title: 'Design handoffs',
-        desc: 'Average 1.6 days to acceptance',
-        fromPill: 'pill-lavender',
-        toPill: 'pill-blue'
-      },
-      Design: {
-        from: 'Design',
-        to: 'Engineering',
-        title: 'Design handoffs',
-        desc: 'Average 1.6 days to acceptance',
-        fromPill: 'pill-lavender',
-        toPill: 'pill-blue'
-      },
-      Engineering: {
-        from: 'Engineering',
-        to: 'QA',
-        title: 'Engineering handoffs',
-        desc: 'Average 2.1 days to acceptance',
-        fromPill: 'pill-blue',
-        toPill: 'pill-green'
-      },
-      Marketing: {
-        from: 'Content',
-        to: 'Design',
-        title: 'Content handoffs',
-        desc: 'Average 1.2 days to acceptance',
-        fromPill: 'pill-peach',
-        toPill: 'pill-lavender'
-      },
-      Operations: {
-        from: 'Operations',
-        to: 'All teams',
-        title: 'Operational handoffs',
-        desc: 'Average 1.9 days to acceptance',
-        fromPill: 'pill-blue',
-        toPill: 'pill-green'
-      }
+      all: { from: 'Design', to: 'Engineering', fromPill: 'pill-purple', toPill: 'pill-blue', title: 'Cross-team deliverables', desc: 'No cross-team handoffs recorded.' },
+      Design: { from: 'Design', to: 'Engineering', fromPill: 'pill-purple', toPill: 'pill-blue', title: 'Cross-team deliverables', desc: 'No cross-team handoffs recorded.' },
+      Engineering: { from: 'Engineering', to: 'QA', fromPill: 'pill-blue', toPill: 'pill-green', title: 'Cross-team deliverables', desc: 'No cross-team handoffs recorded.' },
+      Marketing: { from: 'Marketing', to: 'Design', fromPill: 'pill-orange', toPill: 'pill-purple', title: 'Cross-team deliverables', desc: 'No cross-team handoffs recorded.' },
+      Operations: { from: 'Operations', to: 'All', fromPill: 'pill-grey', toPill: 'pill-purple', title: 'Cross-team deliverables', desc: 'No cross-team handoffs recorded.' }
     },
-
-    // Late Milestones Breakdown (For Bottom Banner Details Modal)
-    lateMilestones: [
-      {
-        title: 'Client Deck Approval',
-        project: 'Brand Development',
-        team: 'Creative & Marketing',
-        overdueDays: '2 days overdue',
-        reason: 'Waiting on executive sign-off from client steering committee.'
-      },
-      {
-        title: 'Design System 2.0 Tokens',
-        project: 'Website Redesign',
-        team: 'Design',
-        overdueDays: '1 day overdue',
-        reason: 'Accessibility contrast audits required token refinement.'
-      },
-      {
-        title: 'API Gateway Migration',
-        project: 'Client Application',
-        team: 'Engineering',
-        overdueDays: '3 days overdue',
-        reason: 'Security key rotation dependency in staging cluster.'
-      }
-    ],
-
-    // Key Insights Panel
-    keyInsights: [
-      {
-        dotClass: 'dot-green',
-        title: 'Delivery reliability improved',
-        delta: '(+8% vs previous period)',
-        targetSection: 'delivery-intelligence-card'
-      },
-      {
-        dotClass: 'dot-purple',
-        title: 'Decision turnaround reduced',
-        delta: '(-18% vs previous period)',
-        targetSection: 'perf-card-decisions'
-      },
-      {
-        dotClass: 'dot-blue',
-        title: 'More work in Engineering',
-        delta: '(+12% vs previous period)',
-        targetSection: 'collaboration-analysis-section'
-      }
-    ]
+    lateMilestones: [],
+    keyInsights: []
   };
 
   /* ==========================================================================
@@ -445,12 +117,12 @@
     } else if (window.Auth && typeof window.Auth.getCurrentUser === 'function') {
       try {
         currentUser = await window.Auth.getCurrentUser();
-      } catch (err) {}
+      } catch (err) { }
     } else {
       try {
         const userRes = await fetch('/api/auth/me');
         if (userRes.ok) currentUser = await userRes.json();
-      } catch (err) {}
+      } catch (err) { }
     }
     if (!currentUser) {
       currentUser = {
@@ -538,17 +210,26 @@
       console.warn('Auth hydrate optional:', e);
     }
 
-    // Attempt fetching live projects data to enrich metrics
+    // Fetch live insights data from API
     try {
-      const res = await fetch('/api/projects/data');
+      const res = await fetch('/api/insights/data');
       if (res.ok) {
         const data = await res.json();
-        if (data && Array.isArray(data.projects)) {
-          console.log('Hydrated live projects data count:', data.projects.length);
+        if (data && data.metrics) {
+          Object.assign(INSIGHTS_DATA.metrics, data.metrics);
+        }
+        if (data && data.performance) {
+          Object.assign(INSIGHTS_DATA.performance, data.performance);
+        }
+        if (data && Array.isArray(data.decisions)) {
+          INSIGHTS_DATA.decisions = data.decisions;
+        }
+        if (data && Array.isArray(data.lateMilestones)) {
+          INSIGHTS_DATA.lateMilestones = data.lateMilestones;
         }
       }
     } catch (err) {
-      // Graceful fallback to rich built-in seed dataset
+      console.warn('Insights live fetch error:', err);
     }
   }
 
@@ -929,9 +610,9 @@
       <div class="slowdown-row-item" data-id="${dec.id}" role="button" tabindex="0">
         <div class="row-left-group">
           <div class="row-icon-circle ${dec.iconClass}">
-            ${dec.status === 'resolved' 
-              ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`
-              : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`}
+            ${dec.status === 'resolved'
+        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`
+        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`}
           </div>
           <div class="row-text-meta">
             <span class="row-main-title">${escapeHtml(dec.title)}</span>

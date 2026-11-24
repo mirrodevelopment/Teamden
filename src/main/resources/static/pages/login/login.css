@@ -809,6 +809,29 @@ html, body.brick-auth-body {
   flex-shrink: 0;
 }
 
+/* Registration Callout */
+.login-register-callout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--brick-text-secondary);
+}
+
+.brick-register-prompt-link {
+  color: var(--dash-text-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.brick-register-prompt-link:hover {
+  color: var(--dash-accent-lime-hover);
+  text-decoration: underline;
+}
+
 /* Legal Footer */
 .form-legal-footer {
   margin-top: clamp(1rem, 2.2vh, 1.8rem);

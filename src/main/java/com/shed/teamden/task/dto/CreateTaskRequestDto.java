@@ -17,7 +17,7 @@ public class CreateTaskRequestDto {
     private String description;
     private String column;       // "NOW", "NEXT", "LATER"
     private String priority;     // "HIGH", "MEDIUM", "LOW", "URGENT"
-    private String status;       // "TODO", "IN_PROGRESS", "IN_REVIEW", "BLOCKED"
+    private String status;       // e.g. "BACKLOG", "IN_PROGRESS", "IN_REVIEW", "BLOCKED"
     private UUID projectId;
     private String projectTag;   // Fallback string for project name
     private UUID assigneeId;

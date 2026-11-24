@@ -630,17 +630,19 @@ Base URL: `http://localhost:8080`
 | `/pages/overview/insights/` | 18 Insights Dashboard | `insights.css` | Velocity charts, workload balance |
 | `/pages/inbox/inbox.html` | Inbox & Notifications | `inbox.css` | Attention Queue, Register, Action in Focus rail |
 | `/pages/discovery/discovery.html` | Discovery Search Page | `discovery.css` | 3-column connected knowledge graph |
+| `/pages/settings/settings.html` | Workspace Settings | `settings.css` | 5 category tab panes, roles & permission matrices |
+| `/pages/calendar/meeting-detail/` | Meeting Details & Edit | `meeting-detail.css` | 2-column meeting canvas, notes, agenda, decisions |
 | `/fragments/create/` | Universal Create Modal | `universal-create.css` | 2-column modal (Task, Project, Doc, Meeting) |
 | `/fragments/search/` | Global Search Modal | `search-modal.css` | `Ctrl+K` translucent overlay with quick actions |
 | `/dev use/dev use.html` | Developer Console | `dev use.css` | Dynamic table browser & test impersonator |
 
 ---
 
-## 7. Automated Test Suite & Quality Matrix (85 Tests)
+## 7. Automated Test Suite & Quality Matrix (103 Tests)
 
 ```text
 Results:
-Tests run: 85, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 103, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
 
@@ -648,21 +650,23 @@ BUILD SUCCESS
 |:---|:---|:---:|:---:|
 | `ActivityIntegrationTest` | Audit & Activity | 8 | PASS |
 | `AuthenticationIntegrationTest` | Auth & Sessions | 6 | PASS |
-| `CalendarIntegrationTest` | Calendar | 7 | PASS |
+| `CalendarIntegrationTest` | Calendar Core | 6 | PASS |
+| `MeetingDetailIntegrationTest` | Meeting Detail & Edit Experience | 9 | PASS |
 | `DailyUpdateIntegrationTest` | Standup Updates | 6 | PASS |
 | `DashboardKanbanIntegrationTest` | Kanban Transitions | 6 | PASS |
 | `DevPortalIntegrationTest` | Developer Tools | 5 | PASS |
 | `EmployeeIntegrationTest` | Workspace Employees | 5 | PASS |
 | `GlobalSearchIntegrationTest` | Global Search & Discovery | 6 | PASS |
-| `MultiOrganizationIsolationTest` | Security Boundaries | 6 | PASS |
+| `MultiOrganizationIsolationTest` | Security Boundaries | 7 | PASS |
 | `NotificationIntegrationTest` | Inbox & Notifications | 7 | PASS |
 | `ProjectFlowIntegrationTest` | Project Documents & Decisions | 5 | PASS |
 | `ProjectIntegrationTest` | Projects Core | 8 | PASS |
 | `ProjectMilestoneIntegrationTest`| Milestones 9-Stage Lifecycle | 6 | PASS |
+| `SettingsIntegrationTest` | Workspace Settings & Role Permissions | 9 | PASS |
 | `SetupIntegrationTest` | Company Onboarding | 3 | PASS |
 | `TaskIntegrationTest` | Task Management | 3 | PASS |
 | `TeamdenApplicationTests` | Application Context | 1 | PASS |
-| **TOTAL** | **Full System Suite** | **85** | **100% GREEN** |
+| **TOTAL** | **Full System Suite** | **103** | **100% GREEN** |
 
 ---
 
@@ -678,7 +682,7 @@ start.bat
 4. Launches Spring Boot server on `http://localhost:8080`.
 
 ### 8.2. Database Purge Utility (`purge_db.bat`)
-Truncates all 28 relational tables while preserving the Flyway migration history:
+Truncates all 32 relational tables while preserving the Flyway migration history:
 ```cmd
 purge_db.bat --force
 ```
@@ -688,7 +692,7 @@ purge_db.bat --force
 :: Compile all classes
 .\mvnw.cmd compile
 
-:: Run full test suite (85 tests)
+:: Run full test suite (103 tests)
 .\mvnw.cmd test
 
 :: Run application

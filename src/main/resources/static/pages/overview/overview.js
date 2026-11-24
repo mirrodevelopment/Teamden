@@ -21,153 +21,24 @@
   let selectedDateRange = '30';
   let selectedTeam = 'all';
 
-  // Seed Data strictly aligned with Reference Screenshot
-  const SEED_DATA = {
-    organizationName: 'Acme Co.',
+  // Baseline Empty Model
+  const DEFAULT_EMPTY_DATA = {
+    organizationName: '',
     kpis: {
-      activeProjects: 9,
-      pendingDecisions: 3,
-      blockedHandoffs: 2,
-      upcomingMilestones: 4
+      activeProjects: 0,
+      pendingDecisions: 0,
+      blockedHandoffs: 0,
+      upcomingMilestones: 0
     },
     pulse: {
-      heading: 'Delivery is progressing. Two handoffs need resolution.',
-      subtext: 'Pending handoffs may affect upcoming project milestones.'
+      heading: 'No active delivery alerts.',
+      subtext: 'Create your first project to start tracking milestones and dependencies.'
     },
-    projects: [
-      {
-        id: 'featured-01',
-        name: 'Website Redesign',
-        team: 'Design and Engineering',
-        activityType: 'Next milestone',
-        activityText: 'Design handoff · 30 Oct',
-        statusKey: 'on-track',
-        statusLabel: 'On Track',
-        teamCategory: 'Design and Engineering'
-      },
-      {
-        id: 'proj-03',
-        name: 'Brand Development',
-        team: 'Creative and Marketing',
-        activityType: 'Approval pending',
-        activityText: 'Brand identity',
-        statusKey: 'needs-attention',
-        statusLabel: 'Needs Attention',
-        teamCategory: 'Creative and Marketing'
-      },
-      {
-        id: 'proj-02',
-        name: 'Client Application',
-        team: 'Engineering and Design',
-        activityType: 'Handoff delayed',
-        activityText: 'API integration · 02 Nov',
-        statusKey: 'at-risk',
-        statusLabel: 'At Risk',
-        teamCategory: 'Engineering and Design'
-      },
-      {
-        id: 'proj-04',
-        name: 'Marketing Campaign',
-        team: 'Marketing',
-        activityType: 'In progress',
-        activityText: 'Content and creative',
-        statusKey: 'planning',
-        statusLabel: 'Planning',
-        teamCategory: 'Marketing'
-      },
-      {
-        id: 'proj-06',
-        name: 'Internal Tools',
-        team: 'Operations',
-        activityType: 'Research phase',
-        activityText: 'Discovery and planning',
-        statusKey: 'planning-grey',
-        statusLabel: 'Planning',
-        teamCategory: 'Operations'
-      }
-    ],
-    decisions: [
-      {
-        id: 'dec-brand-identity',
-        iconType: 'cube',
-        title: 'Brand identity approval',
-        project: 'Brand Development',
-        meta: 'Client review pending · 30 Oct',
-        team: 'Creative and Marketing'
-      },
-      {
-        id: 'dec-pricing-structure',
-        iconType: 'document',
-        title: 'Pricing structure',
-        project: 'Client Application',
-        meta: 'Client Application · 02 Nov',
-        team: 'Engineering and Design'
-      }
-    ],
-    dependencies: [
-      {
-        id: 'dep-design-handoff',
-        title: 'Design system handoff',
-        project: 'Website Redesign',
-        meta: 'From Design → Engineering',
-        team: 'Design and Engineering',
-        status: 'Blocked by component audit'
-      },
-      {
-        id: 'dep-api-integration',
-        title: 'API integration',
-        project: 'Client Application',
-        meta: 'From Engineering → QA',
-        team: 'Engineering and Design',
-        status: 'Delayed by auth endpoint'
-      }
-    ],
-    upcomingDelivery: [
-      {
-        icon: 'flag',
-        iconColor: 'icon-box-green',
-        title: 'Design handoff',
-        meta: 'Website Redesign · 30 Oct'
-      },
-      {
-        icon: 'calendar',
-        iconColor: 'icon-box-blue',
-        title: 'Client review',
-        meta: 'Brand Development · 02 Nov'
-      },
-      {
-        icon: 'cube',
-        iconColor: 'icon-box-peach',
-        title: 'Feature launch',
-        meta: 'Client Application · 10 Nov'
-      },
-      {
-        icon: 'document',
-        iconColor: 'icon-box-blue',
-        title: 'Campaign rollout',
-        meta: 'Marketing · 12 Nov'
-      }
-    ],
-    acrossOrg: [
-      {
-        icon: 'team',
-        iconColor: 'icon-box-purple',
-        title: 'Design → Engineering',
-        desc: 'Approved specifications ready for handoff.'
-      },
-      {
-        icon: 'book',
-        iconColor: 'icon-box-green',
-        title: 'Shared Knowledge',
-        desc: 'Updated team guidelines are awaiting publication approval.'
-      },
-      {
-        icon: 'chat',
-        iconColor: 'icon-box-blue',
-        title: 'Team Update',
-        desc: 'Q4 planning sessions begin next week across all teams.'
-      }
-    ]
+    projects: [],
+    decisions: [],
+    dependencies: [],
+    upcomingDelivery: [],
+    acrossOrg: []
   };
 
   /**
@@ -229,7 +100,7 @@
    * Fetch current user and live backend projects
    */
   async function fetchInitialData() {
-    activeData = JSON.parse(JSON.stringify(SEED_DATA));
+    activeData = JSON.parse(JSON.stringify(DEFAULT_EMPTY_DATA));
 
     // 1. Try to load authenticated user
     try {
@@ -242,32 +113,20 @@
         }
       }
     } catch (e) {
-      console.warn('Auth check fallback to guest/mock user:', e);
+      console.warn('Auth check error:', e);
     }
 
-    if (!currentUser) {
-      currentUser = {
-        name: 'Alex Rivera',
-        email: 'alex@acme.co',
-        initials: 'AR',
-        activeOrganizationName: 'Acme Co.'
-      };
-    }
-
-    // 2. Try to load live project data from API
+    // 2. Load live overview data from API
     try {
-      const projRes = await fetch('/api/projects/data');
-      if (projRes.ok) {
-        const data = await projRes.json();
-        if (data.workspaceBreadcrumb) {
-          const parts = data.workspaceBreadcrumb.split('/');
-          if (parts.length > 1) {
-            activeData.organizationName = parts[1].trim();
-          }
+      const ovRes = await fetch('/api/overview/data');
+      if (ovRes.ok) {
+        const data = await ovRes.json();
+        if (data) {
+          activeData = data;
         }
       }
     } catch (err) {
-      console.warn('Backend /api/projects/data offline or unauthenticated, using baseline model:', err);
+      console.warn('Backend /api/overview/data fetch error:', err);
     }
 
     // Set organization in breadcrumb
@@ -524,60 +383,121 @@
    * Render Right Rail: Upcoming Delivery & Across the Organisation
    */
   function renderRightRail() {
+    // 0. Executive Attention Card
+    const attentionCard = document.getElementById('exec-attention-card');
+    if (attentionCard) {
+      if (activeData.decisions && activeData.decisions.length > 0) {
+        const topDec = activeData.decisions[0];
+        attentionCard.innerHTML = `
+          <div class="exec-attention-top">
+            <span class="exec-eyebrow">EXECUTIVE ATTENTION / 01</span>
+            <div class="exec-cube-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+          </div>
+          <h3 class="exec-attention-title">${escapeHtml(topDec.title)}</h3>
+          <div class="exec-attention-project">${escapeHtml(topDec.project)}</div>
+          <p class="exec-attention-desc">Requires review to proceed to completion.</p>
+          <div class="exec-metadata-grid">
+            <div class="exec-meta-row">
+              <span class="exec-meta-label">Reviewer</span>
+              <div class="exec-meta-value">
+                <span class="exec-avatar-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                <span>You</span>
+              </div>
+            </div>
+          </div>
+          <div class="exec-divider"></div>
+          <button class="exec-action-link" type="button" onclick="window.location.href='/pages/projects/projects.html'">
+            <span>Review decision</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        `;
+      } else {
+        attentionCard.innerHTML = `
+          <div class="exec-attention-top">
+            <span class="exec-eyebrow">EXECUTIVE ATTENTION / 01</span>
+          </div>
+          <h3 class="exec-attention-title">No pending reviews</h3>
+          <p class="exec-attention-desc" style="margin-top: 8px;">All decisions and milestones are currently on track.</p>
+        `;
+      }
+    }
+
     // 1. Upcoming Delivery List
     const deliveryListEl = document.getElementById('upcoming-delivery-list');
     if (deliveryListEl) {
-      deliveryListEl.innerHTML = activeData.upcomingDelivery.map(item => {
-        let iconSvg = '';
-        if (item.icon === 'flag') {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`;
-        } else if (item.icon === 'calendar') {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
-        } else if (item.icon === 'cube') {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`;
-        } else {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`;
-        }
-
-        return `
-          <div class="exec-rail-item" role="button" tabindex="0" onclick="window.location.href='/pages/calendar/calendar.html'">
-            <div class="exec-item-icon-box ${item.iconColor}">
-              ${iconSvg}
-            </div>
-            <div class="exec-item-details">
-              <span class="exec-item-title">${escapeHtml(item.title)}</span>
-              <span class="exec-item-desc">${escapeHtml(item.meta)}</span>
-            </div>
+      if (!activeData.upcomingDelivery || activeData.upcomingDelivery.length === 0) {
+        deliveryListEl.innerHTML = `
+          <div style="padding: 16px; font-size: 12px; color: var(--ov-text-secondary); text-align: center;">
+            No upcoming delivery items scheduled.
           </div>
         `;
-      }).join('');
+      } else {
+        deliveryListEl.innerHTML = activeData.upcomingDelivery.map(item => {
+          let iconSvg = '';
+          if (item.icon === 'flag') {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`;
+          } else if (item.icon === 'calendar') {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+          } else if (item.icon === 'cube') {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`;
+          } else {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`;
+          }
+
+          return `
+            <div class="exec-rail-item" role="button" tabindex="0" onclick="window.location.href='/pages/calendar/calendar.html'">
+              <div class="exec-item-icon-box ${item.iconColor}">
+                ${iconSvg}
+              </div>
+              <div class="exec-item-details">
+                <span class="exec-item-title">${escapeHtml(item.title)}</span>
+                <span class="exec-item-desc">${escapeHtml(item.meta)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
     }
 
     // 2. Across the Organisation List
     const acrossOrgEl = document.getElementById('across-org-list');
     if (acrossOrgEl) {
-      acrossOrgEl.innerHTML = activeData.acrossOrg.map(item => {
-        let iconSvg = '';
-        if (item.icon === 'team') {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
-        } else if (item.icon === 'book') {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
-        } else {
-          iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
-        }
-
-        return `
-          <div class="exec-rail-item" role="button" tabindex="0">
-            <div class="exec-item-icon-box ${item.iconColor}">
-              ${iconSvg}
-            </div>
-            <div class="exec-item-details">
-              <span class="exec-item-title">${escapeHtml(item.title)}</span>
-              <span class="exec-item-desc">${escapeHtml(item.desc)}</span>
-            </div>
+      if (!activeData.acrossOrg || activeData.acrossOrg.length === 0) {
+        acrossOrgEl.innerHTML = `
+          <div style="padding: 16px; font-size: 12px; color: var(--ov-text-secondary); text-align: center;">
+            No organization highlights recorded.
           </div>
         `;
-      }).join('');
+      } else {
+        acrossOrgEl.innerHTML = activeData.acrossOrg.map(item => {
+          let iconSvg = '';
+          if (item.icon === 'team') {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
+          } else if (item.icon === 'book') {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
+          } else {
+            iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+          }
+
+          return `
+            <div class="exec-rail-item" role="button" tabindex="0">
+              <div class="exec-item-icon-box ${item.iconColor}">
+                ${iconSvg}
+              </div>
+              <div class="exec-item-details">
+                <span class="exec-item-title">${escapeHtml(item.title)}</span>
+                <span class="exec-item-desc">${escapeHtml(item.desc)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
     }
   }
 

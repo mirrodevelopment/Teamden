@@ -100,14 +100,14 @@
    */
   function normalizeEvent(evt) {
     if (!evt) return evt;
-    const project = evt.project || 'Website Redesign';
-    const idNum = (evt.id || '001').replace(/\D/g, '') || '008';
+    const project = evt.project || 'General';
+    const idNum = (evt.id || '001').replace(/\D/g, '') || '001';
 
     if (!evt.breadcrumb) {
       evt.breadcrumb = `${project.toUpperCase()} / EVENT ${idNum.padStart(3, '0')}`;
     }
     if (!evt.organizer) {
-      evt.organizer = { name: 'Alex R.', role: 'Lead Designer' };
+      evt.organizer = { name: (currentUser && currentUser.name) ? currentUser.name : 'Organizer', role: 'Team Member' };
     }
     if (!evt.rsvp) {
       evt.rsvp = 'Accepted';
@@ -115,65 +115,20 @@
     if (!evt.meetingUrl) {
       evt.meetingUrl = (evt.location && evt.location.startsWith('http'))
         ? evt.location
-        : 'https://meet.acme.co/' + (evt.title || 'event').toLowerCase().replace(/[^a-z0-9]/g, '-');
+        : 'https://meet.google.com/' + (evt.title || 'event').toLowerCase().replace(/[^a-z0-9]/g, '-');
     }
-    if (!evt.attendeesList || evt.attendeesList.length === 0) {
-      evt.attendeesList = [
-        { initials: 'PK', name: 'Priya K.', theme: 'avatar-pk', status: 'Accepted' },
-        { initials: 'AR', name: 'Alex R.', theme: 'avatar-ar', status: 'Accepted' },
-        { initials: 'SK', name: 'Sara K.', theme: 'avatar-sk', status: 'Accepted' },
-        { initials: 'MJ', name: 'Marcus J.', theme: 'avatar-mj', status: 'Accepted' }
-      ];
+    if (!evt.attendeesList) {
+      evt.attendeesList = [];
     }
-    if (!evt.agenda || evt.agenda.length === 0) {
-      if (evt.id === 'evt-thu-2' || (evt.title && evt.title.toLowerCase().includes('design review'))) {
-        evt.agenda = [
-          'Review homepage direction',
-          'Finalise mobile navigation',
-          'Confirm development handoff'
-        ];
-      } else {
-        evt.agenda = [
-          `Review ${evt.title.toLowerCase()} objectives`,
-          `Align dependencies with ${evt.project || 'team'}`,
-          'Confirm timeline and action items'
-        ];
-      }
+    if (!evt.agenda) {
+      evt.agenda = [];
     }
     if (!evt.notes) {
-      if (evt.id === 'evt-thu-2' || (evt.title && evt.title.toLowerCase().includes('design review'))) {
-        evt.notes = 'The team reviewed the updated homepage structure and agreed that the simplified navigation provides a clearer user journey.';
-        evt.notesTimestamp = 'Saved 5 min ago';
-      } else {
-        evt.notes = evt.desc || `Discussion notes for ${evt.title}. Key agreements reached and documented for the sprint.`;
-        evt.notesTimestamp = 'Saved 10 min ago';
-      }
+      evt.notes = evt.desc || '';
+      evt.notesTimestamp = '';
     }
-    if (!evt.decision) {
-      if (evt.id === 'evt-thu-2' || (evt.title && evt.title.toLowerCase().includes('design review'))) {
-        evt.decision = {
-          title: 'Proceed with the revised homepage layout.',
-          status: 'Approved internally · Client confirmation pending'
-        };
-      } else {
-        evt.decision = {
-          title: `Approved milestone direction for ${evt.title}.`,
-          status: 'Approved by project leads · Execution in progress'
-        };
-      }
-    }
-    if (!evt.followups || evt.followups.length === 0) {
-      if (evt.id === 'evt-thu-2' || (evt.title && evt.title.toLowerCase().includes('design review'))) {
-        evt.followups = [
-          { id: 'fu-1', title: 'Refine mobile navigation', assignee: 'Peter K.', due: 'Due 30 Oct', completed: false },
-          { id: 'fu-2', title: 'Prepare design handoff', assignee: 'Maria J.', due: 'Due 30 Oct', completed: false }
-        ];
-      } else {
-        evt.followups = [
-          { id: 'fu-' + (evt.id || 'x') + '-1', title: `Finalize ${evt.title.toLowerCase()} specs`, assignee: 'Alex R.', due: 'Due 30 Oct', completed: false },
-          { id: 'fu-' + (evt.id || 'x') + '-2', title: 'Share summary with client stakeholders', assignee: 'Sara K.', due: 'Due 30 Oct', completed: false }
-        ];
-      }
+    if (!evt.followups) {
+      evt.followups = [];
     }
     return evt;
   }
@@ -1185,7 +1140,7 @@
     }
 
     const projEl = document.getElementById('drawer-project-name');
-    if (projEl) projEl.textContent = evt.project || 'Website Redesign';
+    if (projEl) projEl.textContent = evt.project || 'General';
 
     // B. Date & Time Split Card
     const d = new Date(evt.date + 'T00:00:00');
@@ -1209,7 +1164,7 @@
 
     // C. Organiser & RSVP
     const orgNameEl = document.getElementById('drawer-organizer-name');
-    if (orgNameEl) orgNameEl.textContent = evt.organizer ? (evt.organizer.name || evt.organizer) : 'Alex R.';
+    if (orgNameEl) orgNameEl.textContent = evt.organizer ? (evt.organizer.name || evt.organizer) : (currentUser ? currentUser.name : 'Organizer');
 
     updateRsvpUi(evt.rsvp || 'Accepted');
 

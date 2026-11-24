@@ -18,7 +18,6 @@ import com.shed.teamden.search.dto.GlobalSearchResponseDto;
 import com.shed.teamden.search.dto.GlobalSearchResultDto;
 import com.shed.teamden.search.dto.SavedSearchDto;
 import com.shed.teamden.task.entity.Task;
-import com.shed.teamden.task.entity.TaskStatus;
 import com.shed.teamden.task.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -10,12 +10,12 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'black-and-white';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
     })();
   </script>
 
-  <!-- Central Design System & Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap">
+  <!-- Central Design System and Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&amp;display=swap">
   <link rel="stylesheet" href="/fragments/fonts/fonts.css">
   <link rel="stylesheet" href="/fragments/theme/theme.css">
   <link rel="stylesheet" href="/fragments/utilities/utilities.css">
@@ -28,11 +28,11 @@
   <header class="dev-header">
     <div class="header-inner">
       <div class="brand-section">
-        <a href="/" data-company-url data-company="url" title="Go to Teamden Home" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
-          <img src="/assets/teamden-minimalist-icon.png" alt="Teamden Icon" class="brand-icon-dev" data-company="icon" style="width: 36px; height: 36px; object-fit: contain;">
+        <a href="/" data-company-url data-company="url" title="Go to Teamden Home" class="brand-link">
+          <img src="/assets/teamden-minimalist-icon.png" alt="Teamden Icon" class="brand-icon-dev" data-company="icon">
           <div class="brand-titles">
             <h1>Teamden Developer Portal</h1>
-            <p data-company="tagline">Database Schemas · Users & Passwords · API Specifications · Local Development</p>
+            <p data-company="tagline">Database Schemas · Users &amp; Passwords · API Specifications · Local Development</p>
           </div>
         </a>
       </div>
@@ -40,10 +40,10 @@
         <span class="status-active-pill" id="db-status-pill">
           <span class="live-status-dot"></span> <span id="db-status-text">PostgreSQL 17</span>
         </span>
-        <button class="db-refresh-btn" id="db-refresh-btn" onclick="refreshDatabaseData()" title="Reload all tables and data from Database">
+        <button type="button" class="db-refresh-btn" id="db-refresh-btn" onclick="refreshDatabaseData()" title="Reload all tables and data from Database">
           <span id="refresh-icon">🔄</span> Refresh from DB
         </button>
-        <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
+        <button type="button" class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
           <span id="theme-icon">☀️</span>
           <span id="theme-text">Light Theme</span>
         </button>
@@ -53,11 +53,11 @@
     <!-- Navigation Tabs (Integrated inside sticky header) -->
     <nav class="nav-tabs">
       <div class="tabs-inner">
-        <button class="tab-btn active" data-target="tab-overview">⚡ Environment & DB</button>
-        <button class="tab-btn" data-target="tab-tables">🗄️ Relational Tables <span id="nav-tables-count" class="pill-count">...</span></button>
-        <button class="tab-btn" data-target="tab-users">👥 Users & Passwords <span id="nav-users-count" class="pill-count">...</span></button>
-        <button class="tab-btn" data-target="tab-apis">🔌 REST APIs</button>
-        <button class="tab-btn" data-target="tab-scripts">💻 Commands & Launcher</button>
+        <button type="button" class="tab-btn active" data-target="tab-overview">⚡ Environment &amp; DB</button>
+        <button type="button" class="tab-btn" data-target="tab-tables">🗄️ Relational Tables <span id="nav-tables-count" class="pill-count">...</span></button>
+        <button type="button" class="tab-btn" data-target="tab-users">👥 Users &amp; Passwords <span id="nav-users-count" class="pill-count">...</span></button>
+        <button type="button" class="tab-btn" data-target="tab-apis">🔌 REST APIs</button>
+        <button type="button" class="tab-btn" data-target="tab-scripts">💻 Commands &amp; Launcher</button>
       </div>
     </nav>
   </header>
@@ -66,22 +66,22 @@
   <main class="dev-container">
 
     <!-- Connection Notice (if backend is offline) -->
-    <div id="db-error-banner" class="card d-none mb-4" style="border-color: var(--color-danger); background-color: var(--color-danger-bg);">
+    <div id="db-error-banner" class="card card-danger-banner d-none mb-4">
       <div class="d-flex justify-between align-center flex-wrap gap-2">
         <div>
-          <strong style="color: var(--color-danger-text);">⚠️ Could not connect to backend API server</strong>
-          <p class="text-xs" style="color: var(--color-danger-text); margin-top: 0.25rem;">
+          <strong class="text-danger-strong">⚠️ Could not connect to backend API server</strong>
+          <p class="text-xs text-danger-desc">
             Ensure the Spring Boot server is running on <code>http://localhost:8080</code> (via <code>.\start.bat</code>).
           </p>
         </div>
-        <button class="db-refresh-btn" onclick="refreshDatabaseData()">Retry Connection</button>
+        <button type="button" class="db-refresh-btn" onclick="refreshDatabaseData()">Retry Connection</button>
       </div>
     </div>
 
-    <!-- TAB 1: OVERVIEW & DATABASE CONNECTION -->
+    <!-- TAB 1: OVERVIEW &amp; DATABASE CONNECTION -->
     <section class="section-block active" id="tab-overview">
       <div class="section-header">
-        <h2>Database Connection & Environment</h2>
+        <h2>Database Connection &amp; Environment</h2>
         <p>Live PostgreSQL connection metrics and Spring Boot runtime parameters.</p>
       </div>
 
@@ -96,7 +96,7 @@
             <div class="kv-item"><span class="kv-key">Host</span><span class="kv-val">localhost (127.0.0.1)</span></div>
             <div class="kv-item"><span class="kv-key">Port</span><span class="kv-val">5432</span></div>
             <div class="kv-item"><span class="kv-key">Database Name</span><span class="kv-val" id="ov-db-name">teamden</span></div>
-            <div class="kv-item"><span class="kv-key">Product & Engine</span><span class="kv-val" id="ov-db-engine">PostgreSQL 17</span></div>
+            <div class="kv-item"><span class="kv-key">Product &amp; Engine</span><span class="kv-val" id="ov-db-engine">PostgreSQL 17</span></div>
             <div class="kv-item"><span class="kv-key">Total Schema Tables</span><span class="kv-val" id="ov-table-count">...</span></div>
             <div class="kv-item"><span class="kv-key">Username</span><span class="kv-val">postgres</span></div>
             <div class="kv-item"><span class="kv-key">Password</span><span class="kv-val text-muted">[Configured via DB_PASSWORD]</span></div>
@@ -107,15 +107,15 @@
             <span class="snippet-label">JDBC Connection URL:</span>
             <div class="code-box">
               <span class="code-text" id="jdbc-url">jdbc:postgresql://localhost:5432/teamden</span>
-              <button class="copy-btn" onclick="copySnippet('jdbc-url')">Copy</button>
+              <button type="button" class="copy-btn" onclick="copySnippet('jdbc-url')">Copy</button>
             </div>
           </div>
 
           <div>
             <span class="snippet-label">PowerShell Direct PSQL Connect:</span>
             <div class="code-box">
-              <span class="code-text" id="psql-cmd">$env:PGPASSWORD=$env:DB_PASSWORD; & 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -h 127.0.0.1 -U postgres -d teamden</span>
-              <button class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
+              <span class="code-text" id="psql-cmd">$env:PGPASSWORD=$env:DB_PASSWORD; &amp; 'C:\Program Files\PostgreSQL\17\bin\psql.exe' -h 127.0.0.1 -U postgres -d teamden</span>
+              <button type="button" class="copy-btn" onclick="copySnippet('psql-cmd')">Copy</button>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@
             <div class="kv-item"><span class="kv-key">Spring Boot</span><span class="kv-val">4.1.2</span></div>
             <div class="kv-item"><span class="kv-key">Session Cookie</span><span class="kv-val">TEAMDEN_SESSION (HttpOnly, Lax)</span></div>
             <div class="kv-item"><span class="kv-key">Password Encoder</span><span class="kv-val">BCrypt (12 rounds)</span></div>
-            <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql</span></div>
+            <div class="kv-item"><span class="kv-key">Flyway Migrations</span><span class="kv-val">V1__init_schema.sql, V2__project_flow_tables.sql</span></div>
             <div class="kv-item"><span class="kv-key">Global Font</span><span class="kv-val">Montserrat</span></div>
           </div>
 
@@ -153,7 +153,7 @@
     <!-- TAB 2: RELATIONAL TABLES (100% FROM DATABASE) -->
     <section class="section-block" id="tab-tables">
       <div class="section-header">
-        <h2>Live Relational Tables & Columns</h2>
+        <h2>Live Relational Tables &amp; Columns</h2>
         <p>All tables, column definitions, constraints, and data rows are retrieved dynamically from the database.</p>
       </div>
 
@@ -171,23 +171,23 @@
       </div>
     </section>
 
-    <!-- TAB 3: USERS & PASSWORDS (100% FROM DATABASE) -->
+    <!-- TAB 3: USERS &amp; PASSWORDS (100% FROM DATABASE) -->
     <section class="section-block" id="tab-users">
       <div class="section-header">
-        <h2>Users, Credentials & Passwords</h2>
+        <h2>Users, Credentials &amp; Passwords</h2>
         <p>Active user accounts and developer credentials retrieved dynamically from the database.</p>
       </div>
 
       <div class="grid-2" id="users-grid-container">
-        <div class="loading-state-card" style="grid-column: 1 / -1;">
+        <div class="loading-state-card grid-col-full">
           Loading user records from database...
         </div>
       </div>
 
-      <!-- Security & Database Tools -->
+      <!-- Security &amp; Database Tools -->
       <div class="card mt-4">
         <div class="card-title">
-          <span>🔐 Authentication & Database Tools</span>
+          <span>🔐 Authentication &amp; Database Tools</span>
           <span class="quick-pill">BCrypt 12 Rounds</span>
         </div>
 
@@ -201,15 +201,15 @@
           <span class="snippet-label">Reset User Password Template SQL:</span>
           <div class="code-box">
             <span class="code-text" id="reset-sql">UPDATE users SET password_hash = '&lt;bcrypt_12_hash&gt;' WHERE email = '&lt;target_email&gt;';</span>
-            <button class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippet('reset-sql')">Copy</button>
           </div>
         </div>
 
         <div>
-          <span class="snippet-label">Verify Active Users & Memberships SQL:</span>
+          <span class="snippet-label">Verify Active Users &amp; Memberships SQL:</span>
           <div class="code-box">
             <span class="code-text" id="verify-users-sql">SELECT u.email, u.full_name, m.role, o.name AS org_name FROM users u JOIN organization_memberships m ON u.id = m.user_id JOIN organizations o ON m.organization_id = o.id;</span>
-            <button class="copy-btn" onclick="copySnippet('verify-users-sql')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippet('verify-users-sql')">Copy</button>
           </div>
         </div>
       </div>
@@ -223,9 +223,14 @@
       </div>
 
       <div class="table-container">
-        <table class="data-table">
+        <table class="data-table" aria-label="REST API Endpoint Specifications">
           <thead>
-            <tr><th>Method</th><th>Endpoint</th><th>Auth Required</th><th>Description</th></tr>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Endpoint</th>
+              <th scope="col">Auth Required</th>
+              <th scope="col">Description</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
@@ -284,6 +289,132 @@
             </tr>
             <tr>
               <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/overview</code></td>
+              <td>No</td>
+              <td>Project flow overview: specs, milestones (01-09), work status, and decisions</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/tasks</code></td>
+              <td>No</td>
+              <td>Project flow task registry: milestone grouping, subtasks, and blocker tracking</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/documents</code></td>
+              <td>No</td>
+              <td>Project flow knowledge base: library categories, briefs, and notes viewer</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/projects/{id}/activity</code></td>
+              <td>No</td>
+              <td>Project flow activity feed: milestone events, comments, and audit timeline</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/dashboard/today</code></td>
+              <td>Yes</td>
+              <td>Today Kanban board view: columns (Now, Next, Later), task items, ticking date</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/tasks</code></td>
+              <td>Yes</td>
+              <td>Universal task creation with project association, assignee, and priority</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/tasks/options</code></td>
+              <td>Yes</td>
+              <td>Live project and assignee options for Universal Create modal</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/directory</code></td>
+              <td>Yes</td>
+              <td>Workspace people directory: 2-column cards, member counts, and ownership breakdown</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/{id}</code></td>
+              <td>Yes</td>
+              <td>Employee profile detail: owned responsibilities, work in motion, collaborations</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/employees</code></td>
+              <td>Yes</td>
+              <td>Invite / create employee with department, role, and initial responsibilities</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/roles</code></td>
+              <td>Yes</td>
+              <td>Workspace role catalog (Owner, Admin, Manager, Lead, Employee, Guest)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/employees/structure</code></td>
+              <td>Yes</td>
+              <td>Interactive organizational hierarchy tree from executive board down to teams</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/notifications</code></td>
+              <td>Yes</td>
+              <td>Inbox notifications: Attention Queue, Notification Register, and Action in Focus</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-put">PUT</span></td>
+              <td><code>/api/notifications/{id}/read</code></td>
+              <td>Yes</td>
+              <td>Mark individual notification as read</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/notifications/mark-all-read</code></td>
+              <td>Yes</td>
+              <td>Bulk mark all notifications as read for current user</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/daily-updates/today</code></td>
+              <td>Yes</td>
+              <td>Today's standup update (completed, next, blockers, health, velocity, attachment)</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/api/daily-updates</code></td>
+              <td>Yes</td>
+              <td>Publish or save draft daily standup update with optional image reference</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/daily-updates/suggestions</code></td>
+              <td>Yes</td>
+              <td>1-click auto-fill suggestions derived from today's completed tasks</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/search</code></td>
+              <td>Yes</td>
+              <td>Global discovery &amp; search with connected context extraction across all entities</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/calendar/full-data</code></td>
+              <td>Yes</td>
+              <td>Unified calendar data: events, sources, commitments, team availability, backlog</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/activity/events</code></td>
+              <td>Yes</td>
+              <td>Audit feed &amp; chronicle timeline with category key and date range filtering</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
               <td><code>/actuator/health</code></td>
               <td>No</td>
               <td>System health probe (Returns HTTP 200 UP)</td>
@@ -293,10 +424,10 @@
       </div>
     </section>
 
-    <!-- TAB 5: COMMANDS & SCRIPTS -->
+    <!-- TAB 5: COMMANDS &amp; SCRIPTS -->
     <section class="section-block" id="tab-scripts">
       <div class="section-header">
-        <h2>Developer Commands & Launcher</h2>
+        <h2>Developer Commands &amp; Launcher</h2>
         <p>Pre-configured scripts to run, build, and test Teamden.</p>
       </div>
 
@@ -308,7 +439,7 @@
           </p>
           <div class="code-box">
             <span class="code-text">.\start.bat</span>
-            <button class="copy-btn" onclick="copySnippetText('.\\start.bat')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippetText('.\\start.bat')">Copy</button>
           </div>
         </div>
 
@@ -319,7 +450,7 @@
           </p>
           <div class="code-box">
             <span class="code-text">.\mvnw.cmd test</span>
-            <button class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd test')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd test')">Copy</button>
           </div>
         </div>
 
@@ -330,7 +461,7 @@
           </p>
           <div class="code-box">
             <span class="code-text">.\mvnw.cmd compile</span>
-            <button class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd compile')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippetText('.\\mvnw.cmd compile')">Copy</button>
           </div>
         </div>
 
@@ -341,7 +472,7 @@
           </p>
           <div class="code-box">
             <span class="code-text">net start postgresql-x64-17</span>
-            <button class="copy-btn" onclick="copySnippetText('net start postgresql-x64-17')">Copy</button>
+            <button type="button" class="copy-btn" onclick="copySnippetText('net start postgresql-x64-17')">Copy</button>
           </div>
         </div>
       </div>
@@ -351,7 +482,7 @@
 
   <!-- Footer -->
   <footer class="dev-footer">
-    <span data-company="brand">Teamden by shed</span> — Internal Developer Reference Portal · Connected directly to PostgreSQL Database · Contact: <a href="mailto:teamden@gmil.com" data-company="mail" style="color: var(--color-primary); text-decoration: underline;">teamden@gmil.com</a>
+    <span data-company="brand">Teamden by shed</span> — Internal Developer Reference Portal · Connected directly to PostgreSQL Database · Contact: <a href="mailto:teamden@gmil.com" data-company="mail" class="footer-mail-link">teamden@gmil.com</a>
   </footer>
 
   <script>
@@ -374,7 +505,7 @@
         document.querySelectorAll('.section-block').forEach(s => s.classList.remove('active'));
 
         btn.classList.add('active');
-        const targetId = btn.getAttribute('data-target');
+        const targetId = btn.dataset.target;
         const targetSection = document.getElementById(targetId);
         if (targetSection) targetSection.classList.add('active');
       });
@@ -386,7 +517,7 @@
     const themeText = document.getElementById('theme-text');
 
     function applyTheme(t) {
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       localStorage.setItem('teamden-theme', t);
       const isBW = (t === 'black-and-white' || t === 'dark');
       themeIcon.textContent = isBW ? '☀️' : '🌙';
@@ -397,7 +528,7 @@
     applyTheme(savedTheme);
 
     themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'black-and-white';
+      const current = document.documentElement.dataset.theme || 'black-and-white';
       const isBW = (current === 'black-and-white' || current === 'dark');
       applyTheme(isBW ? 'light' : 'black-and-white');
     });
@@ -467,6 +598,68 @@
       renderActiveTable();
     }
 
+    function formatResolvedRef(resolved, valStr) {
+      const badgeMap = {
+        '🏢': 'badge-resolved-org',
+        '👤': 'badge-resolved-user',
+        '📁': 'badge-resolved-project',
+        '📋': 'badge-resolved-task',
+        '🔑': 'badge-resolved-pwd'
+      };
+      let badgeClass = 'badge-resolved-entity';
+      for (const [icon, cls] of Object.entries(badgeMap)) {
+        if (resolved.startsWith(icon)) {
+          badgeClass = cls;
+          break;
+        }
+      }
+      const isPwd = resolved.startsWith('🔑');
+      const rawSub = isPwd ? valStr.substring(0, 12) : valStr.substring(0, 8);
+      const titleAttr = isPwd ? `Click to copy raw hash: ${escapeHtml(valStr)}` : `Click to copy raw value: ${escapeHtml(valStr)}`;
+
+      return `
+        <div class="decrypted-cell">
+          <span class="${badgeClass}">${escapeHtml(resolved)}</span>
+          <span class="raw-subtext" title="${titleAttr}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(rawSub)}... <span class="copy-hint">📋</span></span>
+        </div>
+      `;
+    }
+
+    function formatTimestamp(colUpper, valStr) {
+      if (!colUpper.endsWith('_AT') && !colUpper.endsWith('_TIMESTAMP') && !colUpper.endsWith('_DATE') && !colUpper.endsWith('_TIME')) {
+        return null;
+      }
+      try {
+        const d = new Date(valStr);
+        if (!Number.isNaN(d.getTime()) && valStr.length >= 10 && valStr.includes('-')) {
+          const dateFormatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const timeFormatted = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          return `
+            <div class="decrypted-cell">
+              <span class="badge-resolved-time">🕒 ${dateFormatted} ${timeFormatted}</span>
+              <span class="raw-subtext" title="${escapeHtml(valStr)}">${escapeHtml(valStr)}</span>
+            </div>
+          `;
+        }
+      } catch (e) {
+        /* Ignore invalid date parse */
+      }
+      return null;
+    }
+
+    function formatStatusBadge(valStr) {
+      const lower = valStr.toLowerCase();
+      let pillClass = 'status-default';
+      if (lower.includes('active') || lower.includes('provisioned') || lower.includes('done') || lower.includes('owner') || lower.includes('present')) {
+        pillClass = 'status-success';
+      } else if (lower.includes('progress') || lower.includes('admin') || lower.includes('medium') || lower.includes('organization')) {
+        pillClass = 'status-warning';
+      } else if (lower.includes('inactive') || lower.includes('high') || lower.includes('error')) {
+        pillClass = 'status-danger';
+      }
+      return `<span class="data-status-pill ${pillClass}">${escapeHtml(valStr.replaceAll('_', ' '))}</span>`;
+    }
+
     function formatCellData(col, val, resolvedRefs, isDecrypted) {
       if (val === null || val === undefined) {
         return '<span class="text-muted">NULL</span>';
@@ -478,50 +671,7 @@
 
       // 1. Check if value is in resolvedReferences (UUID mapping or Password Hash)
       if (resolvedRefs && resolvedRefs[valStr]) {
-        const resolved = resolvedRefs[valStr];
-        if (resolved.startsWith('🏢')) {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-org">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        } else if (resolved.startsWith('👤')) {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-user">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        } else if (resolved.startsWith('📁')) {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-project">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        } else if (resolved.startsWith('📋')) {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-task">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw UUID: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        } else if (resolved.startsWith('🔑')) {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-pwd">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw hash: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 12))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        } else {
-          return `
-            <div class="decrypted-cell">
-              <span class="badge-resolved-entity">${escapeHtml(resolved)}</span>
-              <span class="raw-subtext" title="Click to copy raw value: ${escapeHtml(valStr)}" onclick="copyDirect('${escapeHtml(valStr)}')">${escapeHtml(valStr.substring(0, 8))}... <span class="copy-hint">📋</span></span>
-            </div>
-          `;
-        }
+        return formatResolvedRef(resolvedRefs[valStr], valStr);
       }
 
       // 2. Unresolved BCrypt Password Hash
@@ -536,34 +686,14 @@
 
       // 3. Timestamps & Dates
       const colUpper = (col || '').toUpperCase();
-      if (colUpper.endsWith('_AT') || colUpper.endsWith('_TIMESTAMP') || colUpper.endsWith('_DATE') || colUpper.endsWith('_TIME')) {
-        try {
-          const d = new Date(valStr);
-          if (!isNaN(d.getTime()) && valStr.length >= 10 && valStr.includes('-')) {
-            const dateFormatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const timeFormatted = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            return `
-              <div class="decrypted-cell">
-                <span class="badge-resolved-time">🕒 ${dateFormatted} ${timeFormatted}</span>
-                <span class="raw-subtext" title="${escapeHtml(valStr)}">${escapeHtml(valStr)}</span>
-              </div>
-            `;
-          }
-        } catch (e) {}
+      const timestampHtml = formatTimestamp(colUpper, valStr);
+      if (timestampHtml) {
+        return timestampHtml;
       }
 
       // 4. Status, Role, Priority, Event Type
       if (colUpper === 'STATUS' || colUpper === 'ROLE' || colUpper === 'PRIORITY' || colUpper === 'EVENT_TYPE' || colUpper === 'ENTITY_TYPE') {
-        const lower = valStr.toLowerCase();
-        let pillClass = 'status-default';
-        if (lower.includes('active') || lower.includes('provisioned') || lower.includes('done') || lower.includes('owner') || lower.includes('present')) {
-          pillClass = 'status-success';
-        } else if (lower.includes('progress') || lower.includes('admin') || lower.includes('medium') || lower.includes('organization')) {
-          pillClass = 'status-warning';
-        } else if (lower.includes('inactive') || lower.includes('high') || lower.includes('error')) {
-          pillClass = 'status-danger';
-        }
-        return `<span class="data-status-pill ${pillClass}">${escapeHtml(valStr.replace(/_/g, ' '))}</span>`;
+        return formatStatusBadge(valStr);
       }
 
       // 5. UUIDs (Unresolved)
@@ -630,7 +760,7 @@
 
         // Render Schema Filter Pills
         container.innerHTML = tables.map((t, idx) => `
-          <button class="schema-pill ${idx === 0 ? 'active' : ''}" data-table="${escapeHtml(t.tableName)}" onclick="selectTable('${escapeHtml(t.tableName)}')">
+          <button type="button" class="schema-pill ${idx === 0 ? 'active' : ''}" data-table="${escapeHtml(t.tableName)}" onclick="selectTable('${escapeHtml(t.tableName)}')">
             ${escapeHtml(t.tableName)} <span class="pill-count">${t.rowCount}</span>
           </button>
         `).join('');
@@ -645,7 +775,7 @@
         inspector.innerHTML = `
           <div class="card text-center py-4">
             <p class="text-muted">Database API connection failed. Check if server is running on port 8080.</p>
-            <button class="db-refresh-btn mt-3" onclick="refreshDatabaseData()">Retry Loading Tables</button>
+            <button type="button" class="db-refresh-btn mt-3" onclick="refreshDatabaseData()">Retry Loading Tables</button>
           </div>
         `;
       }
@@ -656,7 +786,7 @@
 
       // Highlight active pill
       document.querySelectorAll('.schema-pill').forEach(pill => {
-        if (pill.getAttribute('data-table') === tableName) {
+        if (pill.dataset.table === tableName) {
           pill.classList.add('active');
         } else {
           pill.classList.remove('active');
@@ -671,6 +801,95 @@
       renderActiveTable();
     }
 
+    function renderTableSchema(table) {
+      return `
+        <div class="table-container schema-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Column Name</th>
+                <th>Data Type</th>
+                <th>Nullable</th>
+                <th>Default Value</th>
+                <th>Keys & Constraints</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${table.columns.map(c => `
+                <tr>
+                  <td class="text-xs text-muted">${c.ordinalPosition}</td>
+                  <td><strong>${escapeHtml(c.columnName)}</strong></td>
+                  <td><code>${escapeHtml(c.dataType)}</code></td>
+                  <td>${c.nullable ? '<span class="text-muted">YES</span>' : '<strong>NO</strong>'}</td>
+                  <td>${c.defaultValue ? `<code>${escapeHtml(c.defaultValue)}</code>` : '<span class="text-muted">—</span>'}</td>
+                  <td>
+                    ${c.primaryKey ? '<span class="badge-pk">PRIMARY KEY</span> ' : ''}
+                    ${c.foreignKeyTarget ? `<span class="badge-fk">FK → ${escapeHtml(c.foreignKeyTarget)}</span> ` : ''}
+                    ${c.uniqueConstraint ? `<span class="badge-uk">UNIQUE</span> ` : ''}
+                    ${(!c.primaryKey && !c.foreignKeyTarget && !c.uniqueConstraint) ? '<span class="text-muted text-xs">—</span>' : ''}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function renderTableData(table, inspector, headerHtml) {
+      inspector.innerHTML = headerHtml + `
+        <div class="table-container schema-container">
+          <div id="table-data-content" class="py-4 text-center text-muted text-sm">
+            Loading live rows from database for <code>${escapeHtml(table.tableName)}</code>...
+          </div>
+        </div>
+      `;
+
+      try {
+        const data = await fetchApi(`/api/dev/tables/${encodeURIComponent(table.tableName)}/data?limit=50`);
+        const dataContainer = document.getElementById('table-data-content');
+        if (!dataContainer) return;
+
+        if (!data || !data.rows || data.rows.length === 0) {
+          dataContainer.outerHTML = `
+            <div class="empty-table-state">
+              <p>Table <code>${escapeHtml(table.tableName)}</code> currently contains <strong>0 records</strong> in the database.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const resolvedRefs = data.resolvedReferences || {};
+
+        const dataTableHtml = `
+          <table class="data-table">
+            <thead>
+              <tr>
+                ${data.columnNames.map(col => `<th>${escapeHtml(col)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${data.rows.map(row => `
+                <tr>
+                  ${data.columnNames.map(col => {
+                    const val = row[col];
+                    return `<td>${formatCellData(col, val, resolvedRefs, isDecryptedMode)}</td>`;
+                  }).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        dataContainer.outerHTML = dataTableHtml;
+      } catch (err) {
+        const dataContainer = document.getElementById('table-data-content');
+        if (dataContainer) {
+          dataContainer.innerHTML = `<span class="text-danger">Failed to load table rows: ${escapeHtml(err.message)}</span>`;
+        }
+      }
+    }
+
     async function renderActiveTable() {
       const inspector = document.getElementById('table-inspector-container');
       const table = databaseTables.find(t => t.tableName.toLowerCase() === activeTableName.toLowerCase());
@@ -680,118 +899,45 @@
         return;
       }
 
+      let decryptedBtnHtml = '';
+      if (currentViewMode === 'data') {
+        const activeClass = isDecryptedMode ? 'active-decrypted' : '';
+        const btnLabel = isDecryptedMode ? '🔓 Decrypted Data: ON' : '🔒 Raw DB Values';
+        decryptedBtnHtml = `
+          <button type="button" class="view-mode-btn ${activeClass}" onclick="toggleDecryptedMode()" title="Toggle between decrypted/human-readable data and raw DB values">
+            ${btnLabel}
+          </button>
+        `;
+      }
+
+      const rowLabel = table.rowCount === 1 ? 'row' : 'rows';
+      const schemaTabActive = currentViewMode === 'schema' ? 'active' : '';
+      const dataTabActive = currentViewMode === 'data' ? 'active' : '';
+
       // Render Meta Header with View Mode Switcher
-      let html = `
+      const headerHtml = `
         <div class="table-meta-header">
           <div class="table-meta-title">
             <h3>${escapeHtml(table.tableName)}</h3>
             <span class="quick-pill">${table.columns.length} columns</span>
-            <span class="quick-pill">${table.rowCount} ${table.rowCount === 1 ? 'row' : 'rows'}</span>
+            <span class="quick-pill">${table.rowCount} ${rowLabel}</span>
           </div>
           <div class="view-mode-tabs">
-            <button class="view-mode-btn ${currentViewMode === 'schema' ? 'active' : ''}" onclick="setViewMode('schema')">
-              Columns & Schema
+            <button type="button" class="view-mode-btn ${schemaTabActive}" onclick="setViewMode('schema')">
+              Columns &amp; Schema
             </button>
-            <button class="view-mode-btn ${currentViewMode === 'data' ? 'active' : ''}" onclick="setViewMode('data')">
+            <button type="button" class="view-mode-btn ${dataTabActive}" onclick="setViewMode('data')">
               Live Data Rows (SELECT *)
             </button>
-            ${currentViewMode === 'data' ? `
-            <button class="view-mode-btn ${isDecryptedMode ? 'active-decrypted' : ''}" onclick="toggleDecryptedMode()" title="Toggle between decrypted/human-readable data and raw DB values">
-              ${isDecryptedMode ? '🔓 Decrypted Data: ON' : '🔒 Raw DB Values'}
-            </button>
-            ` : ''}
+            ${decryptedBtnHtml}
           </div>
         </div>
       `;
 
       if (currentViewMode === 'schema') {
-        // Schema & Columns Table
-        html += `
-          <div class="table-container" style="border-top-left-radius: 0; border-top-right-radius: 0; margin-top: 0;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Column Name</th>
-                  <th>Data Type</th>
-                  <th>Nullable</th>
-                  <th>Default Value</th>
-                  <th>Keys & Constraints</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${table.columns.map(c => `
-                  <tr>
-                    <td class="text-xs text-muted">${c.ordinalPosition}</td>
-                    <td><strong>${escapeHtml(c.columnName)}</strong></td>
-                    <td><code>${escapeHtml(c.dataType)}</code></td>
-                    <td>${c.nullable ? '<span class="text-muted">YES</span>' : '<strong>NO</strong>'}</td>
-                    <td>${c.defaultValue ? `<code>${escapeHtml(c.defaultValue)}</code>` : '<span class="text-muted">—</span>'}</td>
-                    <td>
-                      ${c.primaryKey ? '<span class="badge-pk">PRIMARY KEY</span> ' : ''}
-                      ${c.foreignKeyTarget ? `<span class="badge-fk">FK → ${escapeHtml(c.foreignKeyTarget)}</span> ` : ''}
-                      ${c.uniqueConstraint ? `<span class="badge-uk">UNIQUE</span> ` : ''}
-                      ${(!c.primaryKey && !c.foreignKeyTarget && !c.uniqueConstraint) ? '<span class="text-muted text-xs">—</span>' : ''}
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-        inspector.innerHTML = html;
+        inspector.innerHTML = headerHtml + renderTableSchema(table);
       } else {
-        // Live Table Data Rows View
-        inspector.innerHTML = html + `
-          <div class="table-container" style="border-top-left-radius: 0; border-top-right-radius: 0; margin-top: 0;">
-            <div id="table-data-content" class="py-4 text-center text-muted text-sm">
-              Loading live rows from database for <code>${escapeHtml(table.tableName)}</code>...
-            </div>
-          </div>
-        `;
-
-        try {
-          const data = await fetchApi(`/api/dev/tables/${encodeURIComponent(table.tableName)}/data?limit=50`);
-          const dataContainer = document.getElementById('table-data-content');
-          if (!dataContainer) return;
-
-          if (!data || !data.rows || data.rows.length === 0) {
-            dataContainer.outerHTML = `
-              <div class="empty-table-state">
-                <p>Table <code>${escapeHtml(table.tableName)}</code> currently contains <strong>0 records</strong> in the database.</p>
-              </div>
-            `;
-            return;
-          }
-
-          const resolvedRefs = data.resolvedReferences || {};
-
-          let dataTableHtml = `
-            <table class="data-table">
-              <thead>
-                <tr>
-                  ${data.columnNames.map(col => `<th>${escapeHtml(col)}</th>`).join('')}
-                </tr>
-              </thead>
-              <tbody>
-                ${data.rows.map(row => `
-                  <tr>
-                    ${data.columnNames.map(col => {
-                      const val = row[col];
-                      return `<td>${formatCellData(col, val, resolvedRefs, isDecryptedMode)}</td>`;
-                    }).join('')}
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `;
-          dataContainer.outerHTML = dataTableHtml;
-        } catch (err) {
-          const dataContainer = document.getElementById('table-data-content');
-          if (dataContainer) {
-            dataContainer.innerHTML = `<span style="color: var(--color-danger);">Failed to load table rows: ${escapeHtml(err.message)}</span>`;
-          }
-        }
+        await renderTableData(table, inspector, headerHtml);
       }
     }
 
@@ -844,19 +990,19 @@
               <span class="snippet-label">Quick Copy Email:</span>
               <div class="code-box">
                 <span class="code-text">${escapeHtml(u.email || '')}</span>
-                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.email || '')}')">Copy</button>
+                <button type="button" class="copy-btn" onclick="copySnippetText('${escapeHtml(u.email || '')}')">Copy</button>
               </div>
             </div>
             <div>
               <span class="snippet-label-highlight">Quick Copy Password:</span>
               <div class="code-box code-box-highlight">
                 <span class="code-text code-text-highlight">${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}</span>
-                <button class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}')">Copy</button>
+                <button type="button" class="copy-btn" onclick="copySnippetText('${escapeHtml(u.unhashedPasswordNote || 'Configured during registration')}')">Copy</button>
               </div>
             </div>
 
             <div class="user-card-actions">
-              <button class="btn-login-as" onclick="loginAsUser('${escapeHtml(u.id)}', '${escapeHtml(u.fullName || 'User')}')" title="Authenticate and open workspace immediately as this user">
+              <button type="button" class="btn-login-as" onclick="loginAsUser('${escapeHtml(u.id)}', '${escapeHtml(u.fullName || 'User')}')" title="Authenticate and open workspace immediately as this user">
                 <span>🚀</span> One-Click Login
               </button>
               <a href="/pages/login/login.html?email=${encodeURIComponent(u.email || '')}" target="_blank" class="btn-prefill-login" title="Open Login desk with this email pre-filled">
@@ -917,11 +1063,11 @@
     function escapeHtml(str) {
       if (!str) return '';
       return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
     }
 
     // Initial Load on Page Load

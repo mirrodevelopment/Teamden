@@ -6,14 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
 public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.assignee WHERE t.organization.id = :orgId AND t.assignee.id = :assigneeId ORDER BY t.dueDate ASC NULLS LAST, t.createdAt DESC")
@@ -24,6 +22,9 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.assignee WHERE t.organization.id = :orgId ORDER BY t.createdAt DESC")
     List<Task> findByOrganizationId(@Param("orgId") UUID orgId);
+
+    @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.assignee WHERE t.organization.id = :orgId AND t.status IN :statuses ORDER BY t.createdAt DESC")
+    List<Task> findByOrganizationIdAndStatusIn(@Param("orgId") UUID orgId, @Param("statuses") Collection<TaskStatus> statuses);
 
     long countByOrganizationIdAndStatusIn(UUID orgId, Collection<TaskStatus> statuses);
 

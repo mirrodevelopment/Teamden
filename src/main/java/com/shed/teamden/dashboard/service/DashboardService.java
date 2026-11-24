@@ -3,11 +3,9 @@ package com.shed.teamden.dashboard.service;
 import com.shed.teamden.activity.entity.ActivityEvent;
 import com.shed.teamden.activity.entity.ActivityEventType;
 import com.shed.teamden.activity.repository.ActivityEventRepository;
-import com.shed.teamden.activity.service.ActivityService;
 import com.shed.teamden.dailyupdate.service.DailyUpdateService;
 import com.shed.teamden.dashboard.dto.*;
 import com.shed.teamden.organization.entity.Organization;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.project.entity.Project;
 import com.shed.teamden.project.entity.ProjectStatus;
@@ -25,7 +23,6 @@ import com.shed.teamden.calendar.repository.CalendarEventRepository;
 import com.shed.teamden.common.exception.BadRequestException;
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
-import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,8 +77,6 @@ public class DashboardService {
                     .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getStatus() != TaskStatus.CANCELLED)
                     .max((a, b) -> isHigherPriority(a, b) ? 1 : -1)
                     .orElse(null);
-
-            final UUID heroId = heroCandidate != null ? heroCandidate.getId() : null;
 
             // 2. Populate Kanban Columns (NOW, NEXT, LATER) with all active tasks
             List<Task> openTasks = allTasks.stream()
@@ -567,12 +562,7 @@ public class DashboardService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
     }
 
     private User resolveCurrentUser(Organization org) {
@@ -585,13 +575,6 @@ public class DashboardService {
         if (!users.isEmpty()) {
             return users.get(0);
         }
-        User defaultUser = User.builder()
-                .id(UUID.randomUUID())
-                .fullName("SIVASURYA S")
-                .email("admin@brick.local")
-                .passwordHash("$2a$12$e0MYzXy/vP7J11.d3Jg1y.X9vG32g9J8qX8f0gK6hP2cQ3v5gK7a")
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(defaultUser);
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 }

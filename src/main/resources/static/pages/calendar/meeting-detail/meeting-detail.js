@@ -39,6 +39,12 @@
 
   // ── Fragment loader ────────────────────────────────────────────
   async function loadFragments() {
+    let authUser = null;
+    try {
+      const uRes = await fetch('/api/auth/me');
+      if (uRes.ok) authUser = await uRes.json();
+    } catch (_) {}
+
     const loads = [
       loadFragment('/fragments/sidebar/sidebar.html?v=14', 'sidebar-mount'),
       loadFragment('/fragments/navbar/navbar.html?v=14', 'navbar-mount'),
@@ -47,7 +53,7 @@
 
     // Initialize Sidebar component
     if (window.Sidebar && typeof window.Sidebar.init === 'function') {
-      window.Sidebar.init({ activeOrganizationName: 'Acme Co.' });
+      window.Sidebar.init(authUser);
     }
 
     // Set 05 Calendar active in sidebar
@@ -59,11 +65,7 @@
 
     // Initialize Navbar component
     if (window.Navbar && typeof window.Navbar.init === 'function') {
-      window.Navbar.init({
-        fullName: 'Alex R.',
-        initials: 'AR',
-        activeOrganizationName: 'Acme Co.'
-      });
+      window.Navbar.init(authUser);
     }
   }
 

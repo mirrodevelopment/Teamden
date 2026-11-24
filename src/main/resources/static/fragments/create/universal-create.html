@@ -1,20 +1,20 @@
 <!-- ==============================================================================
-     Teamden / Brick — Universal Create & Task Creation Modal
+     Teamden / Brick — Universal Create &amp; Task Creation Modal
      Path: fragments/create/universal-create.html
      Strictly follows the Brick Neo-Editorial Design Reference (media_1794909754042_81d5fe2f.png)
      ============================================================================== -->
-<div class="universal-create-backdrop" id="universal-create-backdrop" aria-hidden="true">
-  <div class="universal-create-modal" id="universal-create-modal" role="dialog" aria-modal="true" aria-labelledby="create-modal-title">
+<div class="universal-create-backdrop" id="universal-create-backdrop" inert>
+  <dialog class="universal-create-modal" id="universal-create-modal" open aria-labelledby="create-modal-title">
 
     <!-- Modal Header -->
     <header class="create-modal-header">
       <div class="create-header-left">
-        <div class="create-breadcrumb">BRICK / UNIVERSAL CREATE</div>
+        <nav class="create-breadcrumb" aria-label="Breadcrumb">BRICK / UNIVERSAL CREATE</nav>
         <h1 class="create-title" id="create-modal-title">create.</h1>
         <p class="create-subtitle">Something new begins here.</p>
       </div>
       <button class="create-close-btn" id="btn-close-create-modal" type="button" aria-label="Close creation modal" title="Close (Esc)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -25,12 +25,12 @@
     <div class="create-modal-body">
 
       <!-- Left Column: Type Selector Cards (~32%) -->
-      <aside class="create-type-sidebar" aria-label="Creation Type Selector">
+      <div class="create-type-sidebar" role="tablist" aria-label="Creation Type Selector">
         <!-- Card 1: Task -->
-        <button class="create-type-card type-task active" id="type-card-task" type="button" data-type="TASK" aria-selected="true">
-          <div class="type-card-left">
-            <div class="type-icon-box task-icon-box">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <button class="create-type-card type-task active" id="type-card-task" type="button" role="tab" data-type="TASK" aria-selected="true" aria-controls="form-panel-task">
+          <span class="type-card-left">
+            <span class="type-icon-box task-icon-box">
+              <svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <line x1="9" y1="6" x2="20" y2="6"></line>
                 <line x1="9" y1="12" x2="20" y2="12"></line>
                 <line x1="9" y1="18" x2="20" y2="18"></line>
@@ -38,99 +38,99 @@
                 <circle cx="4" cy="12" r="1.5" fill="currentColor"></circle>
                 <circle cx="4" cy="18" r="1.5" fill="currentColor"></circle>
               </svg>
-            </div>
-            <div class="type-card-text">
-              <h3 class="type-card-title">Task</h3>
-              <p class="type-card-desc">Something to get done</p>
-            </div>
-          </div>
-          <div class="type-check-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            </span>
+            <span class="type-card-text">
+              <span class="type-card-title">Task</span>
+              <span class="type-card-desc">Something to get done</span>
+            </span>
+          </span>
+          <span class="type-check-icon">
+            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-          </div>
+          </span>
         </button>
 
         <!-- Card 2: Project -->
-        <button class="create-type-card type-project" id="type-card-project" type="button" data-type="PROJECT" aria-selected="false">
-          <div class="type-card-left">
-            <div class="type-icon-box project-icon-box">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <button class="create-type-card type-project" id="type-card-project" type="button" role="tab" data-type="PROJECT" aria-selected="false" aria-controls="form-panel-project">
+          <span class="type-card-left">
+            <span class="type-icon-box project-icon-box">
+              <svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
               </svg>
-            </div>
-            <div class="type-card-text">
-              <h3 class="type-card-title">Project</h3>
-              <p class="type-card-desc">Something to build</p>
-            </div>
-          </div>
-          <div class="type-check-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            </span>
+            <span class="type-card-text">
+              <span class="type-card-title">Project</span>
+              <span class="type-card-desc">Something to build</span>
+            </span>
+          </span>
+          <span class="type-check-icon">
+            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-          </div>
+          </span>
         </button>
 
         <!-- Card 3: Document -->
-        <button class="create-type-card type-document" id="type-card-document" type="button" data-type="DOCUMENT" aria-selected="false">
-          <div class="type-card-left">
-            <div class="type-icon-box document-icon-box">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <button class="create-type-card type-document" id="type-card-document" type="button" role="tab" data-type="DOCUMENT" aria-selected="false" aria-controls="form-panel-document">
+          <span class="type-card-left">
+            <span class="type-icon-box document-icon-box">
+              <svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
-            </div>
-            <div class="type-card-text">
-              <h3 class="type-card-title">Document</h3>
-              <p class="type-card-desc">Something to capture</p>
-            </div>
-          </div>
-          <div class="type-check-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            </span>
+            <span class="type-card-text">
+              <span class="type-card-title">Document</span>
+              <span class="type-card-desc">Something to capture</span>
+            </span>
+          </span>
+          <span class="type-check-icon">
+            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-          </div>
+          </span>
         </button>
 
         <!-- Card 4: Meeting -->
-        <button class="create-type-card type-meeting" id="type-card-meeting" type="button" data-type="MEETING" aria-selected="false">
-          <div class="type-card-left">
-            <div class="type-icon-box meeting-icon-box">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <button class="create-type-card type-meeting" id="type-card-meeting" type="button" role="tab" data-type="MEETING" aria-selected="false" aria-controls="form-panel-meeting">
+          <span class="type-card-left">
+            <span class="type-icon-box meeting-icon-box">
+              <svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
                 <polyline points="9 16 12 19 16 14"></polyline>
               </svg>
-            </div>
-            <div class="type-card-text">
-              <h3 class="type-card-title">Meeting</h3>
-              <p class="type-card-desc">Something to discuss</p>
-            </div>
-          </div>
-          <div class="type-check-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            </span>
+            <span class="type-card-text">
+              <span class="type-card-title">Meeting</span>
+              <span class="type-card-desc">Something to discuss</span>
+            </span>
+          </span>
+          <span class="type-check-icon">
+            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-          </div>
+          </span>
         </button>
-      </aside>
+      </div>
 
       <!-- Vertical Divider -->
       <div class="create-modal-divider"></div>
 
       <!-- Right Column: Creation Forms Container (~68%) -->
-      <section class="create-form-area">
+      <section class="create-form-area" aria-label="Creation Forms">
 
         <!-- ====================================================================
              1. TASK CREATION FORM (Default Active)
              ==================================================================== -->
-        <form class="create-form-panel active" id="form-panel-task" onsubmit="event.preventDefault(); window.UniversalCreate.submitTask();">
-          
+        <form class="create-form-panel active" id="form-panel-task" role="tabpanel" aria-labelledby="type-card-task">
+
           <!-- A. NEW TASK Title Input -->
           <div class="form-field-group">
             <label class="form-field-label" for="task-name-input">NEW TASK</label>
@@ -139,22 +139,22 @@
 
           <!-- B. PROJECT Searchable Dropdown -->
           <div class="form-field-group">
-            <label class="form-field-label" id="task-proj-label">PROJECT</label>
+            <label class="form-field-label" id="task-proj-label" for="task-project-trigger">PROJECT</label>
             <div class="custom-select-wrap" id="task-project-select-wrap">
-              <button class="custom-select-trigger" id="task-project-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-                <div class="select-trigger-content">
-                  <svg class="select-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <button class="custom-select-trigger" id="task-project-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="task-project-dropdown">
+                <span class="select-trigger-content">
+                  <svg aria-hidden="true" focusable="false" class="select-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
                   </svg>
-                  <span class="select-trigger-text" id="task-project-selected-name">Website Redesign</span>
-                </div>
-                <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <span class="select-trigger-text placeholder-text" id="task-project-selected-name">Select project...</span>
+                </span>
+                <svg aria-hidden="true" focusable="false" class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
-              <div class="custom-select-dropdown" id="task-project-dropdown" role="listbox">
+              <div class="custom-select-dropdown" id="task-project-dropdown">
                 <div class="select-search-box">
-                  <input type="text" class="select-search-input" id="task-project-search" placeholder="Search projects..." autocomplete="off">
+                  <input type="text" class="select-search-input" id="task-project-search" placeholder="Search projects..." aria-label="Search projects" autocomplete="off">
                 </div>
                 <div class="select-options-list" id="task-project-options">
                   <!-- Populated dynamically via JS -->
@@ -164,22 +164,22 @@
             </div>
           </div>
 
-          <!-- C. ASSIGNEE & DUE DATE (Side by Side) -->
+          <!-- C. ASSIGNEE &amp; DUE DATE (Side by Side) -->
           <div class="form-fields-row-two">
             <!-- ASSIGNEE -->
             <div class="form-field-group">
-              <label class="form-field-label" id="task-assignee-label">ASSIGNEE</label>
+              <label class="form-field-label" id="task-assignee-label" for="task-assignee-trigger">ASSIGNEE</label>
               <div class="custom-select-wrap" id="task-assignee-select-wrap">
-                <button class="custom-select-trigger" id="task-assignee-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-                  <div class="select-trigger-content">
-                    <div class="assignee-avatar-badge" id="task-assignee-selected-avatar">PK</div>
-                    <span class="select-trigger-text" id="task-assignee-selected-name">Peter K.</span>
-                  </div>
-                  <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <button class="custom-select-trigger" id="task-assignee-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="task-assignee-dropdown">
+                  <span class="select-trigger-content">
+                    <span class="assignee-avatar-badge" id="task-assignee-selected-avatar">--</span>
+                    <span class="select-trigger-text placeholder-text" id="task-assignee-selected-name">Select assignee...</span>
+                  </span>
+                  <svg aria-hidden="true" focusable="false" class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
-                <div class="custom-select-dropdown" id="task-assignee-dropdown" role="listbox">
+                <div class="custom-select-dropdown" id="task-assignee-dropdown">
                   <div class="select-options-list" id="task-assignee-options">
                     <!-- Populated dynamically via JS -->
                   </div>
@@ -192,17 +192,17 @@
             <div class="form-field-group">
               <label class="form-field-label" for="task-due-date-raw">DUE DATE</label>
               <div class="custom-date-wrap" id="task-date-select-wrap">
-                <button class="custom-select-trigger" id="task-due-trigger" type="button">
-                  <div class="select-trigger-content">
-                    <svg class="select-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="custom-select-trigger" id="task-due-trigger" type="button" aria-label="Select due date">
+                  <span class="select-trigger-content">
+                    <svg aria-hidden="true" focusable="false" class="select-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                       <line x1="16" y1="2" x2="16" y2="6"></line>
                       <line x1="8" y1="2" x2="8" y2="6"></line>
                       <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span class="select-trigger-text" id="task-due-formatted-display">30 Oct 2026</span>
-                  </div>
-                  <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <span class="select-trigger-text placeholder-text" id="task-due-formatted-display">Select due date...</span>
+                  </span>
+                  <svg aria-hidden="true" focusable="false" class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
@@ -214,14 +214,14 @@
           <!-- D. DESCRIPTION (OPTIONAL) -->
           <div class="form-field-group">
             <label class="form-field-label" for="task-desc-textarea">DESCRIPTION (OPTIONAL)</label>
-            <textarea id="task-desc-textarea" class="form-textarea-editorial" rows="3" placeholder="Update mobile navigation structure and interactions based on latest user feedback."></textarea>
+            <textarea id="task-desc-textarea" class="form-textarea-editorial" rows="3" placeholder="Add task description or context (optional)..."></textarea>
           </div>
 
           <!-- E. LINKED SOURCE CONTEXT CARD -->
           <div class="linked-source-card" id="task-linked-source-card" style="display: none;">
             <div class="linked-source-left">
               <div class="linked-source-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
                   <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -231,13 +231,13 @@
               <div class="linked-source-info">
                 <div class="linked-source-title">
                   <span class="linked-prefix">Linked from:</span>
-                  <span class="linked-name" id="linked-source-name">Design Review Notes</span>
+                  <span class="linked-name" id="linked-source-name"></span>
                 </div>
-                <div class="linked-source-sub" id="linked-source-sub">Website Redesign &middot; Selected paragraph</div>
+                <div class="linked-source-sub" id="linked-source-sub"></div>
               </div>
             </div>
             <button class="linked-source-remove-btn" id="btn-remove-linked-source" type="button" aria-label="Remove linked source" title="Detach reference">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
@@ -288,8 +288,8 @@
 
           <!-- G. BOTTOM ACTION BAR -->
           <div class="create-bottom-bar">
-            <button class="btn-more-details" id="btn-toggle-more-details" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <button class="btn-more-details" id="btn-toggle-more-details" type="button" aria-expanded="false" aria-controls="task-more-details-panel">
+              <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
@@ -311,37 +311,172 @@
         <!-- ====================================================================
              2. PROJECT CREATION FORM
              ==================================================================== -->
-        <form class="create-form-panel" id="form-panel-project" style="display: none;" onsubmit="event.preventDefault(); window.UniversalCreate.submitProject();">
-          <div class="form-field-group">
-            <label class="form-field-label" for="project-name-input">PROJECT NAME</label>
-            <input type="text" id="project-name-input" class="form-title-input" placeholder="e.g. Design System V2" required>
+        <form class="create-form-panel" id="form-panel-project" role="tabpanel" aria-labelledby="type-card-project" style="display: none;">
+          <div class="project-form-header">
+            <h3 class="form-section-title">Project Details</h3>
+            <p class="form-section-sub">Configure and launch a new initiative with your team.</p>
           </div>
 
+          <!-- Project Name * -->
           <div class="form-field-group">
-            <label class="form-field-label" for="project-desc-textarea">DESCRIPTION &amp; GOALS</label>
-            <textarea id="project-desc-textarea" class="form-textarea-editorial" rows="3" placeholder="Outline the main objectives, deliverables, and success metrics..."></textarea>
+            <label class="form-field-label" for="project-name-input">
+              PROJECT NAME <span class="required-asterisk">*</span>
+            </label>
+            <input type="text" id="project-name-input" class="form-title-input" placeholder="e.g. Design System V2" required autocomplete="off">
           </div>
 
+          <!-- Description & Goals * -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="project-desc-textarea">
+              DESCRIPTION &amp; GOALS <span class="required-asterisk">*</span>
+            </label>
+            <textarea id="project-desc-textarea" class="form-textarea-editorial" rows="3" placeholder="Explain the project objectives, expected deliverables, and success criteria..." required></textarea>
+          </div>
+
+          <!-- Team name * & Team lead * (Cascading Dropdowns) -->
           <div class="form-fields-row-two">
             <div class="form-field-group">
-              <label class="form-field-label" for="project-status-select">STATUS</label>
-              <select id="project-status-select" class="form-select-secondary">
-                <option value="ACTIVE" selected>Active</option>
-                <option value="PLANNING">Planning</option>
-                <option value="ON_HOLD">On Hold</option>
+              <label class="form-field-label" for="project-team-select">
+                TEAM NAME <span class="required-asterisk">*</span>
+              </label>
+              <select id="project-team-select" class="form-select-secondary" required>
+                <option value="" disabled selected>Select team</option>
+              </select>
+              <span class="field-hint-text">Connect to actual organization teams</span>
+            </div>
+
+            <div class="form-field-group">
+              <label class="form-field-label" for="project-team-lead-select">
+                TEAM LEAD <span class="required-asterisk">*</span>
+              </label>
+              <select id="project-team-lead-select" class="form-select-secondary" disabled required>
+                <option value="" disabled selected>Select team first</option>
+              </select>
+              <span class="field-hint-text">Eligible active members of selected team</span>
+            </div>
+          </div>
+
+          <!-- Project Category * & Priority * -->
+          <div class="form-fields-row-two">
+            <div class="form-field-group">
+              <label class="form-field-label" for="project-category-select">
+                PROJECT CATEGORY <span class="required-asterisk">*</span>
+              </label>
+              <select id="project-category-select" class="form-select-secondary" required>
+                <option value="Design" selected>Design</option>
+                <option value="Development">Development</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Internal">Internal</option>
+                <option value="Client Project">Client Project</option>
+                <option value="Operations">Operations</option>
+                <option value="Research">Research</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div class="form-field-group">
-              <label class="form-field-label" for="project-due-input">TARGET DUE DATE</label>
-              <input type="date" id="project-due-input" class="form-input-secondary">
+              <label class="form-field-label" for="project-priority-select">
+                PRIORITY <span class="required-asterisk">*</span>
+              </label>
+              <select id="project-priority-select" class="form-select-secondary" required>
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Target Due Date * & Project Status (System generated default: Planned) -->
+          <div class="form-fields-row-two">
+            <div class="form-field-group">
+              <label class="form-field-label" for="project-due-input">
+                TARGET DUE DATE <span class="required-asterisk">*</span>
+              </label>
+              <input type="date" id="project-due-input" class="form-input-secondary" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="form-field-label">
+                PROJECT STATUS <span class="status-system-tag">SYSTEM DEFAULT</span>
+              </label>
+              <div class="status-readonly-badge" id="project-status-display">
+                <span class="status-dot dot-planned"></span>
+                <span class="status-badge-text">Planned</span>
+                <span class="status-badge-sub">Default</span>
+              </div>
+              <input type="hidden" id="project-status-select" value="PLANNING">
+            </div>
+          </div>
+
+          <!-- System note -->
+          <div class="project-system-note">
+            <svg class="note-info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Project ID and project owner are assigned automatically by the backend. Optional client, image, and team members can be added under More details.</span>
+          </div>
+
+          <!-- Expandable More Details Section -->
+          <div class="more-details-panel" id="project-more-details-panel" style="display: none;">
+            <div class="more-details-grid">
+              <!-- Client / Customer -->
+              <div class="form-field-group">
+                <label class="form-field-label" for="project-client-input">CLIENT / CUSTOMER</label>
+                <input type="text" id="project-client-input" list="project-clients-datalist" class="form-input-secondary" placeholder="e.g. Acme Corporation or Internal">
+                <datalist id="project-clients-datalist">
+                  <!-- Populated dynamically via JS -->
+                </datalist>
+              </div>
+
+              <!-- Project Cover Image -->
+              <div class="form-field-group">
+                <label class="form-field-label" for="project-cover-image-input">COVER IMAGE URL</label>
+                <input type="text" id="project-cover-image-input" class="form-input-secondary" placeholder="https://... (or image URL)">
+              </div>
+
+              <!-- Project Start Date -->
+              <div class="form-field-group">
+                <label class="form-field-label" for="project-start-date-input">START DATE</label>
+                <input type="date" id="project-start-date-input" class="form-input-secondary">
+              </div>
+
+              <!-- Tags -->
+              <div class="form-field-group">
+                <label class="form-field-label" for="project-tags-input">TAGS</label>
+                <input type="text" id="project-tags-input" class="form-input-secondary" placeholder="e.g. design, mobile, v2">
+              </div>
+            </div>
+
+            <!-- Expected Deliverables / Milestones -->
+            <div class="form-field-group form-field-group--mt12">
+              <label class="form-field-label" for="project-deliverables-textarea">EXPECTED DELIVERABLES / MILESTONES</label>
+              <textarea id="project-deliverables-textarea" class="form-textarea-editorial" rows="2" placeholder="List key deliverables or milestones..."></textarea>
+            </div>
+
+            <!-- Additional Team Members (multi-select / checkboxes) -->
+            <div class="form-field-group form-field-group--mt12">
+              <label class="form-field-label">ADDITIONAL TEAM MEMBERS</label>
+              <div class="project-members-checklist" id="project-members-checklist">
+                <span class="placeholder-text text-sm">Select a team above to view eligible members.</span>
+              </div>
             </div>
           </div>
 
           <div class="create-form-error" id="project-create-error" style="display: none;"></div>
 
+          <!-- Bottom Action Bar -->
           <div class="create-bottom-bar">
-            <div></div>
+            <button class="btn-more-details" id="btn-toggle-project-more-details" type="button" aria-expanded="false" aria-controls="project-more-details-panel">
+              <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span id="project-more-details-text">More details</span>
+            </button>
+
             <button class="btn-create-submit peach-submit" id="btn-submit-project" type="submit">
               <span>Create project</span>
               <span class="submit-arrow">&rarr;</span>
@@ -352,7 +487,7 @@
         <!-- ====================================================================
              3. DOCUMENT CREATION FORM
              ==================================================================== -->
-        <form class="create-form-panel" id="form-panel-document" style="display: none;" onsubmit="event.preventDefault(); window.UniversalCreate.submitDocument();">
+        <form class="create-form-panel" id="form-panel-document" role="tabpanel" aria-labelledby="type-card-document" style="display: none;">
           <div class="form-field-group">
             <label class="form-field-label" for="doc-title-input">DOCUMENT TITLE</label>
             <input type="text" id="doc-title-input" class="form-title-input" placeholder="e.g. Design Review Notes" required>
@@ -385,7 +520,7 @@
           <div class="create-form-error" id="doc-create-error" style="display: none;"></div>
 
           <div class="create-bottom-bar">
-            <div></div>
+            <div class="bottom-bar-spacer" aria-hidden="true"></div>
             <button class="btn-create-submit lavender-submit" id="btn-submit-document" type="submit">
               <span>Create document</span>
               <span class="submit-arrow">&rarr;</span>
@@ -396,7 +531,7 @@
         <!-- ====================================================================
              4. MEETING CREATION FORM
              ==================================================================== -->
-        <form class="create-form-panel" id="form-panel-meeting" style="display: none;" onsubmit="event.preventDefault(); window.UniversalCreate.submitMeeting();">
+        <form class="create-form-panel" id="form-panel-meeting" role="tabpanel" aria-labelledby="type-card-meeting" style="display: none;">
           <div class="form-field-group">
             <label class="form-field-label" for="meeting-title-input">MEETING TITLE</label>
             <input type="text" id="meeting-title-input" class="form-title-input" placeholder="e.g. Design Review Sync" required>
@@ -435,7 +570,7 @@
           <div class="create-form-error" id="meeting-create-error" style="display: none;"></div>
 
           <div class="create-bottom-bar">
-            <div></div>
+            <div class="bottom-bar-spacer" aria-hidden="true"></div>
             <button class="btn-create-submit green-submit" id="btn-submit-meeting" type="submit">
               <span>Schedule meeting</span>
               <span class="submit-arrow">&rarr;</span>
@@ -446,5 +581,5 @@
       </section>
     </div>
 
-  </div>
+  </dialog>
 </div>

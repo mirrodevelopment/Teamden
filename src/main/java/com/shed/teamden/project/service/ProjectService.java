@@ -6,10 +6,17 @@ import com.shed.teamden.activity.repository.ActivityEventRepository;
 import com.shed.teamden.common.exception.BadRequestException;
 import com.shed.teamden.common.exception.ResourceNotFoundException;
 import com.shed.teamden.common.exception.UnauthorizedException;
+import com.shed.teamden.employee.entity.Department;
+import com.shed.teamden.employee.entity.Employee;
+import com.shed.teamden.employee.repository.DepartmentRepository;
+import com.shed.teamden.employee.repository.EmployeeRepository;
+import com.shed.teamden.team.entity.Team;
+import com.shed.teamden.team.entity.TeamMember;
+import com.shed.teamden.team.repository.TeamMemberRepository;
+import com.shed.teamden.team.repository.TeamRepository;
 import com.shed.teamden.organization.entity.MembershipStatus;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.entity.OrganizationMembership;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationMembershipRepository;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.project.dto.*;
@@ -18,11 +25,9 @@ import com.shed.teamden.project.repository.*;
 import com.shed.teamden.security.CustomUserDetails;
 import com.shed.teamden.security.SecurityUtils;
 import com.shed.teamden.task.entity.Task;
-import com.shed.teamden.task.entity.TaskPriority;
 import com.shed.teamden.task.entity.TaskStatus;
 import com.shed.teamden.task.repository.TaskRepository;
 import com.shed.teamden.user.entity.User;
-import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,6 +44,34 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProjectService {
 
+    private static final String STATUS_ACTIVE = "ACTIVE";
+    private static final String STATUS_PLANNING = "PLANNING";
+    private static final String STATUS_ON_HOLD = "ON_HOLD";
+    private static final String STATUS_BLOCKED = "BLOCKED";
+    private static final String STATUS_LABEL_ACTIVE = "Active";
+
+    private static final String HEALTH_AT_RISK = "AT_RISK";
+    private static final String HEALTH_ON_TRACK = "ON_TRACK";
+
+    private static final String PRIORITY_MEDIUM = "MEDIUM";
+    private static final String PRIORITY_LABEL_MEDIUM = "Medium";
+    private static final String PROJECT_TYPE_GENERAL = "General";
+
+    private static final String DEFAULT_PROJECT_NAME = "Website Redesign";
+    private static final String DEFAULT_WORKSPACE_NAME = "Workspace";
+    private static final String DEFAULT_TEAM_NAME = "Design Team";
+    private static final String DEFAULT_DUE_DATE = "15 Nov 2026";
+    private static final String BREADCRUMB_PROJECTS_PREFIX = "PROJECTS / 02 / ";
+    private static final String REGEX_LINE_BREAK = "\\r?\\n";
+
+    private static final String COLOR_GREEN = "green";
+    private static final String COLOR_AMBER = "amber";
+
+    private static final String DATE_PATTERN_D_MMM_YYYY = "d MMM yyyy";
+    private static final DateTimeFormatter DATE_FMT_D_MMM_YYYY = DateTimeFormatter.ofPattern(DATE_PATTERN_D_MMM_YYYY);
+    private static final DateTimeFormatter DATE_FMT_DD_MMM = DateTimeFormatter.ofPattern("dd MMM");
+    private static final DateTimeFormatter DATE_FMT_D_MMM = DateTimeFormatter.ofPattern("d MMM");
+
     private final ProjectRepository projectRepository;
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
@@ -50,6 +83,11 @@ public class ProjectService {
     private final TaskRepository taskRepository;
     private final ActivityEventRepository activityEventRepository;
     private final OrganizationMembershipRepository organizationMembershipRepository;
+    private final UserPinnedProjectRepository userPinnedProjectRepository;
+    private final DepartmentRepository departmentRepository;
+    private final EmployeeRepository employeeRepository;
+    private final TeamRepository teamRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     public ProjectService(ProjectRepository projectRepository,
             OrganizationRepository organizationRepository,
@@ -61,7 +99,12 @@ public class ProjectService {
             ProjectMemberRepository projectMemberRepository,
             TaskRepository taskRepository,
             ActivityEventRepository activityEventRepository,
-            OrganizationMembershipRepository organizationMembershipRepository) {
+            OrganizationMembershipRepository organizationMembershipRepository,
+            UserPinnedProjectRepository userPinnedProjectRepository,
+            DepartmentRepository departmentRepository,
+            EmployeeRepository employeeRepository,
+            TeamRepository teamRepository,
+            TeamMemberRepository teamMemberRepository) {
         this.projectRepository = projectRepository;
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
@@ -73,32 +116,27 @@ public class ProjectService {
         this.taskRepository = taskRepository;
         this.activityEventRepository = activityEventRepository;
         this.organizationMembershipRepository = organizationMembershipRepository;
+        this.userPinnedProjectRepository = userPinnedProjectRepository;
+        this.departmentRepository = departmentRepository;
+        this.employeeRepository = employeeRepository;
+        this.teamRepository = teamRepository;
+        this.teamMemberRepository = teamMemberRepository;
     }
 
     @Transactional
     public ProjectDashboardDto getProjectDashboardData() {
         try {
             Organization organization = resolveCurrentOrganization();
-            User currentUser = resolveCurrentUser(organization);
+            resolveCurrentUser();
 
             List<Project> allProjects = projectRepository.findByOrganizationIdWithDetails(organization.getId());
-
-            LocalDate today = LocalDate.now();
-            String dayOfWeek = today.getDayOfWeek().name().substring(0, 3);
-            String month = today.getMonth().name().substring(0, 3);
-            String year = String.valueOf(today.getYear());
-            String dayNum = String.format("%02d", today.getDayOfMonth());
-            String formattedDate = dayOfWeek + ", " + dayNum + " " + month + " " + year;
+            LocalDate today = LocalDate.now(ZoneId.systemDefault());
 
             long totalCount = allProjects.size();
             long activeCount = allProjects.stream().filter(p -> p.getStatus() == ProjectStatus.ACTIVE).count();
-            long atRiskCount = allProjects.stream().filter(p -> "AT_RISK".equalsIgnoreCase(p.getHealth())).count();
-            long dueSoonCount = allProjects.stream()
-                    .filter(p -> p.getDueDate() != null && !p.getDueDate().isBefore(today)
-                            && p.getDueDate().isBefore(today.plusDays(7)) && p.getStatus() != ProjectStatus.COMPLETED)
-                    .count();
+            long atRiskCount = allProjects.stream().filter(p -> HEALTH_AT_RISK.equalsIgnoreCase(p.getHealth())).count();
+            long dueSoonCount = countDueSoonProjects(allProjects, today);
 
-            ProjectItemDto featured = null;
             List<ProjectItemDto> projectDtos = new ArrayList<>();
             List<DecisionItemDto> decisions = new ArrayList<>();
             List<ProjectAttentionDto> attention = new ArrayList<>();
@@ -106,114 +144,17 @@ public class ProjectService {
 
             int pIdx = 1;
             for (Project p : allProjects) {
-                String stat = p.getStatus() != null ? p.getStatus().name() : "ACTIVE";
-                String statLbl = stat.replace("_", " ");
-                String dueLbl = p.getDueDate() != null
-                        ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                        : "Upcoming";
-                String health = p.getHealth() != null ? p.getHealth() : "ON_TRACK";
-                String healthLbl = health.replace("_", " ");
-                String healthDot = "AT_RISK".equalsIgnoreCase(health) ? "red" : "green";
-
-                List<ProjectMilestone> pMilestones = projectMilestoneRepository
-                        .findByProjectIdOrderBySeqNumAsc(p.getId());
-                long completedM = pMilestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
-                String mLabel = pMilestones.isEmpty() ? "0 milestones"
-                        : String.format("%02d/%02d", completedM, pMilestones.size());
-
-                List<Task> pTasks = taskRepository.findByProjectIdWithDetails(p.getId());
-                long blockers = pTasks.stream().filter(t -> t != null && t.isBlocked()).count();
-
-                String ownerName = p.getOwner() != null ? p.getOwner().getFullName() : "Team";
-                String[] parts = ownerName.trim().split("\\s+");
-                String initials = parts.length > 1
-                        ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                        : (ownerName.length() > 0
-                                ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase()
-                                : "TM");
-
-                ProjectItemDto dto = ProjectItemDto.builder()
-                        .id(p.getId().toString())
-                        .indexNum(String.format("%02d", pIdx++))
-                        .name(p.getName())
-                        .description(p.getDescription() != null ? p.getDescription() : "Project workspace")
-                        .status(stat)
-                        .statusLabel(statLbl)
-                        .statusDotColor(stat.equals("ACTIVE") ? "green" : stat.equals("COMPLETED") ? "blue" : "gray")
-                        .health(health)
-                        .healthLabel(healthLbl)
-                        .healthDotColor(healthDot)
-                        .team(ownerName)
-                        .dueDate(dueLbl)
-                        .priority(p.getPriority() != null ? p.getPriority() : "Medium")
-                        .milestonesLabel(mLabel)
-                        .milestonesCompleted((int) completedM)
-                        .milestonesTotal(pMilestones.size())
-                        .blockersCount((int) blockers)
-                        .avatars(List.of(initials))
-                        .avatarOverflow("")
-                        .build();
-
-                if (featured == null) {
-                    featured = dto;
-                }
-                projectDtos.add(dto);
-
-                // Decisions
-                List<ProjectDecision> pDecisions = projectDecisionRepository.findByProjectIdWithDecider(p.getId());
-                for (ProjectDecision d : pDecisions) {
-                    if (d.getStatus() == DecisionStatus.PENDING && decisions.size() < 5) {
-                        decisions.add(DecisionItemDto.builder()
-                                .id(d.getId().toString())
-                                .projectTag(p.getName().toUpperCase())
-                                .title(d.getTitle())
-                                .subTitle(d.getSubTitle() != null ? d.getSubTitle() : "Review required")
-                                .dueDate(d.getDueDate() != null
-                                        ? "Due " + d.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                                        : "Pending")
-                                .indicatorColor("amber")
-                                .hasAction(true)
-                                .actionLabel("Review →")
-                                .build());
-                    }
-                }
-
-                // Blockers attention
-                if (blockers > 0 && attention.size() < 5) {
-                    attention.add(ProjectAttentionDto.builder()
-                            .id("att-" + p.getId().toString().substring(0, 4))
-                            .indexNum(String.format("%02d", attention.size() + 1))
-                            .statusType("BLOCKED")
-                            .statusDot("red")
-                            .metaLabel(blockers + (blockers == 1 ? " blocker" : " blockers"))
-                            .projectName(p.getName())
-                            .detail(blockers + " blockers require input")
-                            .dateLabel(p.getDueDate() != null
-                                    ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                                    : "Active")
-                            .build());
-                }
-
-                // Upcoming milestones
-                for (ProjectMilestone m : pMilestones) {
-                    if (m.getStatus() != MilestoneStatus.COMPLETED && milestones.size() < 5) {
-                        String mDate = m.getDueDate() != null
-                                ? m.getDueDate().format(DateTimeFormatter.ofPattern("dd MMM")).toUpperCase()
-                                : "TBD";
-                        milestones.add(UpcomingMilestoneDto.builder()
-                                .id(m.getId().toString())
-                                .dateDayMonth(mDate)
-                                .dotColor(m.getStatus() == MilestoneStatus.CURRENT ? "green" : "amber")
-                                .title(p.getName())
-                                .subTitle(m.getName())
-                                .build());
-                    }
-                }
+                projectDtos.add(buildProjectItemDto(p, pIdx++));
+                collectPendingDecisions(p, decisions);
+                collectBlockerAttention(p, attention);
+                collectUpcomingMilestones(p, milestones);
             }
+
+            ProjectItemDto featured = projectDtos.isEmpty() ? null : projectDtos.get(0);
 
             return ProjectDashboardDto.builder()
                     .workspaceBreadcrumb("YOUR WORKSPACE / 02")
-                    .currentDateLabel(formattedDate)
+                    .currentDateLabel(computeFormattedDate(today))
                     .totalProjects(totalCount)
                     .activeCount(activeCount)
                     .atRiskCount(atRiskCount)
@@ -225,10 +166,159 @@ public class ProjectService {
                     .upcomingMilestones(milestones)
                     .build();
 
-        } catch (Throwable t) {
+        } catch (Exception t) {
             log.error("Error generating projects dashboard data: {}", t.getMessage(), t);
             throw new RuntimeException("Failed to load project dashboard data: " + t.getMessage(), t);
         }
+    }
+
+    private String computeFormattedDate(LocalDate today) {
+        String dayOfWeek = today.getDayOfWeek().name().substring(0, 3);
+        String month = today.getMonth().name().substring(0, 3);
+        String year = String.valueOf(today.getYear());
+        String dayNum = String.format("%02d", today.getDayOfMonth());
+        return dayOfWeek + ", " + dayNum + " " + month + " " + year;
+    }
+
+    private long countDueSoonProjects(List<Project> allProjects, LocalDate today) {
+        LocalDate nextWeek = today.plusDays(7);
+        return allProjects.stream()
+                .filter(p -> p.getDueDate() != null
+                        && !p.getDueDate().isBefore(today)
+                        && p.getDueDate().isBefore(nextWeek)
+                        && p.getStatus() != ProjectStatus.COMPLETED)
+                .count();
+    }
+
+    private ProjectItemDto buildProjectItemDto(Project p, int index) {
+        String stat = p.getStatus() != null ? p.getStatus().name() : STATUS_ACTIVE;
+        String statLbl = stat.replace("_", " ");
+        String dueLbl = p.getDueDate() != null
+                ? "Due " + p.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                : "Upcoming";
+        String health = p.getHealth() != null ? p.getHealth() : HEALTH_ON_TRACK;
+        String healthLbl = health.replace("_", " ");
+        String healthDot = HEALTH_AT_RISK.equalsIgnoreCase(health) ? "red" : COLOR_GREEN;
+
+        List<ProjectMilestone> pMilestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(p.getId());
+        long completedM = pMilestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
+        String mLabel = pMilestones.isEmpty() ? "0 milestones" : String.format("%02d/%02d", completedM, pMilestones.size());
+
+        List<Task> pTasks = taskRepository.findByProjectIdWithDetails(p.getId());
+        long blockers = pTasks.stream().filter(t -> t != null && t.isBlocked()).count();
+
+        String ownerName = p.getOwner() != null ? p.getOwner().getFullName() : "Team";
+        String initials = computeInitials(ownerName, "TM");
+
+        return ProjectItemDto.builder()
+                .id(p.getId().toString())
+                .indexNum(String.format("%02d", index))
+                .name(p.getName())
+                .description(p.getDescription() != null ? p.getDescription() : "Project workspace")
+                .status(stat)
+                .statusLabel(statLbl)
+                .statusDotColor(resolveProjectStatusDotColor(stat))
+                .health(health)
+                .healthLabel(healthLbl)
+                .healthDotColor(healthDot)
+                .team(ownerName)
+                .dueDate(dueLbl)
+                .priority(p.getPriority() != null ? p.getPriority() : PRIORITY_LABEL_MEDIUM)
+                .milestonesLabel(mLabel)
+                .milestonesCompleted((int) completedM)
+                .milestonesTotal(pMilestones.size())
+                .blockersCount((int) blockers)
+                .avatars(List.of(initials))
+                .avatarOverflow("")
+                .build();
+    }
+
+    private void collectPendingDecisions(Project p, List<DecisionItemDto> decisions) {
+        if (decisions.size() >= 5) {
+            return;
+        }
+        List<ProjectDecision> pDecisions = projectDecisionRepository.findByProjectIdWithDecider(p.getId());
+        for (ProjectDecision d : pDecisions) {
+            if (d.getStatus() == DecisionStatus.PENDING) {
+                String subTitle = d.getSubTitle() != null ? d.getSubTitle() : "Review required";
+                String dueStr = d.getDueDate() != null
+                        ? "Due " + d.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                        : "Pending";
+                decisions.add(DecisionItemDto.builder()
+                        .id(d.getId().toString())
+                        .projectTag(p.getName().toUpperCase(Locale.ROOT))
+                        .title(d.getTitle())
+                        .subTitle(subTitle)
+                        .dueDate(dueStr)
+                        .indicatorColor(COLOR_AMBER)
+                        .hasAction(true)
+                        .actionLabel("Review →")
+                        .build());
+                if (decisions.size() >= 5) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void collectBlockerAttention(Project p, List<ProjectAttentionDto> attention) {
+        if (attention.size() >= 5) {
+            return;
+        }
+        List<Task> pTasks = taskRepository.findByProjectIdWithDetails(p.getId());
+        long blockers = pTasks.stream().filter(t -> t != null && t.isBlocked()).count();
+        if (blockers > 0) {
+            String metaLabel = blockers + (blockers == 1 ? " blocker" : " blockers");
+            String dateLabel = p.getDueDate() != null
+                    ? "Due " + p.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                    : STATUS_LABEL_ACTIVE;
+            attention.add(ProjectAttentionDto.builder()
+                    .id("att-" + p.getId().toString().substring(0, 4))
+                    .indexNum(String.format("%02d", attention.size() + 1))
+                    .statusType(STATUS_BLOCKED)
+                    .statusDot("red")
+                    .metaLabel(metaLabel)
+                    .projectName(p.getName())
+                    .detail(blockers + " blockers require input")
+                    .dateLabel(dateLabel)
+                    .build());
+        }
+    }
+
+    private void collectUpcomingMilestones(Project p, List<UpcomingMilestoneDto> milestones) {
+        if (milestones.size() >= 5) {
+            return;
+        }
+        List<ProjectMilestone> pMilestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(p.getId());
+        for (ProjectMilestone m : pMilestones) {
+            if (m.getStatus() != MilestoneStatus.COMPLETED) {
+                String mDate = m.getDueDate() != null
+                        ? m.getDueDate().format(DATE_FMT_DD_MMM).toUpperCase(Locale.ROOT)
+                        : "TBD";
+                String dotColor = m.getStatus() == MilestoneStatus.CURRENT ? COLOR_GREEN : COLOR_AMBER;
+                milestones.add(UpcomingMilestoneDto.builder()
+                        .id(m.getId().toString())
+                        .dateDayMonth(mDate)
+                        .dotColor(dotColor)
+                        .title(p.getName())
+                        .subTitle(m.getName())
+                        .build());
+                if (milestones.size() >= 5) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private String computeInitials(String fullName, String fallback) {
+        if (fullName == null || fullName.isBlank()) {
+            return fallback;
+        }
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length > 1) {
+            return ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase(Locale.ROOT);
+        }
+        return fullName.substring(0, Math.min(2, fullName.length())).toUpperCase(Locale.ROOT);
     }
 
     @Transactional(readOnly = true)
@@ -242,12 +332,7 @@ public class ProjectService {
                 .map(m -> {
                     User u = m.getUser();
                     String fullName = (u != null && u.getFullName() != null) ? u.getFullName() : "Member";
-                    String[] parts = fullName.trim().split("\\s+");
-                    String initials = parts.length > 1
-                            ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                            : (fullName.length() > 0
-                                    ? fullName.substring(0, Math.min(2, fullName.length())).toUpperCase()
-                                    : "TM");
+                    String initials = computeInitials(fullName, "TM");
                     return ProjectOptionsDto.OwnerOptionDto.builder()
                             .id(u != null ? u.getId() : m.getId())
                             .name(fullName)
@@ -258,13 +343,147 @@ public class ProjectService {
                 })
                 .toList();
 
+        List<Department> departments = departmentRepository.findByOrganizationIdOrderBySortOrderAsc(organization.getId());
+        List<Employee> employees = employeeRepository.findByOrganizationIdOrderBySortOrderAscCreatedAtAsc(organization.getId());
+        List<Team> teams = teamRepository.findByOrganizationIdWithDetails(organization.getId());
+        List<ProjectOptionsDto.TeamOptionDto> teamDtos = buildTeamOptions(departments, employees, teams, ownerDtos);
+
+        List<String> clients = projectRepository.findByOrganizationIdWithDetails(organization.getId()).stream()
+                .map(Project::getClientName)
+                .filter(c -> c != null && !c.isBlank())
+                .distinct()
+                .toList();
+        if (clients.isEmpty()) {
+            clients = List.of("Internal Project", "Acme Corporation", "Global Design Studio");
+        }
+
         return ProjectOptionsDto.builder()
                 .owners(ownerDtos)
-                .statuses(List.of("ACTIVE", "PLANNING", "ON_HOLD", "COMPLETED", "CANCELLED"))
-                .priorities(List.of("HIGH", "MEDIUM", "LOW"))
-                .healthOptions(List.of("ON_TRACK", "AT_RISK", "DELAYED"))
-                .projectTypes(List.of("General", "Design & UX", "Engineering", "Marketing", "Product Roadmap"))
+                .teams(teamDtos)
+                .clients(clients)
+                .statuses(List.of("Planned", STATUS_ACTIVE, STATUS_PLANNING, STATUS_ON_HOLD, "COMPLETED", "CANCELLED"))
+                .priorities(List.of("HIGH", PRIORITY_MEDIUM, "LOW", "URGENT", "High", PRIORITY_LABEL_MEDIUM, "Low", "Urgent"))
+                .healthOptions(List.of(HEALTH_ON_TRACK, HEALTH_AT_RISK, "DELAYED"))
+                .projectTypes(List.of("Design", "Development", "Engineering", "Marketing", "Internal", "Client Project", "Operations", "Research", "Other"))
                 .build();
+    }
+
+    private List<ProjectOptionsDto.TeamOptionDto> buildTeamOptions(
+            List<Department> departments, List<Employee> employees, List<Team> teams, List<ProjectOptionsDto.OwnerOptionDto> fallbackOwners) {
+        List<ProjectOptionsDto.TeamOptionDto> teamDtos = new ArrayList<>();
+        addTeamOptionsFromTeams(teams, teamDtos);
+        addTeamOptionsFromDepartments(departments, employees, teamDtos);
+        if (teamDtos.isEmpty()) {
+            return buildFallbackTeamOptions(fallbackOwners);
+        }
+        return teamDtos;
+    }
+
+    private void addTeamOptionsFromTeams(List<Team> teams, List<ProjectOptionsDto.TeamOptionDto> teamDtos) {
+        if (teams == null) {
+            return;
+        }
+        for (Team t : teams) {
+            List<TeamMember> tMembers = teamMemberRepository.findByTeamIdWithEmployee(t.getId());
+            List<ProjectOptionsDto.TeamMemberOptionDto> memberDtos = tMembers.stream()
+                    .map(this::mapTeamMemberToDto)
+                    .toList();
+
+            UUID headUserId = resolveTeamLeadUserId(t.getTeamLead());
+            String headName = t.getTeamLead() != null ? t.getTeamLead().getFullName() : null;
+
+            teamDtos.add(ProjectOptionsDto.TeamOptionDto.builder()
+                    .id(t.getId())
+                    .name(t.getName())
+                    .subtitle(t.getDescription())
+                    .headUserId(headUserId)
+                    .headName(headName)
+                    .members(memberDtos)
+                    .build());
+        }
+    }
+
+    private ProjectOptionsDto.TeamMemberOptionDto mapTeamMemberToDto(TeamMember tm) {
+        Employee e = tm.getEmployee();
+        String role = tm.getMemberRole() != null ? tm.getMemberRole() : e.getJobTitle();
+        UUID userId = (e.getUser() != null) ? e.getUser().getId() : null;
+        return ProjectOptionsDto.TeamMemberOptionDto.builder()
+                .id(e.getId())
+                .userId(userId)
+                .name(e.getFullName())
+                .email(e.getEmail())
+                .role(role)
+                .initials(e.getInitials())
+                .build();
+    }
+
+    private UUID resolveTeamLeadUserId(Employee lead) {
+        if (lead == null) {
+            return null;
+        }
+        if (lead.getUser() != null) {
+            return lead.getUser().getId();
+        }
+        return lead.getId();
+    }
+
+    private void addTeamOptionsFromDepartments(
+            List<Department> departments, List<Employee> employees, List<ProjectOptionsDto.TeamOptionDto> teamDtos) {
+        if (departments == null) {
+            return;
+        }
+        for (Department d : departments) {
+            boolean alreadyAdded = teamDtos.stream().anyMatch(td -> td.getName().equalsIgnoreCase(d.getName()));
+            if (!alreadyAdded) {
+                List<ProjectOptionsDto.TeamMemberOptionDto> members = employees.stream()
+                        .filter(e -> e.getDepartment() != null && e.getDepartment().getId().equals(d.getId()))
+                        .map(this::mapEmployeeToTeamMemberOptionDto)
+                        .toList();
+
+                UUID headUserId = d.getDepartmentHead() != null ? d.getDepartmentHead().getId() : null;
+                String headName = d.getDepartmentHead() != null ? d.getDepartmentHead().getFullName() : null;
+
+                teamDtos.add(ProjectOptionsDto.TeamOptionDto.builder()
+                        .id(d.getId())
+                        .name(d.getName())
+                        .subtitle(d.getSubtitle())
+                        .headUserId(headUserId)
+                        .headName(headName)
+                        .members(members)
+                        .build());
+            }
+        }
+    }
+
+    private ProjectOptionsDto.TeamMemberOptionDto mapEmployeeToTeamMemberOptionDto(Employee e) {
+        UUID userId = (e.getUser() != null) ? e.getUser().getId() : null;
+        return ProjectOptionsDto.TeamMemberOptionDto.builder()
+                .id(e.getId())
+                .userId(userId)
+                .name(e.getFullName())
+                .email(e.getEmail())
+                .role(e.getJobTitle())
+                .initials(e.getInitials())
+                .build();
+    }
+
+    private List<ProjectOptionsDto.TeamOptionDto> buildFallbackTeamOptions(List<ProjectOptionsDto.OwnerOptionDto> fallbackOwners) {
+        List<ProjectOptionsDto.TeamMemberOptionDto> defaultMembers = fallbackOwners.stream()
+                .map(o -> ProjectOptionsDto.TeamMemberOptionDto.builder()
+                        .id(o.getId())
+                        .userId(o.getId())
+                        .name(o.getName())
+                        .email(o.getEmail())
+                        .role(o.getRole())
+                        .initials(o.getInitials())
+                        .build())
+                .toList();
+        return List.of(
+                ProjectOptionsDto.TeamOptionDto.builder().id(UUID.randomUUID()).name(DEFAULT_TEAM_NAME).subtitle("Product Design & UX").members(defaultMembers).build(),
+                ProjectOptionsDto.TeamOptionDto.builder().id(UUID.randomUUID()).name("Engineering").subtitle("Core Platform & Frontend").members(defaultMembers).build(),
+                ProjectOptionsDto.TeamOptionDto.builder().id(UUID.randomUUID()).name("Marketing").subtitle("Growth & Brand").members(defaultMembers).build(),
+                ProjectOptionsDto.TeamOptionDto.builder().id(UUID.randomUUID()).name("Product Operations").subtitle("Operations & Delivery").members(defaultMembers).build()
+        );
     }
 
     @Transactional
@@ -274,66 +493,53 @@ public class ProjectService {
         }
 
         Organization organization = resolveCurrentOrganization();
-        User currentUser = resolveCurrentUser(organization);
+        User currentUser = resolveCurrentUser();
+        User projectOwner = resolveProjectOwner(req.getOwnerId(), organization.getId());
 
-        // Resolve Project Lead / Owner
-        User projectOwner = null;
-        if (req.getOwnerId() != null) {
-            Optional<User> ownerOpt = userRepository.findById(req.getOwnerId());
-            if (ownerOpt.isPresent()) {
-                Optional<OrganizationMembership> memberOpt = organizationMembershipRepository
-                        .findByOrganizationIdAndUserId(organization.getId(), req.getOwnerId());
-                if (memberOpt.isPresent()) {
-                    projectOwner = ownerOpt.get();
-                }
-            }
+        ProjectStatus status = parseProjectStatus(req.getStatus());
+        String health = resolveProjectHealth(req.getHealth());
+        String priority = resolveProjectPriority(req.getPriority());
+        String projectType = resolveProjectType(req.getCategory() != null ? req.getCategory() : req.getProjectType());
+
+        LocalDate start = parseProjectDate(req.getStartDate(), LocalDate.now(ZoneId.systemDefault()));
+        LocalDate due = parseProjectDate(req.getDueDate(), start.plusDays(30));
+
+        // Generate unique Project Code
+        String projectCode = req.getProjectCode();
+        if (projectCode == null || projectCode.isBlank()) {
+            long totalCount = projectRepository.countByOrganizationId(organization.getId());
+            projectCode = String.format("PRJ-%03d", totalCount + 1);
         }
 
-        ProjectStatus status = ProjectStatus.ACTIVE;
-        if (req.getStatus() != null && !req.getStatus().isBlank()) {
-            try {
-                status = ProjectStatus.valueOf(req.getStatus().trim().toUpperCase());
-            } catch (Exception ignored) {
-            }
-        }
+        // Resolve Team and Team Lead
+        Department teamDept = (req.getTeamId() != null)
+                ? departmentRepository.findByIdAndOrganizationId(req.getTeamId(), organization.getId()).orElse(null)
+                : null;
+        String teamName = resolveTeamName(teamDept, req.getTeamName());
+        User teamLead = (req.getTeamLeadId() != null)
+                ? userRepository.findById(req.getTeamLeadId()).orElse(null)
+                : null;
+        User effectiveOwner = resolveEffectiveOwner(teamLead, projectOwner);
 
-        String health = "ON_TRACK";
-        if (req.getHealth() != null && !req.getHealth().isBlank()) {
-            health = req.getHealth().trim().toUpperCase();
-        }
-
-        String priority = "MEDIUM";
-        if (req.getPriority() != null && !req.getPriority().isBlank()) {
-            priority = req.getPriority().trim().toUpperCase();
-        }
-
-        String projectType = "General";
-        if (req.getProjectType() != null && !req.getProjectType().isBlank()) {
-            projectType = req.getProjectType().trim();
-        }
-
-        LocalDate start = LocalDate.now();
-        if (req.getStartDate() != null && !req.getStartDate().isBlank()) {
-            try {
-                start = LocalDate.parse(req.getStartDate().trim());
-            } catch (Exception ignored) {
-            }
-        }
-
-        LocalDate due = start.plusDays(30);
-        if (req.getDueDate() != null && !req.getDueDate().isBlank()) {
-            try {
-                due = LocalDate.parse(req.getDueDate().trim());
-            } catch (Exception ignored) {
-            }
-        }
+        String goals = (req.getGoals() != null && !req.getGoals().isBlank()) ? req.getGoals().trim() : req.getDescription();
+        String deliverables = req.getDeliverables() != null ? req.getDeliverables().trim() : "";
 
         Project newProject = Project.builder()
                 .id(UUID.randomUUID())
                 .organization(organization)
+                .projectCode(projectCode)
                 .name(req.getName().trim())
                 .description(req.getDescription() != null ? req.getDescription().trim() : "")
-                .owner(projectOwner)
+                .goals(goals)
+                .deliverables(deliverables)
+                .teamId(req.getTeamId())
+                .teamName(teamName)
+                .teamLead(teamLead)
+                .owner(effectiveOwner)
+                .createdBy(currentUser)
+                .clientName(req.getClientName() != null ? req.getClientName().trim() : null)
+                .coverImageUrl(req.getCoverImageUrl() != null ? req.getCoverImageUrl().trim() : null)
+                .progress(0)
                 .status(status)
                 .health(health)
                 .priority(priority)
@@ -343,8 +549,108 @@ public class ProjectService {
                 .build();
 
         newProject = projectRepository.save(newProject);
+        assignProjectMembers(newProject, req.getMemberIds());
+        recordProjectCreatedActivity(organization, currentUser, newProject);
 
-        // Record Activity Event
+        long totalCount = projectRepository.countByOrganizationId(organization.getId());
+        String indexNum = String.format("%02d", totalCount);
+
+        return toProjectItemDto(newProject, indexNum);
+    }
+
+    private void assignProjectMembers(Project project, List<UUID> memberIds) {
+        if (memberIds == null || memberIds.isEmpty()) {
+            return;
+        }
+        for (UUID userId : memberIds) {
+            Optional<User> uOpt = userRepository.findById(userId);
+            if (uOpt.isPresent()) {
+                ProjectMember member = ProjectMember.builder()
+                        .id(UUID.randomUUID())
+                        .organization(project.getOrganization())
+                        .project(project)
+                        .user(uOpt.get())
+                        .role("MEMBER")
+                        .build();
+                projectMemberRepository.save(member);
+            }
+        }
+    }
+
+    private User resolveProjectOwner(UUID ownerId, UUID organizationId) {
+        if (ownerId == null) {
+            return null;
+        }
+        Optional<User> ownerOpt = userRepository.findById(ownerId);
+        if (ownerOpt.isPresent()) {
+            Optional<OrganizationMembership> memberOpt = organizationMembershipRepository
+                    .findByOrganizationIdAndUserId(organizationId, ownerId);
+            if (memberOpt.isPresent()) {
+                return ownerOpt.get();
+            }
+        }
+        return null;
+    }
+
+    private String resolveTeamName(Department teamDept, String reqTeamName) {
+        if (teamDept != null) {
+            return teamDept.getName();
+        }
+        if (reqTeamName != null && !reqTeamName.isBlank()) {
+            return reqTeamName.trim();
+        }
+        return DEFAULT_TEAM_NAME;
+    }
+
+    private User resolveEffectiveOwner(User teamLead, User projectOwner) {
+        if (teamLead != null) {
+            return teamLead;
+        }
+        return projectOwner;
+    }
+
+    private String resolveProjectSubMeta(String projectType) {
+        if (projectType != null && !projectType.isBlank()) {
+            return projectType + " / Workspace";
+        }
+        return "Workspace / Projects";
+    }
+
+    private ProjectStatus parseProjectStatus(String statusStr) {
+        if (statusStr != null && !statusStr.isBlank()) {
+            try {
+                return ProjectStatus.valueOf(statusStr.trim().toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                log.debug("Invalid project status '{}', defaulting to ACTIVE", statusStr);
+            }
+        }
+        return ProjectStatus.ACTIVE;
+    }
+
+    private LocalDate parseProjectDate(String dateStr, LocalDate defaultDate) {
+        if (dateStr != null && !dateStr.isBlank()) {
+            try {
+                return LocalDate.parse(dateStr.trim());
+            } catch (java.time.format.DateTimeParseException ignored) {
+                log.debug("Unable to parse date '{}', defaulting to default date", dateStr);
+            }
+        }
+        return defaultDate;
+    }
+
+    private String resolveProjectHealth(String health) {
+        return (health != null && !health.isBlank()) ? health.trim().toUpperCase() : HEALTH_ON_TRACK;
+    }
+
+    private String resolveProjectPriority(String priority) {
+        return (priority != null && !priority.isBlank()) ? priority.trim().toUpperCase() : PRIORITY_MEDIUM;
+    }
+
+    private String resolveProjectType(String projectType) {
+        return (projectType != null && !projectType.isBlank()) ? projectType.trim() : PROJECT_TYPE_GENERAL;
+    }
+
+    private void recordProjectCreatedActivity(Organization organization, User currentUser, Project newProject) {
         ActivityEvent event = ActivityEvent.builder()
                 .id(UUID.randomUUID())
                 .organization(organization)
@@ -356,24 +662,18 @@ public class ProjectService {
                 .description(newProject.getName())
                 .actionText("created project")
                 .targetTitle(newProject.getName())
-                .subMeta(newProject.getProjectType() != null ? newProject.getProjectType() + " / Workspace"
-                        : "Workspace / Projects")
+                .subMeta(resolveProjectSubMeta(newProject.getProjectType()))
                 .badgeType("DOCUMENT")
-                .dotColor("green")
+                .dotColor(COLOR_GREEN)
                 .eventTimestamp(Instant.now())
                 .build();
         activityEventRepository.save(event);
-
-        long totalCount = projectRepository.countByOrganizationId(organization.getId());
-        String indexNum = String.format("%02d", totalCount);
-
-        return toProjectItemDto(newProject, indexNum);
     }
 
     @Transactional
     public ProjectDocumentsDto.DocumentItemDto createDocument(CreateDocumentRequestDto req) {
         Organization organization = resolveCurrentOrganization();
-        User currentUser = resolveCurrentUser(organization);
+        User currentUser = resolveCurrentUser();
 
         if (req.getTitle() == null || req.getTitle().trim().isEmpty()) {
             throw new BadRequestException("Document title is required");
@@ -387,7 +687,9 @@ public class ProjectService {
         if (project == null) {
             List<Project> orgProjects = projectRepository.findByOrganizationId(organization.getId(),
                     org.springframework.data.domain.PageRequest.of(0, 1));
-            project = orgProjects.isEmpty() ? null : orgProjects.get(0);
+            if (!orgProjects.isEmpty()) {
+                project = orgProjects.get(0);
+            }
         }
         if (project == null) {
             project = projectRepository.save(Project.builder()
@@ -452,7 +754,7 @@ public class ProjectService {
         }
 
         Organization organization = resolveCurrentOrganization();
-        User currentUser = resolveCurrentUser(organization);
+        User currentUser = resolveCurrentUser();
 
         Project project = projectRepository.findByOrganizationIdAndId(organization.getId(), projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found in this organization"));
@@ -479,8 +781,7 @@ public class ProjectService {
                 .description("Assigned " + newOwner.getFullName() + " to " + project.getName())
                 .actionText("assigned project lead to " + newOwner.getFullName())
                 .targetTitle(project.getName())
-                .subMeta(project.getProjectType() != null ? project.getProjectType() + " / Workspace"
-                        : "Workspace / Projects")
+                .subMeta(resolveProjectSubMeta(project.getProjectType()))
                 .badgeType("DOCUMENT")
                 .dotColor("blue")
                 .eventTimestamp(Instant.now())
@@ -491,42 +792,29 @@ public class ProjectService {
     }
 
     private ProjectItemDto toProjectItemDto(Project p, String indexNum) {
-        String stat = p.getStatus() != null ? p.getStatus().name() : "ACTIVE";
+        String stat = p.getStatus() != null ? p.getStatus().name() : STATUS_ACTIVE;
         String statLbl = stat.replace("_", " ");
         String dueLbl = p.getDueDate() != null
-                ? "Due " + p.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+                ? "Due " + p.getDueDate().format(DATE_FMT_D_MMM_YYYY)
                 : "Upcoming";
-        String health = p.getHealth() != null ? p.getHealth() : "ON_TRACK";
+        String health = p.getHealth() != null ? p.getHealth() : HEALTH_ON_TRACK;
         String healthLbl = health.replace("_", " ");
-        String healthDot = "AT_RISK".equalsIgnoreCase(health) ? "red" : "green";
+        String healthDot = HEALTH_AT_RISK.equalsIgnoreCase(health) ? "red" : COLOR_GREEN;
 
         String ownerName = (p.getOwner() != null && p.getOwner().getFullName() != null)
                 ? p.getOwner().getFullName()
                 : "Unassigned";
 
-        List<String> avatars = new ArrayList<>();
-        if (p.getOwner() != null && p.getOwner().getFullName() != null) {
-            String[] parts = ownerName.trim().split("\\s+");
-            String initials = parts.length > 1
-                    ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                    : (ownerName.length() > 0 ? ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase()
-                            : "TM");
-            avatars.add(initials);
-        } else {
-            avatars.add("??");
-        }
+        List<String> avatars = resolveOwnerAvatars(p, ownerName);
 
-        String priority = p.getPriority() != null ? p.getPriority() : "MEDIUM";
+        String priority = p.getPriority() != null ? p.getPriority() : PRIORITY_MEDIUM;
         String priorityLabel = priority.charAt(0) + priority.substring(1).toLowerCase() + " Priority";
 
-        String statusDotColor = (p.getStatus() == ProjectStatus.ACTIVE) ? "green"
-                : (p.getStatus() == ProjectStatus.PLANNING ? "blue"
-                        : (p.getStatus() == ProjectStatus.ON_HOLD ? "red" : "orange"));
+        String statusDotColor = resolveProjectStatusDotColor(p.getStatus());
 
         List<ProjectMilestone> pMilestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(p.getId());
         long completedM = pMilestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
-        String mLabel = pMilestones.isEmpty() ? "0/0 milestones"
-                : String.format("%02d/%02d", completedM, pMilestones.size());
+        String mLabel = computeMilestonesProgressLabel(pMilestones, completedM);
 
         return ProjectItemDto.builder()
                 .id(p.getId().toString())
@@ -551,6 +839,48 @@ public class ProjectService {
                 .build();
     }
 
+    private List<String> resolveOwnerAvatars(Project p, String ownerName) {
+        List<String> avatars = new ArrayList<>();
+        if (p.getOwner() != null && p.getOwner().getFullName() != null) {
+            avatars.add(computeInitials(ownerName, "TM"));
+        } else {
+            avatars.add("??");
+        }
+        return avatars;
+    }
+
+    private String computeMilestonesProgressLabel(List<ProjectMilestone> pMilestones, long completedM) {
+        if (pMilestones.isEmpty()) {
+            return "0/0 milestones";
+        }
+        return String.format("%02d/%02d", completedM, pMilestones.size());
+    }
+
+    private String resolveProjectStatusDotColor(ProjectStatus status) {
+        if (status == null) {
+            return COLOR_GREEN;
+        }
+        return switch (status) {
+            case ACTIVE -> COLOR_GREEN;
+            case PLANNING -> "blue";
+            case ON_HOLD -> "red";
+            default -> "orange";
+        };
+    }
+
+    private String resolveProjectStatusDotColor(String status) {
+        if (status == null || STATUS_ACTIVE.equalsIgnoreCase(status)) {
+            return COLOR_GREEN;
+        }
+        if (STATUS_PLANNING.equalsIgnoreCase(status)) {
+            return "blue";
+        }
+        if (STATUS_ON_HOLD.equalsIgnoreCase(status)) {
+            return "red";
+        }
+        return "gray";
+    }
+
     private Organization resolveCurrentOrganization() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
@@ -565,15 +895,10 @@ public class ProjectService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
     }
 
-    private User resolveCurrentUser(Organization org) {
+    private User resolveCurrentUser() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
             return userRepository.findById(userOpt.get().getId())
@@ -583,18 +908,17 @@ public class ProjectService {
         if (!users.isEmpty()) {
             return users.get(0);
         }
-        User defaultUser = User.builder()
-                .id(UUID.randomUUID())
-                .fullName("SIVASURYA S")
-                .email("admin@brick.local")
-                .passwordHash("$2a$12$e0MYzXy/vP7J11.d3Jg1y.X9vG32g9J8qX8f0gK6hP2cQ3v5gK7a")
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(defaultUser);
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 
     private Project resolveProject(String projectId) {
-        Organization org = resolveCurrentOrganization();
+        Organization org;
+        try {
+            org = resolveCurrentOrganization();
+        } catch (UnauthorizedException e) {
+            return null;
+        }
+
         if (projectId != null && !projectId.isBlank() && !projectId.equalsIgnoreCase("featured-01")) {
             UUID uuid;
             try {
@@ -614,7 +938,7 @@ public class ProjectService {
         List<Project> orgProjects = projectRepository.findByOrganizationIdWithDetails(org.getId());
         if (!orgProjects.isEmpty()) {
             return orgProjects.stream()
-                    .filter(p -> p.getName().equalsIgnoreCase("Website Redesign"))
+                    .filter(p -> p.getName().equalsIgnoreCase(DEFAULT_PROJECT_NAME))
                     .findFirst()
                     .orElse(orgProjects.get(0));
         }
@@ -625,178 +949,49 @@ public class ProjectService {
     public ProjectOverviewDto getProjectOverview(String projectId) {
         Project project = resolveProject(projectId);
         if (project == null) {
-            return ProjectOverviewDto.createDefault(projectId, "Website Redesign",
-                    "Redesign the website into a responsive, modern experience.", "Design Team", "15 Nov 2026",
-                    "ACTIVE");
+            return ProjectOverviewDto.createDefault(projectId, DEFAULT_PROJECT_NAME,
+                    "Redesign the website into a responsive, modern experience.", DEFAULT_WORKSPACE_NAME, DEFAULT_DUE_DATE,
+                    STATUS_ACTIVE);
         }
 
-        // Milestones
         List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
         int milestonesTotal = milestones.size();
-        int milestonesCompleted = (int) milestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED)
-                .count();
+        int milestonesCompleted = (int) milestones.stream().filter(m -> m.getStatus() == MilestoneStatus.COMPLETED).count();
         String milestonesSummary = String.format("%02d/%02d COMPLETED", milestonesCompleted, milestonesTotal);
+        List<ProjectOverviewDto.MilestoneStageDto> milestoneDtos = buildMilestoneStageDtos(milestones);
 
-        List<ProjectOverviewDto.MilestoneStageDto> milestoneDtos = milestones.stream()
-                .map(m -> ProjectOverviewDto.MilestoneStageDto.builder()
-                        .id(m.getId().toString())
-                        .seqNum(String.format("%02d", m.getSeqNum()))
-                        .name(m.getName())
-                        .status(m.getStatus().name())
-                        .statusLabel(m.getStatusLabel() != null ? m.getStatusLabel() : m.getStatus().name())
-                        .build())
-                .toList();
+        ProjectOverviewDto.SpecificationDto specDto = resolveOrCreateSpecificationDto(project);
 
-        // Specification
-        Optional<ProjectSpecification> specOpt = projectSpecificationRepository.findByProjectId(project.getId());
-        ProjectOverviewDto.SpecificationDto specDto;
-        if (specOpt.isPresent()) {
-            ProjectSpecification spec = specOpt.get();
-            List<String> objectives = spec.getObjectives() != null
-                    ? Arrays.asList(spec.getObjectives().split("\\r?\\n"))
-                    : List.of();
-            List<String> deliverables = spec.getDeliverables() != null
-                    ? Arrays.asList(spec.getDeliverables().split("\\r?\\n"))
-                    : List.of();
-            List<String> successCriteria = spec.getSuccessCriteria() != null
-                    ? Arrays.asList(spec.getSuccessCriteria().split("\\r?\\n"))
-                    : List.of();
-            specDto = ProjectOverviewDto.SpecificationDto.builder()
-                    .title(spec.getTitle())
-                    .objectives(objectives)
-                    .deliverables(deliverables)
-                    .successCriteria(successCriteria)
-                    .projectContext(Map.of(
-                            "Client", spec.getClientName() != null ? spec.getClientName() : "Acme Co.",
-                            "Type",
-                            project.getProjectType() != null ? project.getProjectType() : "Design / Development",
-                            "Focus",
-                            spec.getFocusArea() != null ? spec.getFocusArea() : "Brand, performance and growth"))
-                    .build();
-        } else {
-            specDto = ProjectOverviewDto.SpecificationDto.builder()
-                    .title("Build a better digital experience.")
-                    .objectives(List.of("Improve user experience", "Increase conversion rate"))
-                    .deliverables(List.of("Responsive website", "CMS implementation"))
-                    .successCriteria(List.of("Higher engagement", "Increased conversion rate"))
-                    .projectContext(Map.of("Client", "Acme Co.", "Type", "Design / Development", "Focus", "Growth"))
-                    .build();
-        }
-
-        // Tasks & Work in Motion
         List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
-        long todoCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO).count();
-        long inProgCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS).count();
-        long inRevCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW).count();
+        List<ProjectOverviewDto.WorkStatusCardDto> workCards = buildWorkStatusCards(tasks);
         long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
 
-        List<ProjectOverviewDto.WorkStatusCardDto> workCards = List.of(
-                ProjectOverviewDto.WorkStatusCardDto.builder()
-                        .statusKey("TODO")
-                        .statusLabel("TO DO")
-                        .dotColor("gray")
-                        .count(String.format("%02d", todoCount))
-                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO)
-                                .findFirst().map(t -> t.getTitle()).orElse("Prepare responsive layouts"))
-                        .assigneeAvatar("AR")
-                        .build(),
-                ProjectOverviewDto.WorkStatusCardDto.builder()
-                        .statusKey("IN_PROGRESS")
-                        .statusLabel("IN PROGRESS")
-                        .dotColor("amber")
-                        .count(String.format("%02d", inProgCount))
-                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS)
-                                .findFirst().map(t -> t.getTitle()).orElse("Homepage development"))
-                        .assigneeAvatar("MJ")
-                        .build(),
-                ProjectOverviewDto.WorkStatusCardDto.builder()
-                        .statusKey("IN_REVIEW")
-                        .statusLabel("IN REVIEW")
-                        .dotColor("blue")
-                        .count(String.format("%02d", inRevCount))
-                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW)
-                                .findFirst().map(t -> t.getTitle()).orElse("Design system review"))
-                        .assigneeAvatar("SK")
-                        .build(),
-                ProjectOverviewDto.WorkStatusCardDto.builder()
-                        .statusKey("BLOCKED")
-                        .statusLabel("BLOCKED")
-                        .dotColor("red")
-                        .count(String.format("%02d", blockedCount))
-                        .exampleTask(tasks.stream().filter(t -> t != null && t.isBlocked()).findFirst()
-                                .map(t -> t.getTitle()).orElse("Client copy approval"))
-                        .assigneeAvatar("PK")
-                        .build());
-
-        // Documents
         List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
-        List<ProjectOverviewDto.ProjectDocumentDto> docDtos = docs.stream()
-                .map(d -> ProjectOverviewDto.ProjectDocumentDto.builder()
-                        .name(d.getTitle())
-                        .fileType(d.getFileType())
-                        .fileSize(d.getFileSize() != null ? d.getFileSize() : "1.2 MB")
-                        .iconType(d.getFileType().toLowerCase())
-                        .build())
-                .toList();
+        List<ProjectOverviewDto.ProjectDocumentDto> docDtos = buildProjectDocumentDtos(docs);
 
-        // Decisions
         List<ProjectDecision> decisions = projectDecisionRepository.findByProjectIdWithDecider(project.getId());
-        Optional<ProjectDecision> firstPending = decisions.stream().filter(d -> d.getStatus() == DecisionStatus.PENDING)
-                .findFirst();
-        ProjectOverviewDto.PendingDecisionDto pendingDecisionDto = null;
-        if (firstPending.isPresent()) {
-            ProjectDecision dec = firstPending.get();
-            String ownerName = dec.getDecider() != null ? dec.getDecider().getFullName() : "Lead Reviewer";
-            String[] parts = ownerName.trim().split("\\s+");
-            String initials = parts.length > 1
-                    ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                    : ownerName.substring(0, Math.min(2, ownerName.length())).toUpperCase();
-            String dueLbl = dec.getDueDate() != null ? dec.getDueDate().format(DateTimeFormatter.ofPattern("d MMM"))
-                    : "Soon";
-            pendingDecisionDto = ProjectOverviewDto.PendingDecisionDto.builder()
-                    .title(dec.getTitle())
-                    .description(dec.getDescription() != null ? dec.getDescription() : "Decision awaiting review.")
-                    .statusLabel("Awaiting Your Review")
-                    .dueDateLabel(dueLbl)
-                    .ownerName(ownerName)
-                    .ownerInitials(initials)
-                    .build();
-        }
+        ProjectOverviewDto.PendingDecisionDto pendingDecisionDto = buildPendingDecisionDto(decisions);
 
-        // Members
         List<ProjectMember> members = projectMemberRepository.findByProjectIdWithUser(project.getId());
-        List<String> memberInitials = new ArrayList<>();
-        for (ProjectMember m : members) {
-            if (m.getUser() != null) {
-                String name = m.getUser().getFullName();
-                String[] parts = name.trim().split("\\s+");
-                String init = parts.length > 1
-                        ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                        : name.substring(0, Math.min(2, name.length())).toUpperCase();
-                memberInitials.add(init);
-            }
-        }
-        if (memberInitials.isEmpty()) {
-            memberInitials = List.of("PK", "AR", "SK", "MJ");
-        }
+        List<String> memberInitials = resolveMemberInitials(members);
 
         String dueStr = project.getDueDate() != null
-                ? project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                : "15 Nov 2026";
-        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : "Design Team";
+                ? project.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                : DEFAULT_DUE_DATE;
+        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : DEFAULT_TEAM_NAME;
 
         return ProjectOverviewDto.builder()
                 .id(project.getId().toString())
-                .breadcrumb("PROJECTS / 02 / " + project.getName().toUpperCase())
+                .breadcrumb(BREADCRUMB_PROJECTS_PREFIX + project.getName().toUpperCase())
                 .title(project.getName())
                 .description(project.getDescription() != null ? project.getDescription() : "Project workspace")
                 .owner(ownerStr)
                 .dueDate(dueStr)
                 .projectType(project.getProjectType() != null ? project.getProjectType() : "Design / Development")
-                .health(project.getHealth().equals("AT_RISK") ? "At Risk" : "On Track")
-                .healthDotColor(project.getHealth().equals("AT_RISK") ? "orange" : "green")
-                .status(project.getStatus() != null ? project.getStatus().name() : "Active")
-                .statusDotColor("green")
+                .health(HEALTH_AT_RISK.equalsIgnoreCase(project.getHealth()) ? "At Risk" : "On Track")
+                .healthDotColor(HEALTH_AT_RISK.equalsIgnoreCase(project.getHealth()) ? "orange" : COLOR_GREEN)
+                .status(project.getStatus() != null ? project.getStatus().name() : STATUS_LABEL_ACTIVE)
+                .statusDotColor(COLOR_GREEN)
                 .specification(specDto)
                 .milestonesSummary(milestonesSummary)
                 .milestonesCompleted(milestonesCompleted)
@@ -814,68 +1009,171 @@ public class ProjectService {
                 .build();
     }
 
+    private List<ProjectOverviewDto.MilestoneStageDto> buildMilestoneStageDtos(List<ProjectMilestone> milestones) {
+        return milestones.stream()
+                .map(m -> ProjectOverviewDto.MilestoneStageDto.builder()
+                        .id(m.getId().toString())
+                        .seqNum(String.format("%02d", m.getSeqNum()))
+                        .name(m.getName())
+                        .status(m.getStatus().name())
+                        .statusLabel(m.getStatusLabel() != null ? m.getStatusLabel() : m.getStatus().name())
+                        .build())
+                .toList();
+    }
+
+    private ProjectOverviewDto.SpecificationDto resolveOrCreateSpecificationDto(Project project) {
+        ProjectSpecification spec = projectSpecificationRepository.findByProjectId(project.getId())
+                .orElseGet(() -> {
+                    ProjectSpecification newSpec = ProjectSpecification.builder()
+                            .id(UUID.randomUUID())
+                            .organization(project.getOrganization())
+                            .project(project)
+                            .title("Build a better digital experience.")
+                            .objectives("Improve user experience\nIncrease conversion rate")
+                            .deliverables("Responsive website\nCMS implementation")
+                            .successCriteria("Higher engagement\nIncreased conversion rate")
+                            .clientName(project.getOrganization() != null ? project.getOrganization().getName() : DEFAULT_WORKSPACE_NAME)
+                            .focusArea("Brand, performance and growth")
+                            .build();
+                    return projectSpecificationRepository.save(newSpec);
+                });
+
+        List<String> objectives = parseDelimitedLines(spec.getObjectives());
+        List<String> deliverables = parseDelimitedLines(spec.getDeliverables());
+        List<String> successCriteria = parseDelimitedLines(spec.getSuccessCriteria());
+
+        String clientName = resolveClientName(spec.getClientName(), project.getOrganization());
+
+        return ProjectOverviewDto.SpecificationDto.builder()
+                .title(spec.getTitle())
+                .objectives(objectives)
+                .deliverables(deliverables)
+                .successCriteria(successCriteria)
+                .projectContext(Map.of(
+                        "Client", clientName,
+                        "Type", project.getProjectType() != null ? project.getProjectType() : "Design / Development",
+                        "Focus", spec.getFocusArea() != null ? spec.getFocusArea() : "Brand, performance and growth"))
+                .build();
+    }
+
+    private String resolveClientName(String clientName, Organization organization) {
+        if (clientName != null && !clientName.isBlank()) {
+            return clientName;
+        }
+        if (organization != null && organization.getName() != null) {
+            return organization.getName();
+        }
+        return DEFAULT_WORKSPACE_NAME;
+    }
+
+    private List<String> parseDelimitedLines(String text) {
+        return (text != null) ? Arrays.asList(text.split(REGEX_LINE_BREAK)) : List.of();
+    }
+
+    private List<ProjectOverviewDto.WorkStatusCardDto> buildWorkStatusCards(List<Task> tasks) {
+        long todoCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO).count();
+        long inProgCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS).count();
+        long inRevCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW).count();
+        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
+
+        return List.of(
+                ProjectOverviewDto.WorkStatusCardDto.builder()
+                        .statusKey("TODO")
+                        .statusLabel("TO DO")
+                        .dotColor("gray")
+                        .count(String.format("%02d", todoCount))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.TODO)
+                                .findFirst().map(Task::getTitle).orElse("Prepare responsive layouts"))
+                        .assigneeAvatar("AR")
+                        .build(),
+                ProjectOverviewDto.WorkStatusCardDto.builder()
+                        .statusKey("IN_PROGRESS")
+                        .statusLabel("IN PROGRESS")
+                        .dotColor(COLOR_AMBER)
+                        .count(String.format("%02d", inProgCount))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS)
+                                .findFirst().map(Task::getTitle).orElse("Homepage development"))
+                        .assigneeAvatar("MJ")
+                        .build(),
+                ProjectOverviewDto.WorkStatusCardDto.builder()
+                        .statusKey("IN_REVIEW")
+                        .statusLabel("IN REVIEW")
+                        .dotColor("blue")
+                        .count(String.format("%02d", inRevCount))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW)
+                                .findFirst().map(Task::getTitle).orElse("Design system review"))
+                        .assigneeAvatar("SK")
+                        .build(),
+                ProjectOverviewDto.WorkStatusCardDto.builder()
+                        .statusKey(STATUS_BLOCKED)
+                        .statusLabel(STATUS_BLOCKED)
+                        .dotColor("red")
+                        .count(String.format("%02d", blockedCount))
+                        .exampleTask(tasks.stream().filter(t -> t != null && t.isBlocked()).findFirst()
+                                .map(Task::getTitle).orElse("Client copy approval"))
+                        .assigneeAvatar("PK")
+                        .build());
+    }
+
+    private List<ProjectOverviewDto.ProjectDocumentDto> buildProjectDocumentDtos(List<ProjectDocument> docs) {
+        return docs.stream()
+                .map(d -> ProjectOverviewDto.ProjectDocumentDto.builder()
+                        .name(d.getTitle())
+                        .fileType(d.getFileType())
+                        .fileSize(d.getFileSize() != null ? d.getFileSize() : "1.2 MB")
+                        .iconType(d.getFileType().toLowerCase())
+                        .build())
+                .toList();
+    }
+
+    private ProjectOverviewDto.PendingDecisionDto buildPendingDecisionDto(List<ProjectDecision> decisions) {
+        Optional<ProjectDecision> firstPending = decisions.stream().filter(d -> d.getStatus() == DecisionStatus.PENDING)
+                .findFirst();
+        ProjectOverviewDto.PendingDecisionDto pendingDecisionDto = null;
+        if (firstPending.isPresent()) {
+            ProjectDecision dec = firstPending.get();
+            String ownerName = dec.getDecider() != null ? dec.getDecider().getFullName() : "Lead Reviewer";
+            String initials = computeInitials(ownerName, "LR");
+            String dueLbl = dec.getDueDate() != null ? dec.getDueDate().format(DATE_FMT_D_MMM)
+                    : "Soon";
+            pendingDecisionDto = ProjectOverviewDto.PendingDecisionDto.builder()
+                    .title(dec.getTitle())
+                    .description(dec.getDescription() != null ? dec.getDescription() : "Decision awaiting review.")
+                    .statusLabel("Awaiting Your Review")
+                    .dueDateLabel(dueLbl)
+                    .ownerName(ownerName)
+                    .ownerInitials(initials)
+                    .build();
+        }
+        return pendingDecisionDto;
+    }
+
+    private List<String> resolveMemberInitials(List<ProjectMember> members) {
+        List<String> memberInitials = new ArrayList<>();
+        for (ProjectMember m : members) {
+            if (m.getUser() != null) {
+                memberInitials.add(computeInitials(m.getUser().getFullName(), "MB"));
+            }
+        }
+        if (memberInitials.isEmpty()) {
+            memberInitials = List.of("PK", "AR", "SK", "MJ");
+        }
+        return memberInitials;
+    }
+
     @Transactional
     public ProjectTasksDto getProjectTasks(String projectId) {
         Project project = resolveProject(projectId);
         if (project == null) {
-            return ProjectTasksDto.createDefault(projectId, "website redesign.", "Design Team", "15 Nov 2026",
-                    "ACTIVE");
+            return ProjectTasksDto.createDefault(projectId, DEFAULT_PROJECT_NAME, DEFAULT_WORKSPACE_NAME, DEFAULT_DUE_DATE,
+                    STATUS_ACTIVE);
         }
 
         List<Task> tasks = taskRepository.findByProjectIdWithDetails(project.getId());
         List<ProjectMilestone> milestones = projectMilestoneRepository.findByProjectIdOrderBySeqNumAsc(project.getId());
 
-        int totalTasks = tasks.size();
-        long todoCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).count();
-        long inProgCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
-        long inRevCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_REVIEW).count();
-        long completedCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED).count();
-        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
-
-        ProjectTasksDto.WorkStatusSummaryDto workStatus = ProjectTasksDto.WorkStatusSummaryDto.builder()
-                .totalTasks(totalTasks)
-                .todoCount((int) todoCount)
-                .todoPercent(totalTasks > 0 ? (todoCount * 100 / totalTasks) + "%" : "0%")
-                .inProgressCount((int) inProgCount)
-                .inProgressPercent(totalTasks > 0 ? (inProgCount * 100 / totalTasks) + "%" : "0%")
-                .inReviewCount((int) inRevCount)
-                .inReviewPercent(totalTasks > 0 ? (inRevCount * 100 / totalTasks) + "%" : "0%")
-                .completedCount((int) completedCount)
-                .completedPercent(totalTasks > 0 ? (completedCount * 100 / totalTasks) + "%" : "0%")
-                .blockedCount((int) blockedCount)
-                .blockedSubtitle("of " + totalTasks + " tasks")
-                .build();
-
-        List<ProjectTasksDto.TaskItemDto> inProgressItems = tasks.stream()
-                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS)
-                .map(this::mapToTaskItemDto)
-                .toList();
-
-        List<ProjectTasksDto.TaskItemDto> todoItems = tasks.stream()
-                .filter(t -> t != null && t.getStatus() == TaskStatus.TODO)
-                .map(this::mapToTaskItemDto)
-                .toList();
-
-        List<ProjectTasksDto.TaskItemDto> inReviewItems = tasks.stream()
-                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW)
-                .map(this::mapToTaskItemDto)
-                .toList();
-
-        List<ProjectTasksDto.TaskItemDto> completedItems = tasks.stream()
-                .filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED)
-                .map(this::mapToTaskItemDto)
-                .toList();
-
-        List<ProjectTasksDto.TaskGroupDto> taskGroups = List.of(
-                ProjectTasksDto.TaskGroupDto.builder().key("in_progress").label("In Progress")
-                        .count(inProgressItems.size()).dotColor("amber").isExpanded(true).tasks(inProgressItems)
-                        .build(),
-                ProjectTasksDto.TaskGroupDto.builder().key("todo").label("To Do").count(todoItems.size())
-                        .dotColor("gray").isExpanded(false).tasks(todoItems).build(),
-                ProjectTasksDto.TaskGroupDto.builder().key("in_review").label("In Review").count(inReviewItems.size())
-                        .dotColor("blue").isExpanded(false).tasks(inReviewItems).build(),
-                ProjectTasksDto.TaskGroupDto.builder().key("completed").label("Completed").count(completedItems.size())
-                        .dotColor("green").isCheckIcon(true).isExpanded(false).tasks(completedItems).build());
+        ProjectTasksDto.WorkStatusSummaryDto workStatus = buildWorkStatusSummary(tasks);
+        List<ProjectTasksDto.TaskGroupDto> taskGroups = buildTaskGroups(tasks);
 
         List<ProjectTasksDto.BlockedTaskDto> blockedList = tasks.stream()
                 .filter(t -> t != null && t.isBlocked())
@@ -886,21 +1184,9 @@ public class ProjectService {
                         .build())
                 .toList();
 
-        ProjectMilestone currMilestone = milestones.stream()
-                .filter(m -> m.getStatus() == MilestoneStatus.CURRENT)
-                .findFirst()
-                .orElse(milestones.isEmpty() ? null : milestones.get(0));
-
-        ProjectTasksDto.CurrentMilestoneDto currDto = null;
-        if (currMilestone != null) {
-            currDto = ProjectTasksDto.CurrentMilestoneDto.builder()
-                    .number("Milestone " + currMilestone.getCode())
-                    .name(currMilestone.getName())
-                    .activeTasksCount((int) inProgCount)
-                    .blockedTasksCount((int) blockedCount)
-                    .progressPercent(65)
-                    .build();
-        }
+        long inProgCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
+        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
+        ProjectTasksDto.CurrentMilestoneDto currDto = buildCurrentMilestoneDto(milestones, (int) inProgCount, (int) blockedCount);
 
         List<ProjectTasksDto.MilestoneSummaryDto> byMilestone = milestones.stream().map(m -> {
             long count = tasks.stream()
@@ -914,17 +1200,17 @@ public class ProjectService {
         }).toList();
 
         String dueStr = project.getDueDate() != null
-                ? project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                : "15 Nov 2026";
-        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : "Design Team";
+                ? project.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                : DEFAULT_DUE_DATE;
+        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : DEFAULT_TEAM_NAME;
 
         return ProjectTasksDto.builder()
                 .id(project.getId().toString())
-                .breadcrumb("PROJECTS / 02 / " + project.getName().toUpperCase())
+                .breadcrumb(BREADCRUMB_PROJECTS_PREFIX + project.getName().toUpperCase())
                 .title(project.getName())
                 .owner(ownerStr)
                 .dueDate(dueStr)
-                .status(project.getStatus() != null ? project.getStatus().name() : "Active")
+                .status(project.getStatus() != null ? project.getStatus().name() : STATUS_LABEL_ACTIVE)
                 .workStatus(workStatus)
                 .taskGroups(taskGroups)
                 .currentMilestone(currDto)
@@ -945,13 +1231,90 @@ public class ProjectService {
                 .build();
     }
 
+    private ProjectTasksDto.WorkStatusSummaryDto buildWorkStatusSummary(List<Task> tasks) {
+        int totalTasks = tasks.size();
+        long todoCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).count();
+        long inProgCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
+        long inRevCount = tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_REVIEW).count();
+        long completedCount = tasks.stream().filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED).count();
+        long blockedCount = tasks.stream().filter(t -> t != null && t.isBlocked()).count();
+
+        return ProjectTasksDto.WorkStatusSummaryDto.builder()
+                .totalTasks(totalTasks)
+                .todoCount((int) todoCount)
+                .todoPercent(totalTasks > 0 ? (todoCount * 100 / totalTasks) + "%" : "0%")
+                .inProgressCount((int) inProgCount)
+                .inProgressPercent(totalTasks > 0 ? (inProgCount * 100 / totalTasks) + "%" : "0%")
+                .inReviewCount((int) inRevCount)
+                .inReviewPercent(totalTasks > 0 ? (inRevCount * 100 / totalTasks) + "%" : "0%")
+                .completedCount((int) completedCount)
+                .completedPercent(totalTasks > 0 ? (completedCount * 100 / totalTasks) + "%" : "0%")
+                .blockedCount((int) blockedCount)
+                .blockedSubtitle("of " + totalTasks + " tasks")
+                .build();
+    }
+
+    private List<ProjectTasksDto.TaskGroupDto> buildTaskGroups(List<Task> tasks) {
+        List<ProjectTasksDto.TaskItemDto> inProgressItems = tasks.stream()
+                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_PROGRESS)
+                .map(this::mapToTaskItemDto)
+                .toList();
+
+        List<ProjectTasksDto.TaskItemDto> todoItems = tasks.stream()
+                .filter(t -> t != null && t.getStatus() == TaskStatus.TODO)
+                .map(this::mapToTaskItemDto)
+                .toList();
+
+        List<ProjectTasksDto.TaskItemDto> inReviewItems = tasks.stream()
+                .filter(t -> t != null && t.getStatus() == TaskStatus.IN_REVIEW)
+                .map(this::mapToTaskItemDto)
+                .toList();
+
+        List<ProjectTasksDto.TaskItemDto> completedItems = tasks.stream()
+                .filter(t -> t != null && t.getStatus() == TaskStatus.COMPLETED)
+                .map(this::mapToTaskItemDto)
+                .toList();
+
+        return List.of(
+                ProjectTasksDto.TaskGroupDto.builder().key("in_progress").label("In Progress")
+                        .count(inProgressItems.size()).dotColor(COLOR_AMBER).isExpanded(true).tasks(inProgressItems)
+                        .build(),
+                ProjectTasksDto.TaskGroupDto.builder().key("todo").label("To Do").count(todoItems.size())
+                        .dotColor("gray").isExpanded(false).tasks(todoItems).build(),
+                ProjectTasksDto.TaskGroupDto.builder().key("in_review").label("In Review").count(inReviewItems.size())
+                        .dotColor("blue").isExpanded(false).tasks(inReviewItems).build(),
+                ProjectTasksDto.TaskGroupDto.builder().key("completed").label("Completed").count(completedItems.size())
+                        .dotColor(COLOR_GREEN).isCheckIcon(true).isExpanded(false).tasks(completedItems).build());
+    }
+
+    private ProjectTasksDto.CurrentMilestoneDto buildCurrentMilestoneDto(
+            List<ProjectMilestone> milestones, int inProgCount, int blockedCount) {
+        ProjectMilestone currMilestone = milestones.stream()
+                .filter(m -> m.getStatus() == MilestoneStatus.CURRENT)
+                .findFirst()
+                .orElse(null);
+        if (currMilestone == null && !milestones.isEmpty()) {
+            currMilestone = milestones.get(0);
+        }
+
+        if (currMilestone == null) {
+            return null;
+        }
+
+        return ProjectTasksDto.CurrentMilestoneDto.builder()
+                .number("Milestone " + currMilestone.getCode())
+                .name(currMilestone.getName())
+                .activeTasksCount(inProgCount)
+                .blockedTasksCount(blockedCount)
+                .progressPercent(65)
+                .build();
+    }
+
     private ProjectTasksDto.TaskItemDto mapToTaskItemDto(Task t) {
-        String milestoneName = t.getMilestone() != null ? "Milestone " + t.getMilestone().getCode() : "General";
+        String milestoneName = t.getMilestone() != null ? "Milestone " + t.getMilestone().getCode() : PROJECT_TYPE_GENERAL;
         String assigneeName = t.getAssignee() != null ? t.getAssignee().getFullName() : "Unassigned";
-        String[] parts = assigneeName.trim().split("\\s+");
-        String initials = parts.length > 1 ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                : assigneeName.substring(0, Math.min(2, assigneeName.length())).toUpperCase();
-        String dueStr = t.getDueDate() != null ? t.getDueDate().format(DateTimeFormatter.ofPattern("d MMM")) : "TBD";
+        String initials = computeInitials(assigneeName, "UA");
+        String dueStr = t.getDueDate() != null ? t.getDueDate().format(DATE_FMT_D_MMM) : "TBD";
 
         return ProjectTasksDto.TaskItemDto.builder()
                 .id(t.getTaskCode() != null ? t.getTaskCode() : "T-" + t.getId().toString().substring(0, 4))
@@ -962,8 +1325,8 @@ public class ProjectService {
                 .assigneeInitials(initials)
                 .assigneeName(assigneeName)
                 .assigneeColor("#3B82F6")
-                .priority(t.getPriority() != null ? t.getPriority().name() : "MEDIUM")
-                .priorityStyle(t.getPriority() != null ? t.getPriority().name().toLowerCase() : "medium")
+                .priority(t.getPriority() != null ? t.getPriority().name() : PRIORITY_MEDIUM)
+                .priorityStyle(t.getPriority() != null ? t.getPriority().name().toLowerCase() : PRIORITY_LABEL_MEDIUM.toLowerCase())
                 .dueDate(dueStr)
                 .dueDateColor(t.isBlocked() ? "#DC2626" : "#111111")
                 .attachmentsCount(0)
@@ -976,8 +1339,8 @@ public class ProjectService {
     public ProjectDocumentsDto getProjectDocuments(String projectId) {
         Project project = resolveProject(projectId);
         if (project == null) {
-            return ProjectDocumentsDto.createDefault(projectId, "website redesign.", "Design Team", "15 Nov 2026",
-                    "ACTIVE");
+            return ProjectDocumentsDto.createDefault(projectId, DEFAULT_PROJECT_NAME, DEFAULT_WORKSPACE_NAME, DEFAULT_DUE_DATE,
+                    STATUS_ACTIVE);
         }
 
         List<ProjectDocument> docs = projectDocumentRepository.findByProjectIdWithAuthor(project.getId());
@@ -1000,15 +1363,18 @@ public class ProjectService {
                 .documents(docDtos)
                 .build();
 
-        ProjectDocument activeDoc = docs.stream().filter(ProjectDocument::isPinned).findFirst()
-                .orElse(docs.isEmpty() ? null : docs.get(0));
+        ProjectDocument activeDoc = docs.stream().filter(d -> Boolean.TRUE.equals(d.isPinned())).findFirst()
+                .orElse(null);
+        if (activeDoc == null && !docs.isEmpty()) {
+            activeDoc = docs.get(0);
+        }
         ProjectDocumentsDto.DocumentViewerDto viewer = null;
         if (activeDoc != null) {
             viewer = ProjectDocumentsDto.DocumentViewerDto.builder()
                     .docNumber(activeDoc.getDocNumber())
                     .title(activeDoc.getTitle())
                     .category(activeDoc.getCategory())
-                    .date(LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                    .date(LocalDate.now(ZoneId.systemDefault()).format(DATE_FMT_D_MMM_YYYY))
                     .team(project.getName())
                     .savedStatus("Saved 2 minutes ago")
                     .discussionParagraph1(activeDoc.getContent() != null ? activeDoc.getContent()
@@ -1016,31 +1382,23 @@ public class ProjectService {
                     .discussionHighlighted(
                             "We also agreed to simplify the navigation and reduce unnecessary interface controls.")
                     .discussionParagraph2Remainder(" The revised approach will improve usability and content strategy.")
-                    .collaborators(List.of(
-                            ProjectDocumentsDto.CollaboratorDto.builder().initials("MJ").name("Maria J.")
-                                    .colorClass("avatar-mj").build(),
-                            ProjectDocumentsDto.CollaboratorDto.builder().initials("PK").name("Peter K.")
-                                    .colorClass("avatar-pk").build()))
-                    .attendees(List.of(
-                            ProjectDocumentsDto.AttendeeDto.builder().initials("MJ").name("Maria J.")
-                                    .colorClass("avatar-mj").build(),
-                            ProjectDocumentsDto.AttendeeDto.builder().initials("PK").name("Peter K.")
-                                    .colorClass("avatar-pk").build()))
+                    .collaborators(List.of())
+                    .attendees(List.of())
                     .build();
         }
 
         String dueStr = project.getDueDate() != null
-                ? project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                : "15 Nov 2026";
-        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : "Design Team";
+                ? project.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                : DEFAULT_DUE_DATE;
+        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : DEFAULT_TEAM_NAME;
 
         return ProjectDocumentsDto.builder()
                 .id(project.getId().toString())
-                .breadcrumb("PROJECTS / 02 / " + project.getName().toUpperCase())
+                .breadcrumb(BREADCRUMB_PROJECTS_PREFIX + project.getName().toUpperCase())
                 .title(project.getName())
                 .owner(ownerStr)
                 .dueDate(dueStr)
-                .status(project.getStatus() != null ? project.getStatus().name() : "Active")
+                .status(project.getStatus() != null ? project.getStatus().name() : STATUS_LABEL_ACTIVE)
                 .library(library)
                 .activeDocument(viewer)
                 .build();
@@ -1052,62 +1410,115 @@ public class ProjectService {
         if (project == null) {
             Organization organization = resolveCurrentOrganization();
             List<Project> projs = projectRepository.findByOrganizationIdWithDetails(organization.getId());
-            project = projs.isEmpty() ? null : projs.get(0);
+            if (!projs.isEmpty()) {
+                project = projs.get(0);
+            }
         }
         if (project == null) {
             throw new ResourceNotFoundException("Project not found: " + projectId);
         }
 
         Organization org = project.getOrganization();
-
         final String projectName = project.getName() != null ? project.getName() : "Team";
 
         List<ActivityEvent> events = activityEventRepository
                 .findByOrganizationIdAndProjectIdOrderByEventTimestampDesc(org.getId(), project.getId());
 
         ZoneId zone = ZoneId.systemDefault();
-        LocalDate today = LocalDate.now(zone);
-        LocalDate yesterday = today.minusDays(1);
-
-        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(zone);
         DateTimeFormatter fullDateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(zone);
-        DateTimeFormatter dayNumFmt = DateTimeFormatter.ofPattern("dd").withZone(zone);
-        DateTimeFormatter monthYearFmt = DateTimeFormatter.ofPattern("MMM yyyy").withZone(zone);
-        DateTimeFormatter weekdayFmt = DateTimeFormatter.ofPattern("EEE").withZone(zone);
 
+        ActivityCounts counts = new ActivityCounts();
+        Map<String, List<ActivityEvent>> groupedByDate = groupActivityEventsByDate(events, fullDateFmt, counts);
+
+        List<ProjectActivityDto.ActivityDateGroupDto> dateGroups = buildActivityDateGroups(groupedByDate, projectName, zone);
+
+        ProjectActivityDto.SinceLastVisitDto sinceLastVisit = ProjectActivityDto.SinceLastVisitDto.builder()
+                .count(counts.important)
+                .title(counts.important + " important updates since your last visit")
+                .description("Includes milestone completions, mentions, and key decisions.")
+                .actionLabel("Dismiss")
+                .build();
+
+        ProjectActivityDto.ActivityFilterCountsDto filterCounts = ProjectActivityDto.ActivityFilterCountsDto.builder()
+                .milestones(counts.milestones)
+                .decisions(counts.decisions)
+                .taskUpdates(counts.tasks)
+                .documentActivity(counts.docs)
+                .comments(counts.comments)
+                .filesAndAttachments(counts.files)
+                .mentions(counts.mentions)
+                .build();
+
+        String dueStr = project.getDueDate() != null
+                ? project.getDueDate().format(DATE_FMT_D_MMM_YYYY)
+                : DEFAULT_DUE_DATE;
+        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : DEFAULT_TEAM_NAME;
+
+        return ProjectActivityDto.builder()
+                .id(project.getId().toString())
+                .breadcrumb(BREADCRUMB_PROJECTS_PREFIX + project.getName().toUpperCase())
+                .title(project.getName())
+                .owner(ownerStr)
+                .dueDate(dueStr)
+                .status(project.getStatus() != null ? project.getStatus().name() : STATUS_LABEL_ACTIVE)
+                .sinceLastVisit(sinceLastVisit)
+                .filterCounts(filterCounts)
+                .dateGroups(dateGroups)
+                .build();
+    }
+
+    private static class ActivityCounts {
+        int milestones;
+        int decisions;
+        int tasks;
+        int docs;
+        int comments;
+        int files;
+        int mentions;
+        int important;
+    }
+
+    private Map<String, List<ActivityEvent>> groupActivityEventsByDate(
+            List<ActivityEvent> events, DateTimeFormatter fullDateFmt, ActivityCounts counts) {
         Map<String, List<ActivityEvent>> groupedByDate = new LinkedHashMap<>();
-        int countMilestones = 0;
-        int countDecisions = 0;
-        int countTasks = 0;
-        int countDocs = 0;
-        int countComments = 0;
-        int countFiles = 0;
-        int countMentions = 0;
-        int importantCount = 0;
-
         for (ActivityEvent e : events) {
             Instant ts = e.getEventTimestamp() != null ? e.getEventTimestamp() : Instant.now();
             String dateKey = fullDateFmt.format(ts);
             groupedByDate.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(e);
 
-            String catKey = e.getCategoryKey() != null ? e.getCategoryKey().toLowerCase() : "";
-            switch (catKey) {
-                case "milestones" -> countMilestones++;
-                case "decisions" -> countDecisions++;
-                case "tasks" -> countTasks++;
-                case "documents" -> countDocs++;
-                case "comments" -> countComments++;
-                case "files" -> countFiles++;
-                default -> {
-                }
-            }
-            if (e.isMention()) {
-                countMentions++;
-            }
-            if (e.isImportant()) {
-                importantCount++;
-            }
+            tallyActivityEvent(e, counts);
         }
+        return groupedByDate;
+    }
+
+    private void tallyActivityEvent(ActivityEvent e, ActivityCounts counts) {
+        String catKey = e.getCategoryKey() != null ? e.getCategoryKey().toLowerCase() : "";
+        switch (catKey) {
+            case "milestones" -> counts.milestones++;
+            case "decisions" -> counts.decisions++;
+            case "tasks" -> counts.tasks++;
+            case "documents" -> counts.docs++;
+            case "comments" -> counts.comments++;
+            case "files" -> counts.files++;
+            default -> { /* other categories ignored */ }
+        }
+        if (e.isMention()) {
+            counts.mentions++;
+        }
+        if (e.isImportant()) {
+            counts.important++;
+        }
+    }
+
+    private List<ProjectActivityDto.ActivityDateGroupDto> buildActivityDateGroups(
+            Map<String, List<ActivityEvent>> groupedByDate, String projectName, ZoneId zone) {
+        LocalDate today = LocalDate.now(zone);
+        LocalDate yesterday = today.minusDays(1);
+
+        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm").withZone(zone);
+        DateTimeFormatter dayNumFmt = DateTimeFormatter.ofPattern("dd").withZone(zone);
+        DateTimeFormatter monthYearFmt = DateTimeFormatter.ofPattern("MMM yyyy").withZone(zone);
+        DateTimeFormatter weekdayFmt = DateTimeFormatter.ofPattern("EEE").withZone(zone);
 
         List<ProjectActivityDto.ActivityDateGroupDto> dateGroups = new ArrayList<>();
         for (Map.Entry<String, List<ActivityEvent>> entry : groupedByDate.entrySet()) {
@@ -1117,58 +1528,11 @@ public class ProjectService {
                     : Instant.now();
             LocalDate eventLocalDate = LocalDate.ofInstant(firstTs, zone);
 
-            String weekday;
-            if (eventLocalDate.equals(today)) {
-                weekday = "TODAY";
-            } else if (eventLocalDate.equals(yesterday)) {
-                weekday = "YESTERDAY";
-            } else {
-                weekday = weekdayFmt.format(firstTs).toUpperCase();
-            }
+            String weekday = resolveWeekdayLabel(eventLocalDate, today, yesterday, weekdayFmt, firstTs);
 
-            List<ProjectActivityDto.ActivityEventDto> eventDtos = dayEvents.stream().map(e -> {
-                Instant et = e.getEventTimestamp() != null ? e.getEventTimestamp() : Instant.now();
-
-                String initials = "TD";
-                String actorName = "Team Member";
-                String actorTeam = projectName;
-                String avatarColor = "#3B82F6";
-
-                if (e.getActor() != null) {
-                    actorName = e.getActor().getFullName();
-                    if (actorName != null && !actorName.isBlank()) {
-                        String[] parts = actorName.trim().split("\\s+");
-                        if (parts.length >= 2) {
-                            initials = ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-                        } else if (parts.length == 1 && !parts[0].isEmpty()) {
-                            initials = parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-                        }
-                    }
-                }
-
-                return ProjectActivityDto.ActivityEventDto.builder()
-                        .id(e.getId().toString())
-                        .time(timeFmt.format(et))
-                        .category(e.getBadgeType() != null ? e.getBadgeType() : "ACTIVITY")
-                        .categoryKey(e.getCategoryKey() != null ? e.getCategoryKey() : "tasks")
-                        .dotColor(e.getDotColor() != null ? e.getDotColor() : "blue")
-                        .iconType(e.getIconType() != null ? e.getIconType() : "check-circle")
-                        .iconBgClass(e.getIconBgClass() != null ? e.getIconBgClass() : "icon-bg-blue")
-                        .title(e.getTitle())
-                        .description(e.getDescription())
-                        .statusFrom(e.getStatusFrom())
-                        .statusTo(e.getStatusTo())
-                        .userInitials(initials)
-                        .userName(actorName)
-                        .userTeam(actorTeam)
-                        .avatarColor(avatarColor)
-                        .actionLabel(e.getActionLabel())
-                        .actionType(e.getActionType())
-                        .actionTargetId(e.getActionTargetId())
-                        .isImportant(e.isImportant())
-                        .isMention(e.isMention())
-                        .build();
-            }).toList();
+            List<ProjectActivityDto.ActivityEventDto> eventDtos = dayEvents.stream()
+                    .map(e -> mapToActivityEventDto(e, timeFmt, projectName))
+                    .toList();
 
             dateGroups.add(ProjectActivityDto.ActivityDateGroupDto.builder()
                     .dayNumber(dayNumFmt.format(firstTs))
@@ -1178,39 +1542,157 @@ public class ProjectService {
                     .events(eventDtos)
                     .build());
         }
+        return dateGroups;
+    }
 
-        ProjectActivityDto.SinceLastVisitDto sinceLastVisit = ProjectActivityDto.SinceLastVisitDto.builder()
-                .count(importantCount)
-                .title(importantCount + " important updates since your last visit")
-                .description("Includes milestone completions, mentions, and key decisions.")
-                .actionLabel("Dismiss")
+    private String resolveWeekdayLabel(LocalDate eventDate, LocalDate today, LocalDate yesterday,
+                                       DateTimeFormatter weekdayFmt, Instant firstTs) {
+        if (eventDate.equals(today)) {
+            return "TODAY";
+        }
+        if (eventDate.equals(yesterday)) {
+            return "YESTERDAY";
+        }
+        return weekdayFmt.format(firstTs).toUpperCase();
+    }
+
+    private ProjectActivityDto.ActivityEventDto mapToActivityEventDto(
+            ActivityEvent e, DateTimeFormatter timeFmt, String projectName) {
+        Instant et = e.getEventTimestamp() != null ? e.getEventTimestamp() : Instant.now();
+        String actorName = (e.getActor() != null && e.getActor().getFullName() != null)
+                ? e.getActor().getFullName() : "Team Member";
+        String initials = computeInitials(actorName, "TD");
+
+        return ProjectActivityDto.ActivityEventDto.builder()
+                .id(e.getId().toString())
+                .time(timeFmt.format(et))
+                .category(e.getBadgeType() != null ? e.getBadgeType() : "ACTIVITY")
+                .categoryKey(e.getCategoryKey() != null ? e.getCategoryKey() : "tasks")
+                .dotColor(e.getDotColor() != null ? e.getDotColor() : "blue")
+                .iconType(e.getIconType() != null ? e.getIconType() : "check-circle")
+                .iconBgClass(e.getIconBgClass() != null ? e.getIconBgClass() : "icon-bg-blue")
+                .title(e.getTitle())
+                .description(e.getDescription())
+                .statusFrom(e.getStatusFrom())
+                .statusTo(e.getStatusTo())
+                .userInitials(initials)
+                .userName(actorName)
+                .userTeam(projectName)
+                .avatarColor("#3B82F6")
+                .actionLabel(e.getActionLabel())
+                .actionType(e.getActionType())
+                .actionTargetId(e.getActionTargetId())
+                .isImportant(e.isImportant())
+                .isMention(e.isMention())
                 .build();
+    }
 
-        ProjectActivityDto.ActivityFilterCountsDto filterCounts = ProjectActivityDto.ActivityFilterCountsDto.builder()
-                .milestones(countMilestones)
-                .decisions(countDecisions)
-                .taskUpdates(countTasks)
-                .documentActivity(countDocs)
-                .comments(countComments)
-                .filesAndAttachments(countFiles)
-                .mentions(countMentions)
-                .build();
+    @Transactional(readOnly = true)
+    public List<PinnedProjectDto> getPinnedProjectsForCurrentUser() {
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser();
 
-        String dueStr = project.getDueDate() != null
-                ? project.getDueDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                : "15 Nov 2026";
-        String ownerStr = project.getOwner() != null ? project.getOwner().getFullName() : "Design Team";
+        List<UserPinnedProject> pinned = userPinnedProjectRepository
+                .findByUserIdAndOrganizationIdWithProject(currentUser.getId(), organization.getId());
 
-        return ProjectActivityDto.builder()
+        return pinned.stream()
+                .filter(upp -> upp.getProject() != null)
+                .map(upp -> {
+                    Project p = upp.getProject();
+                    String status = p.getStatus() != null ? p.getStatus().name() : STATUS_ACTIVE;
+                    String statusDot = resolveProjectStatusDotColor(status);
+                    return PinnedProjectDto.builder()
+                            .id(p.getId().toString())
+                            .name(p.getName())
+                            .status(status)
+                            .statusLabel(status.replace("_", " "))
+                            .statusDotColor(statusDot)
+                            .url("/pages/projects/project-detail/project-detail.html?id=" + p.getId())
+                            .sortOrder(upp.getSortOrder())
+                            .build();
+                })
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OngoingProjectOptionDto> getOngoingProjectsAvailableForPinning() {
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser();
+
+        List<Project> allProjects = projectRepository.findByOrganizationIdWithDetails(organization.getId());
+        List<UserPinnedProject> pinnedList = userPinnedProjectRepository
+                .findByUserIdAndOrganizationIdWithProject(currentUser.getId(), organization.getId());
+
+        Set<UUID> pinnedProjectIds = pinnedList.stream()
+                .filter(upp -> upp.getProject() != null)
+                .map(upp -> upp.getProject().getId())
+                .collect(Collectors.toSet());
+
+        return allProjects.stream()
+                .filter(p -> p.getStatus() != ProjectStatus.COMPLETED && p.getStatus() != ProjectStatus.CANCELLED)
+                .map(p -> {
+                    String status = p.getStatus() != null ? p.getStatus().name() : STATUS_ACTIVE;
+                    String statusDot = resolveProjectStatusDotColor(status);
+                    return OngoingProjectOptionDto.builder()
+                            .id(p.getId().toString())
+                            .name(p.getName())
+                            .status(status)
+                            .statusLabel(status.replace("_", " "))
+                            .statusDotColor(statusDot)
+                            .isPinned(pinnedProjectIds.contains(p.getId()))
+                            .build();
+                })
+                .toList();
+    }
+
+    @Transactional
+    public PinnedProjectDto pinProjectForCurrentUser(UUID projectId) {
+        Organization organization = resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser();
+
+        Project project = projectRepository.findByIdAndOrganizationId(projectId, organization.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found: " + projectId));
+
+        if (project.getStatus() == ProjectStatus.COMPLETED || project.getStatus() == ProjectStatus.CANCELLED) {
+            throw new BadRequestException("Only ongoing projects can be pinned");
+        }
+
+        Optional<UserPinnedProject> existing = userPinnedProjectRepository
+                .findByUserIdAndProjectId(currentUser.getId(), projectId);
+
+        UserPinnedProject upp;
+        if (existing.isPresent()) {
+            upp = existing.get();
+        } else {
+            long currentCount = userPinnedProjectRepository.countByUserIdAndOrganizationId(currentUser.getId(), organization.getId());
+            upp = UserPinnedProject.builder()
+                    .id(UUID.randomUUID())
+                    .organization(organization)
+                    .user(currentUser)
+                    .project(project)
+                    .sortOrder((int) currentCount)
+                    .build();
+            upp = userPinnedProjectRepository.save(upp);
+        }
+
+        String status = project.getStatus() != null ? project.getStatus().name() : STATUS_ACTIVE;
+        String statusDot = resolveProjectStatusDotColor(status);
+
+        return PinnedProjectDto.builder()
                 .id(project.getId().toString())
-                .breadcrumb("PROJECTS / 02 / " + project.getName().toUpperCase())
-                .title(project.getName())
-                .owner(ownerStr)
-                .dueDate(dueStr)
-                .status(project.getStatus() != null ? project.getStatus().name() : "Active")
-                .sinceLastVisit(sinceLastVisit)
-                .filterCounts(filterCounts)
-                .dateGroups(dateGroups)
+                .name(project.getName())
+                .status(status)
+                .statusLabel(status.replace("_", " "))
+                .statusDotColor(statusDot)
+                .url("/pages/projects/project-detail/project-detail.html?id=" + project.getId())
+                .sortOrder(upp.getSortOrder())
                 .build();
+    }
+
+    @Transactional
+    public void unpinProjectForCurrentUser(UUID projectId) {
+        resolveCurrentOrganization();
+        User currentUser = resolveCurrentUser();
+        userPinnedProjectRepository.deleteByUserIdAndProjectId(currentUser.getId(), projectId);
     }
 }

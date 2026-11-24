@@ -13,7 +13,7 @@
   <!-- Workspace Selector Dropdown -->
   <div class="sidebar-workspace-select">
     <div class="workspace-eyebrow">WORKSPACE</div>
-    <button class="workspace-dropdown-trigger" id="workspace-dropdown-trigger" aria-haspopup="true" aria-expanded="false" title="Switch Workspace">
+    <button type="button" class="workspace-dropdown-trigger" id="workspace-dropdown-trigger" aria-haspopup="true" aria-expanded="false" title="Switch Workspace">
       <span class="workspace-name" id="sidebar-workspace-name">Acme Co.</span>
       <svg class="workspace-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
@@ -105,57 +105,33 @@
     <div class="sidebar-divider"></div>
 
     <!-- Pinned Items Section -->
-    <div class="sidebar-pinned-section">
+    <div class="sidebar-pinned-section" id="sidebar-pinned-section">
       <div class="pinned-header">
         <span class="pinned-title">PINNED</span>
-        <button class="pinned-add-btn" id="pinned-add-btn" title="Add pinned item" aria-label="Add pinned item">+</button>
+        <button class="pinned-add-btn" id="pinned-add-btn" title="Pin ongoing project" aria-label="Pin ongoing project" type="button">+</button>
       </div>
-      <div class="pinned-list">
-        <a href="/pages/projects/project-detail/project-detail.html?id=featured-01" class="pinned-item" data-tooltip="Website Redesign">
-          <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="pinned-label">Website Redesign</span>
-        </a>
 
-        <a href="/pages/workspace/team-libraries/team-libraries.html" class="pinned-item" data-tooltip="Brand Guidelines">
-          <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-          <span class="pinned-label">Brand Guidelines</span>
-        </a>
-
-        <a href="#client-application" class="pinned-item" data-tooltip="Client Application">
-          <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="pinned-label">Client Application</span>
-        </a>
-
-        <a href="#marketing" class="pinned-item" data-tooltip="Marketing">
-          <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="pinned-label">Marketing</span>
-        </a>
-
-        <a href="#product-roadmap" class="pinned-item" data-tooltip="Product Roadmap">
-          <svg class="pinned-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="pinned-label">Product Roadmap</span>
-        </a>
+      <!-- Pinned Project Picker Popover (shown on '+' click) -->
+      <div class="pinned-picker-popover" id="pinned-picker-popover" style="display: none;" role="dialog" aria-label="Pin Ongoing Project">
+        <div class="pinned-picker-header">
+          <span class="pinned-picker-title">Pin ongoing project</span>
+          <button type="button" class="pinned-picker-close" id="pinned-picker-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="pinned-picker-list" id="pinned-picker-list">
+          <!-- Populated dynamically via Sidebar.openPinPicker() -->
+        </div>
       </div>
+
+      <!-- Dynamic User Pinned Project List -->
+      <ul class="pinned-list" id="sidebar-pinned-list">
+        <!-- Rendered dynamically for current user via Sidebar.loadPinnedProjects() -->
+      </ul>
     </div>
   </div>
 
   <!-- Sidebar Footer: Settings & Help -->
   <div class="sidebar-footer">
-    <a href="#settings" class="sidebar-footer-link" id="nav-settings" title="Settings" data-tooltip="Settings">
+    <a href="/pages/settings/settings.html" class="sidebar-footer-link" id="nav-settings" title="Settings" data-tooltip="Settings">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"></circle>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -169,7 +145,7 @@
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
       </svg>
-      <span class="footer-label">Help & Support</span>
+      <span class="footer-label">Help &amp; Support</span>
     </a>
   </div>
 </aside>

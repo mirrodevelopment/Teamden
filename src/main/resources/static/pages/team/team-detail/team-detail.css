@@ -73,11 +73,22 @@ body.sidebar-collapsed .tdet-main-area {
   min-width: 0;
 }
 
+.tdet-members-team-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--dash-text-muted);
+}
+
 .tdet-rail-pane {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 0.85rem;
   width: 100%;
+}
+
+.tdet-rail-pane.active {
+  display: flex;
+}
 }
 
 /* Ensure inner tab layouts flow as full width inside the left column */

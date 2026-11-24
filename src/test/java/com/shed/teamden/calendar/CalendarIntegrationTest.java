@@ -77,9 +77,16 @@ public class CalendarIntegrationTest {
                 .build();
 
         jdbcTemplate.execute("DELETE FROM task_linked_documents");
+        jdbcTemplate.execute("DELETE FROM inbox_items");
+        jdbcTemplate.execute("DELETE FROM inbox_preferences");
+        jdbcTemplate.execute("DELETE FROM user_pinned_projects");
         jdbcTemplate.execute("DELETE FROM employee_shared_documents");
         jdbcTemplate.execute("DELETE FROM employee_collaborations");
         jdbcTemplate.execute("DELETE FROM employee_responsibilities");
+        jdbcTemplate.execute("DELETE FROM workspace_role_permissions");
+        jdbcTemplate.execute("DELETE FROM workspace_security_policies");
+        jdbcTemplate.execute("DELETE FROM workspace_integrations");
+        jdbcTemplate.execute("DELETE FROM workspace_settings");
         jdbcTemplate.execute("DELETE FROM workspace_roles");
         jdbcTemplate.execute("DELETE FROM employees");
         jdbcTemplate.execute("DELETE FROM departments");

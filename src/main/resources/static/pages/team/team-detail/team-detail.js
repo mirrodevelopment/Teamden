@@ -17,65 +17,48 @@
   let currentActiveTab = 'overview';
   let currentUser = null;
 
-  /* ── Team Registry ─────────────────────────────────────────────────────── */
-  const TEAMS_REGISTRY = {
-    'team-design': {
-      id: 'team-design',
-      num: '01',
-      name: 'DESIGN TEAM',
-      title: 'design team.',
-      subtitle: 'Creating thoughtful digital experiences, together.',
-      count: '4 members',
-      members: [
-        { id: 'u1', name: 'Priya Kapoor', initials: 'PK', role: 'Design Lead', bgClass: 'avatar--pk', email: 'priya@acme.co' },
-        { id: 'u2', name: 'Alex Rivera', initials: 'AR', role: 'Senior Product Designer', bgClass: 'avatar--ar', email: 'alex@acme.co' },
-        { id: 'u3', name: 'Samir Khan', initials: 'SK', role: 'Systems & Brand Designer', bgClass: 'avatar--sk', email: 'samir@acme.co' },
-        { id: 'u4', name: 'Maya Jones', initials: 'MJ', role: 'Staff Frontend Engineer', bgClass: 'avatar--mj', email: 'maya@acme.co' }
-      ]
-    },
-    'team-engineering': {
-      id: 'team-engineering',
-      num: '02',
-      name: 'ENGINEERING TEAM',
-      title: 'engineering team.',
-      subtitle: 'Development, systems and scalable delivery.',
-      count: '6 members',
-      members: [
-        { id: 'u4', name: 'Maya Jones', initials: 'MJ', role: 'Staff Frontend Engineer', bgClass: 'avatar--mj', email: 'maya@acme.co' },
-        { id: 'u6', name: 'Rohan Kumar', initials: 'RK', role: 'Senior Backend Engineer', bgClass: 'avatar--rk', email: 'rohan@acme.co' },
-        { id: 'u8', name: 'Ananya Verma', initials: 'AV', role: 'Cloud Platform Architect', bgClass: 'avatar--av', email: 'ananya@acme.co' },
-        { id: 'u7', name: 'Sarah Miller', initials: 'SM', role: 'Director of Operations', bgClass: 'avatar--sm', email: 'sarah@acme.co' }
-      ]
-    },
-    'team-content': {
-      id: 'team-content',
-      num: '03',
-      name: 'CONTENT TEAM',
-      title: 'content team.',
-      subtitle: 'Communication, writing and shared organizational knowledge.',
-      count: '5 members',
-      members: [
-        { id: 'u5', name: 'Nisha Varma', initials: 'NV', role: 'Content Strategy Lead', bgClass: 'avatar--nv', email: 'nisha@acme.co' },
-        { id: 'u3', name: 'Samir Khan', initials: 'SK', role: 'Systems & Brand Designer', bgClass: 'avatar--sk', email: 'samir@acme.co' },
-        { id: 'u2', name: 'Alex Rivera', initials: 'AR', role: 'Senior Product Designer', bgClass: 'avatar--ar', email: 'alex@acme.co' },
-        { id: 'u1', name: 'Priya Kapoor', initials: 'PK', role: 'Design Lead', bgClass: 'avatar--pk', email: 'priya@acme.co' }
-      ]
-    },
-    'team-operations': {
-      id: 'team-operations',
-      num: '04',
-      name: 'OPERATIONS TEAM',
-      title: 'operations team.',
-      subtitle: 'Coordination, agile sprint planning and handoffs.',
-      count: '4 members',
-      members: [
-        { id: 'u7', name: 'Sarah Miller', initials: 'SM', role: 'Director of Operations', bgClass: 'avatar--sm', email: 'sarah@acme.co' },
-        { id: 'u1', name: 'Priya Kapoor', initials: 'PK', role: 'Design Lead', bgClass: 'avatar--pk', email: 'priya@acme.co' },
-        { id: 'u6', name: 'Rohan Kumar', initials: 'RK', role: 'Senior Backend Engineer', bgClass: 'avatar--rk', email: 'rohan@acme.co' },
-        { id: 'u8', name: 'Ananya Verma', initials: 'AV', role: 'Cloud Platform Architect', bgClass: 'avatar--av', email: 'ananya@acme.co' }
-      ]
+  /* ── Team Registry (dynamically populated from /api/departments & /api/employees) ── */
+  let TEAMS_REGISTRY = {};
+
+  async function fetchTeamRegistry() {
+    try {
+      const [empRes, deptRes] = await Promise.all([
+        fetch('/api/employees'),
+        fetch('/api/departments')
+      ]);
+      if (empRes.ok && deptRes.ok) {
+        const employees = await empRes.json();
+        const departments = await deptRes.json();
+
+        const allPeople = employees.map(e => ({
+          id: e.id,
+          name: e.fullName,
+          initials: e.initials || 'AC',
+          role: e.jobTitle || e.roleTitle || 'Team Member',
+          dept: (e.departmentName || '').toLowerCase().replace(' team', '').trim() || 'design',
+          email: e.email,
+          bgClass: 'avatar--' + (e.cardTheme || 'pk')
+        }));
+
+        departments.forEach((d, index) => {
+          const deptKey = d.name.toLowerCase().replace(' team', '').trim();
+          const teamId = 'team-' + deptKey;
+          const members = allPeople.filter(p => p.dept === deptKey);
+          TEAMS_REGISTRY[teamId] = {
+            id: teamId,
+            num: String(index + 1).padStart(2, '0'),
+            name: d.name.toUpperCase(),
+            title: d.name.toLowerCase() + '.',
+            subtitle: d.subtitle || 'Creating thoughtful digital experiences, together.',
+            count: `${members.length} members`,
+            members: members
+          };
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to fetch team registry:', e);
     }
-  };
+  }
 
   /* ── Fragment Fetcher ──────────────────────────────────────────────────── */
   async function loadFragment(url, containerId) {
@@ -214,12 +197,13 @@
 
   /* ── Main Init ────────────────────────────────────────────────────────── */
   async function init() {
-    // 1. Session check
+    // 1. Session check & fetch team entities from DB
     try {
       if (window.Auth && typeof Auth.checkSession === 'function') {
         currentUser = await Auth.checkSession();
       }
     } catch (e) { /* dev mode */ }
+    await fetchTeamRegistry();
 
     // 2. Load sidebar and navbar fragments
     await Promise.all([

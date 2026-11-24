@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -58,11 +58,11 @@
             <!-- View Mode Switcher (Day, Week, Month, Agenda) -->
             <div class="calendar-view-controls">
               <div class="segmented-view-group" role="tablist" aria-label="Calendar view mode">
-                <button class="view-btn" data-view="day" role="tab" aria-selected="false" id="view-tab-day">Day</button>
-                <button class="view-btn active" data-view="week" role="tab" aria-selected="true" id="view-tab-week">Week</button>
-                <button class="view-btn" data-view="month" role="tab" aria-selected="false" id="view-tab-month">Month</button>
-                <button class="view-btn" data-view="agenda" role="tab" aria-selected="false" id="view-tab-agenda">Agenda</button>
-                <button class="view-btn" data-view="table" role="tab" aria-selected="false" id="view-tab-table">Table</button>
+                <button type="button" class="view-btn" data-view="day" role="tab" aria-selected="false" id="view-tab-day">Day</button>
+                <button type="button" class="view-btn active" data-view="week" role="tab" aria-selected="true" id="view-tab-week">Week</button>
+                <button type="button" class="view-btn" data-view="month" role="tab" aria-selected="false" id="view-tab-month">Month</button>
+                <button type="button" class="view-btn" data-view="agenda" role="tab" aria-selected="false" id="view-tab-agenda">Agenda</button>
+                <button type="button" class="view-btn" data-view="table" role="tab" aria-selected="false" id="view-tab-table">Table</button>
               </div>
             </div>
           </header>
@@ -72,11 +72,11 @@
             <h2 class="calendar-period-heading" id="calendar-period-heading">26 – 30 October 2026</h2>
 
             <div class="calendar-nav-actions">
-              <button class="cal-nav-btn" id="cal-prev-btn" title="Previous period" aria-label="Previous period">
+              <button type="button" class="cal-nav-btn" id="cal-prev-btn" title="Previous period" aria-label="Previous period">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
               </button>
-              <button class="cal-today-btn" id="cal-today-btn">Today</button>
-              <button class="cal-nav-btn" id="cal-next-btn" title="Next period" aria-label="Next period">
+              <button type="button" class="cal-today-btn" id="cal-today-btn">Today</button>
+              <button type="button" class="cal-nav-btn" id="cal-next-btn" title="Next period" aria-label="Next period">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </button>
             </div>
@@ -94,7 +94,6 @@
 
           <!-- MAIN CALENDAR CONTAINER (Pill Views) -->
           <section class="main-calendar-card" aria-label="Main Calendar Grid">
-            
             <!-- 1. WEEK VIEW PANE (Default) -->
             <div class="calendar-view-pane active" id="pane-week">
               <!-- Week Day Column Headers -->
@@ -229,7 +228,7 @@
                   <table class="cal-events-table" id="cal-events-table">
                     <thead>
                       <tr>
-                        <th class="th-col-date">DATE & TIME</th>
+                        <th class="th-col-date">DATE &amp; TIME</th>
                         <th class="th-col-title">EVENT</th>
                         <th class="th-col-project">PROJECT</th>
                         <th class="th-col-category">CATEGORY</th>
@@ -335,7 +334,7 @@
        =================================================================== -->
   <div class="event-drawer-backdrop" id="event-drawer-backdrop"></div>
 
-  <aside class="event-details-drawer" id="event-details-drawer" role="dialog" aria-modal="true" aria-label="Event Details Drawer">
+  <aside class="event-details-drawer" id="event-details-drawer" aria-label="Event Details Drawer">
     <div class="drawer-scroll-container">
 
       <!-- A. Drawer Header -->
@@ -543,11 +542,11 @@
   </aside>
 
   <!-- 2. CREATE / EDIT EVENT MODAL -->
-  <div class="cal-modal-overlay" id="event-create-modal" role="dialog" aria-modal="true" aria-labelledby="create-modal-title">
+  <div class="cal-modal-overlay" id="event-create-modal">
     <div class="cal-modal-card">
       <div class="cal-modal-header">
         <h3 class="cal-modal-title" id="create-modal-title">Create New Event</h3>
-        <button class="cal-modal-close-btn" id="btn-close-create" title="Close" aria-label="Close modal">✕</button>
+        <button type="button" class="cal-modal-close-btn" id="btn-close-create" title="Close" aria-label="Close modal">✕</button>
       </div>
 
       <form id="create-event-form" class="cal-modal-form">
@@ -622,21 +621,21 @@
   </div>
 
   <!-- 3. TEAM AVAILABILITY MODAL -->
-  <div class="cal-modal-overlay" id="team-avail-modal" role="dialog" aria-modal="true" aria-labelledby="team-avail-modal-title">
+  <div class="cal-modal-overlay" id="team-avail-modal">
     <div class="cal-modal-card team-avail-modal-card">
       <div class="cal-modal-header">
         <div>
           <h3 class="cal-modal-title" id="team-avail-modal-title">Team Shared Availability</h3>
           <p class="modal-subtitle">Find a free meeting slot across team members</p>
         </div>
-        <button class="cal-modal-close-btn" id="btn-close-team-avail" title="Close" aria-label="Close modal">✕</button>
+        <button type="button" class="cal-modal-close-btn" id="btn-close-team-avail" title="Close" aria-label="Close modal">✕</button>
       </div>
 
       <div class="cal-modal-body">
         <div class="avail-date-selector">
-          <button class="avail-nav-arrow" id="avail-prev-day">‹</button>
+          <button type="button" class="avail-nav-arrow" id="avail-prev-day">‹</button>
           <span class="avail-current-day" id="avail-current-day-label">Monday, 26 October 2026</span>
-          <button class="avail-nav-arrow" id="avail-next-day">›</button>
+          <button type="button" class="avail-nav-arrow" id="avail-next-day">›</button>
         </div>
 
         <div class="team-schedule-matrix" id="team-schedule-matrix">
@@ -657,11 +656,11 @@
   </div>
 
   <!-- 4. MANAGE CALENDARS MODAL -->
-  <div class="cal-modal-overlay" id="manage-calendars-modal" role="dialog" aria-modal="true" aria-labelledby="manage-cal-title">
+  <div class="cal-modal-overlay" id="manage-calendars-modal">
     <div class="cal-modal-card">
       <div class="cal-modal-header">
         <h3 class="cal-modal-title" id="manage-cal-title">Connected Calendars</h3>
-        <button class="cal-modal-close-btn" id="btn-close-manage-cal" title="Close" aria-label="Close modal">✕</button>
+        <button type="button" class="cal-modal-close-btn" id="btn-close-manage-cal" title="Close" aria-label="Close modal">✕</button>
       </div>
 
       <div class="cal-modal-body">

@@ -1,10 +1,12 @@
 package com.shed.teamden.notification.controller;
 
+import com.shed.teamden.notification.dto.CreateNotificationRequestDto;
 import com.shed.teamden.notification.dto.NotificationDto;
 import com.shed.teamden.notification.dto.NotificationResponseDto;
 import com.shed.teamden.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,12 @@ public class NotificationController {
     ) {
         NotificationResponseDto response = notificationService.getNotifications(tab, filter, activeItemId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<NotificationDto> createNotification(@RequestBody CreateNotificationRequestDto request) {
+        NotificationDto created = notificationService.createNotification(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}/read")

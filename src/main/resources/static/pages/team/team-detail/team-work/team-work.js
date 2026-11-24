@@ -29,255 +29,8 @@
   };
 
   /* ── Baseline Tasks Seed Data adhering to Screenshot & Specifications ──── */
-  let TASKS = [
-    // ── IN PROGRESS ────────────────────────────────────────────────────────
-    {
-      id: 'TASK-014',
-      num: 'TASK 014',
-      project: 'Website Redesign',
-      title: 'Homepage interaction refinements',
-      dueDate: 'Due 28 Oct 2026',
-      docs: '2 linked documents',
-      priority: 'High priority',
-      assignee: 'MJ',
-      assigneeName: 'Maria J.',
-      assigneeBg: 'avatar--mj',
-      status: 'IN_PROGRESS',
-      statusLabel: 'In progress',
-      statusClass: 'tw-status-pill--progress',
-      iconType: 'purple',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
-      desc: 'Finalise interactive hero states, navigation hover feedback, and mobile drawer transitions.',
-      subtasks: [
-        { id: 'st1', title: 'Header elevation on scroll threshold', completed: true },
-        { id: 'st2', title: 'Navigation drawer gesture handling', completed: true },
-        { id: 'st3', title: 'Responsive viewport validation (390px, 768px, 1280px)', completed: false }
-      ]
-    },
-    {
-      id: 'TASK-028',
-      num: 'TASK 028',
-      project: 'Client Application',
-      title: 'Component system development',
-      dueDate: 'Due 30 Oct 2026',
-      docs: '4 subtasks',
-      priority: 'Normal priority',
-      assignee: 'PK',
-      assigneeName: 'Peter K.',
-      assigneeBg: 'avatar--pk',
-      status: 'IN_PROGRESS',
-      statusLabel: 'In progress',
-      statusClass: 'tw-status-pill--progress',
-      iconType: 'blue',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`,
-      desc: 'Build and document core component library including button variants, input fields, and dialog wrappers.',
-      subtasks: [
-        { id: 'st4', title: 'Button variant token mappings', completed: true },
-        { id: 'st5', title: 'Accessible focus ring styling', completed: true },
-        { id: 'st6', title: 'Modal dialog focus lock', completed: false },
-        { id: 'st7', title: 'Documentation & Storybook stories', completed: false }
-      ]
-    },
-    {
-      id: 'TASK-007',
-      num: 'TASK 007',
-      project: 'Brand Development',
-      title: 'Icon set exploration',
-      dueDate: 'Due 2 Nov 2026',
-      docs: '1 linked document',
-      priority: 'Normal priority',
-      assignee: 'SK',
-      assigneeName: 'Sarah K.',
-      assigneeBg: 'avatar--sk',
-      status: 'IN_PROGRESS',
-      statusLabel: 'In progress',
-      statusClass: 'tw-status-pill--progress',
-      iconType: 'green',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5 19 9l-4-4L3.5 16.5 2 22z"></path></svg>`,
-      desc: 'Design set of 48 coherent line icons on 24x24 grid with standard 1.5px stroke.',
-      subtasks: [
-        { id: 'st8', title: 'Core system navigation icons', completed: true },
-        { id: 'st9', title: 'Action and utility glyphs', completed: false }
-      ]
-    },
-    {
-      id: 'TASK-031',
-      num: 'TASK 031',
-      project: 'Website Redesign',
-      title: 'Typography and responsive scale audit',
-      dueDate: 'Due 5 Nov 2026',
-      docs: '2 linked documents',
-      priority: 'Normal priority',
-      assignee: 'AR',
-      assigneeName: 'Alex R.',
-      assigneeBg: 'avatar--ar',
-      status: 'IN_PROGRESS',
-      statusLabel: 'In progress',
-      statusClass: 'tw-status-pill--progress',
-      iconType: 'purple',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>`,
-      desc: 'Audit all heading levels and body font scales across desktop and mobile screens.',
-      subtasks: []
-    },
-    {
-      id: 'TASK-019',
-      num: 'TASK 019',
-      project: 'Client Application',
-      title: 'Header micro-interactions and transitions',
-      dueDate: 'Due 8 Nov 2026',
-      docs: '3 subtasks',
-      priority: 'Normal priority',
-      assignee: 'MJ',
-      assigneeName: 'Maria J.',
-      assigneeBg: 'avatar--mj',
-      status: 'IN_PROGRESS',
-      statusLabel: 'In progress',
-      statusClass: 'tw-status-pill--progress',
-      iconType: 'blue',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
-      desc: 'Add subtle interactive feedback for hover and click states across primary navigation headers.',
-      subtasks: []
-    },
-
-    // ── IN REVIEW ──────────────────────────────────────────────────────────
-    {
-      id: 'TASK-009',
-      num: 'TASK 009',
-      project: 'Website Redesign',
-      title: 'Mobile navigation drawer patterns',
-      dueDate: 'Due 29 Oct 2026',
-      docs: 'Awaiting Design Lead',
-      priority: 'High priority',
-      assignee: 'AR',
-      assigneeName: 'Alex R.',
-      assigneeBg: 'avatar--ar',
-      status: 'IN_REVIEW',
-      statusLabel: 'In review',
-      statusClass: 'tw-status-pill--review',
-      iconType: 'amber',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>`,
-      desc: 'Reviewed by Peter K. for ergonomic finger reach and contrast against dark backgrounds.',
-      subtasks: []
-    },
-    {
-      id: 'TASK-022',
-      num: 'TASK 022',
-      project: 'Client Application',
-      title: 'Component spacing matrix and 8pt grid',
-      dueDate: 'Due 1 Nov 2026',
-      docs: 'Review requested',
-      priority: 'Normal priority',
-      assignee: 'PK',
-      assigneeName: 'Peter K.',
-      assigneeBg: 'avatar--pk',
-      status: 'IN_REVIEW',
-      statusLabel: 'In review',
-      statusClass: 'tw-status-pill--review',
-      iconType: 'blue',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`,
-      desc: 'Standardized padding and margin rules across card containers and split panels.',
-      subtasks: []
-    },
-
-    // ── TO DO ──────────────────────────────────────────────────────────────
-    {
-      id: 'TASK-035',
-      num: 'TASK 035',
-      project: 'Website Redesign',
-      title: 'Dark mode elevation styles and shadow tokens',
-      dueDate: 'Due 10 Nov 2026',
-      docs: 'Backlog item',
-      priority: 'Normal priority',
-      assignee: 'SK',
-      assigneeName: 'Sarah K.',
-      assigneeBg: 'avatar--sk',
-      status: 'TODO',
-      statusLabel: 'To do',
-      statusClass: 'tw-status-pill--todo',
-      iconType: 'purple',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
-      desc: 'Define box-shadow elevations and ambient lighting layers for dark theme.',
-      subtasks: []
-    },
-    {
-      id: 'TASK-042',
-      num: 'TASK 042',
-      project: 'Client Application',
-      title: 'Form validation and inline feedback patterns',
-      dueDate: 'Due 12 Nov 2026',
-      docs: '3 subtasks',
-      priority: 'High priority',
-      assignee: 'MJ',
-      assigneeName: 'Maria J.',
-      assigneeBg: 'avatar--mj',
-      status: 'TODO',
-      statusLabel: 'To do',
-      statusClass: 'tw-status-pill--todo',
-      iconType: 'blue',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
-      desc: 'Specify accessible error, warning, and success indicators for inputs.',
-      subtasks: []
-    },
-    {
-      id: 'TASK-047',
-      num: 'TASK 047',
-      project: 'Brand Development',
-      title: 'Editorial illustration guidelines and color harmonies',
-      dueDate: 'Due 15 Nov 2026',
-      docs: '1 linked document',
-      priority: 'Normal priority',
-      assignee: 'PK',
-      assigneeName: 'Peter K.',
-      assigneeBg: 'avatar--pk',
-      status: 'TODO',
-      statusLabel: 'To do',
-      statusClass: 'tw-status-pill--todo',
-      iconType: 'green',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path></svg>`,
-      desc: 'Establish guidelines for isometric spot illustrations and product hero artwork.',
-      subtasks: []
-    },
-
-    // ── COMPLETED ──────────────────────────────────────────────────────────
-    {
-      id: 'TASK-001',
-      num: 'TASK 001',
-      project: 'Website Redesign',
-      title: 'Design kickoff, stakeholder brief and scope definition',
-      dueDate: 'Completed 15 Oct 2026',
-      docs: 'Approved reference',
-      priority: 'High priority',
-      assignee: 'PK',
-      assigneeName: 'Peter K.',
-      assigneeBg: 'avatar--pk',
-      status: 'COMPLETED',
-      statusLabel: 'Completed',
-      statusClass: 'tw-status-pill--done',
-      iconType: 'purple',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-      desc: 'Project roadmap, team allocation and milestone targets approved by Product VP.',
-      subtasks: []
-    },
-    {
-      id: 'TASK-003',
-      num: 'TASK 003',
-      project: 'Website Redesign',
-      title: 'Competitive UX benchmarking and wireframes',
-      dueDate: 'Completed 18 Oct 2026',
-      docs: '4 documents linked',
-      priority: 'Normal priority',
-      assignee: 'AR',
-      assigneeName: 'Alex R.',
-      assigneeBg: 'avatar--ar',
-      status: 'COMPLETED',
-      statusLabel: 'Completed',
-      statusClass: 'tw-status-pill--done',
-      iconType: 'purple',
-      iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-      desc: 'Comprehensive UX research document mapping top industry peer patterns.',
-      subtasks: []
-    }
-  ];
+  /* -- Baseline Tasks (Populated dynamically from /api/tasks) ---- */
+  let TASKS = [];
 
   /* ── Helper: Escape HTML ───────────────────────────────────────────────── */
   function esc(str) {
@@ -931,7 +684,34 @@
     init(teamId) {
       currentTeamId = teamId || 'team-design';
       wireEvents();
-      renderTaskRegister();
+      fetch('/api/tasks')
+        .then(res => res.ok ? res.json() : [])
+        .then(tasks => {
+          TASKS = Array.isArray(tasks) ? tasks.map(t => ({
+            id: t.id || 'TASK-000',
+            num: t.indexNum ? `TASK ${t.indexNum}` : (t.id || 'TASK'),
+            project: t.tag || 'Project Delivery',
+            title: t.title || 'Untitled Task',
+            dueDate: t.dueDateLabel || 'No due date',
+            docs: '0 linked documents',
+            priority: t.priority ? `${t.priority} priority` : 'Normal priority',
+            assignee: 'ME',
+            assigneeName: 'Current User',
+            assigneeBg: 'avatar--ar',
+            status: t.column === 'NOW' ? 'IN_PROGRESS' : (t.column === 'NEXT' ? 'IN_REVIEW' : 'TODO'),
+            statusLabel: t.column === 'NOW' ? 'In progress' : (t.column === 'NEXT' ? 'In review' : 'To do'),
+            statusClass: t.column === 'NOW' ? 'tw-status-pill--progress' : (t.column === 'NEXT' ? 'tw-status-pill--review' : 'tw-status-pill--todo'),
+            iconType: 'blue',
+            iconSvg: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`,
+            desc: t.title || '',
+            subtasks: []
+          })) : [];
+          renderTaskRegister();
+        })
+        .catch(() => {
+          TASKS = [];
+          renderTaskRegister();
+        });
     }
   };
 

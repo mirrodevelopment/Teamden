@@ -8,7 +8,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
@@ -49,7 +49,7 @@
             <span class="crumb-separator">/</span>
             <span class="crumb-part">INBOX</span>
             <span class="crumb-separator">/</span>
-            <span class="crumb-count" id="inbox-total-count">20</span>
+            <span class="crumb-count" id="inbox-total-count">0</span>
           </nav>
 
           <h1 class="inbox-page-title">inbox.</h1>
@@ -58,16 +58,17 @@
           <!-- Filter Navigation Tabs Bar -->
           <div class="inbox-toolbar-row">
             <div class="inbox-tabs" role="tablist" aria-label="Inbox Filter Tabs">
-              <button class="inbox-tab active" data-tab="ALL" role="tab" aria-selected="true" id="tab-all">
+              <button type="button" class="inbox-tab active" data-tab="ALL" role="tab" aria-selected="true" id="tab-all">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                   <path d="M2 17l10 5 10-5"></path>
                   <path d="M2 12l10 5 10-5"></path>
                 </svg>
                 <span>All</span>
+                <span class="tab-badge" id="badge-all">0</span>
               </button>
 
-              <button class="inbox-tab" data-tab="NEEDS_ACTION" role="tab" aria-selected="false" id="tab-needs-action">
+              <button type="button" class="inbox-tab" data-tab="NEEDS_ACTION" role="tab" aria-selected="false" id="tab-needs-action">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                   <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -75,35 +76,38 @@
                   <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
                 <span>Needs Action</span>
+                <span class="tab-badge" id="badge-needs-action">0</span>
               </button>
 
-              <button class="inbox-tab" data-tab="UPDATES" role="tab" aria-selected="false" id="tab-updates">
+              <button type="button" class="inbox-tab" data-tab="UPDATES" role="tab" aria-selected="false" id="tab-updates">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                   <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
                 <span>Updates</span>
+                <span class="tab-badge" id="badge-updates">0</span>
               </button>
 
-              <button class="inbox-tab" data-tab="ARCHIVED" role="tab" aria-selected="false" id="tab-archived">
+              <button type="button" class="inbox-tab" data-tab="ARCHIVED" role="tab" aria-selected="false" id="tab-archived">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <polyline points="21 8 21 21 3 21 3 8"></polyline>
                   <rect x="1" y="3" width="22" height="5"></rect>
                   <line x1="10" y1="12" x2="14" y2="12"></line>
                 </svg>
                 <span>Archived</span>
+                <span class="tab-badge" id="badge-archived">0</span>
               </button>
             </div>
 
             <!-- Right Controls: Search, Filter, More -->
             <div class="inbox-toolbar-actions">
-              <button class="inbox-icon-btn" id="btn-inbox-search" title="Search notifications" aria-label="Search notifications">
+              <button type="button" class="inbox-icon-btn" id="btn-inbox-search" title="Search notifications" aria-label="Search notifications">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
               </button>
-              <button class="inbox-icon-btn" id="btn-inbox-filters" title="Filter preferences" aria-label="Filter preferences">
+              <button type="button" class="inbox-icon-btn" id="btn-inbox-filters" title="Filter preferences" aria-label="Filter preferences">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="4" y1="21" x2="4" y2="14"></line>
                   <line x1="4" y1="10" x2="4" y2="3"></line>
@@ -116,7 +120,7 @@
                   <line x1="17" y1="16" x2="23" y2="16"></line>
                 </svg>
               </button>
-              <button class="inbox-icon-btn" id="btn-inbox-more" title="More options" aria-label="More options">
+              <button type="button" class="inbox-icon-btn" id="btn-inbox-more" title="More options" aria-label="More options">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="1.5"></circle>
                   <circle cx="19" cy="12" r="1.5"></circle>
@@ -141,7 +145,7 @@
                   <button class="attention-view-all-btn" id="btn-view-all-attention" type="button">View all &rarr;</button>
                 </div>
                 <h2 class="attention-hero-title">Needs your attention.</h2>
-                <p class="attention-hero-subtitle" id="attention-hero-subtitle">Three requests are waiting for a response.</p>
+                <p class="attention-hero-subtitle" id="attention-hero-subtitle">No requests waiting for a response.</p>
               </div>
 
               <!-- Actionable Request Cards List -->
@@ -161,11 +165,11 @@
               </div>
 
               <!-- Secondary Filter Pills -->
-              <div class="register-filter-pills" role="group" aria-label="Secondary Filter Pills">
-                <button class="filter-pill active" data-filter="ALL" id="pill-all">All (<span id="pill-count-all">12</span>)</button>
-                <button class="filter-pill" data-filter="UNREAD" id="pill-unread">Unread (<span id="pill-count-unread">5</span>)</button>
-                <button class="filter-pill" data-filter="MENTIONS" id="pill-mentions">Mentions (<span id="pill-count-mentions">4</span>)</button>
-                <button class="filter-pill" data-filter="FOLLOWING" id="pill-following">Following (<span id="pill-count-following">3</span>)</button>
+              <div class="register-filter-pills">
+                <button type="button" class="filter-pill active" data-filter="ALL" id="pill-all">All (<span id="pill-count-all">0</span>)</button>
+                <button type="button" class="filter-pill" data-filter="UNREAD" id="pill-unread">Unread (<span id="pill-count-unread">0</span>)</button>
+                <button type="button" class="filter-pill" data-filter="MENTIONS" id="pill-mentions">Mentions (<span id="pill-count-mentions">0</span>)</button>
+                <button type="button" class="filter-pill" data-filter="FOLLOWING" id="pill-following">Following (<span id="pill-count-following">0</span>)</button>
               </div>
 
               <!-- Register Timeline Groups -->
@@ -191,13 +195,13 @@
           </div>
 
           <!-- Right Column: Action in Focus + Notification Controls (~32%) -->
-          <aside class="inbox-side-column">
+          <aside class="inbox-side-column" aria-label="Inbox Sidebar">
 
             <!-- CARD 01: ACTION IN FOCUS -->
             <div class="action-focus-card" id="action-focus-card">
               <div class="focus-card-header">
                 <span class="section-eyebrow">03 / ACTION IN FOCUS</span>
-                <button class="focus-more-btn" id="btn-focus-more" aria-label="Action options">
+                <button type="button" class="focus-more-btn" id="btn-focus-more" aria-label="Action options">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="1.5"></circle>
                     <circle cx="19" cy="12" r="1.5"></circle>
@@ -207,14 +211,14 @@
               </div>
 
               <div class="focus-title-row">
-                <h3 class="focus-title" id="focus-item-title">Brand identity approval</h3>
-                <span class="focus-due-badge" id="focus-item-due">Due 30 Oct</span>
+                <h3 class="focus-title" id="focus-item-title">No item selected</h3>
+                <span class="focus-due-badge" id="focus-item-due" style="display: none;"></span>
               </div>
 
-              <p class="focus-description" id="focus-item-desc">Your approval is required before the client presentation.</p>
+              <p class="focus-description" id="focus-item-desc">When an update or request requires attention, it will appear here.</p>
 
               <!-- Connected Meta Details -->
-              <div class="focus-meta-list">
+              <div class="focus-meta-list" id="focus-meta-list" style="display: none;">
                 <!-- PROJECT -->
                 <div class="focus-meta-block">
                   <div class="focus-meta-label">PROJECT</div>
@@ -226,7 +230,7 @@
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                       </svg>
                     </div>
-                    <span class="focus-meta-value" id="focus-project-title">Brand Development</span>
+                    <span class="focus-meta-value" id="focus-project-title"></span>
                     <span class="focus-meta-arrow">&rarr;</span>
                   </a>
                 </div>
@@ -235,8 +239,8 @@
                 <div class="focus-meta-block">
                   <div class="focus-meta-label">REQUESTED BY</div>
                   <div class="focus-person-row">
-                    <div class="focus-avatar" id="focus-requester-avatar">PK</div>
-                    <span class="focus-person-name" id="focus-requester-name">Peter K.</span>
+                    <div class="focus-avatar" id="focus-requester-avatar"></div>
+                    <span class="focus-person-name" id="focus-requester-name"></span>
                   </div>
                 </div>
 
@@ -253,14 +257,14 @@
                         <polyline points="10 9 9 9 8 9"></polyline>
                       </svg>
                     </div>
-                    <span class="focus-meta-value" id="focus-doc-title">Brand Identity Guidelines</span>
+                    <span class="focus-meta-value" id="focus-doc-title"></span>
                     <span class="focus-meta-arrow">&rarr;</span>
                   </a>
                 </div>
               </div>
 
               <!-- Main Primary Lime Action Button -->
-              <button class="focus-action-btn" id="btn-focus-action" type="button">
+              <button class="focus-action-btn" id="btn-focus-action" type="button" style="display: none;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
@@ -275,18 +279,18 @@
               <h3 class="controls-card-title">Notification Controls</h3>
               <div class="controls-action-list">
                 <button class="control-row-btn" id="btn-control-snooze" type="button">
-                  <div class="control-row-left">
+                  <span class="control-row-left">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     <span class="control-label">Snooze</span>
-                  </div>
+                  </span>
                   <span class="control-arrow">&rarr;</span>
                 </button>
 
                 <button class="control-row-btn" id="btn-control-mute" type="button">
-                  <div class="control-row-left">
+                  <span class="control-row-left">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <line x1="1" y1="1" x2="23" y2="23"></line>
                       <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
@@ -295,18 +299,18 @@
                       <line x1="8" y1="23" x2="16" y2="23"></line>
                     </svg>
                     <span class="control-label">Mute this thread</span>
-                  </div>
+                  </span>
                   <span class="control-arrow">&rarr;</span>
                 </button>
 
                 <button class="control-row-btn" id="btn-control-preferences" type="button">
-                  <div class="control-row-left">
+                  <span class="control-row-left">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="3"></circle>
                       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                     <span class="control-label">Notification preferences</span>
-                  </div>
+                  </span>
                   <span class="control-arrow">&rarr;</span>
                 </button>
               </div>
@@ -322,13 +326,13 @@
 
   <!-- Interactive Slide-in Detail Drawer -->
   <div class="inbox-drawer-backdrop" id="drawer-backdrop"></div>
-  <aside class="inbox-detail-drawer" id="inbox-detail-drawer" aria-hidden="true" role="dialog" aria-labelledby="drawer-item-title">
+  <aside class="inbox-detail-drawer" id="inbox-detail-drawer" aria-labelledby="drawer-item-title">
     <div class="drawer-header">
       <div class="drawer-header-left">
-        <span class="drawer-badge" id="drawer-item-badge">APPROVAL REQUIRED</span>
-        <h2 class="drawer-title" id="drawer-item-title">Brand identity approval</h2>
+        <span class="drawer-badge" id="drawer-item-badge"></span>
+        <h2 class="drawer-title" id="drawer-item-title">Notification Details</h2>
       </div>
-      <button class="drawer-close-btn" id="btn-close-drawer" aria-label="Close details">
+      <button type="button" class="drawer-close-btn" id="btn-close-drawer" aria-label="Close details">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -340,25 +344,25 @@
       <div class="drawer-meta-section">
         <div class="drawer-meta-item">
           <span class="drawer-meta-label">Project</span>
-          <span class="drawer-meta-val" id="drawer-project-name">Brand Development</span>
+          <span class="drawer-meta-val" id="drawer-project-name"></span>
         </div>
         <div class="drawer-meta-item">
           <span class="drawer-meta-label">Requested By</span>
-          <span class="drawer-meta-val" id="drawer-requester-name">Peter K.</span>
+          <span class="drawer-meta-val" id="drawer-requester-name"></span>
         </div>
         <div class="drawer-meta-item">
           <span class="drawer-meta-label">Due Date</span>
-          <span class="drawer-meta-val" id="drawer-due-date">Due 30 Oct</span>
+          <span class="drawer-meta-val" id="drawer-due-date"></span>
         </div>
         <div class="drawer-meta-item">
           <span class="drawer-meta-label">Status</span>
-          <span class="drawer-meta-val" id="drawer-status">Pending Review</span>
+          <span class="drawer-meta-val" id="drawer-status"></span>
         </div>
       </div>
 
       <div class="drawer-section">
         <h4 class="drawer-section-heading">Description</h4>
-        <p class="drawer-desc" id="drawer-description">Your approval is required before the client presentation.</p>
+        <p class="drawer-desc" id="drawer-description"></p>
       </div>
 
       <div class="drawer-section" id="drawer-quote-section" style="display: none;">
@@ -376,18 +380,18 @@
             </svg>
           </div>
           <div class="drawer-attachment-info">
-            <div class="drawer-attachment-name" id="drawer-doc-name">Brand Identity Guidelines</div>
-            <div class="drawer-attachment-meta">PDF · Updated 28 Oct</div>
+            <div class="drawer-attachment-name" id="drawer-doc-name"></div>
+            <div class="drawer-attachment-meta" id="drawer-doc-meta"></div>
           </div>
-          <button class="drawer-attachment-action" id="btn-drawer-open-doc">Open &rarr;</button>
+          <button type="button" class="drawer-attachment-action" id="btn-drawer-open-doc">Open &rarr;</button>
         </div>
       </div>
     </div>
 
     <div class="drawer-footer">
-      <button class="drawer-primary-btn" id="btn-drawer-primary">Review decision &rarr;</button>
-      <button class="drawer-secondary-btn" id="btn-drawer-read">Mark as read</button>
-      <button class="drawer-secondary-btn" id="btn-drawer-archive">Archive</button>
+      <button type="button" class="drawer-primary-btn" id="btn-drawer-primary">Review decision &rarr;</button>
+      <button type="button" class="drawer-secondary-btn" id="btn-drawer-read">Mark as read</button>
+      <button type="button" class="drawer-secondary-btn" id="btn-drawer-archive">Archive</button>
     </div>
   </aside>
 

@@ -15,56 +15,45 @@
 
   let currentTeam = null;
 
-  /* ── Default Seed Data for Overview ────────────────────────────────────── */
-  const SEED_DATA = {
+  /* ── Baseline Overview Model ─────────────────────────────────────────── */
+  const DEFAULT_EMPTY_OVERVIEW = {
     focus: {
-      title: 'Website Redesign',
-      desc: 'Finalise the interface system and prepare approved designs for development.',
-      nextDelivery: 'Design handoff · 30 Oct',
-      workUrl: '/pages/projects/project-detail/project-detail.html?id=featured-01&tab=tasks'
+      title: 'No active team focus',
+      desc: 'Create or assign projects to establish this team’s primary focus.',
+      nextDelivery: 'No upcoming delivery scheduled',
+      workUrl: '/pages/projects/projects.html'
     },
     workInMotion: {
-      inProgress: { count: '04', title: 'Interface system', desc: 'Being developed across components and layouts.', owner: 'OWNER / MJ' },
-      inReview: { count: '02', title: 'Mobile navigation', desc: 'Awaiting feedback from stakeholders.', reviewer: 'REVIEWER / AR' },
-      readyHandoff: { count: '01', title: 'Design tokens', desc: 'Ready for Engineering implementation.', handoff: 'HANDOFF / ENGINEERING' }
+      inProgress: { count: '00', title: 'Tasks in progress', desc: 'No active tasks being developed.', owner: '—' },
+      inReview: { count: '00', title: 'Work in review', desc: 'No work awaiting review.', reviewer: '—' },
+      readyHandoff: { count: '00', title: 'Ready for handoff', desc: 'No deliverables awaiting handoff.', handoff: '—' }
     },
-    activeProjects: [
-      { id: 'website-redesign', num: '01', title: 'Website Redesign', meta: 'Design review / Next delivery 30 Oct', icon: 'purple', url: '/pages/projects/project-detail/project-detail.html?id=featured-01' },
-      { id: 'client-application', num: '02', title: 'Client Application', meta: 'Interface refinement / In progress', icon: 'blue', url: '/pages/projects/project-detail/project-detail.html?id=featured-01' },
-      { id: 'brand-development', num: '03', title: 'Brand Development', meta: 'Identity system / Awaiting approval', icon: 'green', url: '/pages/projects/project-detail/project-detail.html?id=featured-01' }
-    ],
-    teamLibrary: [
-      { id: 'design-guidelines', title: 'Design Guidelines', meta: 'Approved reference', icon: 'purple', url: '/pages/workspace/team-libraries/team-libraries.html' },
-      { id: 'review-notes', title: 'Design Review Notes', meta: '3 linked tasks', icon: 'blue', url: '/pages/workspace/team-libraries/team-libraries.html' },
-      { id: 'component-standards', title: 'Component Standards', meta: 'Latest version / Shared', icon: 'green', url: '/pages/workspace/team-libraries/team-libraries.html' }
-    ],
-    updates: [
-      { id: 'u1', author: 'Alex R.', initials: 'AR', avatarBg: 'avatar--ar', title: 'Design guidelines ready for review', desc: 'The updated guidelines are ready for feedback.', meta: 'Alex R. · 2 hrs ago · Linked to Design Guidelines' },
-      { id: 'u2', author: 'Maria J.', initials: 'MJ', avatarBg: 'avatar--mj', title: 'Staging environment is ready', desc: 'The latest build is available for internal testing.', meta: 'Maria J. · 4 hrs ago · Linked to Client Application' }
-    ],
+    activeProjects: [],
+    teamLibrary: [],
+    updates: [],
     coordination: {
-      title: 'Next delivery.',
-      sub: 'Website Redesign · Design handoff',
-      due: 'Due 30 Oct 2026',
-      milestoneTitle: 'Design System & Component Handoff',
-      milestoneDesc: 'Delivery of all Figma tokens, SVG icons, and responsive page templates to Engineering.'
+      title: 'No upcoming delivery',
+      sub: 'All milestones clear',
+      due: '',
+      milestoneTitle: 'No milestone active',
+      milestoneDesc: 'Schedule deliverables in projects to coordinate milestones.'
     },
     awaitingReview: {
-      title: 'Mobile navigation',
-      desc: 'Feedback required from Design Lead.',
-      project: 'Website Redesign',
-      author: 'Samir Khan'
+      title: 'No pending reviews',
+      desc: 'All tasks and decisions are up to date.',
+      project: 'Workspace',
+      author: '—'
     },
     upcomingHandoff: {
-      title: 'Design tokens',
-      sub: 'Ready for Engineering',
-      meta: 'Handoff to Engineering Team · 3 days',
-      details: 'JSON tokens exported for colors, spacing, typography, and shadow elevations.'
+      title: 'No upcoming handoffs',
+      sub: 'Work flowing smoothly',
+      meta: '',
+      details: 'No cross-team dependencies pending.'
     },
     recentDecision: {
-      title: 'Homepage design approved',
-      desc: 'Client design approved for development.',
-      meta: 'Website Redesign · 1 day ago'
+      title: 'No recent decisions recorded',
+      desc: 'All project milestones on track.',
+      meta: ''
     }
   };
 
@@ -387,9 +376,35 @@
 
   /* ── Public API ────────────────────────────────────────────────────────── */
   const TeamOverview = {
-    init(teamId, customData) {
-      const data = customData || SEED_DATA;
+    async init(teamId, customData) {
       currentTeam = teamId || 'team-design';
+      let data = customData;
+      if (!data) {
+        data = JSON.parse(JSON.stringify(DEFAULT_EMPTY_OVERVIEW));
+        try {
+          const res = await fetch('/api/projects/data');
+          if (res.ok) {
+            const pData = await res.json();
+            if (pData && pData.projects && pData.projects.length > 0) {
+              data.activeProjects = pData.projects.slice(0, 5).map((p, i) => ({
+                id: p.id,
+                num: String(i + 1).padStart(2, '0'),
+                title: p.name,
+                meta: `${p.team || 'Team'} / Due ${p.dueDate || 'Soon'}`,
+                icon: i % 2 === 0 ? 'purple' : 'blue',
+                url: `/pages/projects/project-detail/project-detail.html?id=${p.id}`
+              }));
+              const feat = pData.featuredProject || pData.projects[0];
+              data.focus.title = feat.name;
+              data.focus.desc = feat.description || 'Deliver project deliverables on schedule.';
+              data.focus.nextDelivery = feat.dueDate ? `Due ${feat.dueDate}` : 'Delivery in progress';
+              data.focus.workUrl = `/pages/projects/project-detail/project-detail.html?id=${feat.id}`;
+            }
+          }
+        } catch (e) {
+          console.warn('Could not load overview projects:', e);
+        }
+      }
       wireInteractions(data);
     }
   };

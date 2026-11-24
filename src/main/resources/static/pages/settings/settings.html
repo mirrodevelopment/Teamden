@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brick — settings.</title>
+  <meta name="description" content="Brick Workspace Settings — Organisation configuration and management.">
+  <link rel="icon" type="image/png" href="/assets/bric-icon.png" data-company="icon">
+  <script>
+    (function () {
+      var t = localStorage.getItem('teamden-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    })();
+  </script>
+
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Unbounded:wght@800;900&display=swap">
+  <link rel="stylesheet" href="/fragments/fonts/fonts.css?v=12">
+  <link rel="stylesheet" href="/fragments/theme/theme.css?v=15">
+  <link rel="stylesheet" href="/fragments/theme/reset.css">
+
+  <!-- Modular Fragment Styles -->
+  <link rel="stylesheet" href="/fragments/sidebar/sidebar.css?v=13">
+  <link rel="stylesheet" href="/fragments/navbar/navbar.css?v=14">
+
+  <!-- Settings Page Styles -->
+  <link rel="stylesheet" href="settings.css?v=1">
+</head>
+<body class="dashboard-body settings-body">
+
+  <div class="dash-master-wrapper settings-master-wrapper">
+    <!-- Modular Sidebar Mount -->
+    <div id="sidebar-mount" class="sidebar-mount-area"></div>
+
+    <!-- Main Settings Application Area -->
+    <div class="dash-main-area settings-main-area">
+      <!-- Modular Topbar Mount -->
+      <div id="navbar-mount" class="navbar-mount-area"></div>
+
+      <!-- Main Settings Canvas Wrapper -->
+      <div class="settings-content-wrapper">
+
+        <!-- Top Page Header -->
+        <header class="settings-header">
+          <div class="settings-breadcrumb">BRICK / 24 — CONTROL STUDIO</div>
+          <h1 class="settings-title">settings<span class="settings-title-dot">.</span></h1>
+          <p class="settings-subtitle">Organisation configuration and management.</p>
+        </header>
+
+        <!-- Two-Part Settings Layout -->
+        <div class="settings-layout">
+
+          <!-- Left Column: Secondary Navigation Panel -->
+          <aside class="settings-nav-panel">
+            <nav class="settings-nav-list" aria-label="Settings Categories">
+              <button class="settings-nav-item active" data-section="general" type="button">
+                <svg class="settings-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="21" x2="4" y2="14"></line>
+                  <line x1="4" y1="10" x2="4" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="3"></line>
+                  <line x1="20" y1="21" x2="20" y2="16"></line>
+                  <line x1="20" y1="12" x2="20" y2="3"></line>
+                  <line x1="1" y1="14" x2="7" y2="14"></line>
+                  <line x1="9" y1="8" x2="15" y2="8"></line>
+                  <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                <span class="settings-nav-label">General</span>
+              </button>
+
+              <button class="settings-nav-item" data-section="people" type="button">
+                <svg class="settings-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span class="settings-nav-label">People &amp; Access</span>
+              </button>
+
+              <button class="settings-nav-item" data-section="roles" type="button">
+                <svg class="settings-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+                <span class="settings-nav-label">Roles &amp; Permissions</span>
+              </button>
+
+              <button class="settings-nav-item" data-section="integrations" type="button">
+                <svg class="settings-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span class="settings-nav-label">Integrations</span>
+              </button>
+
+              <button class="settings-nav-item" data-section="security" type="button">
+                <svg class="settings-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span class="settings-nav-label">Security &amp; Activity</span>
+              </button>
+            </nav>
+          </aside>
+
+          <!-- Right Column: Settings Tab Content Area -->
+          <main class="settings-cards-area">
+
+            <!-- TAB PANE 1: GENERAL -->
+            <div class="settings-tab-pane active" id="tab-pane-general">
+              <!-- 01 / ORGANISATION IDENTITY -->
+              <section class="settings-card card-org-identity" id="section-general">
+                <div class="settings-card-label">01 / ORGANISATION IDENTITY</div>
+                <div class="org-identity-main-row">
+                  <div class="org-avatar-badge" id="org-avatar-badge">AC</div>
+                  <div class="org-identity-info">
+                    <h2 class="org-name" id="org-name-display">Acme Co.</h2>
+                    <div class="org-type" id="org-type-display">Organisation workspace</div>
+                    <a href="https://acme.brick.app" target="_blank" rel="noopener" class="org-url-link" id="org-url-display">
+                      <span>Workspace URL</span> · <span id="org-url-text">acme.brick.app</span>
+                      <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </a>
+                  </div>
+                  <div class="org-identity-actions">
+                    <button type="button" class="btn-edit-org" id="btn-edit-org">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                      <span>Edit</span>
+                    </button>
+                    <div class="org-more-wrapper">
+                      <button type="button" class="btn-more-dots" id="btn-org-more" aria-label="More options" aria-haspopup="true">•••</button>
+                      <div class="dropdown-menu-popover" id="org-more-menu" style="display:none;">
+                        <button class="dropdown-item" id="btn-copy-url" type="button">Copy workspace URL</button>
+                        <button class="dropdown-item" id="btn-regenerate-api" type="button">Regenerate API key</button>
+                        <button class="dropdown-item" id="btn-export-data" type="button">Export workspace data</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="org-identity-divider"></div>
+
+                <!-- 3 Dropdown Selectors Row -->
+                <div class="org-selectors-row">
+                  <div class="org-selector-group">
+                    <div class="org-selector-header">
+                      <svg class="selector-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                      <span class="org-selector-label">DEFAULT TIMEZONE</span>
+                    </div>
+                    <div class="org-select-wrapper">
+                      <select class="org-select" id="select-timezone">
+                        <option value="Asia/Kolkata (GMT+5:30)">Asia/Kolkata (GMT+5:30)</option>
+                        <option value="UTC (GMT+0:00)">UTC (GMT+0:00)</option>
+                        <option value="America/New_York (EST/EDT)">America/New_York (EST/EDT)</option>
+                        <option value="America/Los_Angeles (PST/PDT)">America/Los_Angeles (PST/PDT)</option>
+                        <option value="Europe/London (BST/GMT)">Europe/London (BST/GMT)</option>
+                      </select>
+                      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                  </div>
+
+                  <div class="org-selector-group">
+                    <div class="org-selector-header">
+                      <svg class="selector-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m5 12 7-7 7 7"></path><path d="m12 19V5"></path></svg>
+                      <span class="org-selector-label">WORKSPACE LANGUAGE</span>
+                    </div>
+                    <div class="org-select-wrapper">
+                      <select class="org-select" id="select-language">
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="German">German</option>
+                        <option value="French">French</option>
+                        <option value="Japanese">Japanese</option>
+                      </select>
+                      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                  </div>
+
+                  <div class="org-selector-group">
+                    <div class="org-selector-header">
+                      <svg class="selector-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span class="org-selector-label">WEEK STARTS ON</span>
+                    </div>
+                    <div class="org-select-wrapper">
+                      <select class="org-select" id="select-week-starts">
+                        <option value="Monday">Monday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Saturday">Saturday</option>
+                      </select>
+                      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <!-- TAB PANE 2: PEOPLE & ACCESS -->
+            <div class="settings-tab-pane" id="tab-pane-people" style="display:none;">
+              <!-- 02 / PEOPLE & ACCESS -->
+              <section class="settings-card card-people-access" id="section-people">
+                <div class="card-header-bar">
+                  <div>
+                    <div class="settings-card-label">02 / PEOPLE &amp; ACCESS</div>
+                    <h3 class="card-heading">Who has access.</h3>
+                  </div>
+                  <button type="button" class="btn-invite-member" id="btn-open-invite">
+                    <span>+ Invite member</span>
+                  </button>
+                </div>
+                <div class="members-list" id="members-list-container">
+                  <!-- Dynamically populated from /api/settings/data -->
+                </div>
+                <div class="card-footer-action">
+                  <a href="/pages/workspace/workspace.html" class="footer-link">
+                    <span>Manage members, invitations and access</span>
+                    <svg class="footer-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V8H8"></path></svg>
+                  </a>
+                </div>
+              </section>
+            </div>
+
+            <!-- TAB PANE 3: ROLES & PERMISSIONS -->
+            <div class="settings-tab-pane" id="tab-pane-roles" style="display:none;">
+              <!-- 03 / ROLES & PERMISSIONS -->
+              <section class="settings-card card-roles-permissions" id="section-roles">
+                <div class="card-header-bar">
+                  <div>
+                    <div class="settings-card-label">03 / ROLES &amp; PERMISSIONS</div>
+                    <h3 class="card-heading">Roles &amp; access.</h3>
+                  </div>
+                </div>
+                <div class="roles-grid" id="roles-grid-container">
+                  <!-- Dynamically populated 2x2 role tiles -->
+                </div>
+              </section>
+            </div>
+
+            <!-- TAB PANE 4: INTEGRATIONS -->
+            <div class="settings-tab-pane" id="tab-pane-integrations" style="display:none;">
+              <!-- 04 / CONNECTED SERVICES -->
+              <section class="settings-card card-connected-services" id="section-integrations">
+                <div class="card-header-bar">
+                  <div>
+                    <div class="settings-card-label">04 / CONNECTED SERVICES</div>
+                    <h3 class="card-heading">Your connected tools.</h3>
+                  </div>
+                </div>
+                <div class="integrations-list" id="integrations-list-container">
+                  <!-- Google Calendar, Microsoft 365, Figma dynamic items -->
+                </div>
+              </section>
+            </div>
+
+            <!-- TAB PANE 5: SECURITY & ACTIVITY -->
+            <div class="settings-tab-pane" id="tab-pane-security" style="display:none;">
+              <!-- 05 / SECURITY & ACTIVITY -->
+              <section class="settings-card card-security-activity" id="section-security">
+                <div class="card-header-bar">
+                  <div>
+                    <div class="settings-card-label">05 / SECURITY &amp; ACTIVITY</div>
+                    <h3 class="card-heading">Security &amp; control.</h3>
+                  </div>
+                </div>
+                <div class="security-list" id="security-list-container">
+                  <!-- Access policies, Authentication, Audit history, Data management -->
+                </div>
+              </section>
+            </div>
+
+          </main>
+        </div><!-- /.settings-layout -->
+
+      </div><!-- /.settings-content-wrapper -->
+    </div><!-- /.settings-main-area -->
+  </div><!-- /.settings-master-wrapper -->
+
+  <!-- =========================================================================
+       MODALS
+       ========================================================================= -->
+
+  <!-- Edit Organisation Modal -->
+  <div class="modal-backdrop" id="modal-edit-org" style="display:none;" aria-hidden="true" role="dialog">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-eyebrow">ORGANISATION SETTINGS</div>
+        <h3 class="modal-title">Edit Organisation Details</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-edit-org" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="form-edit-org" class="modal-form">
+        <div class="form-group">
+          <label for="input-org-name" class="form-label">Workspace Name</label>
+          <input type="text" id="input-org-name" class="form-input" required placeholder="e.g. Acme Co.">
+        </div>
+        <div class="form-group">
+          <label for="input-org-type" class="form-label">Workspace Type</label>
+          <input type="text" id="input-org-type" class="form-input" placeholder="e.g. Organisation workspace">
+        </div>
+        <div class="form-group">
+          <label for="input-org-url" class="form-label">Workspace URL</label>
+          <input type="text" id="input-org-url" class="form-input" placeholder="e.g. acme.brick.app">
+        </div>
+        <div class="form-group">
+          <label for="input-org-initials" class="form-label">Logo Initials (Max 2 characters)</label>
+          <input type="text" id="input-org-initials" class="form-input" maxlength="2" placeholder="e.g. AC">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" data-close-modal="modal-edit-org">Cancel</button>
+          <button type="submit" class="btn-submit-lime">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Invite Member Modal -->
+  <div class="modal-backdrop" id="modal-invite-member" style="display:none;" aria-hidden="true" role="dialog">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-eyebrow">MEMBERSHIP</div>
+        <h3 class="modal-title">Invite New Member</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-invite-member" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="form-invite-member" class="modal-form">
+        <div class="form-group">
+          <label for="input-member-name" class="form-label">Full Name</label>
+          <input type="text" id="input-member-name" class="form-input" required placeholder="e.g. Elena Rostova">
+        </div>
+        <div class="form-group">
+          <label for="input-member-email" class="form-label">Email Address</label>
+          <input type="email" id="input-member-email" class="form-input" required placeholder="e.g. elena@acme.co">
+        </div>
+        <div class="form-group">
+          <label for="select-member-dept" class="form-label">Department</label>
+          <select id="select-member-dept" class="form-input">
+            <option value="Design Team">Design Team</option>
+            <option value="Engineering Team">Engineering Team</option>
+            <option value="Operations Team">Operations Team</option>
+            <option value="Content Team">Content Team</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="select-member-role" class="form-label">Workspace Role</label>
+          <select id="select-member-role" class="form-input">
+            <option value="Member">Member</option>
+            <option value="Team Admin">Team Admin</option>
+            <option value="Organisation Admin">Organisation Admin</option>
+            <option value="Guest">Guest</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" data-close-modal="modal-invite-member">Cancel</button>
+          <button type="submit" class="btn-submit-lime">Send Invitation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Role Permissions Modal -->
+  <div class="modal-backdrop" id="modal-role-permissions" style="display:none;" aria-hidden="true" role="dialog">
+    <div class="modal-box modal-box--wide">
+      <div class="modal-header">
+        <div class="modal-eyebrow">ROLES &amp; ACCESS</div>
+        <h3 class="modal-title" id="role-modal-title">Admin Permissions</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-role-permissions" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="role-modal-desc" id="role-modal-desc">Manage organisation settings, members and access policies.</p>
+        <div class="permissions-matrix" id="permissions-matrix-container">
+          <!-- Dynamic permission table injected here -->
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" data-close-modal="modal-role-permissions">Close</button>
+        <button type="button" class="btn-submit-lime" id="btn-save-role-permissions">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Policy Details Modal -->
+  <div class="modal-backdrop" id="modal-security-policy" style="display:none;" aria-hidden="true" role="dialog">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-eyebrow">SECURITY &amp; CONTROL</div>
+        <h3 class="modal-title" id="policy-modal-title">Access Policies</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-security-policy" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="policy-modal-desc" id="policy-modal-desc">Configure security preferences and administrative controls.</p>
+        <div class="policy-toggle-wrapper">
+          <label class="toggle-switch">
+            <input type="checkbox" id="policy-active-toggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label" id="policy-toggle-label">Enforce policy for all members</span>
+        </div>
+        <div class="policy-meta-box">
+          <div class="policy-meta-title">Current Configuration</div>
+          <pre class="policy-meta-code" id="policy-meta-code">{}</pre>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" data-close-modal="modal-security-policy">Close</button>
+        <button type="button" class="btn-submit-lime" id="btn-toggle-policy-save">Save &amp; Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Member Action Dropdown (Global popover) -->
+  <div class="dropdown-menu-popover" id="member-action-menu" style="display:none;">
+    <button class="dropdown-item" id="btn-action-view-profile" type="button">View Profile</button>
+    <button class="dropdown-item" id="btn-action-change-role" type="button">Change Role</button>
+    <button class="dropdown-item dropdown-item--danger" id="btn-action-remove-member" type="button">Remove Member</button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toast-notification" style="display:none;" role="alert">
+    <span class="toast-message" id="toast-message">Action completed successfully.</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/fragments/company-data/company-data.js?v=2"></script>
+  <script src="/shared/js/api.js?v=2"></script>
+  <script src="/shared/js/auth.js?v=2"></script>
+  <script src="/fragments/sidebar/sidebar.js?v=3"></script>
+  <script src="/fragments/navbar/navbar.js?v=14"></script>
+  <script src="settings.js?v=1"></script>
+</body>
+</html>

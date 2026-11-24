@@ -79,7 +79,7 @@ public class ProjectOverviewDto {
                         "Meets accessibility standards"
                 ))
                 .projectContext(Map.of(
-                        "Client", "Acme Co.",
+                        "Client", "Workspace",
                         "Type", "Design / Development",
                         "Focus", "Brand, performance and growth"
                 ))

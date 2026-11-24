@@ -65,7 +65,7 @@ public class Employee {
 
     @Column(name = "company_name", nullable = false, length = 150)
     @Builder.Default
-    private String companyName = "Acme Co.";
+    private String companyName = "Workspace";
 
     @Column(name = "short_bio", columnDefinition = "TEXT")
     private String shortBio;
@@ -133,7 +133,7 @@ public class Employee {
             this.cardTheme = "lavender";
         }
         if (this.companyName == null) {
-            this.companyName = "Acme Co.";
+            this.companyName = this.organization != null ? this.organization.getName() : "Workspace";
         }
         if (this.departmentName == null) {
             this.departmentName = "Design Team";

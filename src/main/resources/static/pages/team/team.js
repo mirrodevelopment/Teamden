@@ -23,93 +23,104 @@
   let searchQuery = '';
   let acrossTeamsPage = 0;
 
-  /* ── Team Directory Members ────────────────────────────────────────────── */
-  const ALL_PEOPLE = [
-    { id: 'u1', name: 'Priya Kapoor', initials: 'PK', role: 'Design Lead', dept: 'design', email: 'priya@acme.co', bgClass: 'avatar--pk' },
-    { id: 'u2', name: 'Alex Rivera', initials: 'AR', role: 'Senior Product Designer', dept: 'design', email: 'alex@acme.co', bgClass: 'avatar--ar' },
-    { id: 'u3', name: 'Samir Khan', initials: 'SK', role: 'Systems & Brand Designer', dept: 'design', email: 'samir@acme.co', bgClass: 'avatar--sk' },
-    { id: 'u4', name: 'Maya Jones', initials: 'MJ', role: 'Staff Frontend Engineer', dept: 'engineering', email: 'maya@acme.co', bgClass: 'avatar--mj' },
-    { id: 'u5', name: 'Nisha Varma', initials: 'NV', role: 'Content Strategy Lead', dept: 'content', email: 'nisha@acme.co', bgClass: 'avatar--nv' },
-    { id: 'u6', name: 'Rohan Kumar', initials: 'RK', role: 'Senior Backend Engineer', dept: 'engineering', email: 'rohan@acme.co', bgClass: 'avatar--rk' },
-    { id: 'u7', name: 'Sarah Miller', initials: 'SM', role: 'Director of Operations', dept: 'operations', email: 'sarah@acme.co', bgClass: 'avatar--sm' },
-    { id: 'u8', name: 'Ananya Verma', initials: 'AV', role: 'Cloud Platform Architect', dept: 'engineering', email: 'ananya@acme.co', bgClass: 'avatar--av' },
-    { id: 'u9', name: 'Daniel Moore', initials: 'DM', role: 'Product Manager', dept: 'operations', email: 'daniel@acme.co', bgClass: 'avatar--pk' },
-    { id: 'u10', name: 'Elena Rostova', initials: 'ER', role: 'UX Researcher', dept: 'design', email: 'elena@acme.co', bgClass: 'avatar--ar' },
-    { id: 'u11', name: 'Tariq Al-Mansoor', initials: 'TM', role: 'DevOps Engineer', dept: 'engineering', email: 'tariq@acme.co', bgClass: 'avatar--sk' },
-    { id: 'u12', name: 'Chloe Dubois', initials: 'CD', role: 'Technical Writer', dept: 'content', email: 'chloe@acme.co', bgClass: 'avatar--nv' },
-    { id: 'u13', name: 'Marcus Vance', initials: 'MV', role: 'Release Coordinator', dept: 'operations', email: 'marcus@acme.co', bgClass: 'avatar--rk' },
-    { id: 'u14', name: 'Hana Tanaka', initials: 'HT', role: 'Visual Designer', dept: 'design', email: 'hana@acme.co', bgClass: 'avatar--mj' },
-    { id: 'u15', name: 'Lucas Scott', initials: 'LS', role: 'QA Lead', dept: 'engineering', email: 'lucas@acme.co', bgClass: 'avatar--sm' },
-    { id: 'u16', name: 'Grace O\'Connor', initials: 'GO', role: 'Copy Editor', dept: 'content', email: 'grace@acme.co', bgClass: 'avatar--av' }
-  ];
+  /* ── Team Directory Members & Teams (dynamically loaded from /api/employees, /api/departments & /api/teams) ── */
+  let ALL_PEOPLE = [];
+  let TEAMS = [];
+  let CREATE_TEAM_OPTIONS = null;
+  let SELECTED_TEAM_MEMBERS = [];
 
-  /* ── Teams Data ────────────────────────────────────────────────────────── */
-  const TEAMS = [
-    {
-      id: 'team-design',
-      num: '01',
-      name: 'Design',
-      dept: 'design',
-      fullName: 'Design Team',
-      desc: 'Visual systems, research and experiences',
-      fullDesc: 'Building consistent, intuitive digital experiences across projects. Responsible for brand identity, UI design tokens, prototyping, and end-user research.',
-      themeClass: 'team-card--lavender',
-      iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>`,
-      membersCount: 4,
-      projectsCount: 3,
-      lead: 'Priya Kapoor',
-      activeProjects: ['Website Redesign 2026', 'ORYGN App UI', 'Design System v2'],
-      members: ['u1', 'u2', 'u3', 'u4']
-    },
-    {
-      id: 'team-engineering',
-      num: '02',
-      name: 'Engineering',
-      dept: 'engineering',
-      fullName: 'Engineering Team',
-      desc: 'Development, systems and delivery',
-      fullDesc: 'Architecting high-scale frontend applications, distributed microservices, infrastructure automation, and automated testing pipelines.',
-      themeClass: 'team-card--blue',
-      iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`,
-      membersCount: 6,
-      projectsCount: 5,
-      lead: 'Maya Jones',
-      activeProjects: ['Core Services API', 'Web App Client', 'Cloud Infrastructure', 'Mobile SDK', 'Dev Portal'],
-      members: ['u4', 'u6', 'u8', 'u7']
-    },
-    {
-      id: 'team-content',
-      num: '03',
-      name: 'Content',
-      dept: 'content',
-      fullName: 'Content Team',
-      desc: 'Communication, writing and knowledge',
-      fullDesc: 'Crafting brand messaging, product copy, knowledge base articles, technical documentation, and strategic company communications.',
-      themeClass: 'team-card--green',
-      iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
-      membersCount: 5,
-      projectsCount: 2,
-      lead: 'Nisha Varma',
-      activeProjects: ['Company Knowledge Hub', 'Product Launch Copy'],
-      members: ['u3', 'u5', 'u2', 'u1']
-    },
-    {
-      id: 'team-operations',
-      num: '04',
-      name: 'Operations',
-      dept: 'operations',
-      fullName: 'Operations Team',
-      desc: 'Coordination, planning and handoffs',
-      fullDesc: 'Orchestrating cross-functional workflows, agile sprint cadences, project delivery milestones, and operational compliance.',
-      themeClass: 'team-card--beige',
-      iconSvg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12.01 20.71 7"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
-      membersCount: 4,
-      projectsCount: 4,
-      lead: 'Sarah Miller',
-      activeProjects: ['Q4 Roadmap Execution', 'SOC2 Readiness', 'Vendor Integration', 'Handoff Guidelines'],
-      members: ['u1', 'u7', 'u6', 'u8']
+  async function fetchTeamAndEmployeeData() {
+    try {
+      const [empRes, deptRes, teamsRes] = await Promise.all([
+        fetch('/api/employees'),
+        fetch('/api/departments'),
+        fetch('/api/teams').catch(() => null)
+      ]);
+      if (empRes.ok && deptRes.ok) {
+        const employeesRaw = await empRes.json();
+        const departmentsRaw = await deptRes.json();
+        const employees = Array.isArray(employeesRaw) ? employeesRaw : (employeesRaw.employees || []);
+        const departments = Array.isArray(departmentsRaw) ? departmentsRaw : (departmentsRaw.departments || []);
+        const brickTeams = (teamsRes && teamsRes.ok) ? await teamsRes.json() : [];
+
+        ALL_PEOPLE = employees.map(e => ({
+          id: e.id,
+          name: e.fullName,
+          initials: e.initials || 'AC',
+          role: e.jobTitle || e.roleTitle || 'Team Member',
+          dept: (e.departmentName || '').toLowerCase().replace(' team', '').trim() || 'design',
+          email: e.email,
+          bgClass: 'avatar--' + (e.cardTheme || 'pk')
+        }));
+
+        const themes = ['team-card--lavender', 'team-card--blue', 'team-card--green', 'team-card--peach', 'team-card--beige'];
+        const icons = [
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>`,
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`,
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.55" y2="4.24"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12.01 20.71 7"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`
+        ];
+
+        // Combine BRICK Teams and Departments
+        const combined = [];
+        let cardIdx = 0;
+
+        if (Array.isArray(brickTeams) && brickTeams.length > 0) {
+          brickTeams.forEach(t => {
+            const deptKey = (t.departmentName || t.name || '').toLowerCase().replace(' team', '').trim();
+            const memberIds = (t.members || []).map(m => m.employeeId || m.id);
+            combined.push({
+              id: 'team-' + (t.code ? t.code.toLowerCase() : t.name.toLowerCase().replace(/\s+/g, '-')),
+              num: String(cardIdx + 1).padStart(2, '0'),
+              name: t.name,
+              dept: deptKey,
+              fullName: t.name,
+              desc: t.description || 'Dedicated functional team in BRICK',
+              fullDesc: t.description || 'Delivering high-impact cross-functional work.',
+              themeClass: themes[cardIdx % themes.length],
+              iconSvg: icons[cardIdx % icons.length],
+              membersCount: t.memberCount || (memberIds.length > 0 ? memberIds.length : 1),
+              projectsCount: 2 + (cardIdx % 3),
+              lead: t.teamLeadName || 'Team Lead',
+              activeProjects: ['Active Initiative', 'Sprint Delivery'],
+              members: memberIds
+            });
+            cardIdx++;
+          });
+        }
+
+        departments.forEach(d => {
+          const deptKey = d.name.toLowerCase().replace(' team', '').trim();
+          // If already added via brickTeams with the same name, skip
+          if (combined.some(c => (c.fullName && c.fullName.toLowerCase() === d.name.toLowerCase()) || (c.name && c.name.toLowerCase() === d.name.toLowerCase()))) {
+            return;
+          }
+          const deptMembers = ALL_PEOPLE.filter(p => p.dept === deptKey);
+          combined.push({
+            id: 'team-' + deptKey,
+            num: String(cardIdx + 1).padStart(2, '0'),
+            name: d.name.replace(' Team', ''),
+            dept: deptKey,
+            fullName: d.name,
+            desc: d.subtitle || 'Visual systems, research and experiences',
+            fullDesc: d.detailedDescription || d.subtitle || 'Building consistent digital experiences across projects.',
+            themeClass: themes[cardIdx % themes.length],
+            iconSvg: icons[cardIdx % icons.length],
+            membersCount: deptMembers.length,
+            projectsCount: 3 + cardIdx,
+            lead: deptMembers.length > 0 ? deptMembers[0].name : (d.departmentHeadName || 'Priya Kapoor'),
+            activeProjects: ['Website Redesign 2026', 'ORYGN App UI', 'Design System v2'],
+            members: deptMembers.map(m => m.id)
+          });
+          cardIdx++;
+        });
+
+        TEAMS = combined;
+      }
+    } catch (e) {
+      console.warn('Failed to fetch employees/departments from API:', e);
     }
-  ];
+  }
 
   /* ── Across Teams Collaborations ───────────────────────────────────────── */
   const ACROSS_TEAMS = [
@@ -587,7 +598,7 @@
     if (emptyEl) emptyEl.style.display = 'none';
 
     el.innerHTML = AWAITING_REQUESTS.map(r => `
-      <div class="team-awaiting-row" data-req-id="${r.id}" role="button" tabindex="0">
+      <button type="button" class="team-awaiting-row" data-req-id="${r.id}">
         <div class="team-awaiting-icon-wrap ${r.iconClass}">
           ${r.iconSvg}
         </div>
@@ -597,7 +608,7 @@
           <span class="team-awaiting-meta">${esc(r.project)} · ${esc(r.time)}</span>
         </div>
         <span class="team-awaiting-arrow">&#8594;</span>
-      </div>
+      </button>
     `).join('');
 
     el.querySelectorAll('.team-awaiting-row').forEach(row => {
@@ -624,7 +635,7 @@
     if (emptyEl) emptyEl.style.display = 'none';
 
     el.innerHTML = MENTIONS.map(m => `
-      <div class="team-mention-row" data-mention-id="${m.id}" role="button" tabindex="0">
+      <button type="button" class="team-mention-row" data-mention-id="${m.id}">
         <div class="team-mention-avatar ${m.avatarBg}">${esc(m.avatarInitials)}</div>
         <div class="team-mention-content">
           <span class="team-mention-name">${esc(m.name)}</span>
@@ -632,7 +643,7 @@
           <span class="team-mention-time">${esc(m.time)}</span>
         </div>
         <span class="team-mention-arrow">&#8594;</span>
-      </div>
+      </button>
     `).join('');
 
     el.querySelectorAll('.team-mention-row').forEach(row => {
@@ -990,6 +1001,274 @@
     if (req) openRequestModal(req);
   };
 
+  /* ── 4-Section Create Team Modal Logic ─────────────────────────────────── */
+  function updateTeamCodePreview(name) {
+    const codeEl = document.getElementById('create-team-code');
+    if (!codeEl) return;
+    const clean = (name || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    const prefix = clean.length >= 4 ? clean.substring(0, 4) : (clean + 'TEAM').substring(0, 4);
+    codeEl.value = 'TEAM-' + prefix + '-01';
+  }
+
+  function renderSelectedTeamMembers() {
+    const container = document.getElementById('create-team-selected-members');
+    if (!container) return;
+
+    if (!SELECTED_TEAM_MEMBERS || SELECTED_TEAM_MEMBERS.length === 0) {
+      container.innerHTML = `
+        <div style="padding:0.75rem; color:var(--dash-text-muted); font-size:0.75rem; text-align:center; border:1px dashed var(--dash-border); border-radius:6px;">
+          No members added yet. Select a Team Lead above, or add employees below.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = SELECTED_TEAM_MEMBERS.map(m => `
+      <div class="team-selected-member-row" data-id="${m.id}">
+        <div class="team-selected-member-left">
+          <div class="team-people-avatar-circle ${m.bgClass || 'avatar--pk'}" style="width:26px; height:26px; font-size:0.6rem; flex-shrink:0;">
+            ${esc(m.initials || 'TM')}
+          </div>
+          <div class="team-selected-member-info">
+            <span class="team-selected-member-name">${esc(m.name)} ${m.isLead ? '<span style="font-size:0.6rem; color:#84cc16; font-weight:800; margin-left:4px;">LEAD</span>' : ''}</span>
+            <span class="team-selected-member-sub">${esc(m.jobTitle || 'Team Member')} &bull; ${esc(m.departmentName || 'Team')}</span>
+          </div>
+        </div>
+        <div class="team-selected-member-actions">
+          <select class="team-member-role-select" data-id="${m.id}" ${m.isLead ? 'disabled title="Team Lead role is fixed"' : ''}>
+            <option value="Team Lead" ${m.role === 'Team Lead' ? 'selected' : ''}>Team Lead</option>
+            <option value="Assistant Team Lead" ${m.role === 'Assistant Team Lead' ? 'selected' : ''}>Assistant Team Lead</option>
+            <option value="Core Contributor" ${m.role === 'Core Contributor' ? 'selected' : ''}>Core Contributor</option>
+            <option value="Specialist" ${m.role === 'Specialist' ? 'selected' : ''}>Specialist</option>
+            <option value="Reviewer" ${m.role === 'Reviewer' ? 'selected' : ''}>Reviewer</option>
+            <option value="Member" ${m.role === 'Member' ? 'selected' : ''}>Member</option>
+          </select>
+          ${!m.isLead ? `<button type="button" class="team-member-remove-btn" data-id="${m.id}" title="Remove member">&times;</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function openCreateTeamModal() {
+    const modal = document.getElementById('team-create-modal');
+    if (!modal) return;
+
+    // Reset error state
+    const errEl = document.getElementById('create-team-error');
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+
+    // Try fetching /api/teams/options
+    try {
+      const optRes = await fetch('/api/teams/options');
+      if (optRes.ok) {
+        CREATE_TEAM_OPTIONS = await optRes.json();
+      }
+    } catch (e) {
+      console.warn('Could not load /api/teams/options:', e);
+    }
+
+    const depts = (CREATE_TEAM_OPTIONS && CREATE_TEAM_OPTIONS.departments) || [];
+    const emps = (CREATE_TEAM_OPTIONS && CREATE_TEAM_OPTIONS.employees) || ALL_PEOPLE;
+
+    // 1. Populate Department Dropdown
+    const deptSelect = document.getElementById('create-team-department');
+    if (deptSelect) {
+      deptSelect.innerHTML = '<option value="" disabled selected>Select department</option>' +
+        depts.map(d => `<option value="${d.id}">${esc(d.name)}${d.subtitle ? ' (' + esc(d.subtitle) + ')' : ''}</option>`).join('');
+    }
+
+    // 2. Populate Team Lead Dropdown
+    const leadSelect = document.getElementById('create-team-lead');
+    if (leadSelect) {
+      leadSelect.innerHTML = '<option value="" disabled selected>Select team lead</option>' +
+        emps.map(e => `<option value="${e.id}">${esc(e.name)} (${esc(e.jobTitle || 'Member')})</option>`).join('');
+    }
+
+    // 3. Populate Assistant Lead Dropdown
+    const assistantSelect = document.getElementById('create-team-assistant');
+    if (assistantSelect) {
+      assistantSelect.innerHTML = '<option value="">None (optional)</option>' +
+        emps.map(e => `<option value="${e.id}">${esc(e.name)} (${esc(e.jobTitle || 'Member')})</option>`).join('');
+    }
+
+    // 4. Populate Reporting Manager Dropdown
+    const managerSelect = document.getElementById('create-team-manager');
+    if (managerSelect) {
+      managerSelect.innerHTML = '<option value="">None (optional)</option>' +
+        emps.map(e => `<option value="${e.id}">${esc(e.name)} (${esc(e.jobTitle || 'Member')})</option>`).join('');
+    }
+
+    // 5. Populate Member Selector
+    const memberSelector = document.getElementById('create-team-member-selector');
+    if (memberSelector) {
+      memberSelector.innerHTML = '<option value="">Choose employee to add...</option>' +
+        emps.map(e => `<option value="${e.id}">${esc(e.name)} &bull; ${esc(e.jobTitle || 'Member')}</option>`).join('');
+    }
+
+    // Reset Form Fields
+    const form = document.getElementById('form-create-team');
+    if (form) form.reset();
+
+    const nameInput = document.getElementById('create-team-name');
+    if (nameInput) nameInput.value = '';
+    updateTeamCodePreview('');
+
+    SELECTED_TEAM_MEMBERS = [];
+    renderSelectedTeamMembers();
+
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    if (nameInput) nameInput.focus();
+  }
+
+  function closeCreateTeamModal() {
+    const modal = document.getElementById('team-create-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    const form = document.getElementById('form-create-team');
+    if (form) form.reset();
+    SELECTED_TEAM_MEMBERS = [];
+    const errEl = document.getElementById('create-team-error');
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+  }
+
+  async function handleCreateTeamSubmit(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('create-team-error');
+    const submitBtn = document.getElementById('btn-submit-team');
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+
+    const nameInput = document.getElementById('create-team-name');
+    const codeInput = document.getElementById('create-team-code');
+    const descInput = document.getElementById('create-team-desc');
+    const deptSelect = document.getElementById('create-team-department');
+    const categorySelect = document.getElementById('create-team-category');
+    const leadSelect = document.getElementById('create-team-lead');
+    const assistantSelect = document.getElementById('create-team-assistant');
+    const managerSelect = document.getElementById('create-team-manager');
+    const visibilitySelect = document.getElementById('create-team-visibility');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const code = codeInput ? codeInput.value.trim() : '';
+    const description = descInput ? descInput.value.trim() : '';
+    const departmentId = deptSelect && deptSelect.value ? deptSelect.value : null;
+    const category = categorySelect && categorySelect.value ? categorySelect.value : 'Development';
+    const teamLeadId = leadSelect && leadSelect.value ? leadSelect.value : null;
+    const assistantTeamLeadId = assistantSelect && assistantSelect.value ? assistantSelect.value : null;
+    const reportingManagerId = managerSelect && managerSelect.value ? managerSelect.value : null;
+    const visibility = visibilitySelect && visibilitySelect.value ? visibilitySelect.value : 'Organization-wide';
+
+    if (!name) {
+      if (errEl) { errEl.textContent = 'Team name is required.'; errEl.style.display = 'block'; }
+      if (nameInput) nameInput.focus();
+      return;
+    }
+
+    if (!description) {
+      if (errEl) { errEl.textContent = 'Team description is required.'; errEl.style.display = 'block'; }
+      if (descInput) descInput.focus();
+      return;
+    }
+
+    if (!departmentId) {
+      if (errEl) { errEl.textContent = 'Please select a department.'; errEl.style.display = 'block'; }
+      if (deptSelect) deptSelect.focus();
+      return;
+    }
+
+    if (!teamLeadId) {
+      if (errEl) { errEl.textContent = 'Please select a Team Lead.'; errEl.style.display = 'block'; }
+      if (leadSelect) leadSelect.focus();
+      return;
+    }
+
+    if (!SELECTED_TEAM_MEMBERS || SELECTED_TEAM_MEMBERS.length === 0) {
+      if (errEl) { errEl.textContent = 'At least one team member is required.'; errEl.style.display = 'block'; }
+      return;
+    }
+
+    const payload = {
+      name: name,
+      code: code,
+      description: description,
+      departmentId: departmentId,
+      category: category,
+      teamLeadId: teamLeadId,
+      assistantTeamLeadId: assistantTeamLeadId,
+      reportingManagerId: reportingManagerId,
+      visibility: visibility,
+      members: SELECTED_TEAM_MEMBERS.map(m => ({
+        employeeId: m.id,
+        memberRole: m.role || 'Member'
+      }))
+    };
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+    }
+
+    try {
+      const res = await fetch('/api/teams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        let msg = 'Failed to create team. Please try again.';
+        try {
+          const errData = await res.json();
+          if (errData && (errData.message || errData.error)) {
+            msg = errData.message || errData.error;
+          }
+        } catch (_) {}
+        if (errEl) {
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const created = await res.json();
+      showToast(`Team "${created.name || name}" created successfully!`);
+      closeCreateTeamModal();
+
+      // Refresh data and re-render sections
+      await fetchTeamAndEmployeeData();
+      renderFeaturedTeam(TEAMS[0]);
+      renderExploreTeams();
+      renderAcrossTeams();
+      renderTeamUpdates();
+      renderPeopleAvatars();
+
+      // Dispatch custom events for Universal Create and other modules
+      document.dispatchEvent(new CustomEvent('teamden:teamCreated', { detail: created }));
+      document.dispatchEvent(new CustomEvent('teamden:refresh'));
+    } catch (err) {
+      console.error('Error creating team:', err);
+      if (errEl) {
+        errEl.textContent = 'Network or server error while creating team.';
+        errEl.style.display = 'block';
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }
+    }
+  }
+
   /* ── Wire Events ───────────────────────────────────────────────────────── */
   function wireEvents() {
     // Search input
@@ -1099,16 +1378,144 @@
         showToast('Viewing all mentions & tags');
       });
     }
+
+    // Create Team Modal Triggers & Actions
+    const openCreateBtn = document.getElementById('btn-open-create-team');
+    if (openCreateBtn) {
+      openCreateBtn.addEventListener('click', openCreateTeamModal);
+    }
+    const exploreCreateBtn = document.getElementById('btn-explore-create-team');
+    if (exploreCreateBtn) {
+      exploreCreateBtn.addEventListener('click', openCreateTeamModal);
+    }
+
+    const closeCreateBtn = document.getElementById('btn-close-team-modal');
+    if (closeCreateBtn) {
+      closeCreateBtn.addEventListener('click', closeCreateTeamModal);
+    }
+    const cancelCreateBtn = document.getElementById('btn-cancel-create-team');
+    if (cancelCreateBtn) {
+      cancelCreateBtn.addEventListener('click', closeCreateTeamModal);
+    }
+
+    const createModal = document.getElementById('team-create-modal');
+    if (createModal) {
+      createModal.addEventListener('click', (e) => {
+        if (e.target === createModal) {
+          closeCreateTeamModal();
+        }
+      });
+    }
+
+    const createForm = document.getElementById('form-create-team');
+    if (createForm) {
+      createForm.addEventListener('submit', handleCreateTeamSubmit);
+    }
+
+    // Interactive controls for Create Team Modal
+    const nameInput = document.getElementById('create-team-name');
+    if (nameInput) {
+      nameInput.addEventListener('input', (e) => {
+        updateTeamCodePreview(e.target.value);
+      });
+    }
+
+    const leadSelect = document.getElementById('create-team-lead');
+    if (leadSelect) {
+      leadSelect.addEventListener('change', (e) => {
+        const empId = e.target.value;
+        const empList = (CREATE_TEAM_OPTIONS && CREATE_TEAM_OPTIONS.employees) || ALL_PEOPLE;
+        const emp = empList.find(p => String(p.id) === String(empId));
+        if (emp) {
+          SELECTED_TEAM_MEMBERS = SELECTED_TEAM_MEMBERS.filter(m => !m.isLead && String(m.id) !== String(empId));
+          SELECTED_TEAM_MEMBERS.unshift({
+            id: emp.id,
+            name: emp.name,
+            initials: emp.initials || 'TM',
+            jobTitle: emp.jobTitle || 'Team Lead',
+            departmentName: emp.departmentName || 'Team',
+            bgClass: emp.cardTheme ? 'avatar--' + emp.cardTheme : 'avatar--pk',
+            role: 'Team Lead',
+            isLead: true
+          });
+          renderSelectedTeamMembers();
+        }
+      });
+    }
+
+    const addMemberBtn = document.getElementById('btn-add-team-member');
+    const memberSelector = document.getElementById('create-team-member-selector');
+    if (addMemberBtn && memberSelector) {
+      addMemberBtn.addEventListener('click', () => {
+        const empId = memberSelector.value;
+        if (!empId) {
+          showToast('Please choose an employee to add');
+          return;
+        }
+        if (SELECTED_TEAM_MEMBERS.some(m => String(m.id) === String(empId))) {
+          showToast('Employee already added to this team');
+          return;
+        }
+        const empList = (CREATE_TEAM_OPTIONS && CREATE_TEAM_OPTIONS.employees) || ALL_PEOPLE;
+        const emp = empList.find(p => String(p.id) === String(empId));
+        if (emp) {
+          SELECTED_TEAM_MEMBERS.push({
+            id: emp.id,
+            name: emp.name,
+            initials: emp.initials || 'TM',
+            jobTitle: emp.jobTitle || 'Member',
+            departmentName: emp.departmentName || 'Team',
+            bgClass: emp.cardTheme ? 'avatar--' + emp.cardTheme : 'avatar--pk',
+            role: 'Member',
+            isLead: false
+          });
+          memberSelector.value = '';
+          renderSelectedTeamMembers();
+        }
+      });
+    }
+
+    const selectedMembersList = document.getElementById('create-team-selected-members');
+    if (selectedMembersList) {
+      selectedMembersList.addEventListener('change', (e) => {
+        if (e.target.classList.contains('team-member-role-select')) {
+          const empId = e.target.getAttribute('data-id');
+          const member = SELECTED_TEAM_MEMBERS.find(m => String(m.id) === String(empId));
+          if (member && !member.isLead) {
+            member.role = e.target.value;
+          }
+        }
+      });
+
+      selectedMembersList.addEventListener('click', (e) => {
+        const removeBtn = e.target.closest('.team-member-remove-btn');
+        if (removeBtn) {
+          const empId = removeBtn.getAttribute('data-id');
+          SELECTED_TEAM_MEMBERS = SELECTED_TEAM_MEMBERS.filter(m => String(m.id) !== String(empId));
+          renderSelectedTeamMembers();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('team-create-modal');
+        if (modal && modal.style.display !== 'none') {
+          closeCreateTeamModal();
+        }
+      }
+    });
   }
 
   /* ── Main Init ────────────────────────────────────────────────────────── */
   async function init() {
-    // 1. Session check
+    // 1. Session check & fetch team entities from DB
     try {
       if (window.Auth && typeof Auth.checkSession === 'function') {
         currentUser = await Auth.checkSession();
       }
     } catch (e) { /* dev mode fallback */ }
+    await fetchTeamAndEmployeeData();
 
     // 2. Load fragments
     await Promise.all([

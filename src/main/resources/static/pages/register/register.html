@@ -31,7 +31,7 @@
          LEFT PANEL: Brand, Editorial Pitch & Workspace Preview
          Occupies ~38–40% on Desktop
          ======================================================== -->
-    <aside class="register-brand-panel">
+    <aside class="register-brand-panel" aria-label="Brand Overview">
       <div class="brand-panel-inner">
         <!-- Brand Wordmark / Logo -->
         <header class="panel-brand-header">
@@ -102,7 +102,7 @@
       <div class="preview-backdrop-card" aria-hidden="true"></div>
 
       <!-- Floating Miniature Dashboard Preview Card (Direct Visual Inspiration) -->
-      <aside class="dashboard-preview-card" aria-hidden="true">
+      <div class="dashboard-preview-card" aria-hidden="true">
         <div class="preview-header">
           <span class="preview-logo">brick</span>
           <div class="preview-search">
@@ -186,7 +186,7 @@
             </div>
           </div>
         </div>
-      </aside>
+      </div>
     </aside>
 
     <!-- ========================================================
@@ -307,7 +307,7 @@
 
                 <!-- Field 2: Legal Company Name -->
                 <div class="field-cell">
-                  <label for="legal-company-name" class="input-label">Legal company name (if different)</label>
+                  <label for="legal-company-name" class="input-label">Legal company name (if different) <span class="optional-hint">(optional)</span></label>
                   <input
                     type="text"
                     id="legal-company-name"
@@ -319,7 +319,7 @@
 
                 <!-- Field 3: Company Logo Upload -->
                 <div class="field-cell">
-                  <label class="input-label">Company logo</label>
+                  <label class="input-label">Company logo <span class="optional-hint">(optional)</span></label>
                   <div class="logo-upload-dropzone" id="logo-dropzone">
                     <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none">
                     <div class="upload-idle-state" id="upload-idle-state">
@@ -336,7 +336,7 @@
                       </div>
                     </div>
                     <div class="upload-preview-state d-none" id="upload-preview-state">
-                      <img id="logo-preview-img" src="" alt="Company Logo Preview" class="logo-preview-thumb">
+                      <img id="logo-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Company Logo Preview" class="logo-preview-thumb">
                       <div class="preview-meta">
                         <span id="logo-file-name" class="file-name-label">logo.png</span>
                         <button type="button" id="remove-logo-btn" class="btn-remove-logo">Remove</button>
@@ -352,11 +352,12 @@
                   <div class="select-wrapper">
                     <select id="company-type" name="companyType" class="brick-control brick-select" required>
                       <option value="" disabled selected>Select company type</option>
-                      <option value="Private Limited Company">Private Limited Company</option>
-                      <option value="Public Limited Company">Public Limited Company</option>
+                      <option value="Sole Proprietorship">Sole Proprietorship</option>
                       <option value="Partnership">Partnership</option>
                       <option value="Limited Liability Partnership (LLP)">Limited Liability Partnership (LLP)</option>
-                      <option value="Sole Proprietorship">Sole Proprietorship</option>
+                      <option value="Private Limited Company">Private Limited Company</option>
+                      <option value="Public Limited Company">Public Limited Company</option>
+                      <option value="Corporation">Corporation</option>
                       <option value="Non-profit Organization">Non-profit Organization</option>
                       <option value="Other">Other</option>
                     </select>
@@ -371,15 +372,17 @@
                   <div class="select-wrapper">
                     <select id="company-industry" name="industry" class="brick-control brick-select" required>
                       <option value="" disabled selected>Select industry</option>
-                      <option value="Technology / Software">Technology / Software</option>
-                      <option value="Finance / Banking">Finance / Banking</option>
-                      <option value="Healthcare">Healthcare</option>
-                      <option value="Education">Education</option>
-                      <option value="Retail / E-commerce">Retail / E-commerce</option>
+                      <option value="IT & Software">IT &amp; Software</option>
+                      <option value="Marketing & Advertising">Marketing &amp; Advertising</option>
+                      <option value="Design & Creative Agency">Design &amp; Creative Agency</option>
+                      <option value="Construction & Engineering">Construction &amp; Engineering</option>
+                      <option value="Consulting">Consulting</option>
+                      <option value="Professional Services">Professional Services</option>
+                      <option value="Maintenance & Repair">Maintenance &amp; Repair</option>
+                      <option value="Education & Training">Education &amp; Training</option>
+                      <option value="Healthcare Services">Healthcare Services</option>
                       <option value="Manufacturing">Manufacturing</option>
-                      <option value="Consulting / Professional Services">Consulting / Professional Services</option>
-                      <option value="Construction / Real Estate">Construction / Real Estate</option>
-                      <option value="Media / Marketing">Media / Marketing</option>
+                      <option value="Retail & E-commerce">Retail &amp; E-commerce</option>
                       <option value="Other">Other</option>
                     </select>
                     <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -387,28 +390,42 @@
                   <div class="field-error-msg d-none" id="error-company-industry">Please select an industry.</div>
                 </div>
 
-                <!-- Field 6: Company Size -->
+                <!-- Field 6: Industry Name (if Other) -->
+                <div class="field-cell full-width d-none" id="company-industry-other-group">
+                  <label for="company-industry-other" class="input-label">Industry name (if Other) <span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="company-industry-other"
+                    name="industryOther"
+                    class="brick-control"
+                    placeholder="e.g. Clean Energy, Biotech, Aerospace"
+                  >
+                  <div class="field-error-msg d-none" id="error-company-industry-other">Please enter your industry name.</div>
+                </div>
+
+                <!-- Field 7: Company Size -->
                 <div class="field-cell">
                   <label for="company-size" class="input-label">Company size <span class="required-asterisk">*</span></label>
                   <div class="select-wrapper">
                     <select id="company-size" name="companySize" class="brick-control brick-select" required>
                       <option value="" disabled selected>Select company size</option>
-                      <option value="Just me">Just me (1 person)</option>
-                      <option value="2–10 employees">2–10 employees</option>
-                      <option value="11–50 employees">11–50 employees</option>
-                      <option value="51–200 employees">51–200 employees</option>
-                      <option value="201–500 employees">201–500 employees</option>
-                      <option value="501–1,000 employees">501–1,000 employees</option>
-                      <option value="1,000+ employees">1,000+ employees</option>
+                      <option value="1–5 employees">1–5 employees</option>
+                      <option value="6–10 employees">6–10 employees</option>
+                      <option value="11–25 employees">11–25 employees</option>
+                      <option value="26–50 employees">26–50 employees</option>
+                      <option value="51–100 employees">51–100 employees</option>
+                      <option value="101–250 employees">101–250 employees</option>
+                      <option value="251–500 employees">251–500 employees</option>
+                      <option value="500+ employees">500+ employees</option>
                     </select>
                     <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
                   <div class="field-error-msg d-none" id="error-company-size">Please select company size.</div>
                 </div>
 
-                <!-- Field 7: Website URL -->
+                <!-- Field 8: Website URL -->
                 <div class="field-cell">
-                  <label for="company-website" class="input-label">Website URL</label>
+                  <label for="company-website" class="input-label">Website URL <span class="optional-hint">(optional)</span></label>
                   <div class="icon-input-wrapper">
                     <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
@@ -425,9 +442,9 @@
                   <div class="field-error-msg d-none" id="error-company-website">Please enter a valid website URL (e.g. https://example.com).</div>
                 </div>
 
-                <!-- Field 8: Year Established -->
+                <!-- Field 9: Year Established -->
                 <div class="field-cell">
-                  <label for="company-year" class="input-label">Year established</label>
+                  <label for="company-year" class="input-label">Year established <span class="optional-hint">(optional)</span></label>
                   <div class="icon-input-wrapper">
                     <svg class="input-leading-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -533,39 +550,45 @@
                   <div class="field-error-msg d-none" id="error-address-city">Please enter the city.</div>
                 </div>
 
-                <!-- State / Region -->
+                <!-- State / Region (Conditional) -->
                 <div class="field-cell">
-                  <label for="address-state" class="input-label">State / Province / Region <span class="required-asterisk">*</span></label>
+                  <label for="address-state" class="input-label">
+                    State / Province / Region
+                    <span id="state-req-indicator" class="required-asterisk">*</span>
+                    <span id="state-opt-hint" class="optional-hint d-none">(optional)</span>
+                  </label>
                   <input
                     type="text"
                     id="address-state"
                     name="state"
                     class="brick-control"
                     placeholder="e.g. California"
-                    required
                   >
                   <div class="field-error-msg d-none" id="error-address-state">Please enter the state or province.</div>
                 </div>
 
-                <!-- Postal / ZIP -->
+                <!-- Postal / ZIP (Conditional) -->
                 <div class="field-cell">
-                  <label for="address-zip" class="input-label">Postal / ZIP code <span class="required-asterisk">*</span></label>
+                  <label for="address-zip" class="input-label">
+                    Postal / ZIP code
+                    <span id="zip-req-indicator" class="required-asterisk">*</span>
+                    <span id="zip-opt-hint" class="optional-hint d-none">(optional)</span>
+                  </label>
                   <input
                     type="text"
                     id="address-zip"
                     name="zipCode"
                     class="brick-control"
                     placeholder="e.g. 94103"
-                    required
                   >
                   <div class="field-error-msg d-none" id="error-address-zip">Please enter the postal or ZIP code.</div>
                 </div>
 
                 <!-- Currency -->
                 <div class="field-cell">
-                  <label for="currency-preference" class="input-label">Workspace currency</label>
+                  <label for="currency-preference" class="input-label">Workspace currency <span class="required-asterisk">*</span></label>
                   <div class="select-wrapper">
-                    <select id="currency-preference" name="currency" class="brick-control brick-select">
+                    <select id="currency-preference" name="currency" class="brick-control brick-select" required>
                       <option value="USD" selected>USD ($) — US Dollar</option>
                       <option value="EUR">EUR (€) — Euro</option>
                       <option value="GBP">GBP (£) — British Pound</option>
@@ -573,9 +596,36 @@
                       <option value="AUD">AUD ($) — Australian Dollar</option>
                       <option value="INR">INR (₹) — Indian Rupee</option>
                       <option value="SGD">SGD ($) — Singapore Dollar</option>
+                      <option value="JPY">JPY (¥) — Japanese Yen</option>
+                      <option value="CHF">CHF (Fr) — Swiss Franc</option>
+                      <option value="AED">AED (د.إ) — UAE Dirham</option>
                     </select>
                     <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
+                </div>
+
+                <!-- Time Zone -->
+                <div class="field-cell">
+                  <label for="timezone-preference" class="input-label">Time zone <span class="required-asterisk">*</span></label>
+                  <div class="select-wrapper">
+                    <select id="timezone-preference" name="timezone" class="brick-control brick-select" required>
+                      <option value="UTC" selected>UTC (Coordinated Universal Time)</option>
+                      <option value="America/New_York">America/New_York (GMT-05:00)</option>
+                      <option value="America/Chicago">America/Chicago (GMT-06:00)</option>
+                      <option value="America/Denver">America/Denver (GMT-07:00)</option>
+                      <option value="America/Los_Angeles">America/Los_Angeles (GMT-08:00)</option>
+                      <option value="Europe/London">Europe/London (GMT+00:00 / +01:00)</option>
+                      <option value="Europe/Paris">Europe/Paris (GMT+01:00 / +02:00)</option>
+                      <option value="Europe/Berlin">Europe/Berlin (GMT+01:00 / +02:00)</option>
+                      <option value="Asia/Dubai">Asia/Dubai (GMT+04:00)</option>
+                      <option value="Asia/Kolkata">Asia/Kolkata (GMT+05:30)</option>
+                      <option value="Asia/Singapore">Asia/Singapore (GMT+08:00)</option>
+                      <option value="Asia/Tokyo">Asia/Tokyo (GMT+09:00)</option>
+                      <option value="Australia/Sydney">Australia/Sydney (GMT+10:00 / +11:00)</option>
+                    </select>
+                    <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                  <div class="field-info-hint" id="timezone-suggestion-hint">Suggested based on country — please confirm.</div>
                 </div>
 
                 <!-- Business Registration Number -->
@@ -600,6 +650,73 @@
                     class="brick-control"
                     placeholder="e.g. EIN / VAT / GST #"
                   >
+                </div>
+
+                <!-- Billing Address Same Checkbox -->
+                <div class="field-cell full-width pt-1">
+                  <label class="consent-checkbox-row">
+                    <input type="checkbox" id="billing-same-as-registered" checked>
+                    <span class="consent-label">
+                      Billing address is the same as registered address
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Conditional Billing Address Group -->
+                <div class="billing-address-group full-width d-none" id="billing-address-group">
+                  <div class="billing-group-title">Billing Address Details</div>
+                  <div class="form-two-column-grid">
+                    <div class="field-cell full-width">
+                      <label for="billing-country" class="input-label">Billing country <span class="required-asterisk">*</span></label>
+                      <div class="select-wrapper">
+                        <select id="billing-country" name="billingCountry" class="brick-control brick-select">
+                          <option value="" disabled selected>Select billing country</option>
+                          <option value="United States">United States</option>
+                          <option value="United Kingdom">United Kingdom</option>
+                          <option value="Canada">Canada</option>
+                          <option value="Australia">Australia</option>
+                          <option value="Germany">Germany</option>
+                          <option value="France">France</option>
+                          <option value="India">India</option>
+                          <option value="Singapore">Singapore</option>
+                          <option value="Netherlands">Netherlands</option>
+                          <option value="United Arab Emirates">United Arab Emirates</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      </div>
+                      <div class="field-error-msg d-none" id="error-billing-country">Please select a billing country.</div>
+                    </div>
+
+                    <div class="field-cell full-width">
+                      <label for="billing-street" class="input-label">Billing address <span class="required-asterisk">*</span></label>
+                      <input type="text" id="billing-street" name="billingAddress" class="brick-control" placeholder="Street address or P.O. Box">
+                      <div class="field-error-msg d-none" id="error-billing-street">Please enter the billing street address.</div>
+                    </div>
+
+                    <div class="field-cell full-width">
+                      <label for="billing-line2" class="input-label">Billing address line 2 (optional)</label>
+                      <input type="text" id="billing-line2" name="billingAddressLine2" class="brick-control" placeholder="Suite, unit, floor (optional)">
+                    </div>
+
+                    <div class="field-cell">
+                      <label for="billing-city" class="input-label">Billing city <span class="required-asterisk">*</span></label>
+                      <input type="text" id="billing-city" name="billingCity" class="brick-control" placeholder="City">
+                      <div class="field-error-msg d-none" id="error-billing-city">Please enter the billing city.</div>
+                    </div>
+
+                    <div class="field-cell">
+                      <label for="billing-state" class="input-label">Billing state / province</label>
+                      <input type="text" id="billing-state" name="billingState" class="brick-control" placeholder="State or province">
+                      <div class="field-error-msg d-none" id="error-billing-state">Please enter the billing state.</div>
+                    </div>
+
+                    <div class="field-cell">
+                      <label for="billing-zip" class="input-label">Billing postal / ZIP code</label>
+                      <input type="text" id="billing-zip" name="billingPostalCode" class="brick-control" placeholder="Postal or ZIP code">
+                      <div class="field-error-msg d-none" id="error-billing-zip">Please enter the billing postal code.</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -662,6 +779,34 @@
                     >
                   </div>
                   <div class="field-error-msg d-none" id="error-admin-email">Please enter a valid work email address.</div>
+
+                  <!-- Email Verification (OTP) Group -->
+                  <div class="email-verification-container mt-2" id="email-verification-container">
+                    <div class="otp-action-row">
+                      <div class="otp-input-wrap">
+                        <input
+                          type="text"
+                          id="verification-code"
+                          class="brick-control otp-input"
+                          placeholder="6-digit OTP code"
+                          maxlength="6"
+                        >
+                      </div>
+                      <button type="button" id="btn-send-code" class="btn-brick-secondary btn-otp-action">
+                        Send Code
+                      </button>
+                      <button type="button" id="btn-verify-code" class="btn-brick-secondary btn-otp-action">
+                        Verify
+                      </button>
+                      <span id="email-verified-badge" class="verification-pill unverified">
+                        <span class="pill-dot"></span> Verification on hold
+                      </span>
+                    </div>
+                    <div class="otp-hint-text" id="otp-hint-text">
+                      Email verification is temporarily on hold. You can test OTP with "Send Code" or proceed directly.
+                    </div>
+                    <div class="field-error-msg d-none" id="error-verification-code"></div>
+                  </div>
                 </div>
 
                 <!-- Admin Password -->
@@ -679,6 +824,7 @@
                       class="brick-control with-icon with-trailing"
                       placeholder="Create secure password (min 8 chars)"
                       minlength="8"
+                      autocomplete="new-password"
                       required
                     >
                     <button type="button" id="toggle-admin-pw" class="input-trailing-action" aria-label="Toggle password visibility">
@@ -687,6 +833,17 @@
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
                     </button>
+                  </div>
+
+                  <!-- Password Strength Meter -->
+                  <div class="password-strength-container mt-1" id="password-strength-container">
+                    <div class="strength-bar-track">
+                      <div id="strength-bar-fill" class="strength-bar-fill"></div>
+                    </div>
+                    <div class="strength-label-row">
+                      <span id="strength-label" class="strength-label">Strength: —</span>
+                      <span class="strength-recommendation">Min 8 chars, 12+ recommended</span>
+                    </div>
                   </div>
                   <div class="field-error-msg d-none" id="error-admin-password">Password must be at least 8 characters long.</div>
                 </div>
@@ -704,6 +861,7 @@
                       id="admin-confirm-password"
                       class="brick-control with-icon"
                       placeholder="Re-enter your password"
+                      autocomplete="new-password"
                       required
                     >
                   </div>
@@ -739,15 +897,65 @@
                   </div>
                 </div>
 
-                <!-- Terms Consent Checkbox -->
+                <!-- Field 8: Profile Picture Upload -->
+                <div class="field-cell full-width">
+                  <label class="input-label">Profile picture (optional)</label>
+                  <div class="logo-upload-dropzone" id="avatar-dropzone">
+                    <input type="file" id="avatar-file-input" accept="image/png,image/jpeg" class="d-none">
+                    <div class="upload-idle-state" id="avatar-idle-state">
+                      <div class="upload-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                      </div>
+                      <div class="upload-copy">
+                        <span class="upload-link-text">Upload profile photo</span>
+                        <span class="upload-hint">PNG, JPG up to 5MB</span>
+                      </div>
+                    </div>
+                    <div class="upload-preview-state d-none" id="avatar-preview-state">
+                      <img id="avatar-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Picture Preview" class="logo-preview-thumb">
+                      <div class="preview-meta">
+                        <span id="avatar-file-name" class="file-name-label">avatar.png</span>
+                        <button type="button" id="remove-avatar-btn" class="btn-remove-logo">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field-error-msg d-none" id="error-avatar-file"></div>
+                </div>
+
+                <!-- Terms Consent Checkbox 1 -->
                 <div class="field-cell full-width pt-1">
                   <label class="consent-checkbox-row">
                     <input type="checkbox" id="consent-terms" required>
                     <span class="consent-label">
-                      I agree to the <a href="#" class="inline-legal-link">Terms of Service</a> and <a href="#" class="inline-legal-link">Privacy Policy</a>, and confirm I am authorized to register on behalf of the company. <span class="required-asterisk">*</span>
+                      I have read and agree to the <a href="#" class="inline-legal-link">Terms of Service</a>. <span class="required-asterisk">*</span>
                     </span>
                   </label>
-                  <div class="field-error-msg d-none" id="error-consent-terms">You must agree to the terms to proceed.</div>
+                  <div class="field-error-msg d-none" id="error-consent-terms">You must agree to the Terms of Service to proceed.</div>
+                </div>
+
+                <!-- Terms Consent Checkbox 2: Privacy -->
+                <div class="field-cell full-width">
+                  <label class="consent-checkbox-row">
+                    <input type="checkbox" id="consent-privacy" required>
+                    <span class="consent-label">
+                      I have read and agree to the <a href="#" class="inline-legal-link">Privacy Policy</a>. <span class="required-asterisk">*</span>
+                    </span>
+                  </label>
+                  <div class="field-error-msg d-none" id="error-consent-privacy">You must agree to the Privacy Policy to proceed.</div>
+                </div>
+
+                <!-- Terms Consent Checkbox 3: Authorization -->
+                <div class="field-cell full-width">
+                  <label class="consent-checkbox-row">
+                    <input type="checkbox" id="consent-auth" required>
+                    <span class="consent-label">
+                      I confirm I am legally authorized to register this organization on behalf of the company. <span class="required-asterisk">*</span>
+                    </span>
+                  </label>
+                  <div class="field-error-msg d-none" id="error-consent-auth">You must confirm authorization to register this company.</div>
                 </div>
               </div>
             </div>
@@ -839,6 +1047,10 @@
                     <span class="review-key">Tax ID / VAT</span>
                     <span class="review-val" id="summary-tax-id">—</span>
                   </div>
+                  <div class="review-item full">
+                    <span class="review-key">Billing Address</span>
+                    <span class="review-val" id="summary-billing-address">—</span>
+                  </div>
                 </div>
               </div>
 
@@ -858,6 +1070,10 @@
                     <span class="review-val" id="summary-admin-email">—</span>
                   </div>
                   <div class="review-item">
+                    <span class="review-key">Email Verification</span>
+                    <span class="review-val" id="summary-verification-status">Verified</span>
+                  </div>
+                  <div class="review-item">
                     <span class="review-key">Job Title</span>
                     <span class="review-val" id="summary-job-title">—</span>
                   </div>
@@ -865,7 +1081,40 @@
                     <span class="review-key">Phone</span>
                     <span class="review-val" id="summary-phone">—</span>
                   </div>
+                  <div class="review-item">
+                    <span class="review-key">Account Role</span>
+                    <span class="review-val" id="summary-role">OWNER (System-generated)</span>
+                  </div>
                 </div>
+              </div>
+
+              <!-- Summary Section 4: Workspace Settings -->
+              <div class="review-block">
+                <div class="review-block-header">
+                  <h4 class="review-section-title">4. Workspace Settings</h4>
+                  <button type="button" class="btn-jump-step" data-target-step="2">Edit</button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="review-key">Workspace Currency</span>
+                    <span class="review-val" id="summary-currency">—</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="review-key">Time Zone</span>
+                    <span class="review-val" id="summary-timezone">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Final Confirmation Checkbox -->
+              <div class="review-confirm-block mt-3">
+                <label class="consent-checkbox-row">
+                  <input type="checkbox" id="final-confirm-checkbox" required>
+                  <span class="consent-label">
+                    I confirm all information provided is accurate and authorize the creation of this organization workspace. <span class="required-asterisk">*</span>
+                  </span>
+                </label>
+                <div class="field-error-msg d-none" id="error-final-confirm">Please confirm all details to create your workspace.</div>
               </div>
             </div>
           </div>
@@ -887,7 +1136,7 @@
                 </svg>
               </button>
               <button type="submit" id="btn-nav-submit" class="btn-brick-primary d-none">
-                <span id="btn-submit-text">Create Company</span>
+                <span id="btn-submit-text">Create Workspace</span>
                 <svg class="btn-right-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>

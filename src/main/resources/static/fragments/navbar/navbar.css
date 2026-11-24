@@ -247,14 +247,30 @@
   position: relative;
 }
 
-.bell-red-dot {
+.bell-badge-count {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 6px;
-  height: 6px;
+  top: -2px;
+  right: -2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
   background-color: var(--dash-dot-red);
-  border-radius: 50%;
+  color: var(--dash-text-white);
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-family, 'Montserrat', sans-serif);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 1.5px solid var(--dash-bg-canvas);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 2;
+  letter-spacing: -0.02em;
+}
+
 }
 
 /* Theme Switcher Button */
@@ -324,12 +340,34 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: var(--font-family, 'Montserrat', sans-serif);
+  text-transform: uppercase;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.user-avatar-initials {
+  display: inline-block;
+  line-height: 1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dash-text-white);
+  text-transform: uppercase;
 }
 
 .user-avatar-circle svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   color: var(--dash-text-white);
+}
+
+.user-profile-trigger:hover .user-avatar-circle {
+  transform: scale(1.04);
 }
 
 .user-chevron {

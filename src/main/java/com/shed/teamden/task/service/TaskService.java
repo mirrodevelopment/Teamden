@@ -10,7 +10,6 @@ import com.shed.teamden.dashboard.dto.PriorityTaskDto;
 import com.shed.teamden.organization.entity.MembershipStatus;
 import com.shed.teamden.organization.entity.Organization;
 import com.shed.teamden.organization.entity.OrganizationMembership;
-import com.shed.teamden.organization.entity.OrganizationStatus;
 import com.shed.teamden.organization.repository.OrganizationMembershipRepository;
 import com.shed.teamden.organization.repository.OrganizationRepository;
 import com.shed.teamden.project.entity.Project;
@@ -26,7 +25,6 @@ import com.shed.teamden.task.entity.TaskPriority;
 import com.shed.teamden.task.entity.TaskStatus;
 import com.shed.teamden.task.repository.TaskRepository;
 import com.shed.teamden.user.entity.User;
-import com.shed.teamden.user.entity.UserStatus;
 import com.shed.teamden.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +42,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TaskService {
 
+    private static final DateTimeFormatter DATE_FMT_EEE_DD_MMM = DateTimeFormatter.ofPattern("EEE, dd MMM");
+
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
@@ -58,7 +58,7 @@ public class TaskService {
         }
 
         Organization organization = resolveCurrentOrganization();
-        User currentUser = resolveCurrentUser(organization);
+        User currentUser = resolveCurrentUser();
 
         // 1. Resolve Kanban Column
         KanbanColumn column = KanbanColumn.NOW;
@@ -71,7 +71,7 @@ public class TaskService {
         }
 
         // 2. Resolve Priority
-        TaskPriority priority = TaskPriority.MEDIUM;
+        TaskPriority priority;
         if (request.getPriority() != null && !request.getPriority().isBlank()) {
             try {
                 priority = TaskPriority.valueOf(request.getPriority().trim().toUpperCase());
@@ -79,23 +79,23 @@ public class TaskService {
                 priority = (column == KanbanColumn.NOW) ? TaskPriority.HIGH : TaskPriority.MEDIUM;
             }
         } else {
-            if (column == KanbanColumn.NOW)
-                priority = TaskPriority.HIGH;
-            else if (column == KanbanColumn.LATER)
-                priority = TaskPriority.LOW;
+            priority = switch (column) {
+                case NOW -> TaskPriority.HIGH;
+                case LATER -> TaskPriority.LOW;
+                default -> TaskPriority.MEDIUM;
+            };
         }
 
         // 3. Resolve Due Date
         LocalDate dueDate = request.getDueDate();
         if (dueDate == null) {
-            LocalDate today = LocalDate.now();
-            if (column == KanbanColumn.NOW) {
-                dueDate = today;
-            } else if (column == KanbanColumn.NEXT) {
-                dueDate = today.plusDays(1);
-            } else {
-                dueDate = today.plusDays(7);
-            }
+            LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
+            final KanbanColumn dueDateCol = (column != null) ? column : KanbanColumn.NOW;
+            dueDate = switch (dueDateCol) {
+                case NOW -> today;
+                case NEXT -> today.plusDays(1);
+                default -> today.plusDays(7);
+            };
         }
 
         // 4. Resolve Project (validating multi-tenant isolation)
@@ -121,7 +121,7 @@ public class TaskService {
                         .name(tagName)
                         .owner(currentUser)
                         .status(ProjectStatus.ACTIVE)
-                        .startDate(LocalDate.now())
+                        .startDate(LocalDate.now(java.time.ZoneId.systemDefault()))
                         .build();
                 project = projectRepository.save(project);
             }
@@ -209,7 +209,7 @@ public class TaskService {
                     String[] parts = fullName.trim().split("\\s+");
                     String initials = parts.length > 1
                             ? ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
-                            : (fullName.length() > 0
+                            : (!fullName.isEmpty()
                                     ? fullName.substring(0, Math.min(2, fullName.length())).toUpperCase()
                                     : "TM");
                     return TaskOptionsDto.AssigneeOptionDto.builder()
@@ -259,7 +259,7 @@ public class TaskService {
     public PriorityTaskDto toPriorityTaskDto(Task task, String indexNum) {
         String dot = "gray";
         String dueLabel = "Upcoming";
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
 
         if (task.getDueDate() != null) {
             if (task.getDueDate().isEqual(today)) {
@@ -270,7 +270,7 @@ public class TaskService {
                 dueLabel = "Tomorrow";
             } else {
                 dot = "blue";
-                dueLabel = task.getDueDate().format(DateTimeFormatter.ofPattern("EEE, dd MMM"));
+                dueLabel = task.getDueDate().format(DATE_FMT_EEE_DD_MMM);
             }
         }
 
@@ -302,15 +302,10 @@ public class TaskService {
         if (!orgs.isEmpty()) {
             return orgs.get(0);
         }
-        Organization defaultOrg = Organization.builder()
-                .id(UUID.randomUUID())
-                .name("Acme Co.")
-                .status(OrganizationStatus.ACTIVE)
-                .build();
-        return organizationRepository.save(defaultOrg);
+        throw new UnauthorizedException("Authentication required. No active workspace found.");
     }
 
-    private User resolveCurrentUser(Organization org) {
+    private User resolveCurrentUser() {
         Optional<CustomUserDetails> userOpt = SecurityUtils.getAuthenticatedUser();
         if (userOpt.isPresent()) {
             return userRepository.findById(userOpt.get().getId())
@@ -320,13 +315,6 @@ public class TaskService {
         if (!users.isEmpty()) {
             return users.get(0);
         }
-        User defaultUser = User.builder()
-                .id(UUID.randomUUID())
-                .fullName("SIVASURYA S")
-                .email("admin@brick.local")
-                .passwordHash("$2a$12$e0MYzXy/vP7J11.d3Jg1y.X9vG32g9J8qX8f0gK6hP2cQ3v5gK7a")
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(defaultUser);
+        throw new UnauthorizedException("Authentication required. No active user found.");
     }
 }

@@ -6,6 +6,7 @@
 (function () {
   'use strict';
 
+  const API_BASE = '/api/inbox';
   let currentTab = 'ALL';
   let currentFilter = 'ALL';
   let activeItemId = null;
@@ -20,14 +21,24 @@
 
   async function initShellFragments() {
     try {
+      let currentUser = null;
+      try {
+        const userRes = await fetch('/api/auth/me');
+        if (userRes.ok) {
+          currentUser = await userRes.json();
+        }
+      } catch (e) {
+        console.warn('Could not fetch authenticated user', e);
+      }
+
       // 1. Mount Sidebar
       const sidebarMount = document.getElementById('sidebar-mount');
       if (sidebarMount) {
-        const res = await fetch('/fragments/sidebar/sidebar.html?v=13');
+        const res = await fetch('/fragments/sidebar/sidebar.html?v=14');
         if (res.ok) {
           sidebarMount.innerHTML = await res.text();
           if (window.Sidebar && typeof window.Sidebar.init === 'function') {
-            window.Sidebar.init({ activeOrganizationName: 'Acme Co.' });
+            window.Sidebar.init(currentUser);
           }
         }
       }
@@ -35,15 +46,11 @@
       // 2. Mount Navbar
       const navbarMount = document.getElementById('navbar-mount');
       if (navbarMount) {
-        const res = await fetch('/fragments/navbar/navbar.html?v=14');
+        const res = await fetch('/fragments/navbar/navbar.html?v=15');
         if (res.ok) {
           navbarMount.innerHTML = await res.text();
           if (window.Navbar && typeof window.Navbar.init === 'function') {
-            window.Navbar.init({
-              fullName: 'Peter B.',
-              initials: 'PB',
-              activeOrganizationName: 'Acme Co.'
-            });
+            window.Navbar.init(currentUser);
           }
         }
       }
@@ -84,7 +91,7 @@
     if (markAllBtn) {
       markAllBtn.addEventListener('click', async () => {
         try {
-          const res = await fetch('/api/notifications/mark-all-read', { method: 'POST' });
+          const res = await fetch(`${API_BASE}/mark-all-read`, { method: 'POST' });
           if (res.ok) {
             await loadNotifications();
             showToast('All notifications marked as read');
@@ -174,15 +181,25 @@
 
   async function loadNotifications(preserveActiveId) {
     try {
-      const url = new URL('/api/notifications', window.location.origin);
+      let url = new URL(API_BASE, window.location.origin);
       url.searchParams.set('tab', currentTab);
       url.searchParams.set('filter', currentFilter);
       if (preserveActiveId || activeItemId) {
         url.searchParams.set('activeItemId', preserveActiveId || activeItemId);
       }
 
-      const res = await fetch(url.toString());
-      if (!res.ok) return;
+      let res = await fetch(url.toString());
+      if (!res.ok) {
+        // Fallback to legacy endpoint if needed
+        url = new URL('/api/notifications', window.location.origin);
+        url.searchParams.set('tab', currentTab);
+        url.searchParams.set('filter', currentFilter);
+        if (preserveActiveId || activeItemId) {
+          url.searchParams.set('activeItemId', preserveActiveId || activeItemId);
+        }
+        res = await fetch(url.toString());
+        if (!res.ok) return;
+      }
 
       currentData = await res.json();
       renderCounts(currentData.counts);
@@ -191,6 +208,9 @@
       if (currentData.activeItem) {
         activeItemId = currentData.activeItem.id;
         renderActionInFocus(currentData.activeItem);
+      } else {
+        activeItemId = null;
+        renderActionInFocus(null);
       }
     } catch (err) {
       console.error('Failed to load notifications:', err);
@@ -203,42 +223,65 @@
     // Header breadcrumb total
     const totalEl = document.getElementById('inbox-total-count');
     if (totalEl) {
-      totalEl.textContent = counts.totalWorkspace || (counts.all === 7 ? 20 : counts.all);
+      totalEl.textContent = counts.all != null ? counts.all : 0;
     }
 
     // Tab badges
     const bAll = document.getElementById('badge-all');
-    if (bAll) bAll.textContent = counts.all;
+    if (bAll) bAll.textContent = counts.all != null ? counts.all : 0;
     const bAction = document.getElementById('badge-needs-action');
-    if (bAction) bAction.textContent = counts.needsAction;
+    if (bAction) bAction.textContent = counts.needsAction != null ? counts.needsAction : 0;
     const bUpdates = document.getElementById('badge-updates');
-    if (bUpdates) bUpdates.textContent = counts.updates;
+    if (bUpdates) bUpdates.textContent = counts.updates != null ? counts.updates : 0;
     const bArchived = document.getElementById('badge-archived');
-    if (bArchived) bArchived.textContent = counts.archived;
+    if (bArchived) bArchived.textContent = counts.archived != null ? counts.archived : 0;
 
     // Secondary filter pills
     const pAll = document.getElementById('pill-count-all');
-    if (pAll) pAll.textContent = counts.all === 7 ? 12 : counts.all;
+    if (pAll) pAll.textContent = counts.all != null ? counts.all : 0;
     const pUnread = document.getElementById('pill-count-unread');
-    if (pUnread) pUnread.textContent = counts.all === 7 ? 5 : counts.unread;
+    if (pUnread) pUnread.textContent = counts.unread != null ? counts.unread : 0;
     const pMentions = document.getElementById('pill-count-mentions');
-    if (pMentions) pMentions.textContent = counts.all === 7 ? 4 : counts.mentions;
+    if (pMentions) pMentions.textContent = counts.mentions != null ? counts.mentions : 0;
     const pFollowing = document.getElementById('pill-count-following');
-    if (pFollowing) pFollowing.textContent = counts.all === 7 ? 3 : counts.following;
+    if (pFollowing) pFollowing.textContent = counts.following != null ? counts.following : 0;
 
     // Update Attention subtitle count
     const attentionSub = document.getElementById('attention-hero-subtitle');
     if (attentionSub) {
-      const count = counts.needsAction;
-      const countWord = count === 1 ? 'One request is' : count === 2 ? 'Two requests are' : count === 3 ? 'Three requests are' : `${count} requests are`;
-      attentionSub.textContent = `${countWord} waiting for a response.`;
+      const count = counts.needsAction != null ? counts.needsAction : 0;
+      if (count === 0) {
+        attentionSub.textContent = 'No requests waiting for a response.';
+      } else if (count === 1) {
+        attentionSub.textContent = 'One request is waiting for a response.';
+      } else if (count === 2) {
+        attentionSub.textContent = 'Two requests are waiting for a response.';
+      } else if (count === 3) {
+        attentionSub.textContent = 'Three requests are waiting for a response.';
+      } else {
+        attentionSub.textContent = `${count} requests are waiting for a response.`;
+      }
     }
 
     // Update sidebar badge
     const sideBadge = document.getElementById('sidebar-inbox-count');
     if (sideBadge) {
-      sideBadge.textContent = '20';
-      sideBadge.style.display = 'inline-block';
+      const unreadCount = counts.unread != null ? counts.unread : 0;
+      sideBadge.textContent = unreadCount;
+      sideBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    }
+
+    // Update navbar bell count badge
+    const topbarBellCount = document.getElementById('topbar-bell-count');
+    if (topbarBellCount) {
+      const unreadCount = counts.unread != null ? Number(counts.unread) : 0;
+      if (unreadCount > 0) {
+        topbarBellCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        topbarBellCount.style.display = 'inline-flex';
+      } else {
+        topbarBellCount.textContent = '0';
+        topbarBellCount.style.display = 'none';
+      }
     }
   }
 
@@ -325,9 +368,13 @@
     const groupToday = document.getElementById('group-today');
     const groupEarlier = document.getElementById('group-earlier');
 
+    const hasToday = todayItems && todayItems.length > 0;
+    const hasEarlier = earlierItems && earlierItems.length > 0;
+
     if (groupToday) {
-      if (!todayItems || todayItems.length === 0) {
+      if (!hasToday) {
         groupToday.style.display = 'none';
+        if (todayContainer) todayContainer.innerHTML = '';
       } else {
         groupToday.style.display = 'flex';
         todayContainer.innerHTML = todayItems.map(item => renderRegisterRow(item)).join('');
@@ -335,12 +382,29 @@
     }
 
     if (groupEarlier) {
-      if (!earlierItems || earlierItems.length === 0) {
+      if (!hasEarlier) {
         groupEarlier.style.display = 'none';
+        if (earlierContainer) earlierContainer.innerHTML = '';
       } else {
         groupEarlier.style.display = 'flex';
         earlierContainer.innerHTML = earlierItems.map(item => renderRegisterRow(item)).join('');
       }
+    }
+
+    let emptyEl = document.getElementById('register-empty-msg');
+    if (!hasToday && !hasEarlier) {
+      if (!emptyEl) {
+        emptyEl = document.createElement('div');
+        emptyEl.id = 'register-empty-msg';
+        emptyEl.style.cssText = 'padding: 24px 16px; font-size: 13px; color: var(--dash-text-muted); text-align: center;';
+        emptyEl.textContent = 'No updates in this view.';
+        const container = document.getElementById('register-timeline-container');
+        if (container) container.appendChild(emptyEl);
+      } else {
+        emptyEl.style.display = 'block';
+      }
+    } else if (emptyEl) {
+      emptyEl.style.display = 'none';
     }
 
     // Attach click handlers
@@ -424,27 +488,38 @@
   }
 
   function renderActionInFocus(item) {
-    if (!item) return;
-
     const titleEl = document.getElementById('focus-item-title');
     const dueEl = document.getElementById('focus-item-due');
     const descEl = document.getElementById('focus-item-desc');
+    const metaListEl = document.getElementById('focus-meta-list');
     const projectTitleEl = document.getElementById('focus-project-title');
     const avatarEl = document.getElementById('focus-requester-avatar');
     const nameEl = document.getElementById('focus-requester-name');
     const docTitleEl = document.getElementById('focus-doc-title');
+    const actionBtn = document.getElementById('btn-focus-action');
     const btnLabelEl = document.getElementById('focus-btn-label');
+
+    if (!item) {
+      if (titleEl) titleEl.textContent = 'No item selected';
+      if (dueEl) dueEl.style.display = 'none';
+      if (descEl) descEl.textContent = 'When an update or request requires attention, it will appear here.';
+      if (metaListEl) metaListEl.style.display = 'none';
+      if (actionBtn) actionBtn.style.display = 'none';
+      return;
+    }
 
     if (titleEl) titleEl.textContent = item.title;
     if (dueEl) {
-      dueEl.textContent = item.dueDateStr || 'Due soon';
+      dueEl.textContent = item.dueDateStr || '';
       dueEl.style.display = item.dueDateStr ? 'inline-block' : 'none';
     }
     if (descEl) descEl.textContent = item.description || item.subtitle || '';
+    if (metaListEl) metaListEl.style.display = 'flex';
     if (projectTitleEl) projectTitleEl.textContent = item.projectTitle || 'Workspace Project';
     if (avatarEl) avatarEl.textContent = item.requesterInitials || 'TD';
     if (nameEl) nameEl.textContent = item.requesterName || 'Team Lead';
     if (docTitleEl) docTitleEl.textContent = item.supportingDocTitle || 'Reference Document';
+    if (actionBtn) actionBtn.style.display = 'flex';
     if (btnLabelEl) btnLabelEl.textContent = item.actionLabel ? `${item.actionLabel} \u2192` : 'Review decision \u2192';
   }
 
@@ -499,7 +574,7 @@
 
   async function markRead(id) {
     try {
-      const res = await fetch(`/api/notifications/${id}/read`, { method: 'PUT' });
+      const res = await fetch(`${API_BASE}/${id}/read`, { method: 'PUT' });
       if (res.ok) {
         await loadNotifications(id);
         showToast('Notification marked as read');
@@ -511,7 +586,7 @@
 
   async function toggleArchive(id) {
     try {
-      const res = await fetch(`/api/notifications/${id}/archive`, { method: 'PUT' });
+      const res = await fetch(`${API_BASE}/${id}/archive`, { method: 'PUT' });
       if (res.ok) {
         await loadNotifications();
         showToast('Notification archive status updated');
@@ -523,7 +598,7 @@
 
   async function toggleSnooze(id) {
     try {
-      const res = await fetch(`/api/notifications/${id}/snooze`, { method: 'PUT' });
+      const res = await fetch(`${API_BASE}/${id}/snooze`, { method: 'PUT' });
       if (res.ok) {
         await loadNotifications(id);
         showToast('Notification snoozed for 2 hours');
@@ -535,7 +610,7 @@
 
   async function toggleMute(id) {
     try {
-      const res = await fetch(`/api/notifications/${id}/mute`, { method: 'PUT' });
+      const res = await fetch(`${API_BASE}/${id}/mute`, { method: 'PUT' });
       if (res.ok) {
         await loadNotifications(id);
         showToast('Thread notifications muted');
@@ -547,7 +622,7 @@
 
   async function executeAction(id, action) {
     try {
-      const res = await fetch(`/api/notifications/${id}/action`, {
+      const res = await fetch(`${API_BASE}/${id}/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: action })

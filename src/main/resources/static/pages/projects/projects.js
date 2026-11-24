@@ -78,30 +78,183 @@
   }
 
   /**
-   * Render Featured Project (Website Redesign)
+   * Render Featured Project
    */
   function renderFeaturedCard(feat) {
-    if (!feat) return;
-    const titleEl = document.getElementById('featured-title');
-    const descEl = document.getElementById('featured-desc');
-    const teamEl = document.getElementById('featured-team');
-    const dueEl = document.getElementById('featured-due');
-    const priorityEl = document.getElementById('featured-priority');
-    const ratioEl = document.getElementById('featured-milestone-ratio');
-    const progressEl = document.getElementById('featured-progress-bar');
-    const blockersEl = document.getElementById('featured-blockers-count');
+    const card = document.getElementById('featured-project-card');
+    if (!card) return;
+    if (!feat) {
+      card.innerHTML = `
+        <div class="featured-empty-state" style="padding: 32px; width: 100%;">
+          <span class="featured-tag-id">01 / PROJECT IN FOCUS</span>
+          <h2 class="featured-project-title" style="margin-top: 12px;">No active projects</h2>
+          <p class="featured-project-desc" style="margin-top: 8px; color: var(--dash-text-muted);">Create your first project to track milestones, tasks, and team deliverables.</p>
+          <button class="btn-create-project-primary" style="margin-top: 16px; padding: 10px 18px; border-radius: 8px; background: var(--dash-accent-lime); color: var(--dash-card-dark); font-weight: 600; cursor: pointer; border: none;" onclick="document.getElementById('btn-open-create-project')?.click()">+ Create Project</button>
+        </div>
+      `;
+      return;
+    }
 
-    if (titleEl) titleEl.textContent = feat.name || 'Website Redesign';
-    if (descEl) descEl.textContent = feat.description || 'Deliver a responsive, approved website ready for production.';
-    if (teamEl) teamEl.textContent = feat.team || 'Design Team';
-    if (dueEl) dueEl.textContent = feat.dueDate || 'Due 15 Nov 2026';
-    if (priorityEl) priorityEl.textContent = feat.priority || 'High Priority';
-    if (ratioEl) ratioEl.textContent = feat.milestonesLabel || '06/09';
-    if (blockersEl) blockersEl.textContent = String(feat.blockersCount || 2).padStart(2, '0');
+    const pct = feat.milestonesTotal > 0 ? Math.round((feat.milestonesCompleted / feat.milestonesTotal) * 100) : 0;
+    card.innerHTML = `
+      <div class="featured-left-col">
+        <div class="featured-top-row">
+          <span class="featured-tag-id">01 / PROJECT IN FOCUS</span>
+          <span class="status-pill pill-active">
+            <span class="pill-dot dot-green"></span>
+            <span>${escapeHtml(feat.status || 'ACTIVE')}</span>
+          </span>
+        </div>
 
-    if (progressEl && feat.milestonesTotal > 0) {
-      const pct = Math.round((feat.milestonesCompleted / feat.milestonesTotal) * 100);
-      progressEl.style.width = `${pct}%`;
+        <h2 class="featured-project-title" id="featured-title">${escapeHtml(feat.name)}</h2>
+        <p class="featured-project-desc" id="featured-desc">${escapeHtml(feat.description || '')}</p>
+
+        <div class="featured-meta-row">
+          <span class="featured-meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span id="featured-team">${escapeHtml(feat.team || 'Design Team')}</span>
+          </span>
+          <span class="featured-meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="featured-due">${escapeHtml(feat.dueDate || 'Due soon')}</span>
+          </span>
+          <span class="featured-meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dash-status-urgent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+              <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            <span id="featured-priority">${escapeHtml(feat.priority || 'Medium Priority')}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="featured-right-col">
+        <div class="featured-metrics-wrap">
+          <div class="featured-milestones-box">
+            <span class="feat-metric-label">MILESTONES</span>
+            <span class="feat-metric-val" id="featured-milestone-ratio">${escapeHtml(feat.milestonesLabel || '0/0')}</span>
+            <div class="feat-progress-track">
+              <div class="feat-progress-fill" id="featured-progress-bar" style="width: ${pct}%;"></div>
+            </div>
+          </div>
+
+          <div class="featured-blockers-box">
+            <span class="feat-metric-label">BLOCKERS</span>
+            <span class="feat-metric-val" id="featured-blockers-count">${String(feat.blockersCount || 0).padStart(2, '0')}</span>
+          </div>
+        </div>
+
+        <button class="btn-open-project" id="btn-open-featured" onclick="window.location.href='/pages/projects/project-detail/project-detail.html?id=${escapeHtml(feat.id)}'">
+          <span>Open project</span>
+          <span class="arrow-glyph">→</span>
+        </button>
+      </div>
+    `;
+  }
+
+  /**
+   * Render Right Rail: Decisions Required, Project Attention, Upcoming Milestones
+   */
+  function renderRightRail(decisions, attention, milestones) {
+    // 1. Decisions Required
+    const decisionsListEl = document.getElementById('decisions-items-list');
+    const decisionsLargeNum = document.getElementById('decisions-large-num');
+    const decList = decisions || [];
+    if (decisionsLargeNum) {
+      decisionsLargeNum.textContent = String(decList.length).padStart(2, '0');
+    }
+    if (decisionsListEl) {
+      if (decList.length === 0) {
+        decisionsListEl.innerHTML = '<div style="padding: 16px; font-size: 12px; color: var(--dash-text-muted); text-align: center;">No approvals awaiting action</div>';
+      } else {
+        decisionsListEl.innerHTML = decList.map((d, idx) => `
+          <div class="decision-card-item ${idx === 0 ? 'card-primary-highlight' : ''}">
+            <div class="decision-top-meta">
+              <span class="decision-dot dot-amber"></span>
+              <span class="decision-project-tag">${escapeHtml(d.project || 'PROJECT')}</span>
+            </div>
+            <h4 class="decision-title">${escapeHtml(d.title)}</h4>
+            <span class="decision-sub">${escapeHtml(d.sub || 'Pending review')}</span>
+            <div class="decision-action-row">
+              <span class="decision-due-date">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>${escapeHtml(d.dueDate || 'Due soon')}</span>
+              </span>
+              <button class="btn-review-decision" onclick="window.location.href='/pages/projects/projects.html'">Review →</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 2. Project Attention
+    const attentionListEl = document.getElementById('attention-items-list');
+    const attList = attention || [];
+    if (attentionListEl) {
+      if (attList.length === 0) {
+        attentionListEl.innerHTML = '<div style="padding: 16px; font-size: 12px; color: var(--dash-text-muted); text-align: center;">All projects are currently on track. No active risks or blockers.</div>';
+      } else {
+        attentionListEl.innerHTML = attList.map((att, idx) => `
+          <div class="attention-card-item">
+            <div class="att-num-col">
+              <span class="att-num">${String(idx + 1).padStart(2, '0')}</span>
+              <span class="att-num-line"></span>
+            </div>
+            <div class="att-body">
+              <div class="att-top-row">
+                <span class="att-status-badge ${att.badgeClass || 'badge-blocked'}">
+                  <span class="att-badge-dot ${att.dotClass || 'dot-red'}"></span>
+                  <span>${escapeHtml(att.status || 'ATTENTION')}</span>
+                </span>
+                <span class="att-meta-label">${escapeHtml(att.metaLabel || '')}</span>
+              </div>
+              <div class="att-content-row">
+                <div class="att-info-col">
+                  <h4 class="att-project-name">${escapeHtml(att.projectName || 'Project')}</h4>
+                  <p class="att-detail-text">${escapeHtml(att.detail || '')}</p>
+                </div>
+                <span class="att-arrow">→</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 3. Upcoming Milestones
+    const milestonesListEl = document.getElementById('milestones-timeline-list');
+    const msList = milestones || [];
+    if (milestonesListEl) {
+      if (msList.length === 0) {
+        milestonesListEl.innerHTML = '<div style="padding: 16px; font-size: 12px; color: var(--dash-text-muted); text-align: center;">No upcoming milestones scheduled.</div>';
+      } else {
+        milestonesListEl.innerHTML = msList.map(ms => `
+          <div class="milestone-timeline-item">
+            <div class="milestone-date-col">
+              <span class="milestone-date-str">${escapeHtml(ms.day || '')}</span>
+              <span class="milestone-month-str">${escapeHtml(ms.month || '')}</span>
+            </div>
+            <span class="milestone-node-dot dot-green"></span>
+            <div class="milestone-content">
+              <h5 class="milestone-item-title">${escapeHtml(ms.title)}</h5>
+              <span class="milestone-item-sub">${escapeHtml(ms.project || '')}</span>
+            </div>
+            <span class="milestone-arrow">→</span>
+          </div>
+        `).join('');
+      }
     }
   }
 
@@ -503,6 +656,7 @@
       renderFeaturedCard(currentProjectData.featuredProject);
       updateFilterCounts(currentProjectData.projects);
       renderProjectsCollection();
+      renderRightRail(currentProjectData.decisions, currentProjectData.projectAttention, currentProjectData.upcomingMilestones);
     }
   }
 
