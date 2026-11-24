@@ -206,7 +206,220 @@ function setupPasswordVisibility(toggleBtn, inputEl, eyeIcon) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+function setupIndustryOther(selectIndustry, groupIndustryOther, inputIndustryOther) {
+  if (!selectIndustry || !groupIndustryOther) return;
+  selectIndustry.addEventListener('change', () => {
+    const isOther = (selectIndustry.value === 'Other');
+    toggleDisplay(groupIndustryOther, isOther);
+    if (!isOther) {
+      if (inputIndustryOther) inputIndustryOther.value = '';
+      clearFieldError('error-company-industry-other');
+    }
+  });
+}
+
+function setupCountryRules(selectCountry, stateReqIndicator, stateOptHint, zipReqIndicator, zipOptHint, tzSuggestionHint, selectCurrency, selectTimezone) {
+  if (!selectCountry) return;
+
+  function updateRules() {
+    const selected = selectCountry.value;
+    const def = countryDefaults[selected];
+    if (def) {
+      if (selectCurrency && def.currency) selectCurrency.value = def.currency;
+      if (selectTimezone && def.timezone) selectTimezone.value = def.timezone;
+      if (tzSuggestionHint) tzSuggestionHint.textContent = `Suggested for ${selected} (${def.timezone}) — please confirm.`;
+    } else if (tzSuggestionHint) {
+      tzSuggestionHint.textContent = 'Please confirm the workspace time zone.';
+    }
+
+    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selected);
+    toggleDisplay(stateReqIndicator, requiresState);
+    toggleDisplay(stateOptHint, !requiresState);
+
+    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selected);
+    toggleDisplay(zipReqIndicator, requiresZip);
+    toggleDisplay(zipOptHint, !requiresZip);
+  }
+
+  selectCountry.addEventListener('change', updateRules);
+  if (selectCountry.value) {
+    updateRules();
+  }
+}
+
+function setupBillingToggle(checkBillingSame, groupBillingAddress, selectBillingCountry, selectCountry) {
+  if (!checkBillingSame || !groupBillingAddress) return;
+  checkBillingSame.addEventListener('change', () => {
+    const isDifferent = !checkBillingSame.checked;
+    toggleDisplay(groupBillingAddress, isDifferent);
+    if (isDifferent && selectBillingCountry && selectCountry?.value) {
+      selectBillingCountry.value = selectCountry.value;
+    }
+  });
+}
+
+function setupEmailVerification({ btnSendCode, btnVerifyCode, inputAdminEmail, inputVerificationCode, badgeEmailVerified, otpHintText, onVerified }) {
+  if (btnSendCode && inputAdminEmail) {
+    btnSendCode.addEventListener('click', async () => {
+      const email = inputAdminEmail.value.trim();
+      clearFieldError('error-verification-code');
+      clearFieldError('error-admin-email');
+
+      if (!isValidEmail(email)) {
+        showError('error-admin-email', 'Please enter a valid work email address before requesting an OTP code.');
+        inputAdminEmail.focus();
+        return;
+      }
+
+      btnSendCode.disabled = true;
+      btnSendCode.textContent = 'Sending...';
+
+      try {
+        const res = await Api.post('/api/setup/send-verification-code', { email });
+        const code = res.data?.code || '';
+        btnSendCode.textContent = 'Resend Code';
+        btnSendCode.disabled = false;
+
+        if (otpHintText) {
+          otpHintText.textContent = `Verification code sent to ${email}. (Dev hint: ${code})`;
+          otpHintText.style.color = 'var(--brick-text-primary)';
+        }
+        if (inputVerificationCode) {
+          inputVerificationCode.value = code;
+          inputVerificationCode.focus();
+        }
+      } catch (err) {
+        btnSendCode.textContent = 'Send Code';
+        btnSendCode.disabled = false;
+        showError('error-verification-code', err.message || 'Failed to send verification code. Please try again.');
+      }
+    });
+  }
+
+  if (btnVerifyCode && inputVerificationCode && inputAdminEmail) {
+    btnVerifyCode.addEventListener('click', async () => {
+      const email = inputAdminEmail.value.trim();
+      const code = inputVerificationCode.value.trim();
+      clearFieldError('error-verification-code');
+
+      if (!email) {
+        showError('error-admin-email', 'Please enter your work email.');
+        return;
+      }
+      if (!code || code.length < 4) {
+        showError('error-verification-code', 'Please enter the 6-digit verification code.');
+        inputVerificationCode.focus();
+        return;
+      }
+
+      btnVerifyCode.disabled = true;
+      btnVerifyCode.textContent = 'Verifying...';
+
+      try {
+        await Api.post('/api/setup/verify-code', { email, code });
+        onVerified();
+        btnVerifyCode.textContent = 'Verified ✓';
+        btnVerifyCode.disabled = true;
+        if (btnSendCode) btnSendCode.disabled = true;
+
+        if (badgeEmailVerified) {
+          badgeEmailVerified.className = 'verification-pill verified';
+          badgeEmailVerified.innerHTML = '<span class="pill-dot"></span> Verified ✓';
+        }
+        if (otpHintText) {
+          otpHintText.textContent = 'Email address verified successfully!';
+          otpHintText.style.color = 'var(--brick-success)';
+        }
+      } catch (err) {
+        btnVerifyCode.disabled = false;
+        btnVerifyCode.textContent = 'Verify';
+        showError('error-verification-code', err.message || 'Invalid or expired verification code.');
+      }
+    });
+  }
+}
+
+function setupPasswordInputs(inputAdminPassword, inputAdminConfirmPassword, strengthBarFill, strengthLabel) {
+  if (inputAdminPassword) {
+    inputAdminPassword.addEventListener('input', () => {
+      const pw = inputAdminPassword.value;
+      const res = evaluatePasswordStrength(pw);
+      if (strengthBarFill) {
+        strengthBarFill.style.width = `${res.pct}%`;
+        strengthBarFill.style.backgroundColor = res.color;
+      }
+      if (strengthLabel) {
+        strengthLabel.textContent = `Strength: ${res.label}`;
+        strengthLabel.style.color = res.color;
+      }
+      if (inputAdminConfirmPassword?.value && inputAdminPassword.value === inputAdminConfirmPassword.value) {
+        clearFieldError('error-admin-confirm-password');
+      }
+    });
+  }
+
+  if (inputAdminConfirmPassword) {
+    inputAdminConfirmPassword.addEventListener('input', () => {
+      if (inputAdminPassword?.value && inputAdminConfirmPassword.value) {
+        if (inputAdminPassword.value !== inputAdminConfirmPassword.value) {
+          showError('error-admin-confirm-password', 'Passwords do not match.');
+        } else {
+          clearFieldError('error-admin-confirm-password');
+        }
+      }
+    });
+  }
+}
+
+function setupNavigationControls({ btnContinue, btnBack, btnCancel, jumpButtons, inputCompanyName, onNext, onPrev, onJump }) {
+  if (btnContinue) {
+    btnContinue.addEventListener('click', (e) => {
+      e.preventDefault();
+      onNext();
+    });
+  }
+
+  if (btnBack) {
+    btnBack.addEventListener('click', (e) => {
+      e.preventDefault();
+      onPrev();
+    });
+  }
+
+  if (btnCancel) {
+    btnCancel.addEventListener('click', (e) => {
+      e.preventDefault();
+      const hasInput = (inputCompanyName && inputCompanyName.value.trim().length > 0);
+      if (!hasInput || confirm('Are you sure you want to cancel? Any details entered will not be saved.')) {
+        window.location.href = '/pages/login/login.html';
+      }
+    });
+  }
+
+  jumpButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetStep = Number.parseInt(btn.dataset.targetStep || '', 10);
+      if (targetStep >= 1 && targetStep <= 3) {
+        onJump(targetStep);
+      }
+    });
+  });
+}
+
+function setupThemeToggle(themeBtn) {
+  if (!themeBtn) return;
+  themeBtn.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme || 'light';
+    const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
+    const next = isDark ? 'light' : 'black-and-white';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('teamden-theme', next);
+  });
+}
+
+// --- Page Initialization (S3776 Refactored) ---
+async function initRegistration() {
   if (typeof Auth !== 'undefined' && typeof Auth.redirectIfAuthenticated === 'function') {
     await Auth.redirectIfAuthenticated();
   }
@@ -313,6 +526,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   setupPasswordVisibility(toggleAdminPwBtn, inputAdminPassword, eyeIconAdmin);
+  setupPasswordInputs(inputAdminPassword, inputAdminConfirmPassword, strengthBarFill, strengthLabel);
 
   // Consent Checkboxes
   const checkConsentTerms = document.getElementById('consent-terms');
@@ -415,184 +629,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // --- Step 1 Dynamic Industry Other ---
-  if (selectIndustry && groupIndustryOther) {
-    selectIndustry.addEventListener('change', () => {
-      const isOther = (selectIndustry.value === 'Other');
-      toggleDisplay(groupIndustryOther, isOther);
-      if (!isOther) {
-        if (inputIndustryOther) inputIndustryOther.value = '';
-        clearFieldError('error-company-industry-other');
-      }
-    });
-  }
-
-  // --- Step 2 Country Conditional Rules ---
-  function applyCountryDefaults(selected) {
-    const def = countryDefaults[selected];
-    if (def) {
-      if (selectCurrency && def.currency) {
-        selectCurrency.value = def.currency;
-      }
-      if (selectTimezone && def.timezone) {
-        selectTimezone.value = def.timezone;
-      }
-      if (tzSuggestionHint) {
-        tzSuggestionHint.textContent = `Suggested for ${selected} (${def.timezone}) — please confirm.`;
-      }
-    } else if (tzSuggestionHint) {
-      tzSuggestionHint.textContent = 'Please confirm the workspace time zone.';
-    }
-  }
-
-  function updateStateRequirement(selected) {
-    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selected);
-    toggleDisplay(stateReqIndicator, requiresState);
-    toggleDisplay(stateOptHint, !requiresState);
-  }
-
-  function updateZipRequirement(selected) {
-    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selected);
-    toggleDisplay(zipReqIndicator, requiresZip);
-    toggleDisplay(zipOptHint, !requiresZip);
-  }
-
-  function updateCountryConditionalRules() {
-    if (!selectCountry) return;
-    const selected = selectCountry.value;
-    applyCountryDefaults(selected);
-    updateStateRequirement(selected);
-    updateZipRequirement(selected);
-  }
-
-  if (selectCountry) {
-    selectCountry.addEventListener('change', updateCountryConditionalRules);
-    if (selectCountry.value) {
-      updateCountryConditionalRules();
-    }
-  }
-
-  // --- Step 2 Billing Address Same Toggle ---
-  if (checkBillingSame && groupBillingAddress) {
-    checkBillingSame.addEventListener('change', () => {
-      const isDifferent = !checkBillingSame.checked;
-      toggleDisplay(groupBillingAddress, isDifferent);
-      if (isDifferent && selectBillingCountry && selectCountry?.value) {
-        selectBillingCountry.value = selectCountry.value;
-      }
-    });
-  }
-
-  // --- Step 3 Email Verification OTP Handling ---
-  if (btnSendCode && inputAdminEmail) {
-    btnSendCode.addEventListener('click', async () => {
-      const email = inputAdminEmail.value.trim();
-      clearFieldError('error-verification-code');
-      clearFieldError('error-admin-email');
-
-      if (!isValidEmail(email)) {
-        showError('error-admin-email', 'Please enter a valid work email address before requesting an OTP code.');
-        inputAdminEmail.focus();
-        return;
-      }
-
-      btnSendCode.disabled = true;
-      btnSendCode.textContent = 'Sending...';
-
-      try {
-        const res = await Api.post('/api/setup/send-verification-code', { email });
-        const code = res.data?.code || '';
-        btnSendCode.textContent = 'Resend Code';
-        btnSendCode.disabled = false;
-
-        if (otpHintText) {
-          otpHintText.textContent = `Verification code sent to ${email}. (Dev hint: ${code})`;
-          otpHintText.style.color = 'var(--brick-text-primary)';
-        }
-        if (inputVerificationCode) {
-          inputVerificationCode.value = code;
-          inputVerificationCode.focus();
-        }
-      } catch (err) {
-        btnSendCode.textContent = 'Send Code';
-        btnSendCode.disabled = false;
-        showError('error-verification-code', err.message || 'Failed to send verification code. Please try again.');
-      }
-    });
-  }
-
-  if (btnVerifyCode && inputVerificationCode && inputAdminEmail) {
-    btnVerifyCode.addEventListener('click', async () => {
-      const email = inputAdminEmail.value.trim();
-      const code = inputVerificationCode.value.trim();
-      clearFieldError('error-verification-code');
-
-      if (!email) {
-        showError('error-admin-email', 'Please enter your work email.');
-        return;
-      }
-      if (!code || code.length < 4) {
-        showError('error-verification-code', 'Please enter the 6-digit verification code.');
-        inputVerificationCode.focus();
-        return;
-      }
-
-      btnVerifyCode.disabled = true;
-      btnVerifyCode.textContent = 'Verifying...';
-
-      try {
-        await Api.post('/api/setup/verify-code', { email, code });
-        emailVerified = true;
-        btnVerifyCode.textContent = 'Verified ✓';
-        btnVerifyCode.disabled = true;
-        if (btnSendCode) btnSendCode.disabled = true;
-
-        if (badgeEmailVerified) {
-          badgeEmailVerified.className = 'verification-pill verified';
-          badgeEmailVerified.innerHTML = '<span class="pill-dot"></span> Verified ✓';
-        }
-        if (otpHintText) {
-          otpHintText.textContent = 'Email address verified successfully!';
-          otpHintText.style.color = 'var(--brick-success)';
-        }
-      } catch (err) {
-        btnVerifyCode.disabled = false;
-        btnVerifyCode.textContent = 'Verify';
-        showError('error-verification-code', err.message || 'Invalid or expired verification code.');
-      }
-    });
-  }
-
-  // --- Step 3 Password Strength Meter & Confirm Checks ---
-  if (inputAdminPassword) {
-    inputAdminPassword.addEventListener('input', () => {
-      const pw = inputAdminPassword.value;
-      const res = evaluatePasswordStrength(pw);
-      if (strengthBarFill) {
-        strengthBarFill.style.width = `${res.pct}%`;
-        strengthBarFill.style.backgroundColor = res.color;
-      }
-      if (strengthLabel) {
-        strengthLabel.textContent = `Strength: ${res.label}`;
-        strengthLabel.style.color = res.color;
-      }
-      if (inputAdminConfirmPassword?.value && inputAdminPassword.value === inputAdminConfirmPassword.value) {
-        clearFieldError('error-admin-confirm-password');
-      }
-    });
-  }
-
-  if (inputAdminConfirmPassword) {
-    inputAdminConfirmPassword.addEventListener('input', () => {
-      if (inputAdminPassword?.value && inputAdminConfirmPassword.value) {
-        if (inputAdminPassword.value !== inputAdminConfirmPassword.value) {
-          showError('error-admin-confirm-password', 'Passwords do not match.');
-        } else {
-          clearFieldError('error-admin-confirm-password');
-        }
-      }
-    });
-  }
+  // Sub-component setups
+  setupIndustryOther(selectIndustry, groupIndustryOther, inputIndustryOther);
+  setupCountryRules(selectCountry, stateReqIndicator, stateOptHint, zipReqIndicator, zipOptHint, tzSuggestionHint, selectCurrency, selectTimezone);
+  setupBillingToggle(checkBillingSame, groupBillingAddress, selectBillingCountry, selectCountry);
+  setupEmailVerification({
+    btnSendCode,
+    btnVerifyCode,
+    inputAdminEmail,
+    inputVerificationCode,
+    badgeEmailVerified,
+    otpHintText,
+    onVerified: () => { emailVerified = true; }
+  });
 
   // --- Step Validations (S3776 Refactored) ---
   function validateStep1() {
@@ -758,58 +807,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     populateAdminSummary();
   }
 
-  // --- Button Listeners ---
-  if (btnContinue) {
-    btnContinue.addEventListener('click', (e) => {
-      e.preventDefault();
+  setupNavigationControls({
+    btnContinue,
+    btnBack,
+    btnCancel,
+    jumpButtons,
+    inputCompanyName,
+    onNext: () => {
       if (validateCurrentStep() && currentStep < totalSteps) {
         currentStep++;
         updateStepUI();
       }
-    });
-  }
-
-  if (btnBack) {
-    btnBack.addEventListener('click', (e) => {
-      e.preventDefault();
+    },
+    onPrev: () => {
       if (currentStep > 1) {
         currentStep--;
         updateStepUI();
       }
-    });
-  }
-
-  if (btnCancel) {
-    btnCancel.addEventListener('click', (e) => {
-      e.preventDefault();
-      const hasInput = (inputCompanyName && inputCompanyName.value.trim().length > 0);
-      if (!hasInput || confirm('Are you sure you want to cancel? Any details entered will not be saved.')) {
-        window.location.href = '/pages/login/login.html';
-      }
-    });
-  }
-
-  jumpButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetStep = Number.parseInt(btn.dataset.targetStep || '', 10);
-      if (targetStep >= 1 && targetStep <= 3) {
-        currentStep = targetStep;
-        updateStepUI();
-      }
-    });
+    },
+    onJump: (targetStep) => {
+      currentStep = targetStep;
+      updateStepUI();
+    }
   });
 
-  // --- Theme Toggle ---
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.dataset.theme || 'light';
-      const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
-      const next = isDark ? 'light' : 'black-and-white';
-      document.documentElement.dataset.theme = next;
-      localStorage.setItem('teamden-theme', next);
-    });
-  }
+  setupThemeToggle(themeBtn);
 
   // --- Build Registration Payload ---
   function buildRegistrationPayload() {
@@ -923,4 +945,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize Stepper on DOM Ready
   updateStepUI();
-});
+}
+
+document.addEventListener('DOMContentLoaded', initRegistration);
