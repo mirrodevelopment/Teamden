@@ -3,6 +3,84 @@
  * 4-Step Onboarding Flow with Client Validation & Backend Integration
  */
 
+// --- Constants & Lookups ---
+const COMMON_COMPROMISED_PASSWORDS = new Set([
+  'password', 'password123', 'password1', '12345678', '123456789', '1234567890',
+  'admin123', 'admin1234', 'qwerty123', 'welcome123', 'letmein123', 'pass1234'
+]);
+
+const countryDefaults = {
+  'United States': { currency: 'USD', timezone: 'America/New_York' },
+  'United Kingdom': { currency: 'GBP', timezone: 'Europe/London' },
+  'Canada': { currency: 'CAD', timezone: 'America/New_York' },
+  'Australia': { currency: 'AUD', timezone: 'Australia/Sydney' },
+  'Germany': { currency: 'EUR', timezone: 'Europe/Berlin' },
+  'France': { currency: 'EUR', timezone: 'Europe/Paris' },
+  'India': { currency: 'INR', timezone: 'Asia/Kolkata' },
+  'Singapore': { currency: 'SGD', timezone: 'Asia/Singapore' },
+  'Netherlands': { currency: 'EUR', timezone: 'Europe/Berlin' },
+  'United Arab Emirates': { currency: 'AED', timezone: 'Asia/Dubai' }
+};
+
+const stepMeta = {
+  1: {
+    eyebrow: 'STEP 1 OF 4',
+    title: 'Company Details',
+    desc: 'Let’s start with some basic information about your company.'
+  },
+  2: {
+    eyebrow: 'STEP 2 OF 4',
+    title: 'Address & Legal',
+    desc: 'Add your company’s registered address and regional settings.'
+  },
+  3: {
+    eyebrow: 'STEP 3 OF 4',
+    title: 'Administrator Account',
+    desc: 'Set up the first user and Owner of this organization workspace.'
+  },
+  4: {
+    eyebrow: 'STEP 4 OF 4',
+    title: 'Review & Create',
+    desc: 'Review your complete registration before creating your workspace.'
+  }
+};
+
+function setText(el, text) {
+  if (el) {
+    el.textContent = text;
+  }
+}
+
+function resolveBillingField(sameBilling, registeredVal, customInput) {
+  if (sameBilling) {
+    return registeredVal || null;
+  }
+  return customInput?.value?.trim() || null;
+}
+
+function evaluatePasswordStrength(password) {
+  if (!password) return { score: 0, label: '—', color: 'var(--brick-border)', pct: 0 };
+  if (COMMON_COMPROMISED_PASSWORDS.has(password.toLowerCase())) {
+    return { score: 1, label: 'Compromised', color: 'var(--dash-dot-red, #ef4444)', pct: 15 };
+  }
+  let score = 0;
+  if (password.length >= 8) score += 1;
+  if (password.length >= 12) score += 1;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+  if (/\d/.test(password)) score += 1;
+  if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+  if (score <= 1) {
+    return { score: 1, label: 'Weak', color: 'var(--dash-dot-red, #ef4444)', pct: 25 };
+  } else if (score <= 2) {
+    return { score: 2, label: 'Medium', color: 'var(--dash-dot-yellow, #f59e0b)', pct: 50 };
+  } else if (score <= 3) {
+    return { score: 3, label: 'Strong', color: 'var(--dash-col-now-border, #3b82f6)', pct: 75 };
+  } else {
+    return { score: 4, label: 'Very Strong', color: 'var(--dash-dot-green, #10b981)', pct: 100 };
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Redirect if already authenticated
   if (typeof Auth !== 'undefined' && typeof Auth.redirectIfAuthenticated === 'function') {
@@ -23,7 +101,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnCancel = document.getElementById('btn-nav-cancel');
   const btnBack = document.getElementById('btn-nav-back');
   const btnContinue = document.getElementById('btn-nav-continue');
-  const btnContinueText = document.getElementById('btn-continue-text');
   const btnSubmit = document.getElementById('btn-nav-submit');
   const btnSubmitText = document.getElementById('btn-submit-text');
 
@@ -46,7 +123,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const logoPreviewImg = document.getElementById('logo-preview-img');
   const logoFileName = document.getElementById('logo-file-name');
   const removeLogoBtn = document.getElementById('remove-logo-btn');
-  const errorLogoFile = document.getElementById('error-logo-file');
   let logoBase64 = null;
 
   // Step 2 Elements
@@ -145,42 +221,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentStep = 1;
   const totalSteps = 4;
 
-  const stepMeta = {
-    1: {
-      eyebrow: 'STEP 1 OF 4',
-      title: 'Company Details',
-      desc: 'Let’s start with some basic information about your company.'
-    },
-    2: {
-      eyebrow: 'STEP 2 OF 4',
-      title: 'Address & Legal',
-      desc: 'Add your company’s registered address and regional settings.'
-    },
-    3: {
-      eyebrow: 'STEP 3 OF 4',
-      title: 'Administrator Account',
-      desc: 'Set up the first user and Owner of this organization workspace.'
-    },
-    4: {
-      eyebrow: 'STEP 4 OF 4',
-      title: 'Review & Create',
-      desc: 'Review your complete registration before creating your workspace.'
-    }
-  };
+  // --- Step Navigation & UI Rendering Helpers ---
+  function updateHeaderInfo(step) {
+    const meta = stepMeta[step];
+    setText(stepEyebrow, meta.eyebrow);
+    setText(stepTitle, meta.title);
+    setText(stepDesc, meta.desc);
+  }
 
-  // --- Step Navigation & UI Rendering ---
-  function updateStepUI() {
-    clearErrors();
-
-    const meta = stepMeta[currentStep];
-    if (stepEyebrow) stepEyebrow.textContent = meta.eyebrow;
-    if (stepTitle) stepTitle.textContent = meta.title;
-    if (stepDesc) stepDesc.textContent = meta.desc;
-
+  function updateStepSections(step) {
     for (let i = 1; i <= totalSteps; i++) {
       const section = document.getElementById(`section-step-${i}`);
       if (section) {
-        if (i === currentStep) {
+        if (i === step) {
           section.classList.remove('d-none');
           section.classList.add('active');
         } else {
@@ -189,35 +242,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
     }
+  }
 
+  function updateStepStepper(step) {
     for (let i = 1; i <= totalSteps; i++) {
       const node = document.getElementById(`step-node-${i}`);
       const connector = document.getElementById(`connector-${i}`);
 
       if (node) {
         node.classList.remove('active', 'completed');
-        if (i === currentStep) {
+        if (i === step) {
           node.classList.add('active');
-        } else if (i < currentStep) {
+        } else if (i < step) {
           node.classList.add('completed');
         }
       }
 
       if (connector) {
-        if (i < currentStep) {
+        if (i < step) {
           connector.classList.add('completed');
         } else {
           connector.classList.remove('completed');
         }
       }
     }
+  }
 
-    if (currentStep === 1) {
+  function updateNavButtons(step) {
+    if (step === 1) {
       if (btnCancel) btnCancel.classList.remove('d-none');
       if (btnBack) btnBack.classList.add('d-none');
       if (btnContinue) btnContinue.classList.remove('d-none');
       if (btnSubmit) btnSubmit.classList.add('d-none');
-    } else if (currentStep < totalSteps) {
+    } else if (step < totalSteps) {
       if (btnCancel) btnCancel.classList.add('d-none');
       if (btnBack) btnBack.classList.remove('d-none');
       if (btnContinue) btnContinue.classList.remove('d-none');
@@ -229,7 +286,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnSubmit) btnSubmit.classList.remove('d-none');
       populateReviewSummary();
     }
+  }
 
+  function updateStepUI() {
+    clearErrors();
+    updateHeaderInfo(currentStep);
+    updateStepSections(currentStep);
+    updateStepStepper(currentStep);
+    updateNavButtons(currentStep);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -246,23 +310,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // --- Step 2 Country Change Suggestions & Conditional Rules ---
-  const countryDefaults = {
-    'United States': { currency: 'USD', timezone: 'America/New_York' },
-    'United Kingdom': { currency: 'GBP', timezone: 'Europe/London' },
-    'Canada': { currency: 'CAD', timezone: 'America/New_York' },
-    'Australia': { currency: 'AUD', timezone: 'Australia/Sydney' },
-    'Germany': { currency: 'EUR', timezone: 'Europe/Berlin' },
-    'France': { currency: 'EUR', timezone: 'Europe/Paris' },
-    'India': { currency: 'INR', timezone: 'Asia/Kolkata' },
-    'Singapore': { currency: 'SGD', timezone: 'Asia/Singapore' },
-    'Netherlands': { currency: 'EUR', timezone: 'Europe/Berlin' },
-    'United Arab Emirates': { currency: 'AED', timezone: 'Asia/Dubai' }
-  };
-
-  function updateCountryConditionalRules() {
-    if (!selectCountry) return;
-    const selected = selectCountry.value;
+  // --- Step 2 Country Conditional Rules ---
+  function applyCountryDefaults(selected) {
     const def = countryDefaults[selected];
     if (def) {
       if (selectCurrency && def.currency) {
@@ -274,12 +323,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (tzSuggestionHint) {
         tzSuggestionHint.textContent = `Suggested for ${selected} (${def.timezone}) — please confirm.`;
       }
-    } else {
-      if (tzSuggestionHint) {
-        tzSuggestionHint.textContent = 'Please confirm the workspace time zone.';
-      }
+    } else if (tzSuggestionHint) {
+      tzSuggestionHint.textContent = 'Please confirm the workspace time zone.';
     }
+  }
 
+  function updateStateRequirement(selected) {
     const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selected);
     if (stateReqIndicator) {
       if (requiresState) {
@@ -290,7 +339,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (stateOptHint) stateOptHint.classList.remove('d-none');
       }
     }
+  }
 
+  function updateZipRequirement(selected) {
     const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selected);
     if (zipReqIndicator) {
       if (requiresZip) {
@@ -303,9 +354,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  function updateCountryConditionalRules() {
+    if (!selectCountry) return;
+    const selected = selectCountry.value;
+    applyCountryDefaults(selected);
+    updateStateRequirement(selected);
+    updateZipRequirement(selected);
+  }
+
   if (selectCountry) {
     selectCountry.addEventListener('change', updateCountryConditionalRules);
-    // Initial evaluation
     if (selectCountry.value) {
       updateCountryConditionalRules();
     }
@@ -332,7 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       clearFieldError('error-verification-code');
       clearFieldError('error-admin-email');
 
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
         showError('error-admin-email', 'Please enter a valid work email address before requesting an OTP code.');
         inputAdminEmail.focus();
         return;
@@ -343,7 +401,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       try {
         const res = await Api.post('/api/setup/send-verification-code', { email });
-        const code = res.data ? res.data.code : '';
+        const code = res.data?.code || '';
         btnSendCode.textContent = 'Resend Code';
         btnSendCode.disabled = false;
 
@@ -352,7 +410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           otpHintText.style.color = 'var(--brick-text-primary)';
         }
         if (inputVerificationCode) {
-          inputVerificationCode.value = code; // Auto-fill for convenience in local dev
+          inputVerificationCode.value = code;
           inputVerificationCode.focus();
         }
       } catch (err) {
@@ -406,34 +464,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- Step 3 Password Strength Meter & Compromised Checks ---
-  const COMMON_COMPROMISED_PASSWORDS = [
-    'password', 'password123', 'password1', '12345678', '123456789', '1234567890',
-    'admin123', 'admin1234', 'qwerty123', 'welcome123', 'letmein123', 'pass1234'
-  ];
-
-  function evaluatePasswordStrength(password) {
-    if (!password) return { score: 0, label: '—', color: 'var(--brick-border)', pct: 0 };
-    if (COMMON_COMPROMISED_PASSWORDS.includes(password.toLowerCase())) {
-      return { score: 1, label: 'Compromised', color: 'var(--dash-dot-red, #ef4444)', pct: 15 };
-    }
-    let score = 0;
-    if (password.length >= 8) score += 1;
-    if (password.length >= 12) score += 1;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
-    if (/\d/.test(password)) score += 1;
-    if (/[^A-Za-z0-9]/.test(password)) score += 1;
-
-    if (score <= 1) {
-      return { score: 1, label: 'Weak', color: 'var(--dash-dot-red, #ef4444)', pct: 25 };
-    } else if (score <= 2) {
-      return { score: 2, label: 'Medium', color: 'var(--dash-dot-yellow, #f59e0b)', pct: 50 };
-    } else if (score <= 3) {
-      return { score: 3, label: 'Strong', color: 'var(--dash-col-now-border, #3b82f6)', pct: 75 };
-    } else {
-      return { score: 4, label: 'Very Strong', color: 'var(--dash-dot-green, #10b981)', pct: 100 };
-    }
-  }
-
   if (inputAdminPassword) {
     inputAdminPassword.addEventListener('input', () => {
       const pw = inputAdminPassword.value;
@@ -446,10 +476,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         strengthLabel.textContent = `Strength: ${res.label}`;
         strengthLabel.style.color = res.color;
       }
-      if (inputAdminConfirmPassword && inputAdminConfirmPassword.value) {
-        if (inputAdminPassword.value === inputAdminConfirmPassword.value) {
-          clearFieldError('error-admin-confirm-password');
-        }
+      if (inputAdminConfirmPassword?.value && inputAdminPassword.value === inputAdminConfirmPassword.value) {
+        clearFieldError('error-admin-confirm-password');
       }
     });
   }
@@ -467,167 +495,54 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- Step Validations ---
-  function validateCurrentStep() {
-    clearErrors();
+  function validateStep1() {
     let isValid = true;
+    const compName = inputCompanyName.value.trim();
+    if (!compName || compName.length < 2) {
+      showError('error-company-name', 'Company name must be at least 2 characters.');
+      inputCompanyName.focus();
+      isValid = false;
+    }
 
-    if (currentStep === 1) {
-      const compName = inputCompanyName.value.trim();
-      if (!compName || compName.length < 2) {
-        showError('error-company-name', 'Company name must be at least 2 characters.');
-        inputCompanyName.focus();
+    if (!selectCompanyType.value) {
+      showError('error-company-type', 'Please select a company type.');
+      if (isValid) selectCompanyType.focus();
+      isValid = false;
+    }
+
+    if (!selectIndustry.value) {
+      showError('error-company-industry', 'Please select an industry.');
+      if (isValid) selectIndustry.focus();
+      isValid = false;
+    } else if (selectIndustry.value === 'Other') {
+      const indOther = inputIndustryOther?.value?.trim() || '';
+      if (!indOther) {
+        showError('error-company-industry-other', 'Please specify your industry.');
+        if (isValid && inputIndustryOther) inputIndustryOther.focus();
         isValid = false;
       }
+    }
 
-      if (!selectCompanyType.value) {
-        showError('error-company-type', 'Please select a company type.');
-        if (isValid) selectCompanyType.focus();
-        isValid = false;
-      }
+    if (!selectCompanySize.value) {
+      showError('error-company-size', 'Please select company size.');
+      if (isValid) selectCompanySize.focus();
+      isValid = false;
+    }
 
-      if (!selectIndustry.value) {
-        showError('error-company-industry', 'Please select an industry.');
-        if (isValid) selectIndustry.focus();
-        isValid = false;
-      } else if (selectIndustry.value === 'Other') {
-        const indOther = inputIndustryOther ? inputIndustryOther.value.trim() : '';
-        if (!indOther) {
-          showError('error-company-industry-other', 'Please specify your industry.');
-          if (isValid && inputIndustryOther) inputIndustryOther.focus();
-          isValid = false;
-        }
-      }
+    const website = inputWebsite.value.trim();
+    if (website && !/^https?:\/\/.+\..+/.test(website)) {
+      showError('error-company-website', 'Please enter a valid URL (e.g. https://yourcompany.com).');
+      if (isValid) inputWebsite.focus();
+      isValid = false;
+    }
 
-      if (!selectCompanySize.value) {
-        showError('error-company-size', 'Please select company size.');
-        if (isValid) selectCompanySize.focus();
-        isValid = false;
-      }
-
-      const website = inputWebsite.value.trim();
-      if (website && !/^https?:\/\/.+\..+/.test(website)) {
-        showError('error-company-website', 'Please enter a valid URL (e.g. https://yourcompany.com).');
-        if (isValid) inputWebsite.focus();
-        isValid = false;
-      }
-
-      const year = inputYear.value.trim();
-      const currentYear = new Date().getFullYear();
-      if (year && (parseInt(year, 10) < 1800 || parseInt(year, 10) > currentYear)) {
+    const year = inputYear.value.trim();
+    const currentYear = new Date().getFullYear();
+    if (year) {
+      const parsedYear = Number.parseInt(year, 10);
+      if (parsedYear < 1800 || parsedYear > currentYear) {
         showError('error-company-year', `Please enter a valid established year between 1800 and ${currentYear}.`);
         if (isValid) inputYear.focus();
-        isValid = false;
-      }
-    } else if (currentStep === 2) {
-      if (!selectCountry.value) {
-        showError('error-address-country', 'Please select a country or region.');
-        selectCountry.focus();
-        isValid = false;
-      }
-
-      const street = inputStreet.value.trim();
-      if (!street) {
-        showError('error-address-street', 'Please enter the registered street address.');
-        if (isValid) inputStreet.focus();
-        isValid = false;
-      }
-
-      const city = inputCity.value.trim();
-      if (!city) {
-        showError('error-address-city', 'Please enter the city or town.');
-        if (isValid) inputCity.focus();
-        isValid = false;
-      }
-
-      // State required for US, CA, AU, IN
-      const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selectCountry.value);
-      const state = inputState.value.trim();
-      if (requiresState && !state) {
-        showError('error-address-state', `State or province is required for ${selectCountry.value}.`);
-        if (isValid) inputState.focus();
-        isValid = false;
-      }
-
-      // ZIP / Postal code required for major regions
-      const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selectCountry.value);
-      const zip = inputZip.value.trim();
-      if (requiresZip && !zip) {
-        showError('error-address-zip', `Postal or ZIP code is required for ${selectCountry.value}.`);
-        if (isValid) inputZip.focus();
-        isValid = false;
-      }
-
-      // If billing address differs, validate billing fields
-      if (checkBillingSame && !checkBillingSame.checked) {
-        if (!selectBillingCountry.value) {
-          showError('error-billing-country', 'Please select a billing country.');
-          if (isValid) selectBillingCountry.focus();
-          isValid = false;
-        }
-        if (!inputBillingStreet.value.trim()) {
-          showError('error-billing-street', 'Please enter the billing address.');
-          if (isValid) inputBillingStreet.focus();
-          isValid = false;
-        }
-        if (!inputBillingCity.value.trim()) {
-          showError('error-billing-city', 'Please enter the billing city.');
-          if (isValid) inputBillingCity.focus();
-          isValid = false;
-        }
-      }
-    } else if (currentStep === 3) {
-      const name = inputAdminName.value.trim();
-      if (!name || name.length < 2) {
-        showError('error-admin-name', 'Please enter the administrator full name.');
-        inputAdminName.focus();
-        isValid = false;
-      }
-
-      const email = inputAdminEmail.value.trim();
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showError('error-admin-email', 'Please enter a valid work email address.');
-        if (isValid) inputAdminEmail.focus();
-        isValid = false;
-      }
-
-      // Email verification temporarily on hold: do not block registration if not yet verified
-      // (User can still optionally test OTP via Send Code / Verify)
-
-      const password = inputAdminPassword.value;
-      if (!password || password.length < 8) {
-        showError('error-admin-password', 'Password must be at least 8 characters long.');
-        if (isValid) inputAdminPassword.focus();
-        isValid = false;
-      } else if (COMMON_COMPROMISED_PASSWORDS.includes(password.toLowerCase())) {
-        showError('error-admin-password', 'This password is too commonly used and easily compromised. Please choose a stronger password.');
-        if (isValid) inputAdminPassword.focus();
-        isValid = false;
-      }
-
-      const confirmPw = inputAdminConfirmPassword.value;
-      if (password !== confirmPw) {
-        showError('error-admin-confirm-password', 'Passwords do not match.');
-        if (isValid) inputAdminConfirmPassword.focus();
-        isValid = false;
-      }
-
-      if (checkConsentTerms && !checkConsentTerms.checked) {
-        showError('error-consent-terms', 'You must agree to the Terms of Service to proceed.');
-        isValid = false;
-      }
-
-      if (checkConsentPrivacy && !checkConsentPrivacy.checked) {
-        showError('error-consent-privacy', 'You must agree to the Privacy Policy to proceed.');
-        isValid = false;
-      }
-
-      if (checkConsentAuth && !checkConsentAuth.checked) {
-        showError('error-consent-auth', 'You must confirm authorization to register this company.');
-        isValid = false;
-      }
-    } else if (currentStep === 4) {
-      if (checkFinalConfirm && !checkFinalConfirm.checked) {
-        showError('error-final-confirm', 'Please confirm that all information is accurate to create your workspace.');
         isValid = false;
       }
     }
@@ -635,35 +550,172 @@ document.addEventListener('DOMContentLoaded', async () => {
     return isValid;
   }
 
-  // --- Populate Step 4 Review Summary ---
-  function populateReviewSummary() {
-    if (summaryCompanyName) summaryCompanyName.textContent = inputCompanyName.value.trim() || '—';
-    if (summaryLegalName) summaryLegalName.textContent = inputLegalName.value.trim() || 'Same as company name';
-    if (summaryCompanyType) summaryCompanyType.textContent = selectCompanyType.value || '—';
+  function validateStep2() {
+    let isValid = true;
+    if (!selectCountry.value) {
+      showError('error-address-country', 'Please select a country or region.');
+      selectCountry.focus();
+      isValid = false;
+    }
+
+    const street = inputStreet.value.trim();
+    if (!street) {
+      showError('error-address-street', 'Please enter the registered street address.');
+      if (isValid) inputStreet.focus();
+      isValid = false;
+    }
+
+    const city = inputCity.value.trim();
+    if (!city) {
+      showError('error-address-city', 'Please enter the city or town.');
+      if (isValid) inputCity.focus();
+      isValid = false;
+    }
+
+    const requiresState = ['United States', 'Canada', 'Australia', 'India'].includes(selectCountry.value);
+    const state = inputState.value.trim();
+    if (requiresState && !state) {
+      showError('error-address-state', `State or province is required for ${selectCountry.value}.`);
+      if (isValid) inputState.focus();
+      isValid = false;
+    }
+
+    const requiresZip = ['United States', 'United Kingdom', 'Canada', 'Australia', 'India', 'Germany', 'France'].includes(selectCountry.value);
+    const zip = inputZip.value.trim();
+    if (requiresZip && !zip) {
+      showError('error-address-zip', `Postal or ZIP code is required for ${selectCountry.value}.`);
+      if (isValid) inputZip.focus();
+      isValid = false;
+    }
+
+    if (checkBillingSame && !checkBillingSame.checked) {
+      if (!selectBillingCountry.value) {
+        showError('error-billing-country', 'Please select a billing country.');
+        if (isValid) selectBillingCountry.focus();
+        isValid = false;
+      }
+      if (!inputBillingStreet.value.trim()) {
+        showError('error-billing-street', 'Please enter the billing address.');
+        if (isValid) inputBillingStreet.focus();
+        isValid = false;
+      }
+      if (!inputBillingCity.value.trim()) {
+        showError('error-billing-city', 'Please enter the billing city.');
+        if (isValid) inputBillingCity.focus();
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  function validateStep3() {
+    let isValid = true;
+    const name = inputAdminName.value.trim();
+    if (!name || name.length < 2) {
+      showError('error-admin-name', 'Please enter the administrator full name.');
+      inputAdminName.focus();
+      isValid = false;
+    }
+
+    const email = inputAdminEmail.value.trim();
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      showError('error-admin-email', 'Please enter a valid work email address.');
+      if (isValid) inputAdminEmail.focus();
+      isValid = false;
+    }
+
+    const password = inputAdminPassword.value;
+    if (!password || password.length < 8) {
+      showError('error-admin-password', 'Password must be at least 8 characters long.');
+      if (isValid) inputAdminPassword.focus();
+      isValid = false;
+    } else if (COMMON_COMPROMISED_PASSWORDS.has(password.toLowerCase())) {
+      showError('error-admin-password', 'This password is too commonly used and easily compromised. Please choose a stronger password.');
+      if (isValid) inputAdminPassword.focus();
+      isValid = false;
+    }
+
+    const confirmPw = inputAdminConfirmPassword.value;
+    if (password !== confirmPw) {
+      showError('error-admin-confirm-password', 'Passwords do not match.');
+      if (isValid) inputAdminConfirmPassword.focus();
+      isValid = false;
+    }
+
+    if (checkConsentTerms && !checkConsentTerms.checked) {
+      showError('error-consent-terms', 'You must agree to the Terms of Service to proceed.');
+      isValid = false;
+    }
+
+    if (checkConsentPrivacy && !checkConsentPrivacy.checked) {
+      showError('error-consent-privacy', 'You must agree to the Privacy Policy to proceed.');
+      isValid = false;
+    }
+
+    if (checkConsentAuth && !checkConsentAuth.checked) {
+      showError('error-consent-auth', 'You must confirm authorization to register this company.');
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function validateStep4() {
+    if (checkFinalConfirm && !checkFinalConfirm.checked) {
+      showError('error-final-confirm', 'Please confirm that all information is accurate to create your workspace.');
+      return false;
+    }
+    return true;
+  }
+
+  function validateCurrentStep() {
+    clearErrors();
+    switch (currentStep) {
+      case 1:
+        return validateStep1();
+      case 2:
+        return validateStep2();
+      case 3:
+        return validateStep3();
+      case 4:
+        return validateStep4();
+      default:
+        return true;
+    }
+  }
+
+  // --- Populate Step 4 Review Summary Helpers ---
+  function populateCompanySummary() {
+    setText(summaryCompanyName, inputCompanyName.value.trim() || '—');
+    setText(summaryLegalName, inputLegalName.value.trim() || 'Same as company name');
+    setText(summaryCompanyType, selectCompanyType.value || '—');
 
     let indText = selectIndustry.value || '—';
-    if (selectIndustry.value === 'Other' && inputIndustryOther && inputIndustryOther.value.trim()) {
+    if (selectIndustry.value === 'Other' && inputIndustryOther?.value?.trim()) {
       indText = `Other (${inputIndustryOther.value.trim()})`;
     }
-    if (summaryIndustry) summaryIndustry.textContent = indText;
+    setText(summaryIndustry, indText);
 
-    if (summaryCompanySize) summaryCompanySize.textContent = selectCompanySize.value || '—';
-    if (summaryWebsite) summaryWebsite.textContent = inputWebsite.value.trim() || 'None provided';
-    if (summaryYear) summaryYear.textContent = inputYear.value.trim() || '—';
+    setText(summaryCompanySize, selectCompanySize.value || '—');
+    setText(summaryWebsite, inputWebsite.value.trim() || 'None provided');
+    setText(summaryYear, inputYear.value.trim() || '—');
+  }
 
+  function populateAddressSummary() {
     const addr1 = inputStreet.value.trim();
     const addr2 = inputLine2.value.trim();
     const fullStreet = addr2 ? `${addr1}, ${addr2}` : addr1;
-    if (summaryAddress) summaryAddress.textContent = fullStreet || '—';
+    setText(summaryAddress, fullStreet || '—');
 
     const city = inputCity.value.trim();
     const state = inputState.value.trim();
-    if (summaryCityState) summaryCityState.textContent = (city && state) ? `${city}, ${state}` : (city || state || '—');
+    setText(summaryCityState, (city && state) ? `${city}, ${state}` : (city || state || '—'));
 
-    if (summaryCountry) summaryCountry.textContent = selectCountry.value || '—';
-    if (summaryZip) summaryZip.textContent = inputZip.value.trim() || '—';
-    if (summaryRegNum) summaryRegNum.textContent = inputRegNumber.value.trim() || 'None provided';
-    if (summaryTaxId) summaryTaxId.textContent = inputTaxId.value.trim() || 'None provided';
+    setText(summaryCountry, selectCountry.value || '—');
+    setText(summaryZip, inputZip.value.trim() || '—');
+    setText(summaryRegNum, inputRegNumber.value.trim() || 'None provided');
+    setText(summaryTaxId, inputTaxId.value.trim() || 'None provided');
 
     if (summaryBillingAddress) {
       if (!checkBillingSame || checkBillingSame.checked) {
@@ -675,28 +727,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         summaryBillingAddress.textContent = `${bStreet}, ${bCity}, ${bCountry}`;
       }
     }
+  }
 
-    if (summaryAdminName) summaryAdminName.textContent = inputAdminName.value.trim() || '—';
-    if (summaryAdminEmail) summaryAdminEmail.textContent = inputAdminEmail.value.trim() || '—';
-    if (summaryVerificationStatus) {
-      summaryVerificationStatus.textContent = emailVerified ? 'Verified ✓' : 'Verification on hold (Active)';
-    }
-    if (summaryJobTitle) summaryJobTitle.textContent = inputJobTitle.value.trim() || 'Administrator';
-    if (summaryPhone) summaryPhone.textContent = inputPhone.value.trim() || 'None provided';
+  function populateAdminSummary() {
+    setText(summaryAdminName, inputAdminName.value.trim() || '—');
+    setText(summaryAdminEmail, inputAdminEmail.value.trim() || '—');
+    setText(summaryVerificationStatus, emailVerified ? 'Verified ✓' : 'Verification on hold (Active)');
+    setText(summaryJobTitle, inputJobTitle.value.trim() || 'Administrator');
+    setText(summaryPhone, inputPhone.value.trim() || 'None provided');
+    setText(summaryCurrency, selectCurrency ? selectCurrency.value : 'USD');
+    setText(summaryTimezone, selectTimezone ? selectTimezone.value : 'UTC');
+  }
 
-    if (summaryCurrency) summaryCurrency.textContent = selectCurrency ? selectCurrency.value : 'USD';
-    if (summaryTimezone) summaryTimezone.textContent = selectTimezone ? selectTimezone.value : 'UTC';
+  function populateReviewSummary() {
+    populateCompanySummary();
+    populateAddressSummary();
+    populateAdminSummary();
   }
 
   // --- Button Listeners ---
   if (btnContinue) {
     btnContinue.addEventListener('click', (e) => {
       e.preventDefault();
-      if (validateCurrentStep()) {
-        if (currentStep < totalSteps) {
-          currentStep++;
-          updateStepUI();
-        }
+      if (validateCurrentStep() && currentStep < totalSteps) {
+        currentStep++;
+        updateStepUI();
       }
     });
   }
@@ -724,7 +779,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   jumpButtons.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const targetStep = parseInt(btn.getAttribute('data-target-step'), 10);
+      const targetStep = Number.parseInt(btn.dataset.targetStep || '', 10);
       if (targetStep >= 1 && targetStep <= 3) {
         currentStep = targetStep;
         updateStepUI();
@@ -847,12 +902,75 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Theme Toggle ---
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const current = document.documentElement.dataset.theme || 'light';
       const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
       const next = isDark ? 'light' : 'black-and-white';
       document.documentElement.dataset.theme = next;
       localStorage.setItem('teamden-theme', next);
     });
+  }
+
+  // --- Build Registration Payload ---
+  function buildRegistrationPayload() {
+    const sameBilling = !checkBillingSame || checkBillingSame.checked;
+
+    return {
+      organizationName: inputCompanyName.value.trim(),
+      legalName: inputLegalName.value.trim() || null,
+      companyLogo: logoBase64 || null,
+      companyType: selectCompanyType.value,
+      industry: selectIndustry.value,
+      industryOther: (selectIndustry.value === 'Other' && inputIndustryOther) ? inputIndustryOther.value.trim() : null,
+      companySize: selectCompanySize.value,
+      websiteUrl: inputWebsite.value.trim() || null,
+      yearEstablished: inputYear.value.trim() ? Number.parseInt(inputYear.value.trim(), 10) : null,
+
+      country: selectCountry.value,
+      registeredAddress: inputStreet.value.trim(),
+      addressLine2: inputLine2.value.trim() || null,
+      city: inputCity.value.trim(),
+      state: inputState.value.trim() || null,
+      postalCode: inputZip.value.trim() || null,
+      currency: selectCurrency ? selectCurrency.value : 'USD',
+      timezone: selectTimezone ? selectTimezone.value : 'UTC',
+      businessRegNumber: inputRegNumber.value.trim() || null,
+      taxId: inputTaxId.value.trim() || null,
+
+      billingSameAsRegistered: sameBilling,
+      billingAddress: resolveBillingField(sameBilling, inputStreet.value.trim(), inputBillingStreet),
+      billingAddressLine2: resolveBillingField(sameBilling, inputLine2.value.trim(), inputBillingLine2),
+      billingCity: resolveBillingField(sameBilling, inputCity.value.trim(), inputBillingCity),
+      billingState: resolveBillingField(sameBilling, inputState.value.trim(), inputBillingState),
+      billingPostalCode: resolveBillingField(sameBilling, inputZip.value.trim(), inputBillingZip),
+      billingCountry: resolveBillingField(sameBilling, selectCountry.value, selectBillingCountry),
+
+      adminName: inputAdminName.value.trim(),
+      adminEmail: inputAdminEmail.value.trim(),
+      verificationCode: inputVerificationCode ? inputVerificationCode.value.trim() : null,
+      adminPassword: inputAdminPassword.value,
+      jobTitle: inputJobTitle.value.trim() || null,
+      phoneNumber: inputPhone.value.trim() || null,
+      profilePicture: avatarBase64 || null,
+
+      termsAccepted: checkConsentTerms ? checkConsentTerms.checked : true,
+      privacyAccepted: checkConsentPrivacy ? checkConsentPrivacy.checked : true,
+      authorizedToRegister: checkConsentAuth ? checkConsentAuth.checked : true
+    };
+  }
+
+  async function handleAutoLogin(payload) {
+    try {
+      await Auth.login(payload.adminEmail, payload.adminPassword);
+      const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
+      window.location.href = targetUrl;
+    } catch (loginErr) {
+      console.warn('Auto-login after registration failed, redirecting to login page:', loginErr);
+      setSubmittingState(false);
+      showAlert('Workspace created! Redirecting to sign in...', 'success');
+      setTimeout(() => {
+        window.location.href = `/pages/login/login.html?email=${encodeURIComponent(payload.adminEmail)}`;
+      }, 1000);
+    }
   }
 
   // --- Final Form Submission (Step 4) ---
@@ -861,7 +979,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       clearErrors();
 
-      // Ensure all 4 steps are validated
       for (let s = 1; s <= 4; s++) {
         currentStep = s;
         if (!validateCurrentStep()) {
@@ -872,73 +989,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentStep = 4;
       updateStepUI();
 
-      // Gather complete payload matching CompleteRegistrationRequestDto
-      const sameBilling = !checkBillingSame || checkBillingSame.checked;
-
-      const payload = {
-        organizationName: inputCompanyName.value.trim(),
-        legalName: inputLegalName.value.trim() || null,
-        companyLogo: logoBase64 || null,
-        companyType: selectCompanyType.value,
-        industry: selectIndustry.value,
-        industryOther: (selectIndustry.value === 'Other' && inputIndustryOther) ? inputIndustryOther.value.trim() : null,
-        companySize: selectCompanySize.value,
-        websiteUrl: inputWebsite.value.trim() || null,
-        yearEstablished: inputYear.value.trim() ? parseInt(inputYear.value.trim(), 10) : null,
-
-        country: selectCountry.value,
-        registeredAddress: inputStreet.value.trim(),
-        addressLine2: inputLine2.value.trim() || null,
-        city: inputCity.value.trim(),
-        state: inputState.value.trim() || null,
-        postalCode: inputZip.value.trim() || null,
-        currency: selectCurrency ? selectCurrency.value : 'USD',
-        timezone: selectTimezone ? selectTimezone.value : 'UTC',
-        businessRegNumber: inputRegNumber.value.trim() || null,
-        taxId: inputTaxId.value.trim() || null,
-
-        billingSameAsRegistered: sameBilling,
-        billingAddress: sameBilling ? inputStreet.value.trim() : (inputBillingStreet ? inputBillingStreet.value.trim() : null),
-        billingAddressLine2: sameBilling ? (inputLine2.value.trim() || null) : (inputBillingLine2 ? inputBillingLine2.value.trim() || null : null),
-        billingCity: sameBilling ? inputCity.value.trim() : (inputBillingCity ? inputBillingCity.value.trim() : null),
-        billingState: sameBilling ? (inputState.value.trim() || null) : (inputBillingState ? inputBillingState.value.trim() || null : null),
-        billingPostalCode: sameBilling ? (inputZip.value.trim() || null) : (inputBillingZip ? inputBillingZip.value.trim() || null : null),
-        billingCountry: sameBilling ? selectCountry.value : (selectBillingCountry ? selectBillingCountry.value : null),
-
-        adminName: inputAdminName.value.trim(),
-        adminEmail: inputAdminEmail.value.trim(),
-        verificationCode: inputVerificationCode ? inputVerificationCode.value.trim() : null,
-        adminPassword: inputAdminPassword.value,
-        jobTitle: inputJobTitle.value.trim() || null,
-        phoneNumber: inputPhone.value.trim() || null,
-        profilePicture: avatarBase64 || null,
-
-        termsAccepted: checkConsentTerms ? checkConsentTerms.checked : true,
-        privacyAccepted: checkConsentPrivacy ? checkConsentPrivacy.checked : true,
-        authorizedToRegister: checkConsentAuth ? checkConsentAuth.checked : true
-      };
-
+      const payload = buildRegistrationPayload();
       setSubmittingState(true);
 
       try {
         await Api.post('/api/setup/register-company', payload);
-
         showAlert(`Workspace "${payload.organizationName}" created successfully! Launching your workspace...`, 'success');
-
-        setTimeout(async () => {
-          try {
-            await Auth.login(payload.adminEmail, payload.adminPassword);
-            const targetUrl = (typeof Company === 'function' ? Company('url') : '/pages/dashboard/dashboard.html');
-            window.location.href = targetUrl;
-          } catch (loginErr) {
-            setSubmittingState(false);
-            showAlert('Workspace created! Redirecting to sign in...', 'success');
-            setTimeout(() => {
-              window.location.href = `/pages/login/login.html?email=${encodeURIComponent(payload.adminEmail)}`;
-            }, 1000);
-          }
-        }, 800);
-
+        setTimeout(() => handleAutoLogin(payload), 800);
       } catch (err) {
         setSubmittingState(false);
         showAlert(err.message || 'Company registration failed. Please review your details and try again.', 'danger');

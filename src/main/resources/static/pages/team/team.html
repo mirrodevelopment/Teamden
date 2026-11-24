@@ -136,7 +136,7 @@
               </div>
 
               <div class="team-featured-bottom-row">
-                <div class="team-featured-avatars" id="team-featured-avatars" role="group" aria-label="Team members">
+                <div class="team-featured-avatars" id="team-featured-avatars">
                   <!-- Injected via JS -->
                 </div>
 
@@ -290,7 +290,7 @@
   <!-- ===================================================================
        CREATE TEAM MODAL (4-Section BRICK Specification)
        =================================================================== -->
-  <div class="team-modal-backdrop team-hidden" id="team-create-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-headline">
+  <div class="team-modal-backdrop team-hidden" id="team-create-modal">
     <div class="team-modal-card team-modal-card-lg">
       <div class="team-modal-header">
         <div class="team-modal-meta">
@@ -443,6 +443,7 @@
           <!-- Add Member Control -->
           <div class="team-add-member-bar">
             <div class="team-form-group team-form-group--flex">
+              <label for="create-team-member-selector" class="sr-only">Choose employee to add</label>
               <select id="create-team-member-selector" class="team-form-select">
                 <option value="">Choose employee to add...</option>
               </select>
@@ -482,7 +483,7 @@
 
             <!-- Status Indicator -->
             <div class="team-form-group team-flex-1">
-              <label class="team-form-label">INITIAL STATUS</label>
+              <span class="team-form-label">INITIAL STATUS</span>
               <div class="team-badge-status-display">
                 <span class="status-indicator-dot"></span>
                 <span>Active</span>

@@ -319,9 +319,9 @@
 
                 <!-- Field 3: Company Logo Upload -->
                 <div class="field-cell">
-                  <label class="input-label">Company logo <span class="optional-hint">(optional)</span></label>
+                  <label class="input-label" for="logo-file-input">Company logo <span class="optional-hint">(optional)</span></label>
                   <div class="logo-upload-dropzone" id="logo-dropzone">
-                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none">
+                    <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" class="d-none" aria-label="Company logo upload">
                     <div class="upload-idle-state" id="upload-idle-state">
                       <div class="upload-icon-box">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -784,6 +784,7 @@
                   <div class="email-verification-container mt-2" id="email-verification-container">
                     <div class="otp-action-row">
                       <div class="otp-input-wrap">
+                        <label for="verification-code" class="sr-only">Verification code</label>
                         <input
                           type="text"
                           id="verification-code"
@@ -899,9 +900,9 @@
 
                 <!-- Field 8: Profile Picture Upload -->
                 <div class="field-cell full-width">
-                  <label class="input-label">Profile picture (optional)</label>
+                  <label class="input-label" for="avatar-file-input">Profile picture (optional)</label>
                   <div class="logo-upload-dropzone" id="avatar-dropzone">
-                    <input type="file" id="avatar-file-input" accept="image/png,image/jpeg" class="d-none">
+                    <input type="file" id="avatar-file-input" accept="image/png,image/jpeg" class="d-none" aria-label="Profile photo upload">
                     <div class="upload-idle-state" id="avatar-idle-state">
                       <div class="upload-icon-box">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -915,7 +916,7 @@
                       </div>
                     </div>
                     <div class="upload-preview-state d-none" id="avatar-preview-state">
-                      <img id="avatar-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Picture Preview" class="logo-preview-thumb">
+                      <img id="avatar-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Preview" class="logo-preview-thumb">
                       <div class="preview-meta">
                         <span id="avatar-file-name" class="file-name-label">avatar.png</span>
                         <button type="button" id="remove-avatar-btn" class="btn-remove-logo">Remove</button>

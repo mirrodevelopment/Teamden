@@ -92,7 +92,11 @@
     document.querySelectorAll('.tdet-tab-btn').forEach(btn => {
       const match = btn.getAttribute('data-tab') === tabName;
       btn.classList.toggle('active', match);
-      btn.setAttribute('aria-selected', match ? 'true' : 'false');
+      if (match) {
+        btn.setAttribute('aria-current', 'page');
+      } else {
+        btn.removeAttribute('aria-current');
+      }
     });
 
     // Update Panes
