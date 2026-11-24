@@ -9,7 +9,7 @@
   <script>
     (function () {
       var t = localStorage.getItem('teamden-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.dataset.theme = t;
       if (localStorage.getItem('teamden-sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }

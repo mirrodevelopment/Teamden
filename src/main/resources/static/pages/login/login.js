@@ -679,7 +679,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       const isDark = (current === 'dark' || current === 'black-and-white' || current === 'bw');
       const next = isDark ? 'light' : 'black-and-white';
-      document.documentElement.setAttribute('data-theme', next);
+      document.documentElement.dataset.theme = next;
       localStorage.setItem('teamden-theme', next);
     });
   }

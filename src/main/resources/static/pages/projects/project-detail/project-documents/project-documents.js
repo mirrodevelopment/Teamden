@@ -668,7 +668,7 @@
       const isApproved = dec.status === 'APPROVED';
       const card = document.createElement('div');
       card.className = `doc-decision-card ${isApproved ? 'card-approved' : 'card-amber'}`;
-      card.setAttribute('data-decision-id', dec.id);
+      card.dataset.decisionId = dec.id;
 
       card.innerHTML = `
         <div class="decision-icon-circle ${isApproved ? 'green' : 'amber'}">

@@ -292,7 +292,7 @@ const Navbar = (() => {
 
     // --- Theme Switcher Logic ---
     function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.dataset.theme = theme;
       if (document.body) document.body.classList.toggle('dark-theme', theme === 'dark');
       localStorage.setItem('teamden-theme', theme);
 
@@ -382,7 +382,7 @@ const Navbar = (() => {
 // Immediate theme initialization on script load
 (function () {
   const t = localStorage.getItem('teamden-theme') || 'light';
-  document.documentElement.setAttribute('data-theme', t);
+  document.documentElement.dataset.theme = t;
   if (document.body) document.body.classList.toggle('dark-theme', t === 'dark');
 })();
 
