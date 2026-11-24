@@ -218,7 +218,7 @@ function setupIndustryOther(selectIndustry, groupIndustryOther, inputIndustryOth
   });
 }
 
-function setupCountryRules(selectCountry, stateReqIndicator, stateOptHint, zipReqIndicator, zipOptHint, tzSuggestionHint, selectCurrency, selectTimezone) {
+function setupCountryRules({ selectCountry, stateReqIndicator, stateOptHint, zipReqIndicator, zipOptHint, tzSuggestionHint, selectCurrency, selectTimezone }) {
   if (!selectCountry) return;
 
   function updateRules() {
@@ -631,7 +631,16 @@ async function initRegistration() {
 
   // Sub-component setups
   setupIndustryOther(selectIndustry, groupIndustryOther, inputIndustryOther);
-  setupCountryRules(selectCountry, stateReqIndicator, stateOptHint, zipReqIndicator, zipOptHint, tzSuggestionHint, selectCurrency, selectTimezone);
+  setupCountryRules({
+    selectCountry,
+    stateReqIndicator,
+    stateOptHint,
+    zipReqIndicator,
+    zipOptHint,
+    tzSuggestionHint,
+    selectCurrency,
+    selectTimezone
+  });
   setupBillingToggle(checkBillingSame, groupBillingAddress, selectBillingCountry, selectCountry);
   setupEmailVerification({
     btnSendCode,
